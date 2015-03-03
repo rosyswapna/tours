@@ -1,0 +1,22 @@
+Admin
+====================
+username : admin
+password : admin
+
+ORGANIZATIONS
+====================
+
+1.acubeinnovations
+username :ratheeshvijayan
+password :123456
+
+
+
+USERS
+===================
+
+1.ratheesh
+username :ratheesh
+password :123456
+
+

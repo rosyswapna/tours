@@ -1,0 +1,11 @@
+/application/config/config.php
+/application/config/database.php
+/facnc/company
+/facnc/config_db.php
+/facnc/config.php
+/facnc/tmp/
+/issue_track
+/files/DB/truncate.txt
+*.php~
+.gitignore~
+

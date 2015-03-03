@@ -1,0 +1,49 @@
+.voucher-text-box{
+
+height:24px;
+}
+.margin-bottom-0-px{
+margin-bottom:0px;
+}
+.div-with-15-percent-width-with-margin-10{
+width: 11%;
+margin: 10px;
+float: left;
+}
+.div-with-9-percent-width-with-margin-8{
+width: 9.4%;
+margin: 8px;
+float: left;
+}
+.margin-0-10-0-10{
+margin:0 10px 0 10px;
+}
+.height-1250-px{
+height: 1200px;
+}
+
+.height-auto{
+height: auto;
+overflow:hidden;
+}
+
+.padding-2px-0-0-10-px{
+padding:2px 0 0 10px;
+}
+.margin-top-33-px{
+margin-top:33px;
+}
+.margin-top-23-px{
+margin-top:23px;
+}
+.div-with-5-percent-width-with-margin-10{
+width: 5%;
+margin: 10px;
+float: left;
+}
+.margin-15px-10px-0-10px{
+margin: -15px 10px 0 10px !important;
+}
+.no-border{
+border:0;
+}

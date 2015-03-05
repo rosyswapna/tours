@@ -1,17 +1,23 @@
 -- phpMyAdmin SQL Dump
--- version 4.0.6deb1
+-- version 3.4.10.1deb1
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Jan 21, 2015 at 05:05 AM
--- Server version: 5.5.37-0ubuntu0.13.10.1
--- PHP Version: 5.5.3-1ubuntu2.6
+-- Generation Time: Mar 05, 2015 at 03:51 PM
+-- Server version: 5.5.40
+-- PHP Version: 5.3.10-1ubuntu3.15
 
-SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
 
+
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET NAMES utf8 */;
+
 --
--- Database: `test`
+-- Database: `tours`
 --
 
 --
@@ -49,15 +55,6 @@ INSERT INTO `customer_types` (`id`, `name`, `description`, `value`, `organisatio
 (1, 'WalkIn', 'WalkIn', NULL, 1, 5, '2014-09-09 06:29:57', '0000-00-00 00:00:00'),
 (2, 'Cash', 'Cash', NULL, 1, 5, '2014-09-09 06:30:16', '0000-00-00 00:00:00'),
 (3, 'Credit', 'Credit', NULL, 1, 5, '2014-09-09 06:30:27', '0000-00-00 00:00:00');
-
---
--- Dumping data for table `driver_type`
---
-
-INSERT INTO `driver_type` (`id`, `name`, `description`, `value`, `organisation_id`, `user_id`, `created`, `updated`) VALUES
-(1, 'Contract', 'Contract', NULL, 1, 5, '2014-09-09 06:28:26', '0000-00-00 00:00:00'),
-(2, 'Permanent', 'Permanent', NULL, 1, 5, '2014-09-09 06:28:41', '0000-00-00 00:00:00'),
-(3, 'PartTime', 'PartTime', NULL, 1, 5, '2014-09-09 06:29:00', '0000-00-00 00:00:00');
 
 --
 -- Dumping data for table `id_proof_types`
@@ -110,6 +107,12 @@ INSERT INTO `statuses` (`id`, `name`, `description`) VALUES
 (1, 'Active', 'Active'),
 (2, 'Inactive', 'Inactive');
 
+--
+-- Dumping data for table `tour_sessions`
+--
+
+INSERT INTO `tour_sessions` (`session_id`, `ip_address`, `user_agent`, `last_activity`, `user_data`) VALUES
+('735e1a7a8983ad533d69cdc826f708ae', '127.0.0.1', 'Mozilla/5.0 (X11; Ubuntu; Linux i686; rv:34.0) Gec', 1425550745, 'a:9:{s:9:"user_data";s:0:"";s:22:"isloginAttemptexceeded";b:0;s:2:"id";s:1:"7";s:4:"name";s:20:"System Administrator";s:5:"email";s:14:"admin@acube.co";s:8:"username";s:5:"admin";s:4:"type";s:1:"1";s:10:"isLoggedIn";b:1;s:10:"token_pass";s:32:"21232f297a57a5a743894a0e4a801fc3";}');
 
 --
 -- Dumping data for table `trip_models`
@@ -141,7 +144,7 @@ INSERT INTO `trip_statuses` (`id`, `name`, `description`, `value`, `organisation
 --
 
 INSERT INTO `users` (`id`, `username`, `password`, `first_name`, `last_name`, `email`, `phone`, `address`, `occupation`, `user_status_id`, `password_token`, `user_type_id`, `organisation_id`, `organisation_admin_id`, `fa_account`, `created`, `updated`) VALUES
-(1, 'admin', '21232f297a57a5a743894a0e4a801fc3', 'System', 'Administrator', 'admin@acube.local', NULL, NULL, NULL, 1, NULL, 1, -1, NULL, 0, '2014-08-10 18:30:00', '0000-00-00 00:00:00');
+(1, 'admin', '21232f297a57a5a743894a0e4a801fc3', 'System', 'Administrator', 'admin@acube.co', NULL, NULL, NULL, 1, NULL, 1, -1, NULL, 0, '2015-03-05 10:20:59', '0000-00-00 00:00:00');
 
 --
 -- Dumping data for table `user_statuses`
@@ -164,7 +167,6 @@ INSERT INTO `user_types` (`id`, `name`, `description`) VALUES
 (5, 'Driver', 'Driver'),
 (6, 'Vehicle Owner', 'Vehicle Owner');
 
-
 --
 -- Dumping data for table `vehicle_ac_types`
 --
@@ -180,14 +182,6 @@ INSERT INTO `vehicle_ac_types` (`id`, `name`, `description`, `value`, `organisat
 INSERT INTO `vehicle_beacon_light_options` (`id`, `name`, `description`, `value`, `organisation_id`, `user_id`, `created`, `updated`) VALUES
 (1, 'Red', 'Red', NULL, 1, 5, '2014-09-09 06:23:08', '0000-00-00 00:00:00'),
 (2, 'Blue', 'Blue', NULL, 1, 5, '2014-09-09 06:23:16', '0000-00-00 00:00:00');
-
---
--- Dumping data for table `vehicle_driver_bata_percentages`
---
-
-INSERT INTO `vehicle_driver_bata_percentages` (`id`, `name`, `description`, `value`, `organisation_id`, `user_id`, `created`, `updated`) VALUES
-(1, '17percent', '17percent', NULL, 1, 5, '2014-09-09 06:24:25', '0000-00-00 00:00:00'),
-(2, '20percent', '20percent', NULL, 1, 5, '2014-09-09 06:24:39', '0000-00-00 00:00:00');
 
 --
 -- Dumping data for table `vehicle_fuel_types`
@@ -225,6 +219,14 @@ INSERT INTO `vehicle_models` (`id`, `name`, `description`, `value`, `organisatio
 (10, 'Dezire', 'Dezire', NULL, 1, 6, '2015-01-31 09:38:51', '0000-00-00 00:00:00');
 
 --
+-- Dumping data for table `vehicle_owners`
+--
+
+INSERT INTO `vehicle_owners` (`id`, `vehicle_id`, `name`, `address`, `mobile`, `email`, `dob`, `organisation_id`, `user_id`, `login_id`, `created`, `updated`) VALUES
+(2, 1, 'Thambi', '', '9846369852', '', '0000-00-00', 1, 3, 0, '2015-02-20 06:40:47', '0000-00-00 00:00:00'),
+(3, 51, 'Raghu', '', '9633221111', '', '0000-00-00', 1, 3, 0, '2015-02-26 09:07:47', '0000-00-00 00:00:00');
+
+--
 -- Dumping data for table `vehicle_ownership_types`
 --
 
@@ -260,3 +262,6 @@ INSERT INTO `vehicle_types` (`id`, `name`, `description`, `value`, `organisation
 (3, 'SUV', 'SUV', NULL, 1, 5, '2014-09-09 06:20:55', '0000-00-00 00:00:00'),
 (4, 'Traveler', 'Traveler', NULL, 1, 5, '2014-09-09 06:21:06', '0000-00-00 00:00:00');
 
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;

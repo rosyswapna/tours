@@ -742,6 +742,8 @@ CREATE TABLE IF NOT EXISTS `trips` (
   `driver_language_id` int(11) NOT NULL,
   `driver_language_proficiency_id` int(11) NOT NULL,
   `total_amount` double NOT NULL,
+  `markup_type` tinyint(1) NOT NULL DEFAULT '1' COMMENT '1 for rupees and 0 for percentage',
+  `markup_value` double NOT NULL,
   `remarks` text NOT NULL,
   `user_id` int(11) NOT NULL,
   `organisation_id` int(11) NOT NULL,

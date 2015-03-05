@@ -32,7 +32,7 @@
 		{
 			end_page(false, true);
 		}
-
+		/*
 		function menu_header($title, $no_menu, $is_index)
 		{
 			global $path_to_root, $help_base_url, $db_connections;
@@ -139,9 +139,9 @@
 				}
 				echo "</table><br><br>\n";
 			}
-		}
+		}*/
 
-		/*function menu_header($title)
+		function menu_header($title)
 		{
 			echo '<div class="page-outer">';   
 				echo '<fieldset class="body-border">';
@@ -151,7 +151,7 @@
 		{
 				echo '</fieldset>';
 			echo '</div>';
-		}*/
+		}
 		
 
 		function display_applications(&$waapp)

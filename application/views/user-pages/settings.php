@@ -565,8 +565,8 @@
 	<?php echo form_label('Trip Expense');?></td>
 <td><?php  
 	$class="form-control";
-	$tbl="trip_expense_type";
-	echo $this->form_functions->populate_editable_dropdown('select',$trip_expense_type,$class,$tbl)?>
+	$tbl="trip_expenses";
+	echo $this->form_functions->populate_editable_dropdown('select',$trip_expenses,$class,$tbl)?>
 	<?php echo form_input(array('name'=>'select_text','id'=>'editbox','class'=>'form-control','style'=>'display:none','trigger'=>'true','readonly'=>'readonly'));?>
 	<?php echo form_input(array('name'=>'id_val','id'=>'id','style'=>'display:none'));?>
 	</td>
@@ -579,8 +579,136 @@
     <?php echo form_error('name', '<p class="text-red">', '</p>'); ?>
 	<?php echo form_close();?>
 	</tr>
+	
+		<tr>
+<td><div class="form-group">
+	<?php echo form_open(base_url()."trip/trip-service");?>
+	<?php echo form_label('Trip Service');?></td>
+<td><?php  
+	$class="form-control";
+	$tbl="service";
+	echo $this->form_functions->populate_editable_dropdown('select',$service='',$class,$tbl)?>
+	<?php echo form_input(array('name'=>'select_text','id'=>'editbox','class'=>'form-control','style'=>'display:none','trigger'=>'true'));?>
+	<?php echo form_input(array('name'=>'id_val','id'=>'id','style'=>'display:none'));?>
+	</td>
+<td><?php echo form_input(array('name'=>'description','class'=>'form-control','id'=>'description','placeholder'=>'Description','value'=>'')); ?></td>
+
+	<td><div  class="settings-add" ><?php echo nbs(5);?><i class="fa fa-plus-circle"></i><?php echo nbs(5);?></div><div class="hide-me"><?php echo form_submit("add","Add","id=settings-add-id","class=btn");?></div
+	></td>
+<td><div  class="settings-edit" ><?php echo nbs(5);?><i class="fa fa-edit"></i><?php echo nbs(5);?></div><div class="hide-me xx"><?php echo form_submit("edit","Edit","id=settings-edit-id","class=btn");?></div></td>
+    <td><div  class="settings-delete" ><?php echo nbs(5);?><i class="fa fa-trash-o"></i><?php echo nbs(5);?></div><div class="hide-me"><?php echo form_submit("delete","Delete","id=settings-delete-id","class=btn");?></div></td>
+    <?php echo form_error('name', '<p class="text-red">', '</p>'); ?>
+	<?php echo form_close();?>
+		</tr>
+	
 </table>
 </fieldset>
+
+<fieldset class="body-border">
+<legend class="body-head">Hotel</legend>
+<table class="">
+<tr><td><div class="form-group">
+	<?php echo form_open(base_url()."general/categories");?>
+	<?php echo form_label('Hotel Categories');?></td>
+<td><?php  
+	$class="form-control";
+	$tbl="hotel_categories";
+	echo $this->form_functions->populate_editable_dropdown('select',$hotel_categories,$class,$tbl)?>
+	<?php echo form_input(array('name'=>'select_text','id'=>'editbox','class'=>'form-control','style'=>'display:none','trigger'=>'true'));?>
+	<?php echo form_input(array('name'=>'id_val','id'=>'id','style'=>'display:none'));?>
+	</td>
+<td><?php echo form_input(array('name'=>'description','class'=>'form-control','id'=>'description','placeholder'=>'Description','value'=>'')); ?></td>
+
+	<td><div  class="settings-add" ><?php echo nbs(5);?><i class="fa fa-plus-circle"></i><?php echo nbs(5);?></div><div class="hide-me"><?php echo form_submit("add","Add","id=settings-add-id","class=btn");?></div
+	></td>
+<td><div  class="settings-edit" ><?php echo nbs(5);?><i class="fa fa-edit"></i><?php echo nbs(5);?></div><div class="hide-me xx"><?php echo form_submit("edit","Edit","id=settings-edit-id","class=btn");?></div></td>
+    <td><div  class="settings-delete" ><?php echo nbs(5);?><i class="fa fa-trash-o"></i><?php echo nbs(5);?></div><div class="hide-me"><?php echo form_submit("delete","Delete","id=settings-delete-id","class=btn");?></div></td>
+    <?php echo form_error('name', '<p class="text-red">', '</p>'); ?>
+	<?php echo form_close();?>
+<td style="width:5%;"></td>
+<td><div class="form-group">
+	<?php echo form_open(base_url()."general/room-types");?>
+	<?php echo form_label('Room Types');?></td>
+<td><?php  
+	$class="form-control";
+	$tbl="room_types";
+	echo $this->form_functions->populate_editable_dropdown('select',$room_types,$class,$tbl)?>
+	<?php echo form_input(array('name'=>'select_text','id'=>'editbox','class'=>'form-control','style'=>'display:none','trigger'=>'true'));?>
+	<?php echo form_input(array('name'=>'id_val','id'=>'id','style'=>'display:none'));?>
+	</td>
+<td><?php echo form_input(array('name'=>'description','class'=>'form-control','id'=>'description','placeholder'=>'Description','value'=>'')); ?></td>
+
+	<td><div  class="settings-add" ><?php echo nbs(5);?><i class="fa fa-plus-circle"></i><?php echo nbs(5);?></div><div class="hide-me"><?php echo form_submit("add","Add","id=settings-add-id","class=btn");?></div
+	></td>
+<td><div  class="settings-edit" ><?php echo nbs(5);?><i class="fa fa-edit"></i><?php echo nbs(5);?></div><div class="hide-me xx"><?php echo form_submit("edit","Edit","id=settings-edit-id","class=btn");?></div></td>
+    <td><div  class="settings-delete" ><?php echo nbs(5);?><i class="fa fa-trash-o"></i><?php echo nbs(5);?></div><div class="hide-me"><?php echo form_submit("delete","Delete","id=settings-delete-id","class=btn");?></div></td>
+    <?php echo form_error('name', '<p class="text-red">', '</p>'); ?>
+	<?php echo form_close();?>
+</tr>
+<tr >
+<td><div class="form-group">
+	<?php echo form_open(base_url()."general/driver-type");?>
+	<?php echo form_label('Room Tariff Attributes');?></td>
+<td><?php  
+	$class="form-control";
+	$tbl="room_attribute_tariffs";
+	echo $this->form_functions->populate_editable_dropdown('select',$room_attribute_tariffs,$class,$tbl)?>
+	<?php echo form_input(array('name'=>'select_text','id'=>'editbox','class'=>'form-control','style'=>'display:none','trigger'=>'true'));?>
+	<?php echo form_input(array('name'=>'id_val','id'=>'id','style'=>'display:none'));?>
+	</td>
+<td><?php echo form_input(array('name'=>'description','class'=>'form-control','id'=>'description','placeholder'=>'Description','value'=>'')); ?></td>
+
+	<td><div  class="settings-add" ><?php echo nbs(5);?><i class="fa fa-plus-circle"></i><?php echo nbs(5);?></div><div class="hide-me"><?php echo form_submit("add","Add","id=settings-add-id","class=btn");?></div
+	></td>
+<td><div  class="settings-edit" ><?php echo nbs(5);?><i class="fa fa-edit"></i><?php echo nbs(5);?></div><div class="hide-me xx"><?php echo form_submit("edit","Edit","id=settings-edit-id","class=btn");?></div></td>
+    <td><div  class="settings-delete" ><?php echo nbs(5);?><i class="fa fa-trash-o"></i><?php echo nbs(5);?></div><div class="hide-me"><?php echo form_submit("delete","Delete","id=settings-delete-id","class=btn");?></div></td>
+    <?php echo form_error('name', '<p class="text-red">', '</p>'); ?>
+	<?php echo form_close();?>
+<td style="width:5%;"></td>
+<td><div class="form-group">
+	<?php echo form_open(base_url()."general/payment-type");?>
+	<?php echo form_label('Meals Package');?></td>
+<td><?php  
+	$class="form-control";
+	$tbl="payment_type";
+	echo $this->form_functions->populate_editable_dropdown('select',$payment_type,$class,$tbl)?>
+	<?php echo form_input(array('name'=>'select_text','id'=>'editbox','class'=>'form-control','style'=>'display:none','trigger'=>'true'));?>
+	<?php echo form_input(array('name'=>'id_val','id'=>'id','style'=>'display:none'));?>
+	</td>
+<td><?php echo form_input(array('name'=>'description','class'=>'form-control','id'=>'description','placeholder'=>'Description','value'=>'')); ?></td>
+
+	<td><div  class="settings-add" ><?php echo nbs(5);?><i class="fa fa-plus-circle"></i><?php echo nbs(5);?></div><div class="hide-me"><?php echo form_submit("add","Add","id=settings-add-id","class=btn");?></div
+	></td>
+<td><div  class="settings-edit" ><?php echo nbs(5);?><i class="fa fa-edit"></i><?php echo nbs(5);?></div><div class="hide-me xx"><?php echo form_submit("edit","Edit","id=settings-edit-id","class=btn");?></div></td>
+    <td><div  class="settings-delete" ><?php echo nbs(5);?><i class="fa fa-trash-o"></i><?php echo nbs(5);?></div><div class="hide-me"><?php echo form_submit("delete","Delete","id=settings-delete-id","class=btn");?></div></td>
+    <?php echo form_error('name', '<p class="text-red">', '</p>'); ?>
+	<?php echo form_close();?>
+</tr>
+<tr >
+<td><div class="form-group">
+	<?php echo form_open(base_url()."general/customer-type");?>
+	<?php echo form_label('Hotel Rating');?></td>
+<td><?php  
+	$class="form-control";
+	$tbl="customer_types";
+	echo $this->form_functions->populate_editable_dropdown('select',$customer_types,$class,$tbl)?>
+	<?php echo form_input(array('name'=>'select_text','id'=>'editbox','class'=>'form-control','style'=>'display:none','trigger'=>'true'));?>
+	<?php echo form_input(array('name'=>'id_val','id'=>'id','style'=>'display:none'));?>
+	</td>
+<td><?php echo form_input(array('name'=>'description','class'=>'form-control','id'=>'description','placeholder'=>'Description','value'=>'')); ?></td>
+
+	<td><div  class="settings-add" ><?php echo nbs(5);?><i class="fa fa-plus-circle"></i><?php echo nbs(5);?></div><div class="hide-me"><?php echo form_submit("add","Add","id=settings-add-id","class=btn");?></div
+	></td>
+<td><div  class="settings-edit" ><?php echo nbs(5);?><i class="fa fa-edit"></i><?php echo nbs(5);?></div><div class="hide-me xx"><?php echo form_submit("edit","Edit","id=settings-edit-id","class=btn");?></div></td>
+    <td><div  class="settings-delete" ><?php echo nbs(5);?><i class="fa fa-trash-o"></i><?php echo nbs(5);?></div><div class="hide-me"><?php echo form_submit("delete","Delete","id=settings-delete-id","class=btn");?></div></td>
+    <?php echo form_error('name', '<p class="text-red">', '</p>'); ?>
+	<?php echo form_close();?>
+
+
+</tr>
+</table>
+</fieldset>
+
 </td>
 <td><?php echo nbs(10); // trip ends?></td>
 

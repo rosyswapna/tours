@@ -49,7 +49,7 @@ class user_model extends CI_Model {
    	}
 
 	public function getArray($tbl){
-	$org_id=$this->session->userdata('organisation_id'); echo $org_id;
+	$org_id=$this->session->userdata('organisation_id'); 
 	$flag=0;
 	if($tbl=='drivers'){
 	$query='SELECT * FROM drivers WHERE drivers.id NOT IN(SELECT driver_id FROM vehicle_drivers WHERE organisation_id='.$org_id.' and to_date="9999-12-30")and organisation_id='.$org_id.' ORDER BY drivers.name ASC ';
@@ -70,7 +70,7 @@ class user_model extends CI_Model {
 	$query='SELECT * FROM drivers WHERE  organisation_id='.$org_id.' order by name ASC';
 	$qry=$this->db->query($query);
 	}
-	else{ echo "hhi";exit;
+	else{ 
 		$qry=$this->db->where('organisation_id',$org_id);
 		$qry=$this->db->order_by("name", "Asc"); 
 		$qry=$this->db->get($tbl);

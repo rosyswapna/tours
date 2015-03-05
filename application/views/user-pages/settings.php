@@ -582,16 +582,22 @@
 	
 		<tr>
 <td><div class="form-group">
-	<?php echo form_open(base_url()."trip/trip-service");?>
+	<?php echo form_open(base_url()."trip/service");?>
 	<?php echo form_label('Trip Service');?></td>
 <td><?php  
 	$class="form-control";
-	$tbl="service";
-	echo $this->form_functions->populate_editable_dropdown('select',$service='',$class,$tbl)?>
+	$tbl="services";
+	echo $this->form_functions->populate_editable_dropdown('select',$services,$class,$tbl)?>
 	<?php echo form_input(array('name'=>'select_text','id'=>'editbox','class'=>'form-control','style'=>'display:none','trigger'=>'true'));?>
 	<?php echo form_input(array('name'=>'id_val','id'=>'id','style'=>'display:none'));?>
 	</td>
-<td><?php echo form_input(array('name'=>'description','class'=>'form-control','id'=>'description','placeholder'=>'Description','value'=>'')); ?></td>
+<td><?php  
+	$class="form-control";
+	$tbl="statuses";
+	echo $this->form_functions->populate_editable_dropdown('select',$statuses,$class,$tbl)?>
+	<?php echo form_input(array('name'=>'select_text','id'=>'editbox','class'=>'form-control','style'=>'display:none','trigger'=>'true'));?>
+	<?php echo form_input(array('name'=>'id_val','id'=>'id','style'=>'display:none'));?>
+	</td>
 
 	<td><div  class="settings-add" ><?php echo nbs(5);?><i class="fa fa-plus-circle"></i><?php echo nbs(5);?></div><div class="hide-me"><?php echo form_submit("add","Add","id=settings-add-id","class=btn");?></div
 	></td>
@@ -608,7 +614,7 @@
 <legend class="body-head">Hotel</legend>
 <table class="">
 <tr><td><div class="form-group">
-	<?php echo form_open(base_url()."general/categories");?>
+	<?php echo form_open(base_url()."trip/categories");?>
 	<?php echo form_label('Hotel Categories');?></td>
 <td><?php  
 	$class="form-control";
@@ -651,8 +657,8 @@
 	<?php echo form_label('Room Tariff Attributes');?></td>
 <td><?php  
 	$class="form-control";
-	$tbl="room_attribute_tariffs";
-	echo $this->form_functions->populate_editable_dropdown('select',$room_attribute_tariffs,$class,$tbl)?>
+	$tbl="room_attributes";
+	echo $this->form_functions->populate_editable_dropdown('select',$room_attributes,$class,$tbl)?>
 	<?php echo form_input(array('name'=>'select_text','id'=>'editbox','class'=>'form-control','style'=>'display:none','trigger'=>'true'));?>
 	<?php echo form_input(array('name'=>'id_val','id'=>'id','style'=>'display:none'));?>
 	</td>
@@ -666,12 +672,12 @@
 	<?php echo form_close();?>
 <td style="width:5%;"></td>
 <td><div class="form-group">
-	<?php echo form_open(base_url()."general/payment-type");?>
+	<?php echo form_open(base_url()."general/meals-options");?>
 	<?php echo form_label('Meals Package');?></td>
 <td><?php  
 	$class="form-control";
-	$tbl="payment_type";
-	echo $this->form_functions->populate_editable_dropdown('select',$payment_type,$class,$tbl)?>
+	$tbl="meals_options";
+	echo $this->form_functions->populate_editable_dropdown('select',$meals_options,$class,$tbl)?>
 	<?php echo form_input(array('name'=>'select_text','id'=>'editbox','class'=>'form-control','style'=>'display:none','trigger'=>'true'));?>
 	<?php echo form_input(array('name'=>'id_val','id'=>'id','style'=>'display:none'));?>
 	</td>
@@ -686,12 +692,12 @@
 </tr>
 <tr >
 <td><div class="form-group">
-	<?php echo form_open(base_url()."general/customer-type");?>
+	<?php echo form_open(base_url()."general/hotel-ratings");?>
 	<?php echo form_label('Hotel Rating');?></td>
 <td><?php  
 	$class="form-control";
-	$tbl="customer_types";
-	echo $this->form_functions->populate_editable_dropdown('select',$customer_types,$class,$tbl)?>
+	$tbl="hotel_ratings";
+	echo $this->form_functions->populate_editable_dropdown('select',$hotel_ratings,$class,$tbl)?>
 	<?php echo form_input(array('name'=>'select_text','id'=>'editbox','class'=>'form-control','style'=>'display:none','trigger'=>'true'));?>
 	<?php echo form_input(array('name'=>'id_val','id'=>'id','style'=>'display:none'));?>
 	</td>

@@ -37,6 +37,11 @@ class Trip extends CI_Controller {
 			$this->manageTripExpense($tbl[$param1]);
 			
 			}
+			else if($param1=='service') {
+		
+			$this->manageTripService($tbl[$param1]);
+			
+			}
 			if($param1) {
 			
 				if(isset($_REQUEST['add'])){

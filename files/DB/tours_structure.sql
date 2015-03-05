@@ -648,6 +648,23 @@ CREATE TABLE IF NOT EXISTS `rough_estimate` (
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `services`
+--
+CREATE TABLE IF NOT EXISTS `services` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(125) NOT NULL,
+  `status_id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `organisation_id` int(11) NOT NULL,
+  `created` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `updated` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
+  PRIMARY KEY (`id`),
+  KEY `status_id` (`status_id`,`user_id`,`organisation_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `statuses`
 --
 

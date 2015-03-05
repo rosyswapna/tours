@@ -144,7 +144,7 @@ INSERT INTO `trip_statuses` (`id`, `name`, `description`, `value`, `organisation
 --
 
 INSERT INTO `users` (`id`, `username`, `password`, `first_name`, `last_name`, `email`, `phone`, `address`, `occupation`, `user_status_id`, `password_token`, `user_type_id`, `organisation_id`, `organisation_admin_id`, `fa_account`, `created`, `updated`) VALUES
-(7, 'admin', '21232f297a57a5a743894a0e4a801fc3', 'System', 'Administrator', 'admin@acube.co', NULL, NULL, NULL, 1, NULL, 1, -1, NULL, 0, '2015-03-05 10:20:59', '0000-00-00 00:00:00');
+(1, 'admin', '21232f297a57a5a743894a0e4a801fc3', 'System', 'Administrator', 'admin@acube.co', NULL, NULL, NULL, 1, NULL, 1, -1, NULL, 0, '2015-03-05 10:20:59', '0000-00-00 00:00:00');
 
 --
 -- Dumping data for table `user_statuses`

@@ -1,7 +1,7 @@
 <div class="hotel-destination-body">
 	<fieldset class="body-border" >
 	<legend class="body-head">Destinations</legend>
-	<div class="div-with-30-percent-width-with-margin-10">
+	<div class="div-with-28-percent-width-with-margin-20">
 	
 	   <div class="form-group">
 			<?php echo form_label('Name');
@@ -15,7 +15,7 @@
 	
 	</div>
 	
-	<div class="div-with-30-percent-width-with-margin-10">
+	<div class="div-with-28-percent-width-with-margin-20">
 		
 		<div class="form-group">
 			<?php echo form_label('Description');
@@ -36,7 +36,7 @@
 	
 	</div>
 	
-	<div class="div-with-30-percent-width-with-margin-10">
+	<div class="div-with-28-percent-width-with-margin-20">
 		
 	   <div class="form-group">
 		<?php  echo form_open(base_url()."controller/action");

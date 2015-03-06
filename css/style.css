@@ -162,6 +162,11 @@ width:95%;
 margin: auto;
 
 }
+.hotel-profile-body{
+width:95%;
+margin: auto;
+float:left;
+}
 .settings-delete{
 color:#F56954;
 margin-top: 20px;
@@ -225,16 +230,16 @@ float:left;
 width:43%;
 margin:20px;
 }
-.div-with-30-percent-width-with-margin-10{
+.div-with-28-percent-width-with-margin-20{
 float:left;
-width:30%;
-margin:10px;
+width:28%;
+margin:20px;
 }
 
 .div-with-49-percent-width-with-margin-10{
 float:left;
 width:47%;
-margin:20px;
+margin:15px;
 }
 
 .width-60-percent-with-margin-10{
@@ -256,6 +261,11 @@ width:45%;
 margin:40px 0 46px 44px;
 }
 .width-30-percent-with-margin-left-20-Driver-View{
+float:left;
+width:35%;
+margin:40px 0 46px 115px;
+}
+.width-30-percent-with-margin-left-20-Hotel-Profile-View{
 float:left;
 width:35%;
 margin:40px 0 46px 115px;

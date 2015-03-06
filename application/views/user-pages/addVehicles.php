@@ -1,5 +1,3 @@
-<?php //print_r($driver);?>
-
 <div class="page-outer">
 <fieldset class="body-border">
 <legend class="body-head">Manage Vehicles</legend>

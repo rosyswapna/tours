@@ -6,6 +6,7 @@ class Hotel extends CI_Controller {
     		parent::__construct();
 		$this->load->helper('my_helper');
 		$this->load->model('tour_model');
+		$this->load->model('hotel_model');
 		no_cache();
 	}
 

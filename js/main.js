@@ -2010,6 +2010,9 @@ $(this).siblings().find(':submit').trigger('click');
 	$('.fromyearpicker').each(function(){
 	$(this).datetimepicker({timepicker:false,format:'Y'});
 	});
+	$('.fromday-monthpicker').each(function(){
+	$(this).datetimepicker({timepicker:false,format:'d M'});
+	});
 	//trips page js start
 
 	$('.initialize-date-picker').datetimepicker({timepicker:false,format:'Y-m-d',formatDate:'Y-m-d'});
@@ -2124,6 +2127,11 @@ $('.vehicle-list').on('keydown',function(){
 	
 	$(".vehicle-list option[text='']").attr('selected', true);
 });
+
+
+//-----------------------------------Tour Module-----------------------------------------------
+
+
 
  });
 

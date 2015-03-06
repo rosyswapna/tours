@@ -91,5 +91,36 @@ function form_error_session($field = '', $container_open ='', $container_close='
 		}
 }
 
+function populate_multiselect($name = '', $options = array(), $selected = array(),$class='',$id='',$msg='select',$disabled=''){
+$CI = & get_instance();
+
+$form = '<select name="'.$name.'" class="'.$class.'" id="'.$id.'" '.$disabled.'/>';
+if($selected==''){
+$form.='<option value="-1" selected="selected" >--'.$msg.'--</option></br>';
+}
+else{
+$form.='<option value="-1"  >--'.$msg.'--</option></br>';
+}
+if(!empty($options)){
+foreach ($options as $key => $val)
+		{
+			$key = (string) $key;
+
+			if($key==$selected){
+						$sel=' selected="selected"';
+						}
+						else{
+						$sel='';
+						}
+
+					$form .= '<option value="'.$key.'"'.$sel.'>'.(string) $val."</option>\n";
+					
+		}
+}
+		$form .= '</select>';
+
+		return $form;
+}
+
 }
 ?>

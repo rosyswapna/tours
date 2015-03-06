@@ -564,6 +564,25 @@ CREATE TABLE IF NOT EXISTS `payment_type` (
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `room_attributes`
+--
+CREATE TABLE IF NOT EXISTS `room_attributes` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(50) DEFAULT NULL,
+  `description` text NOT NULL,
+  `value` int(11) DEFAULT NULL,
+  `organisation_id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `created` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
+  PRIMARY KEY (`id`),
+  KEY `id` (`id`),
+  KEY `organisation_id` (`organisation_id`),
+  KEY `user_id` (`user_id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=4 ;
+
+-- --------------------------------------------------------
+--
 -- Table structure for table `room_attribute_tariffs`
 --
 

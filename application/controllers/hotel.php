@@ -1,6 +1,6 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
-class Tour extends CI_Controller {
+class Hotel extends CI_Controller {
 	public function __construct()
 	{
     		parent::__construct();
@@ -19,10 +19,10 @@ class Tour extends CI_Controller {
 				$data['title']="Home | ".PRODUCT_NAME;    
 	       			$page='user-pages/user_home';
 				$this->load_templates($page,$data);
-			}elseif($param1=='business-season'){	
-				$this->business_season($param2);
-			}elseif($param1=='destination'){	
-				$this->destination($param2);
+			}elseif($param1=='profile'){	
+				$this->hotel_profile($param2);
+			}elseif($param1=='list'){	
+				$this->list_hotel($param2);
 			}else{
 				$this->notFound();
 			}
@@ -31,66 +31,26 @@ class Tour extends CI_Controller {
 			$this->notAuthorized();
 		}
 	}
+	//------------------------------------------------------------------------------------------
 
-	//-----------------------business season crud----------------------------------
-	public function business_season($id='')
-	{
+	public function hotel_profile($id){
 		if($this->session_check()==true) {
-
-			$data['id']= '';
-			$data['name']= '';
-			$data['starting']= '';
-			$data['ending']= '';
-
-			//if edit get values to form inputs
-			if(is_numeric($id) && $id > 0){
-				$season = $this->tour_model->getBusinessSeason($id);
-				if($season){
-					//get default values for form input values
-					$data['id']= $sesson['id'];
-					$data['name']= $sesson['name'];
-					$data['starting']= $sesson['starting'];
-					$data['ending']= $sesson['ending'];
-				}
-			}
 			
-			if(isset($_REQUEST['business-season-add'])){//add season click
-				$dbData['name'] = $_REQUEST['name'];
-				$dbData['starting'] = $_REQUEST['starting'];
-				$dbData['ending'] = $_REQUEST['ending'];
-
-				$this->tour_model->addBusinessSeason($dbData);	
-				
-			}else if(isset($_REQUEST['business-season-edit'])){//edit season click 
-				$dbData['id'] = $_REQUEST['id'];
-				$dbData['name'] = $_REQUEST['name'];
-				$dbData['starting'] = $_REQUEST['starting'];
-				$dbData['ending'] = $_REQUEST['ending'];
-				
-				$this->tour_model->updateBusinessSeason($dbData);
-				
-			}
-			
-			$data['season_list'] = $this->tour_model->getBusinessSeasonList($data);
-
-			$this->tour_model->addBusinessSeason($data);
-
-			$data['title']="Business Season | ".PRODUCT_NAME;  
-			$page='user-pages/business-season';
+			$data['title']="Hotel | ".PRODUCT_NAME;  
+			$page='user-pages/hotel-profile';
 			$this->load_templates($page,$data);
-		}
-		else{
+		}else{
 			$this->notAuthorized();
-		}	
+		}
 	}
 	//------------------------------------------------------------------------------------------
 	
-	//-----------------------destinations----------------------------------------------------
-	public function destination($id=''){
+	public function list_hotel($id){
+
 		if($this->session_check()==true) {
 			
-			$data['title']="Destination | ".PRODUCT_NAME;  
-			$page='user-pages/destination';
+			$data['title']="Hotel | ".PRODUCT_NAME;  
+			$page='user-pages/list-hotel';
 			$this->load_templates($page,$data);
 		}
 		else{
@@ -139,4 +99,6 @@ class Tour extends CI_Controller {
 			$this->notAuthorized();
 		}
 	}
+	//-------------------------------------------------------------
+
 }

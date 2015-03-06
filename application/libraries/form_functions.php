@@ -94,7 +94,7 @@ function form_error_session($field = '', $container_open ='', $container_close='
 function populate_multiselect($name = '', $options = array(), $selected = array(),$class='',$id='',$msg='select',$disabled=''){
 $CI = & get_instance();
 
-$form = '<select name="'.$name.'" class="'.$class.'" id="'.$id.'" '.$disabled.'/>';
+$form = '<select max_length="4" multiple="multiple" name="'.$name.'" class="'.$class.'" id="'.$id.'" '.$disabled.'/>';
 if($selected==''){
 $form.='<option value="-1" selected="selected" >--'.$msg.'--</option></br>';
 }

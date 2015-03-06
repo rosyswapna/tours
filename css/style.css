@@ -79,8 +79,12 @@ margin: auto;
 width:70%;
 margin:0 auto;
 }
-.new-org-body,.hotel-destination-body{
+.new-org-body{
 width:70%;
+margin:0 auto;
+}
+.hotel-destination-body{
+width:80%;
 margin:0 auto;
 }
 .change-password-body{
@@ -128,6 +132,7 @@ float:none;
 .list-org-table tr > td{
 border-top:none !important;
 }
+
 .tbl-settings{
 width:100%;
 
@@ -219,6 +224,11 @@ margin:10px;
 float:left;
 width:43%;
 margin:20px;
+}
+.div-with-30-percent-width-with-margin-10{
+float:left;
+width:30%;
+margin:10px;
 }
 
 .div-with-49-percent-width-with-margin-10{

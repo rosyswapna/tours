@@ -4,12 +4,15 @@ class Tour extends CI_Controller {
 	public function __construct()
 	{
     		parent::__construct();
+		$this->load->helper('my_helper');
 		no_cache();
 	}
 
-	public function BusinessSeason()
+	public function business_season()
 	{
 		if($this->session_check()==true) {
+
+
 			$data['title']="Business Season | ".PRODUCT_NAME;  
 			$page='user-pages/business-season';
 			$this->load_templates($page,$data);

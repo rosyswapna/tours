@@ -40,6 +40,7 @@ class Hotel_model extends CI_Model {
 		}
 	}
 
+	//get all rooms with hotel id
 	function getHotelRooms($hotel_id)
 	{
 		$this->db->from('hotel_rooms');

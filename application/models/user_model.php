@@ -47,6 +47,7 @@ class user_model extends CI_Model {
 		}
 
    	}
+	
 
 	public function getArray($tbl){
 	$org_id=$this->session->userdata('organisation_id'); 
@@ -97,7 +98,19 @@ class user_model extends CI_Model {
 			}
 			
 	}
-   
+	function getStatus(){
+	
+		$qry=$this->db->get('statuses');
+		$count=$qry->num_rows();
+		$l= $qry->result_array();
+		for($i=0;$i<$count;$i++){
+		$values[$l[$i]['id']]=$l[$i]['name'];
+		}
+		return $values;
+		
+	
+	
+	}
 	
 	public function getAll_tarrifDetails(){
 	//newly added-to be organisation based

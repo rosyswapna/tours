@@ -582,7 +582,7 @@
 	
 		<tr>
 <td><div class="form-group">
-	<?php echo form_open(base_url()."trip/service");?>
+	<?php echo form_open(base_url()."trip/services");?>
 	<?php echo form_label('Trip Service');?></td>
 <td><?php  
 	$class="form-control";
@@ -594,7 +594,7 @@
 <td><?php  
 	$class="form-control";
 	$tbl="statuses";
-	echo $this->form_functions->populate_editable_dropdown('select',$statuses,$class,$tbl)?>
+	echo $this->form_functions->populate_editable_dropdown('status',$statuses,$class,$tbl)?>
 	<?php echo form_input(array('name'=>'select_text','id'=>'editbox','class'=>'form-control','style'=>'display:none','trigger'=>'true'));?>
 	<?php echo form_input(array('name'=>'id_val','id'=>'id','style'=>'display:none'));?>
 	</td>

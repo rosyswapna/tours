@@ -171,8 +171,8 @@ class User extends CI_Controller {
 	else{
 	$data[$tbl_arry[$i]]='';
 	}
-	}//echo '<pre>';print_r($data);exit;
-	//---**** status ***** for trip service***
+	}
+	$data['statuses']=$this->user_model->getStatus();//echo '<pre>';print_r($data);exit;
 	$data['title']="Settings | ".PRODUCT_NAME;  
 	$page='user-pages/settings';
 	$this->load_templates($page,$data);

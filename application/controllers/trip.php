@@ -16,7 +16,7 @@ class Trip extends CI_Controller {
 	
 		if($this->session_check()==true) {
 	
-		$tbl=array('trip-models'=>'trip_models','trip-statuses'=>'trip_statuses','booking-sources'=>'booking_sources','trip-expense'=>'trip_expense_type');
+		$tbl=array('trip-models'=>'trip_models','trip-statuses'=>'trip_statuses','booking-sources'=>'booking_sources','trip-expense'=>'trip_expense_type','services'=>'services');
 			if($param1=='getDescription') {
 			$this->getDescription();
 			}else if($param1=='view') {
@@ -35,11 +35,6 @@ class Trip extends CI_Controller {
 			}else if($param1=='trip-expense') {
 		
 			$this->manageTripExpense($tbl[$param1]);
-			
-			}
-			else if($param1=='service') {
-		
-			$this->manageTripService($tbl[$param1]);
 			
 			}
 			if($param1) {
@@ -179,17 +174,29 @@ class Trip extends CI_Controller {
 	}
 	//----------------------------------trip expense action ends here-------------------------------
 	
+	
+	
 	public function add($tbl,$param1){
 	
-	if(isset($_REQUEST['select'])&& isset( $_REQUEST['description'])&& isset($_REQUEST['add'])){ 
+	if(isset($_REQUEST['select'])&& (isset( $_REQUEST['description'])|| isset($_REQUEST['status'])) && isset($_REQUEST['add'])){ 
 			
 		    $data['name']=$this->input->post('select');
+			
+		if(isset( $_REQUEST['description'])){
 			$data['description']=$this->input->post('description');
+		}elseif(isset( $_REQUEST['status'])){
+			$data['status_id']=$this->input->post('status');
+		}
 			$data['organisation_id']=$this->session->userdata('organisation_id');
 			$data['user_id']=$this->session->userdata('id');
 			
 	        $this->form_validation->set_rules('select','Values','trim|required|min_length[2]|xss_clean');
+		if(isset( $_REQUEST['description'])){
 			$this->form_validation->set_rules('description','Description','trim|required|min_length[2]|xss_clean');
+		}elseif(isset( $_REQUEST['status'])){
+			$this->form_validation->set_rules('status','Status','trim|required|xss_clean');
+		}
+			
 		if($this->form_validation->run()==False){
          redirect(base_url().'organization/front-desk/settings');
 		}

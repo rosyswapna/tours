@@ -2,7 +2,7 @@
 <fieldset class="body-border">
 <legend class="body-head">Hotel</legend>
 <div class="nav-tabs-custom">
-    <ul class="nav nav-tabs">
+  <!--  <ul class="nav nav-tabs">
         <li class="active"><a href="#tab_1" data-toggle="tab">Profile</a></li>
         <li class=""><a href="#tab_2" data-toggle="tab">Owner</a></li>
         <li class=""><a href="#tab_3" data-toggle="tab">Rooms</a></li>
@@ -10,10 +10,21 @@
 	<li class=""><a href="#tab_5" data-toggle="tab">Payment</a></li>
 	<li class=""><a href="#tab_6" data-toggle="tab">Accounts</a></li>
       
-    </ul>
+    </ul>-->
+    <ul class="nav nav-tabs">
+ 		<?php 
+		foreach($tabs as $tab=>$attr){
+		echo '<li class="'.$attr['class'].'">
+			<a href="#'.$attr['tab_id'].'" data-toggle="tab">'.$attr['text'].'</a>
+		      </li>';
+		}
+		?>
+    		</ul>
     
     <div class="tab-content">
-        <div class="tab-pane active" id="tab_1">
+    <?php if (array_key_exists('h_tab', $tabs)) {?>
+         	<div class="<?php echo $tabs['h_tab']['content_class'];?>" id="<?php echo $tabs['h_tab']['tab_id'];?>">
+        <!--<div class="tab-pane active" id="tab_1">-->
           <div class="hotel-profile-body">
 	  
 	  <div class="width-30-percent-with-margin-left-20-Hotel-Profile-View">
@@ -98,8 +109,11 @@
 	  
 	  </div>
 	</div>
+	<?php } ?>
 	
-        <div class="tab-pane" id="tab_2">
+	<?php if (array_key_exists('o_tab', $tabs)) {?>
+         	<div class="<?php echo $tabs['o_tab']['content_class'];?>" id="<?php echo $tabs['o_tab']['tab_id'];?>">
+       <!-- <div class="tab-pane" id="tab_2">-->
             <div class="width-30-percent-with-margin-left-20-Hotel-Profile-View">
 	<fieldset class="body-border-Driver-View border-style-Driver-view" >
 	<legend class="body-head">Owner Details</legend>
@@ -147,8 +161,11 @@
 	</fieldset>
 		</div>
         </div>
+	<?php } ?>
 	
-        <div class="tab-pane" id="tab_3">
+	<?php if (array_key_exists('r_tab', $tabs)) {?>
+         	<div class="<?php echo $tabs['r_tab']['content_class'];?>" id="<?php echo $tabs['r_tab']['tab_id'];?>">
+       <!-- <div class="tab-pane" id="tab_3">-->
            <div class="hotel-profile-body">
 		<fieldset class="body-border border-style" >
 		<legend class="body-head">Add Room Availability</legend>
@@ -197,8 +214,11 @@
 		</fieldset>
 	   </div>
         </div>
+	<?php } ?>
 	
-	<div class="tab-pane" id="tab_4">
+	<?php if (array_key_exists('t_tab', $tabs)) {?>
+         	<div class="<?php echo $tabs['t_tab']['content_class'];?>" id="<?php echo $tabs['t_tab']['tab_id'];?>">
+       <!-- <div class="tab-pane" id="tab_4">-->
           <div class="hotel-profile-body">
 		<fieldset class="body-border border-style" >
 		<legend class="body-head">Add Tariff</legend>
@@ -259,12 +279,21 @@
 		</fieldset>
 	  </div>
         </div>
-	<div class="tab-pane" id="tab_5">
+	<?php } ?>
+	
+	<?php if (array_key_exists('p_tab', $tabs)) {?>
+         	<div class="<?php echo $tabs['p_tab']['content_class'];?>" id="<?php echo $tabs['p_tab']['tab_id'];?>">
+       <!-- <div class="tab-pane" id="tab_5">-->
            hi,Its me P
         </div>
-	<div class="tab-pane" id="tab_6">
+	<?php } ?>
+
+	<?php if (array_key_exists('a_tab', $tabs)) {?>
+         	<div class="<?php echo $tabs['a_tab']['content_class'];?>" id="<?php echo $tabs['a_tab']['tab_id'];?>">
+       <!-- <div class="tab-pane" id="tab_6">-->
            hi,Its me A
         </div>
+	<?php } ?>
     </div>
 </div>
 </fieldset>

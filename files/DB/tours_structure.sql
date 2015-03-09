@@ -189,15 +189,13 @@ CREATE TABLE IF NOT EXISTS `destinations` (
   `description` text NOT NULL,
   `lat` double NOT NULL,
   `lng` double NOT NULL,
-  `season_id` int(11) NOT NULL,
+  `seasons` text NOT NULL,
   `user_id` int(11) NOT NULL,
   `organisation_id` int(11) NOT NULL,
   `created` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `updated` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
-  PRIMARY KEY (`id`),
-  KEY `season_id` (`season_id`,`user_id`,`organisation_id`)
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
-
 -- --------------------------------------------------------
 
 --

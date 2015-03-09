@@ -591,12 +591,10 @@
 	<?php echo form_input(array('name'=>'select_text','id'=>'editbox','class'=>'form-control','style'=>'display:none','trigger'=>'true'));?>
 	<?php echo form_input(array('name'=>'id_val','id'=>'id','style'=>'display:none'));?>
 	</td>
-<td><?php  
-	$class="form-control";
-	$tbl="statuses";
-	echo $this->form_functions->populate_editable_dropdown('status',$statuses,$class,$tbl)?>
-	<?php echo form_input(array('name'=>'select_text','id'=>'editbox','class'=>'form-control','style'=>'display:none','trigger'=>'true'));?>
-	<?php echo form_input(array('name'=>'id_val','id'=>'id','style'=>'display:none'));?>
+<td><?php $class="form-control";
+	$msg="Select Status";
+	$name="status";
+	echo $this->form_functions->populate_dropdown($name,$statuses,$status_id='',$class,$id='status',$msg); ?>
 	</td>
 
 	<td><div  class="settings-add" ><?php echo nbs(5);?><i class="fa fa-plus-circle"></i><?php echo nbs(5);?></div><div class="hide-me"><?php echo form_submit("add","Add","id=settings-add-id","class=btn");?></div

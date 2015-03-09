@@ -306,14 +306,14 @@ $('select').change(function(){
 		$('.edit').attr('for_edit',true);
 	  
 		if($tbl == 'services')	{
-			$.post(base_url+"/trip/getStatus",
+			$.post(base_url+"/vehicle/getStatus",
 			  {
 				id:$id,
 				tbl:$tbl
-			  },function(data){
+			  },function(data){ 
 			  
-				var values=data.split(",",3);//alert($(this).parent().find('#id').attr('id'));
-				alert(values);
+				var values=data.split(",",3); //alert(values[1]);
+				//$(".#status option[value='"+values[2]+"']").attr('selected', true);
 				$obj.parent().find('#id').val(values[0]);
 				$obj.parent().find('#editbox').val(values[2]);
 				$obj.parent().next().find('#status').val(values[1]);

@@ -19,8 +19,6 @@ class Trip extends CI_Controller {
 		$tbl=array('trip-models'=>'trip_models','trip-statuses'=>'trip_statuses','booking-sources'=>'booking_sources','trip-expense'=>'trip_expense_type','services'=>'services');
 			if($param1=='getDescription') {
 			$this->getDescription();
-			}elseif($param1=='getStatus') {
-				$this->getStatus();
 			}
 			else if($param1=='view') {
 		
@@ -214,13 +212,21 @@ class Trip extends CI_Controller {
 							}
 	}
 	public function edit($tbl,$param1){
-	if(isset($_REQUEST['select_text'])&& isset( $_REQUEST['description'])&& isset($_REQUEST['edit'])){ 
+	if(isset($_REQUEST['select_text'])&& (isset( $_REQUEST['description']) || isset($_REQUEST['status']))&& isset($_REQUEST['edit'])){ 
 			
 		    $data['name']=$this->input->post('select_text');
+		    if(isset( $_REQUEST['description'])){
 			$data['description']=$this->input->post('description');
+		   }elseif(isset( $_REQUEST['status'])){
+			$data['status_id']=$this->input->post('status');
+			}
 			$id=$this->input->post('id_val');
 	        $this->form_validation->set_rules('select_text','Values','trim|required|min_length[2]|xss_clean');
+		if(isset( $_REQUEST['description'])){
 			$this->form_validation->set_rules('description','Description','trim|required|min_length[2]|xss_clean');
+		}elseif(isset( $_REQUEST['status'])){
+			$this->form_validation->set_rules('status','Status','trim|required|xss_clean');
+			}
 		if($this->form_validation->run()==False){
        // redirect(base_url().'user/settings');
        redirect(base_url().'organization/front-desk/settings');
@@ -238,17 +244,19 @@ class Trip extends CI_Controller {
 	
 	}
 	
-	public function delete($tbl,$param1){
+	public function delete($tbl,$param1){ 
 	if(isset($_REQUEST['delete'])){ 
 	
 	$id=$this->input->post('id_val');
 	        $this->form_validation->set_rules('select_text','Values','trim|required|min_length[2]|xss_clean|alpha_numeric');
 			//$this->form_validation->set_rules('select','Values','trim|required|min_length[2]|xss_clean|alpha_numeric');
+			
 			$this->form_validation->set_rules('description','Description','trim|required|min_length[2]|xss_clean|alpha_numeric');
+		
 		if($this->form_validation->run()==False){
         redirect(base_url().'organization/front-desk/settings');
 		}
-      else {
+		else { 
 		$result=$this->settings_model->deleteValues($tbl[$param1],$id);
 		if($result==true){
 					$this->session->set_userdata(array('dbSuccess'=>'Details Deleted Succesfully..!'));
@@ -406,19 +414,17 @@ class Trip extends CI_Controller {
 			$this->notAuthorized();
 		}
 	}
-	public function getDescription(){
+	
+	// check whether this function needs or not
+	
+	/*public function getDescription(){
 		$id=$_REQUEST['id'];
 		$tbl=$_REQUEST['tbl'];
 		$res=$this->settings_model->getValues($id,$tbl);
 		echo $res[0]['id']." ".$res[0]['description']." ".$res[0]['name'];
-	}
+	}*/
 
-	public function getStatus(){
-		$id=$_REQUEST['id'];
-		$tbl=$_REQUEST['tbl'];
-		$res=$this->settings_model->getValues($id,$tbl);
-		echo $res[0]['id']." ".$res[0]['status_id']." ".$res[0]['name'];
-	}
+	
 
 	public function notAuthorized(){
 	$data['title']='Not Authorized | '.PRODUCT_NAME;

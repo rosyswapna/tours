@@ -1,6 +1,7 @@
 <?php 
 class Hotel_model extends CI_Model {
 	
+	//get hotel details
 	function getHotelProfile($id)
 	{
 		$this->db->from('hotels');
@@ -13,7 +14,7 @@ class Hotel_model extends CI_Model {
 		}
 	}
 
-	//get hotels with owners
+	//get hotel list with owners joined
 	function getHotelList()
 	{
 		$this->db->select('hotel.*, owner.name as owner_name,owner.mobile as owner_mobile');
@@ -27,7 +28,9 @@ class Hotel_model extends CI_Model {
 			return false;
 		}
 	}
+	//--------------------------------------------------------------------------------------------
 
+	//get owner details
 	function getHotelOwner($id)
 	{
 		$this->db->from('hotel_owners');
@@ -39,8 +42,8 @@ class Hotel_model extends CI_Model {
 			return false;
 		}
 	}
-
-	//get all rooms with hotel id
+	//---------------------------------------------------------------------------------------------
+	//get list of rooms with hotel id
 	function getHotelRooms($hotel_id)
 	{
 		$this->db->from('hotel_rooms');
@@ -53,7 +56,7 @@ class Hotel_model extends CI_Model {
 		}
 	}
 
-	//get room type with hotel id
+	//get hotel room row with hotel id and room type id
 	function getHotelRoomType($hotel_id,$room_type_id)
 	{
 		$this->db->from('hotel_rooms');
@@ -65,8 +68,9 @@ class Hotel_model extends CI_Model {
 			return false;
 		}
 	}
+	//-------------------------------------------------------------------------
 
-
+	//get hotel's room tariffs list
 	function getHotelRoomTariffs($hotel_id)
 	{
 		$this->db->from('room_tariffs');
@@ -79,6 +83,21 @@ class Hotel_model extends CI_Model {
 		}
 	}
 
+	//get hote room tariff row with condition supplied
+	function getHotelRoomTariff($condition=array())
+	{
+		$this->db->from('room_tariffs');
+		$this->db->where($condition);
+		$query = $this->db->get();
+		if($query->num_rows() == 1){
+			return $query->row();
+		}else{
+			return false;
+		}
+	}
+	//----------------------------------------------------------------------
+	
+	//get all room tariffs for a hotel with season id
 	function getHotelRoomSeasonTariffs($hotel_id,$season_id)
 	{
 		$this->db->from('room_tariffs');
@@ -91,6 +110,7 @@ class Hotel_model extends CI_Model {
 		}
 	}
 
+	//get all room attribute tariffs for a hotel 
 	function getHotelRoomAttrTariffs($hotel_id)
 	{
 		$this->db->from('room_attribute_tariffs');
@@ -103,6 +123,7 @@ class Hotel_model extends CI_Model {
 		}
 	}
 
+	//get all room attribute tariffs for a hotel with season id
 	function getHotelRoomAttrSeasonTariffs($hotel_id,$season_id)
 	{
 		$this->db->from('room_attribute_tariffs');
@@ -115,7 +136,22 @@ class Hotel_model extends CI_Model {
 		}
 	}
 
+	//get room attribute row with condition as supplied
+	function getAttributeTariff($condition= array())
+	{
+		$this->db->from('room_attribute_tariffs');
+		$this->db->where($condition);
+		$query = $this->db->get();
+		if($query->num_rows() == 1){
+			return $query->row();
+		}else{
+			return false;
+		}
+	}
 
+	//----------------------------------------------------------------------------
+
+	//insert if no record else update hotel rooms
 	function updateHotelRooms($data)
 	{
 		$condition = array('season_id'=>$data['season_id'],'hotel_id'=>$data['hotel_id'],'room_type_id'=>$data['room_type_id']);
@@ -139,6 +175,7 @@ class Hotel_model extends CI_Model {
 		return false;
 	}
 
+	//insert if no record else update hotel tariffs with table and data array
 	function updateHotelTariffs($data,$table)
 	{
 		if($table == 'room_tariffs'){

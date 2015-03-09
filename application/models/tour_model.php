@@ -73,6 +73,41 @@ class Tour_model extends CI_Model {
 		}
 	}
 	//---------------------------------------------------------
+
+
+	//get current season
+	function getCurrentSeason()
+	{
+		$this->db->from('business_seasons');
+		$this->db->where('DAYOFYEAR(NOW()) BETWEEN DAYOFYEAR(starting_date) AND DAYOFYEAR(ending_date)');
+		$query = $this->db->get();
+		if($query->num_rows() == 1)
+			return $query->row();
+		else
+			return false;	
+		
+	}
+	
+	//get current season destinations
+	function getSeasonDestinations(){ 
+		
+		$current_season = @$this->session->userdata('current_season');
+		$filtered_destinations = array();
+		if($current_season){
+			$destinations  = $this->getDestinationList(); 
+			foreach($destinations as $destination){
+				
+				if(is_array($destination['seasons']) && in_array($current_season['id'],$destination['seasons'])){
+					$filtered_destinations[$destination['id']] = $destination['name'];
+				}
+			}
+		}
+		
+
+		return $filtered_destinations;
+	
+	}
+
 		
 
 }

@@ -91,7 +91,8 @@ class Login_model extends CI_Model {
 
 	//set user session 
 	function set_session() {
-		$this->session->set_userdata( array(
+			
+		$sess_data = array(
 			'id'=>$this->details->id,
 			'name'=> $this->details->first_name . ' ' . $this->details->last_name,
 			'email'=>$this->details->email,
@@ -102,7 +103,19 @@ class Login_model extends CI_Model {
 			'isLoggedIn'=>true,
 			'token_pass' =>$this->details->password,
 			'fa_account' =>$this->details->fa_account
-			));
+			);
+
+		$this->db->select('*');
+		$this->db->from('business_seasons');
+		$this->db->where('DAYOFYEAR(NOW()) BETWEEN DAYOFYEAR(starting_date) AND DAYOFYEAR(ending_date)');
+		$query = $this->db->get();
+		if($query->num_rows() == 1){
+			$row = $query->row();
+			$sess_data['current_season']  = array('id'=>$row->id,'name'=>$row->name);
+		}
+	
+
+		$this->session->set_userdata($sess_data);
 
 		if($this->details->user_type_id == CUSTOMER){
 			$this->db->from('customers');

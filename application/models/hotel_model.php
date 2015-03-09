@@ -15,12 +15,18 @@ class Hotel_model extends CI_Model {
 	}
 
 	//get hotel list with owners joined
-	function getHotelList()
+	function getHotelList($condition=array())
 	{
 		$this->db->select('hotel.*, owner.name as owner_name,owner.mobile as owner_mobile');
 		$this->db->from('hotels as hotel');
 		$this->db->join('hotel_owners as owner', 'owner.id = hotel.hotel_owner_id');
-		$this->db->where('hotel.organisation_id',$this->session->userdata('organisation_id'));
+		if($condition){
+			$condition['hotel.organisation_id'] = $this->session->userdata('organisation_id');
+			$this->db->where($condition);
+		}else{
+			$this->db->where('hotel.organisation_id',$this->session->userdata('organisation_id'));
+		}
+		
 		$query = $this->db->get();
 		if($query->num_rows() > 0){
 			return $query->result_array();
@@ -28,6 +34,31 @@ class Hotel_model extends CI_Model {
 			return false;
 		}
 	}
+
+	//get current season hotels
+	function getSeasonHotels($condition=array()){ 
+		
+		$current_season = @$this->session->userdata('current_season');
+		$filtered_hotels = array();
+		if($current_season){
+			$hotels  = $this->getHotelList($condition);
+			if($hotels){
+				foreach($hotels as $hotel){
+				
+					if(is_array($hotel['seasons']) && in_array($current_season['id'],$hotel['seasons'])){
+						$filtered_hotels[$hotel['id']] = $hotel['name'];
+					}
+				}
+				return $filtered_hotels;
+			}
+			
+		}
+		
+		return false;
+		
+	
+	}
+
 	//--------------------------------------------------------------------------------------------
 
 	//get owner details

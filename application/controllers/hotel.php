@@ -39,7 +39,7 @@ class Hotel extends CI_Controller {
 
 
 	public function hotel_profile($param2 = '',$active_tab = 'h_tab'){
-
+	
 		if($this->session_check()==true) {
 
 			//lists
@@ -291,6 +291,33 @@ class Hotel extends CI_Controller {
 		else{
 			$this->notAuthorized();
 		}
+	}
+	//------------------------------------------------------------------------------------------
+	
+	//-----------------ajax related functions---------------------------------------------------
+	public function getAvailableHotels($ajax = 'NO')
+	{
+		$destination_id=$_REQUEST['destination_id'];
+		$category_id=$_REQUEST['category_id'];
+
+		$hotels = $this->hotel_model->getSeasonHotels();
+
+		if(!$hotels){
+			if($ajax=='NO'){
+				return false;
+			}else{
+				echo 'false';
+			}
+		}else{
+			if($ajax=='NO'){
+				return $hotels;
+			}else{
+				header('Content-Type: application/json');
+				echo json_encode($hotels);
+			}
+		}
+
+		
 	}
 	//------------------------------------------------------------------------------------------
 

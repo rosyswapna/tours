@@ -194,48 +194,96 @@ class Hotel extends CI_Controller {
 	{
 		$id = '';
 		if(isset($_REQUEST['room-add']) || isset($_REQUEST['room-edit'])){
-			$this->form_validation->set_rules('room_type','Room Type','trim|required|xss_clean');
+			$this->form_validation->set_rules('room_type_id','Room Type','trim|required|xss_clean');
 			$this->form_validation->set_rules('no_of_rooms','Number Of Rooms','trim|required|numeric|xss_clean');
 			
 			$data['room_type_id'] = $this->input->post('room_type_id');
 			$data['no_of_rooms'] = $this->input->post('no_of_rooms');
 			
 			$dbData = $data;
+			$dbData['hotel_id'] = $hotel_id;
 			$dbData['organisation_id'] = $this->session->userdata('organisation_id'); 
 			$dbData['user_id'] = $this->session->userdata('user_id');
 
 			if($this->form_validation->run() != False) {
 				 
-				$id = $this->input->post('room_type_id');
-						
-				if(is_numeric($id) && $id > 0){//edit hotel
-					if($this->settings_model->updateValues('hotel_rooms',$dbData,$id)){
-						$this->session->set_userdata(array('dbSuccess'=>'Hotel Rooms Updated Succesfully..!')); 
-						$this->session->set_userdata(array('dbError'=>''));
-					}
-				}else{//add new hotel
-					if($id = $this->settings_model->addValues_returnId('hotel_rooms',$dbData)){
+				$this->hotel_model->updateHotelRooms($dbData);
 					
-						$hotelData = array('hotel_owner_id'=>$id);
-						$this->settings_model->updateValues('hotels',$hotelData,$hotel_id);
-
-						$this->session->set_userdata(array('dbSuccess'=>'Hotel Owner Added Succesfully..!')); 
-						$this->session->set_userdata(array('dbError'=>''));
-					}
-				}
-
+				$this->session->set_userdata(array('dbSuccess'=>'Hotel Rooms Updated Succesfully..!')); 
+				$this->session->set_userdata(array('dbError'=>''));
+				
 			}else{
-				$this->mysession->set('post_owner',$data);
+				$this->mysession->set('post_room',$data);
 			}
 		}
-		$this->hotel_profile($hotel_id,'o_tab');
+		$this->hotel_profile($hotel_id,'r_tab');
+	}
+
+	public function manage_hotel_rooms_tariff($hotel_id)
+	{
+		$id = '';$data = array();
+		if(isset($_REQUEST['room-type-tariff-add']) || isset($_REQUEST['room-type-tariff-edit'])){
+
+			$this->form_validation->set_rules('room_type_id','Room Type','trim|required|xss_clean');
+			$this->form_validation->set_rules('season_id1','Business Season','trim|required|xss_clean');
+			$this->form_validation->set_rules('amount1','Amount','trim|required|numeric|xss_clean');
+
+			$data['room_type_id'] = $this->input->post('room_type_id');
+			$data['season_id'] = $this->input->post('season_id1');
+			$data['amount'] = $this->input->post('amount1');
+			$table = 'room_tariffs';
+		}elseif(isset($_REQUEST['attr-tariff-add']) || isset($_REQUEST['attr-tariff-edit'])){
+
+			$this->form_validation->set_rules('room_attr_id','Room Attribute','trim|required|xss_clean');
+			$this->form_validation->set_rules('season_id2','Business Season','trim|required|xss_clean');
+			$this->form_validation->set_rules('amount2','Amount','trim|required|numeric|xss_clean');
+
+			$data['room_attr_id'] = $this->input->post('room_attr_id');
+			$data['season_id'] = $this->input->post('season_id2');
+			$data['amount'] = $this->input->post('amount2');
+			$table = 'room_attribute_tariffs';
+
+		}elseif(isset($_REQUEST['meals-tariff-add']) || isset($_REQUEST['meals-tariff-edit'])){
+			$this->form_validation->set_rules('meals_package_id','Meals Package','trim|required|xss_clean');
+			$this->form_validation->set_rules('season_id3','Business Season','trim|required|xss_clean');
+			$this->form_validation->set_rules('amount3','Amount','trim|required|numeric|xss_clean');
+			
+			$data['meals_package_id'] = $this->input->post('meals_package_id');
+			$data['season_id'] = $this->input->post('season_id3');
+			$data['amount'] = $this->input->post('amount3');
+			$table = 'room_attribute_tariffs';
+
+		}
+
+		if($data){
+			$dbData = $data;
+			$dbData['hotel_id'] = $hotel_id;
+			$dbData['organisation_id'] = $this->session->userdata('organisation_id'); 
+			$dbData['user_id'] = $this->session->userdata('user_id');
+			if($this->form_validation->run() != False) {
+								
+				$this->hotel_model->updateHotelTariffs($dbData,$table);
+					
+				$this->session->set_userdata(array('dbSuccess'=>'Hotel Tariffs Updated Succesfully..!')); 
+				$this->session->set_userdata(array('dbError'=>''));		
+				
+
+			}else{
+				$this->mysession->set('post_tariff',$data);
+			}
+		}
+		
+		
+		$this->hotel_profile($hotel_id,'t_tab');
 	}
 	//------------------------------------------------------------------------------------------
 	
 	public function list_hotel($id){
 
 		if($this->session_check()==true) {
-			
+
+			$data['hotels'] = $this->hotel_model->getHotelList();
+			//echo "<pre>";print_r($data);echo "</pre>";exit;
 			$data['title']="Hotel | ".PRODUCT_NAME;  
 			$page='user-pages/list-hotel';
 			$this->load_templates($page,$data);

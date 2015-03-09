@@ -49,7 +49,11 @@
 		    </div>
 		</fieldset>
 		
+		</div>
+		 <div class="width-30-percent-with-margin-left-20-Hotel-Profile-View" style="margin-top:60px">
+		
 		<fieldset class="body-border-Driver-View border-style-Driver-view" >
+		<legend class="body-head"></legend>
 		    <div class="form-group">
 				<?php echo form_label('Destination'); ?>
 				<?php $class="form-control";
@@ -83,6 +87,12 @@
 				<?php echo form_label('Rating'); ?>
 				<?php echo form_input(array('name'=>'rating','class'=>'form-control','id'=>'rating','value'=>'')); ?>
 		    </div>
+		    <div class="form-group">
+			<?php $save_update_button='SAVE';$class_save_update_button="class='btn btn-success'";
+			echo form_submit("h-profile-add-update",$save_update_button,$class_save_update_button).nbs(7).form_reset("customer_reset","RESET","class='btn btn-danger'");
+			echo form_close();
+			?>
+		</div>
 		</fieldset>
 	  </div>
 	  
@@ -90,13 +100,164 @@
 	</div>
 	
         <div class="tab-pane" id="tab_2">
-            hi,Its me O
+            <div class="width-30-percent-with-margin-left-20-Hotel-Profile-View">
+	<fieldset class="body-border-Driver-View border-style-Driver-view" >
+	<legend class="body-head">Owner Details</legend>
+	<table>
+	<tr>
+	<td><div class="form-group">
+				<?php echo form_label('Name'); ?>
+				<?php echo form_input(array('name'=>'owner-name','class'=>'form-control','id'=>'owner-name','value'=>'')); ?>
+		    </div></td>
+	</tr>
+	<td><div class="form-group">
+				<?php echo form_label('Mobile'); ?>
+				<?php echo form_input(array('name'=>'mob-no','class'=>'form-control','id'=>'mob-no','value'=>'')); ?>
+		    </div></td>
+	</tr>	    
+	<td><div class="form-group">
+				<?php echo form_label('Email'); ?>
+				<?php echo form_input(array('name'=>'mail-id','class'=>'form-control','id'=>'mail-id','value'=>'')); ?>
+		    </div></td>
+	</tr>	    
+	<td><div class="form-group">
+				<?php echo form_label('Username'); ?>
+				<?php echo form_input(array('name'=>'owner-uname','class'=>'form-control','id'=>'owner-uname','value'=>'')); ?>
+		    </div></td>
+	</tr>	    
+	<td><div class="form-group">
+				<?php echo form_label('Password'); ?>
+				<?php echo form_input(array('name'=>'owner-pwd','class'=>'form-control','id'=>'owner-pwd','value'=>'')); ?>
+		    </div></td>
+	</tr>	    
+	<td><div class="form-group">
+				<?php echo form_label('Confirm Password'); ?>
+				<?php echo form_input(array('name'=>'owner-cpwd','class'=>'form-control','id'=>'owner-cpwd','value'=>'')); ?>
+		    </div></td>
+	</tr>	    
+	<td><div class="form-group">
+			<?php $save_update_button='SAVE';$class_save_update_button="class='btn btn-success'";
+			echo form_submit("h-owner-add-update",$save_update_button,$class_save_update_button).nbs(7).form_reset("customer_reset","RESET","class='btn btn-danger'");
+			echo form_close();
+			?>
+		</div></td>
+	</tr>	
+	
+	</table>
+	</fieldset>
+		</div>
         </div>
+	
         <div class="tab-pane" id="tab_3">
-           hi,Its me R
+           <div class="hotel-profile-body">
+		<fieldset class="body-border border-style" >
+		<legend class="body-head">Add Room Availability</legend>
+		
+		<table>
+		<tr>
+		<td><?php echo form_label('Room Type').nbs(5); ?></td>
+		<td><?php $class="form-control";
+		$msg="-Select-";
+		$name="room_type";
+		echo $this->form_functions->populate_dropdown($name,$room_types='',$room_type_id='',$class,$id='room_type',$msg);?></td>
+		<td><?php echo nbs(10);?></td>
+		<td><?php echo form_label('No:of Rooms').nbs(5); ?></td>
+		<td><?php echo form_input(array('name'=>'no_room','class'=>'form-control','id'=>'no_room','value'=>'','style'=>'margin-top:20px')).nbs(5); ?></td>
+		<td><div  class="tarrif-add" ><?php echo nbs(5);?><i class="fa fa-plus-circle cursor-pointer"></i><?php echo nbs(5);?></div><div class="hide-me"><?php echo form_submit("add","Add","id=tarrif-add-id","class=btn");?></td>
+		</tr>
+		</table>
+		</fieldset>
+		
+		<fieldset class="body-border border-style" >
+		<legend class="body-head">Manage Room Availability</legend>
+		<?php echo br(1);?>
+		
+		<table>
+		<tr style="text-align: center;">
+			
+			<td><?php echo form_label('Room Type '); ?></td>
+			<td><?php echo nbs(10);?></td>
+			<td><?php echo form_label('No:of Rooms '); ?></td>
+			<td><?php echo nbs(10);?></td>
+			<td colspan="2"><?php echo form_label('Action','action'); ?></td>
+		</tr>
+		<tr>
+			<td><?php $class="form-control";
+				$msg="-Select-";
+				$name="m_room_type";
+				echo $this->form_functions->populate_dropdown($name,$room_types='',$room_type_id='',$class,$id='m_room_type',$msg);?>
+				</td>
+			<td><?php echo nbs(10);?></td>
+			<td><?php echo form_input(array('name'=>'m_no_room','class'=>'form-control' ,'id'=>'m_no_room','value'=>''));?></td>
+			<td><?php echo nbs(10);?></td>
+			<td><div  class="tarrif-edit" ><?php echo nbs(5);?><i class="fa fa-edit cursor-pointer"></i><?php echo nbs(5);?></div><div class="hide-me xx"><?php echo form_submit("edit","Edit","id=tarrif-edit-id","class=btn");?></div></td>
+			<td><div  class="tarrif-delete" ><?php echo nbs(5);?><i class="fa fa-trash-o cursor-pointer"></i><?php echo nbs(5);?></div><div class="hide-me"><?php echo form_submit("delete","Delete","id=tarrif-delete-id","class=btn");?></div></td>
+		</tr>
+		</table>
+		</fieldset>
+	   </div>
         </div>
+	
 	<div class="tab-pane" id="tab_4">
-           hi,Its me T
+          <div class="hotel-profile-body">
+		<fieldset class="body-border border-style" >
+		<legend class="body-head">Add Tariff</legend>
+		<table>
+		<tbody>
+		<tr><?php $attributes = array(
+			'style' => 'margin-top: 15px;',
+);		    ?>
+		<td><?php echo form_label('Room Type ','room_type',$attributes).nbs(5); ?></td><td><?php $class="form-control";
+				$msg="-Select-";
+				$name="t_room_type";
+				echo $this->form_functions->populate_dropdown($name,$room_types='',$room_type_id='',$class,$id='t_room_type',$msg);?></td><td>
+		</td>
+		<td><?php echo nbs(10);?></td>
+		<td><?php echo form_label('Season ','season',$attributes).nbs(5); ?></td><td><?php $class="form-control";
+				$msg="-Select-";
+				$name="t_season";
+				echo $this->form_functions->populate_dropdown($name,$season='',$season_id='',$class,$id='t_season',$msg);?></td>
+				<td><?php echo nbs(10);?></td>
+		<td><?php echo form_label('Amount ','amount',$attributes).nbs(5); ?></td><td><?php echo form_input(array('name'=>'t_amount','class'=>'form-control' ,'id'=>'t_amount','value'=>''));?></td>
+
+		<td><div  class="tarrif-add" style="margin-top: 15px;" ><?php echo nbs(5);?><i class="fa fa-plus-circle cursor-pointer"></i><?php echo nbs(5);?></div><div class="hide-me"><?php echo form_submit("add","Add","id=tarrif-add-id","class=btn");?></td>
+		</tr>
+		
+		</tbody>
+		</table>
+		</fieldset>
+		
+		<fieldset class="body-border border-style" >
+		<legend class="body-head">Manage Tariff</legend>
+		<table>
+		<tr style="text-align: center;">
+			<td><?php echo form_label('Tariff Types  ','attributes'); ?></td>
+			<td><?php echo nbs(10);?></td>
+			<td><?php echo form_label('Season ','season'); ?></td>
+			<td><?php echo nbs(10);?></td>
+			<td><?php echo form_label('Amount','amount'); ?></td>
+			<td><?php echo nbs(10);?></td>
+			<td colspan="2"><?php echo form_label('Action','action'); ?></td>
+		</tr>
+		<tr>
+			<td><?php $class="form-control";
+				$msg="-Select-";
+				$name="t_attributes";
+				echo $this->form_functions->populate_dropdown($name,$season='',$season_id='',$class,$id='t_attributes',$msg);?></td>
+			<td><?php echo nbs(10);?></td>
+			<td><?php $class="form-control";
+				$msg="-Select-";
+				$name="mt_season";
+				echo $this->form_functions->populate_dropdown($name,$season='',$season_id='',$class,$id='mt_season',$msg);?></td>
+			<td><?php echo nbs(10);?></td>
+			<td><?php echo form_input(array('name'=>'mt_amount','class'=>'form-control' ,'id'=>'mt_amount','value'=>''));?></td>
+			<td><?php echo nbs(10);?></td>
+			<td><div  class="tarrif-edit" ><?php echo nbs(5);?><i class="fa fa-edit cursor-pointer"></i><?php echo nbs(5);?></div><div class="hide-me xx"><?php echo form_submit("edit","Edit","id=tarrif-edit-id","class=btn");?></div></td>
+			<td><div  class="tarrif-delete" ><?php echo nbs(5);?><i class="fa fa-trash-o cursor-pointer"></i><?php echo nbs(5);?></div><div class="hide-me"><?php echo form_submit("delete","Delete","id=tarrif-delete-id","class=btn");?></div></td>
+		</tr>
+		</table>
+		</fieldset>
+	  </div>
         </div>
 	<div class="tab-pane" id="tab_5">
            hi,Its me P

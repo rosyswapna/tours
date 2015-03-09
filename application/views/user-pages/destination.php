@@ -62,7 +62,7 @@
 					    <th>Name</th>
 					    <th>Latitude</th>
 					    <th>Longitude</th>
-					    <th>Business Season</th>
+					    <th>Season</th>
 					    <th colspan="3">Action</th>
 					</tr>
 					<tr>

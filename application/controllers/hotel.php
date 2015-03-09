@@ -33,7 +33,7 @@ class Hotel extends CI_Controller {
 	}
 	//------------------------------------------------------------------------------------------
 
-	public function hotel_profile($id){
+	public function hotel_profile($id=''){
 		if($this->session_check()==true) {
 			
 			$data['title']="Hotel | ".PRODUCT_NAME;  

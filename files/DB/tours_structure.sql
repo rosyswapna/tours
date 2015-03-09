@@ -410,7 +410,6 @@ CREATE TABLE IF NOT EXISTS `hotel_ratings` (
 --
 
 CREATE TABLE IF NOT EXISTS `hotel_rooms` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
   `hotel_id` int(11) NOT NULL,
   `room_type_id` int(11) NOT NULL,
   `no_of_rooms` int(11) NOT NULL,
@@ -418,9 +417,9 @@ CREATE TABLE IF NOT EXISTS `hotel_rooms` (
   `organisation_id` int(11) NOT NULL,
   `created` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `updated` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
-  PRIMARY KEY (`id`),
+  PRIMARY KEY (`hotel_id`,`room_type_id`),
   KEY `hotel_id` (`hotel_id`,`room_type_id`,`user_id`,`organisation_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -638,7 +637,6 @@ CREATE TABLE IF NOT EXISTS `room_attribute_tariffs` (
 --
 
 CREATE TABLE IF NOT EXISTS `room_tariffs` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
   `season_id` int(11) NOT NULL,
   `hotel_id` int(11) NOT NULL,
   `room_type_id` int(11) NOT NULL,
@@ -647,9 +645,9 @@ CREATE TABLE IF NOT EXISTS `room_tariffs` (
   `organisation_id` int(11) NOT NULL,
   `created` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `updated` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
-  PRIMARY KEY (`id`),
+  PRIMARY KEY (`season_id`,`hotel_id`,`room_type_id`),
   KEY `season_id` (`season_id`,`hotel_id`,`room_type_id`,`user_id`,`organisation_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 

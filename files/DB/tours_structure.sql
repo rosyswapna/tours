@@ -332,6 +332,38 @@ CREATE TABLE IF NOT EXISTS `driver_type` (
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `hotel`
+--
+
+CREATE TABLE IF NOT EXISTS `hotels` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(125) NOT NULL,
+  `address` text NOT NULL,
+  `city` varchar(50) NOT NULL,
+  `state` varchar(50) NOT NULL,
+  `contact_person` varchar(50) NOT NULL,
+  `mobile` varchar(15) NOT NULL,
+  `land_line_number` varchar(15) NOT NULL,
+  `hotel_category_id` int(11) NOT NULL,
+  `hotel_owner_id` int(11) NOT NULL,
+  `destination_id` int(11) NOT NULL,
+  `hotel_rating_id` int(11) NOT NULL,
+  `seasons` text NOT NULL,
+  `no_of_rooms` int(5) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `organisation_id` int(11) NOT NULL,
+  `created` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `updated` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
+  PRIMARY KEY (`id`),
+  KEY `hotel_category_id` (`hotel_category_id`),
+  KEY `hotel_owner_id` (`hotel_owner_id`,`destination_id`),
+  KEY `hotel_rating_id` (`hotel_rating_id`,`user_id`),
+  KEY `organisation_id` (`organisation_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `hotel_categories`
 --
 

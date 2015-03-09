@@ -294,35 +294,54 @@ window.open(url, '_blank');
 });
 
 //masters
-	$('select').change(function(){ 
-	 var edit=$('.edit').attr('for_edit');
-	  if(edit=='false'){
-		    $id=$(this).val();
-			$tbl=$(this).attr('tblname');
-			$obj=$(this);
-	//$(this).attr('trigger',false);
+$('select').change(function(){ 
+	var edit=$('.edit').attr('for_edit');
+	if(edit=='false'){
+		$id=$(this).val();
+		$tbl=$(this).attr('tblname');
+		$obj=$(this);
+		//$(this).attr('trigger',false);
 	
-	  $(this).next().attr('trigger',false);
-	  $('.edit').attr('for_edit',true);
+		$(this).next().attr('trigger',false);
+		$('.edit').attr('for_edit',true);
 	  
-	
-	  $.post(base_url+"/vehicle/getDescription",
-		  {
-			id:$id,
-			tbl:$tbl
-		  },function(data){
-		  
+		if($tbl == 'services')	{
+			$.post(base_url+"/trip/getStatus",
+			  {
+				id:$id,
+				tbl:$tbl
+			  },function(data){
+			  
 				var values=data.split(",",3);//alert($(this).parent().find('#id').attr('id'));
-				  $obj.parent().find('#id').val(values[0]);
-				  $obj.parent().find('#editbox').val(values[2]);
-				  $obj.parent().next().find('#description').val(values[1]);
-				
+				alert(values);
+				$obj.parent().find('#id').val(values[0]);
+				$obj.parent().find('#editbox').val(values[2]);
+				$obj.parent().next().find('#status').val(values[1]);
+
 				$obj.hide();
 				$obj.parent().find('#editbox').show();
-		});
-		}	
+			});
+		}else{
+
+
+			$.post(base_url+"/vehicle/getDescription",
+			  {
+				id:$id,
+				tbl:$tbl
+			  },function(data){
+			  
+					var values=data.split(",",3);//alert($(this).parent().find('#id').attr('id'));
+					  $obj.parent().find('#id').val(values[0]);
+					  $obj.parent().find('#editbox').val(values[2]);
+					  $obj.parent().next().find('#description').val(values[1]);
+		
+					$obj.hide();
+					$obj.parent().find('#editbox').show();
+			});
+		}
+	}	
 			
-	});
+});
 
 
 

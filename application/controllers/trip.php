@@ -19,7 +19,10 @@ class Trip extends CI_Controller {
 		$tbl=array('trip-models'=>'trip_models','trip-statuses'=>'trip_statuses','booking-sources'=>'booking_sources','trip-expense'=>'trip_expense_type','services'=>'services');
 			if($param1=='getDescription') {
 			$this->getDescription();
-			}else if($param1=='view') {
+			}elseif($param1=='getStatus') {
+				$this->getStatus();
+			}
+			else if($param1=='view') {
 		
 			$this->tripView($param2);
 			
@@ -403,12 +406,19 @@ class Trip extends CI_Controller {
 			$this->notAuthorized();
 		}
 	}
-		public function getDescription(){
+	public function getDescription(){
 		$id=$_REQUEST['id'];
 		$tbl=$_REQUEST['tbl'];
 		$res=$this->settings_model->getValues($id,$tbl);
 		echo $res[0]['id']." ".$res[0]['description']." ".$res[0]['name'];
-		}
+	}
+
+	public function getStatus(){
+		$id=$_REQUEST['id'];
+		$tbl=$_REQUEST['tbl'];
+		$res=$this->settings_model->getValues($id,$tbl);
+		echo $res[0]['id']." ".$res[0]['status_id']." ".$res[0]['name'];
+	}
 
 	public function notAuthorized(){
 	$data['title']='Not Authorized | '.PRODUCT_NAME;

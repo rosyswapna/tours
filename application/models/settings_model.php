@@ -15,7 +15,7 @@ class Settings_model extends CI_Model {
 	}
 
 	public function getValues($id,$tbl){ 
-	if($tbl='services'){
+	if($tbl=='services'){
 	$this->db->select('id,status_id,name');
 	}else{
 	$this->db->select('id,description,name');

@@ -614,7 +614,7 @@
 <legend class="body-head">Hotel</legend>
 <table class="">
 <tr><td><div class="form-group">
-	<?php echo form_open(base_url()."trip/categories");?>
+	<?php echo form_open(base_url()."general/hotel-categories");?>
 	<?php echo form_label('Hotel Categories');?></td>
 <td><?php  
 	$class="form-control";
@@ -653,7 +653,7 @@
 </tr>
 <tr >
 <td><div class="form-group">
-	<?php echo form_open(base_url()."general/driver-type");?>
+	<?php echo form_open(base_url()."general/room-attributes");?>
 	<?php echo form_label('Room Tariff Attributes');?></td>
 <td><?php  
 	$class="form-control";

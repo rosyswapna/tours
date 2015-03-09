@@ -13,7 +13,7 @@ class General extends CI_Controller {
 	
 		if($this->session_check()==true) {
 	
-		$tbl=array('languages'=>'languages','language-proficiency'=>'language_proficiency','driver-type'=>'driver_type','payment-type'=>'payment_type','customer-type'=>'customer_types','customer-groups'=>'customer_groups','registration-types'=>'customer_registration_types ','marital-statuses'=>'marital_statuses','bank-account-types'=>'bank_account_types','id-proof-types'=>'id_proof_types','supplier-groups'=>'supplier_groups');
+		$tbl=array('languages'=>'languages','language-proficiency'=>'language_proficiency','driver-type'=>'driver_type','payment-type'=>'payment_type','customer-type'=>'customer_types','customer-groups'=>'customer_groups','registration-types'=>'customer_registration_types ','marital-statuses'=>'marital_statuses','bank-account-types'=>'bank_account_types','id-proof-types'=>'id_proof_types','supplier-groups'=>'supplier_groups','hotel-categories'=>'hotel_categories','room-types'=>'room_types','room-attributes'=>'room_attributes','meals-options'=>'meals_options','hotel-ratings'=>'hotel_ratings');
 			if($param1=='getDescription') {
 			$this->getDescription();
 			}

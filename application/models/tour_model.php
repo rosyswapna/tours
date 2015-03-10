@@ -108,6 +108,26 @@ class Tour_model extends CI_Model {
 	
 	}
 
+
+	//---------------------tour functions------------------------------------
+
+	function getRoomOccupancyCount($hotel_id,$room_type_id,$_date)
+	{
+		$itinerarySQL = "SELECT id FROM itinerary WHERE trip_id IN (SELECT id FROM trips WHERE trip_status_id = ".TRIP_STATUS_PENDING ." OR trip_status_id = ".TRIP_STATUS_CONFIRMED.") AND date = ".$this->db->escape($_date);
+
+		$accomodationSQL = "SELECT SUM(acm.room_quantity) as occupancy FROM trip_accommodation acm";
+		
+		$accomodationSQL .= " WHERE acm.room_type_id = ".$this->db->escape($room_type_id)." AND acm.hotel_id = ".$this->db->escape($hotel_id)." AND acm.itinerary_id IN (".$itinerarySQL.")";
+
+		$result = $this->db->query($accomodationSQL);
+		$row = $result->row();
+		return ($row->occupancy!=null)?$row->occupancy:0;
+		
+
+	
+	}
+	//-----------------------------------------------------------------------
+
 		
 
 }

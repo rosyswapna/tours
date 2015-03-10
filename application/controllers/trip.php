@@ -180,7 +180,7 @@ class Trip extends CI_Controller {
 	public function add($tbl,$param1){
 	
 	if(isset($_REQUEST['select'])&& (isset( $_REQUEST['description'])|| isset($_REQUEST['status'])) && isset($_REQUEST['add'])){ 
-			
+			$err=false;
 		    $data['name']=$this->input->post('select');
 			
 		if(isset( $_REQUEST['description'])){
@@ -195,10 +195,12 @@ class Trip extends CI_Controller {
 		if(isset( $_REQUEST['description'])){
 			$this->form_validation->set_rules('description','Description','trim|required|min_length[2]|xss_clean');
 		}elseif(isset( $_REQUEST['status'])){
-			$this->form_validation->set_rules('status','Status','trim|required|xss_clean');
+			if($this->input->post('status')<0){ 
+			$err=true;
+			}
 		}
-			
-		if($this->form_validation->run()==False){
+		
+		if($this->form_validation->run()==False || $err==true){
          redirect(base_url().'organization/front-desk/settings');
 		}
       else {
@@ -213,7 +215,7 @@ class Trip extends CI_Controller {
 	}
 	public function edit($tbl,$param1){
 	if(isset($_REQUEST['select_text'])&& (isset( $_REQUEST['description']) || isset($_REQUEST['status']))&& isset($_REQUEST['edit'])){ 
-			
+			$err=false;
 		    $data['name']=$this->input->post('select_text');
 		    if(isset( $_REQUEST['description'])){
 			$data['description']=$this->input->post('description');
@@ -225,9 +227,11 @@ class Trip extends CI_Controller {
 		if(isset( $_REQUEST['description'])){
 			$this->form_validation->set_rules('description','Description','trim|required|min_length[2]|xss_clean');
 		}elseif(isset( $_REQUEST['status'])){
-			$this->form_validation->set_rules('status','Status','trim|required|xss_clean');
+			if($this->input->post('status')<0){ 
+			$err=true;
 			}
-		if($this->form_validation->run()==False){
+			}
+		if($this->form_validation->run()==False || $err==true){
        // redirect(base_url().'user/settings');
        redirect(base_url().'organization/front-desk/settings');
 		}
@@ -246,17 +250,21 @@ class Trip extends CI_Controller {
 	
 	public function delete($tbl,$param1){ 
 	if(isset($_REQUEST['delete'])){ 
-	
+	$err=false;
 	$id=$this->input->post('id_val');
-	        $this->form_validation->set_rules('select_text','Values','trim|required|min_length[2]|xss_clean|alpha_numeric');
+	        $this->form_validation->set_rules('select_text','Values','trim|required|min_length[2]|xss_clean');
 			//$this->form_validation->set_rules('select','Values','trim|required|min_length[2]|xss_clean|alpha_numeric');
-			
-			$this->form_validation->set_rules('description','Description','trim|required|min_length[2]|xss_clean|alpha_numeric');
-		
-		if($this->form_validation->run()==False){
+		if($param1=='services')	{
+			if($this->input->post('status')<0){ 
+			$err=true;
+			}
+		}else{ 
+			$this->form_validation->set_rules('description','Description','trim|required|min_length[2]|xss_clean');
+		}
+		if($this->form_validation->run()==False || $err==true){ 
         redirect(base_url().'organization/front-desk/settings');
 		}
-		else { 
+		else {
 		$result=$this->settings_model->deleteValues($tbl[$param1],$id);
 		if($result==true){
 					$this->session->set_userdata(array('dbSuccess'=>'Details Deleted Succesfully..!'));

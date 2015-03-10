@@ -65,8 +65,8 @@ CREATE TABLE IF NOT EXISTS `booking_sources` (
 CREATE TABLE IF NOT EXISTS `business_seasons` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(50) NOT NULL,
-  `starting` date NOT NULL,
-  `ending` date NOT NULL,
+  `starting_date` date NOT NULL,
+  `ending_date` date NOT NULL,
   `user_id` int(11) NOT NULL,
   `organisation_id` int(11) NOT NULL,
   `created` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,

@@ -906,8 +906,8 @@ getDistance();
 });
 */
 
-//-----------------starts --new google maps via place selection in trip page
-	var options = {
+//-----------------starts --new google maps via place selection in trip page *** previous code for trip booking
+	/*var options = {
            
 			componentRestrictions: {country: "IN"}
 
@@ -942,7 +942,30 @@ getDistance();
 			$('#viacitylng').attr('value',cityLng);
 			$("#viacity").attr('value',place.name);
 			getDistance();
+		}); */
+		 
+		 //--------ends-- new google maps
+		 
+	//-----------------starts --new google maps via place selection in destination page
+	var options = {
+           
+			componentRestrictions: {country: "IN"}
+
+         };
+	 
+	
+	
+	var autocompletedest = new google.maps.places.Autocomplete($("#dest_name")[0], options);
+		google.maps.event.addListener(autocompletedest, 'place_changed', function() {
+			var place = autocompletedest.getPlace();
+			var cityLat = place.geometry.location.lat();
+			var cityLng = place.geometry.location.lng();
+			$('#dest_lat').attr('value',cityLat);
+			$('#dest_long').attr('value',cityLng);
+			$("#dest_name").attr('value',place.name);
 		}); 
+		
+		
 		 
 		 //--------ends-- new google maps
 function getDistance(){

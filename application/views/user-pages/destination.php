@@ -1,13 +1,16 @@
 <div class="hotel-destination-body">
 	<fieldset class="body-border" >
 	<legend class="body-head">Destinations</legend>
+	<?php echo form_open(base_url()."tour/manage_destination"); ?>
 	<div class="div-with-28-percent-width-with-margin-20">
-	
-	   <div class="form-group">
+		
+	 <div class="form-group">
+	 
 			<?php echo form_label('Name');
 			echo form_input(array('name'=>'dest_name','class'=>'form-control','id'=>'dest_name','placeholder'=>'','value'=>''));?>
-	   </div>
-		
+	 
+	
+	</div>
 	   <div class="form-group">
 			<?php echo form_label('Latitude');
 			echo form_input(array('name'=>'dest_lat','class'=>'form-control','id'=>'dest_lat','placeholder'=>'','value'=>''));?>
@@ -29,7 +32,7 @@
 		
 		<div class="form-group">
 			<?php $save_update_button='SAVE';$class_save_update_button="class='btn btn-success'";
-			echo form_submit("destination-add-update",$save_update_button,$class_save_update_button).nbs(7).form_reset("customer_reset","RESET","class='btn btn-danger'");
+			echo form_submit("destination-add",$save_update_button,$class_save_update_button).nbs(7).form_reset("customer_reset","RESET","class='btn btn-danger'");
 			echo form_close();
 			?>
 		</div>
@@ -43,13 +46,12 @@
 		echo form_label('Season');
 		$class="form-control";
 		$msg="-Select Season-";
-		$name="seasons[]";
-		$seasons=array('1'=>'Season','2'=>'Mid-season','3'=>'Off-season');
-		
-		echo $this->form_functions->populate_multiselect($name,$seasons,$season_ids=-1,$class,$id='seasons',$msg)?>
+		$name="seasons";
+		echo $this->form_functions->populate_multiselect($name,$business_seasons,$business_seasons_id='',$class,$id='seasons',$msg)?>
 	   </div>
    
 	</div>
+	<?php echo form_close();?>
 	</fieldset>
 	
 	<fieldset class="body-border" >

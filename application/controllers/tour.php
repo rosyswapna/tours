@@ -5,8 +5,8 @@ class Tour extends CI_Controller {
 	{
     		parent::__construct();
 		$this->load->helper('my_helper');
-		$this->load->helper('date_helper');
 		$this->load->model('tour_model');
+		$this->load->model('user_model');
 		$this->load->model('settings_model');
 		no_cache();
 	}
@@ -40,23 +40,6 @@ class Tour extends CI_Controller {
 	public function show_business_season($getID='')
 	{
 		if($this->session_check()==true) { 
-
-			$data['id']= '';
-			$data['name']= '';
-			$data['starting']= '';
-			$data['ending']= '';
-
-			//if edit get values to form inputs
-			if(is_numeric($getID) && $getID > 0){
-				$season = $this->tour_model->getBusinessSeason($getID);
-				if($season){
-					//get default values for form input values
-					$data['id']= $season['id'];
-					$data['name']= $season['name'];
-					$data['starting']= $season['starting_date'];
-					$data['ending']= $season['ending_date'];
-				}
-			}
 			$data['season_list'] = $this->tour_model->getBusinessSeasonList();
 			$data['title']="Business Season | ".PRODUCT_NAME;  
 			$page='user-pages/business-season';
@@ -71,7 +54,7 @@ class Tour extends CI_Controller {
 	public function manage_business_season(){
 		
 		//add or edit
-		if(isset($_REQUEST['business-season-add']) || isset($_REQUEST['business-season-edit'])){
+		if(isset($_REQUEST['business-season-add']) || isset($_REQUEST['business-season-edit'])){ 
 
 			$this->form_validation->set_rules('season_name','Season Name','trim|required|xss_clean');
 			$this->form_validation->set_rules('starting','Season Starting','trim|required|xss_clean');
@@ -79,17 +62,18 @@ class Tour extends CI_Controller {
 
 			if($this->form_validation->run() != False) {
 			//date conversion to mysql
-				$start_date=$this->input->post('starting').' '.date("Y"); 
-			        $end_date=$this->input->post('ending').' '.date("Y");
+				$start_date=$this->input->post('starting');
+			        $end_date=$this->input->post('ending');
 			//-------------------------------	
 				$dbData['organisation_id'] = $this->session->userdata('organisation_id'); 
 				$dbData['user_id'] = $this->session->userdata('id'); 
-				$id = $this->input->post('id');
+				$id = $this->input->post('id'); 
 				$dbData['name'] = $this->input->post('season_name');
-				$dbData['starting_date'] = date('Y-m-d', strtotime($start_date));
-				$dbData['ending_date'] = date('Y-m-d', strtotime($end_date));
+				$dbData['starting_date'] = $this->date_functions->seasonDate_to_mysqlDate($start_date);
+				$dbData['ending_date'] = $this->date_functions->seasonDate_to_mysqlDate($end_date);
 				
-				if(is_numeric($id) && $id > 0){//edit
+				if(is_numeric($id) && $id > 0){//edit 
+
 					if($this->settings_model->updateValues('business_seasons',$dbData,$id)){
 						$this->session->set_userdata(array('dbSuccess'=>'Business Season Updated Succesfully..!')); 
 						$this->session->set_userdata(array('dbError'=>''));
@@ -126,7 +110,7 @@ class Tour extends CI_Controller {
 			$data['latitude']= '';
 			$data['longitude']= '';
 			$data['seasons']= '';
-
+		
 			//if edit get values to form inputs
 			if(is_numeric($getID) && $getID > 0){
 				$destination = $this->tour_model->getDestination($getID);
@@ -139,6 +123,7 @@ class Tour extends CI_Controller {
 					$data['seasons']= $destination['seasons'];
 				}
 			}
+			$data['business_seasons']=$this->user_model->getArray('business_seasons');
 			$data['destination_list'] = $this->tour_model->getDestinationList();
 			$data['title']="Destination | ".PRODUCT_NAME;  
 			$page='user-pages/destination';
@@ -153,19 +138,22 @@ class Tour extends CI_Controller {
 	public function manage_destination(){
 		
 		//add or edit
-		if(isset($_REQUEST['destination-add']) || isset($_REQUEST['destination-edit'])){
+		if(isset($_REQUEST['destination-add']) || isset($_REQUEST['destination-edit'])){ 
 
-			$this->form_validation->set_rules('name','Destination Name','trim|required|xss_clean');
-			$this->form_validation->set_rules('lat','Season Starting','numeric|xss_clean');
-			$this->form_validation->set_rules('lng','Season Ending','numeric|xss_clean');
+			$this->form_validation->set_rules('dest_name','Destination Name','trim|required|xss_clean');
+			$this->form_validation->set_rules('description','Description','trim|required|xss_clean');
+			$this->form_validation->set_rules('dest_lat','Season Starting','numeric|xss_clean');
+			$this->form_validation->set_rules('dest_long','Season Ending','numeric|xss_clean');
+			
 			if($this->form_validation->run() != False) {
 				$dbData['organisation_id'] = $this->session->userdata('organisation_id'); 
-				$dbData['user_id'] = $this->session->userdata('user_id'); 
+				$dbData['user_id'] = $this->session->userdata('id'); 
 				$id = $this->input->post('id');
-				$dbData['name'] = $this->input->post('name');
-				$dbData['lat'] = $this->input->post('latitude');
-				$dbData['lng'] = $this->input->post('longitude');
-				$dbData['seasons'] = searialize($this->input->post('seasons'));
+				$dbData['name'] = $this->input->post('dest_name');
+				$dbData['description'] = $this->input->post('description');
+				$dbData['lat'] = $this->input->post('dest_lat');
+				$dbData['lng'] = $this->input->post('dest_long');
+				$dbData['seasons'] = serialize($this->input->post('seasons'));
 			
 				if(is_numeric($id) && $id > 0){//edit
 					if($this->settings_model->updateValues('destinations',$dbData,$id)){

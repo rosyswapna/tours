@@ -124,7 +124,7 @@ class Tour extends CI_Controller {
 				}
 			}
 			$data['business_seasons']=$this->user_model->getArray('business_seasons');
-			$data['destination_list'] = $this->tour_model->getDestinationList();
+			$data['destination_list'] = $this->tour_model->getDestinationList(); 
 			$data['title']="Destination | ".PRODUCT_NAME;  
 			$page='user-pages/destination';
 			$this->load_templates($page,$data);

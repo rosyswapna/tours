@@ -91,35 +91,33 @@ function form_error_session($field = '', $container_open ='', $container_close='
 		}
 }
 
-function populate_multiselect($name = '', $options = array(), $selected = array(),$class='',$id='',$msg='select',$disabled=''){
-$CI = & get_instance();
+function populate_multiselect($name = '', $options = array(), $selected = array(),$class='',$id='',$msg='select',$disabled='',$max_len='4'){
+	$CI = & get_instance();
 
-$form = '<select max_length="4" multiple="multiple" name="'.$name.'" class="'.$class.'" id="'.$id.'" '.$disabled.'/>';
-if($selected==''){
-$form.='<option value="-1" selected="selected" >--'.$msg.'--</option></br>';
-}
-else{
-$form.='<option value="-1"  >--'.$msg.'--</option></br>';
-}
-if(!empty($options)){
-foreach ($options as $key => $val)
+	$form = '<select max_length="'.$max_len.'" multiple="multiple" name="'.$name.'" class="'.$class.'" id="'.$id.'" '.$disabled.'/>';
+	$form .= '<optgroup label="'.$msg.'">';
+
+	if (!is_array($selected)) $selected = array($selected);
+
+	if(!empty($options)){
+		foreach ($options as $key => $val)
 		{
 			$key = (string) $key;
 
-			if($key==$selected){
-						$sel=' selected="selected"';
-						}
-						else{
-						$sel='';
-						}
+			if(in_array($key,	$selected)){
+				$sel=' selected="selected"';
+			}else{
+				$sel='';
+			}
 
-					$form .= '<option value="'.$key.'"'.$sel.'>'.(string) $val."</option>\n";
+			$form .= '<option value="'.$key.'"'.$sel.'>'.(string) $val."</option>\n";
 					
 		}
-}
-		$form .= '</select>';
+	}
+	$form .= '</optgroup>';
+	$form .= '</select>';
 
-		return $form;
+	return $form;
 }
 
 }

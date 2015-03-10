@@ -5,6 +5,7 @@ class Tour extends CI_Controller {
 	{
     		parent::__construct();
 		$this->load->helper('my_helper');
+		$this->load->helper('date_helper');
 		$this->load->model('tour_model');
 		$this->load->model('settings_model');
 		no_cache();
@@ -38,7 +39,7 @@ class Tour extends CI_Controller {
 	//-----------------------business season ----------------------------------
 	public function show_business_season($getID='')
 	{
-		if($this->session_check()==true) {
+		if($this->session_check()==true) { 
 
 			$data['id']= '';
 			$data['name']= '';
@@ -72,18 +73,22 @@ class Tour extends CI_Controller {
 		//add or edit
 		if(isset($_REQUEST['business-season-add']) || isset($_REQUEST['business-season-edit'])){
 
-			$this->form_validation->set_rules('name','Season Name','trim|required|xss_clean');
+			$this->form_validation->set_rules('season_name','Season Name','trim|required|xss_clean');
 			$this->form_validation->set_rules('starting','Season Starting','trim|required|xss_clean');
 			$this->form_validation->set_rules('ending','Season Ending','trim|required|xss_clean');
 
 			if($this->form_validation->run() != False) {
+			//date conversion to mysql
+				$start_date=$this->input->post('starting').' '.date("Y"); 
+			        $end_date=$this->input->post('ending').' '.date("Y");
+			//-------------------------------	
 				$dbData['organisation_id'] = $this->session->userdata('organisation_id'); 
-				$dbData['user_id'] = $this->session->userdata('user_id'); 
+				$dbData['user_id'] = $this->session->userdata('id'); 
 				$id = $this->input->post('id');
-				$dbData['name'] = $this->input->post('name');
-				$dbData['starting_date'] = $this->input->post('starting');
-				$dbData['ending_date'] = $this->input->post('ending');
-			
+				$dbData['name'] = $this->input->post('season_name');
+				$dbData['starting_date'] = date('Y-m-d', strtotime($start_date));
+				$dbData['ending_date'] = date('Y-m-d', strtotime($end_date));
+				
 				if(is_numeric($id) && $id > 0){//edit
 					if($this->settings_model->updateValues('business_seasons',$dbData,$id)){
 						$this->session->set_userdata(array('dbSuccess'=>'Business Season Updated Succesfully..!')); 

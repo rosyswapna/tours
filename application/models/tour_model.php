@@ -64,6 +64,7 @@ class Tour_model extends CI_Model {
 						'name'	=> $row['name'],
 						'lat'	=> $row['lat'],
 						'lng'	=> $row['lng'],
+						'description'	=> $row['description'],
 						'seasons' => ($row['seasons'] !='')?unserialize($row['seasons']):''
 						);
 			}
@@ -189,6 +190,30 @@ class Tour_model extends CI_Model {
 			return $query->result_array();
 		else
 			return false;
+	}
+
+	function addTripVehicles($vehicleData,$trip_id)
+	{
+		$itineraries = $this->getItineraries($trip_id);
+		if(!$itineraries || count($vehicleData) == 0)
+			return false;
+
+		$vehicleData['user_id'] = $this->session->userdata('id');
+		$vehicleData['organisation_id'] = $this->session->userdata('organisation_id');
+
+		$insertData = array();$i = 0;
+		foreach($itineraries as $itinerary){
+			$insertData[$i] = $vehicleData;
+			$insertData[$i]['itinerary_id'] = $itinerary['id'];
+			$i++;
+		}
+
+		if($insertData){
+			$this->db->insert_batch('trip_vehicles', $insertData);
+			return true;
+		}else{
+			return false;
+		}
 	}
 
 

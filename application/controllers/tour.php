@@ -42,6 +42,11 @@ class Tour extends CI_Controller {
 	public function show_business_season($getID='')
 	{
 		if($this->session_check()==true) { 
+
+			if($this->mysession->get('post')!=NULL){ 
+				$data=$this->mysession->get('post');
+				$this->mysession->delete('post');
+			}
 			$data['season_list'] = $this->tour_model->getBusinessSeasonList();
 			$data['title']="Business Season | ".PRODUCT_NAME;  
 			$page='user-pages/business-season';
@@ -61,6 +66,10 @@ class Tour extends CI_Controller {
 			$this->form_validation->set_rules('season_name','Season Name','trim|required|xss_clean');
 			$this->form_validation->set_rules('starting','Season Starting','trim|required|xss_clean');
 			$this->form_validation->set_rules('ending','Season Ending','trim|required|xss_clean');
+
+			$data['season_name'] = $this->input->post('season_name');
+			$data['starting'] = $this->input->post('starting');
+			$data['ending'] = $this->input->post('ending');
 
 			if($this->form_validation->run() != False) {
 			//date conversion to mysql
@@ -86,6 +95,8 @@ class Tour extends CI_Controller {
 						$this->session->set_userdata(array('dbError'=>''));
 					}
 				}
+			}else{
+				$this->mysession->set('post',$data);
 			}		
 			
 		}else if(isset($_REQUEST['business-season-delete'])){//delete season click
@@ -96,7 +107,7 @@ class Tour extends CI_Controller {
 			}
 		}
 
-		$this->show_business_season();
+		redirect(base_url().'front-desk/tour/business-season/');
 	}
 
 	

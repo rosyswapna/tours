@@ -17,13 +17,13 @@
 		<table>
 		<tr>
 		<td><?php echo form_open(base_url()."tour/manage_business_season");  echo form_label("Name","season_name").nbs(7);?> </td>
-		<td><?php echo form_input(array('name'=>'season_name','class'=>'form-control','id'=>'season_name','placeholder'=>'','value'=>''));?>
+		<td><?php echo form_input(array('name'=>'season_name','class'=>'form-control','id'=>'season_name','placeholder'=>'','value'=>@$season_name));?>
 		<?php echo  $this->form_functions->form_error_session('season_name','<p class="text-red">', '</p>');?></td>
 		<td><?php echo form_label("Starting","starting").nbs(7);?></td>
-		<td><?php echo form_input(array('name'=>'starting','class'=>'fromday-monthpicker form-control' ,'value'=>''));?>
+		<td><?php echo form_input(array('name'=>'starting','class'=>'fromday-monthpicker form-control' ,'value'=>@$starting));?>
 		<?php echo  $this->form_functions->form_error_session('starting','<p class="text-red">', '</p>');?></td>
 		<td><?php echo form_label("Ending","ending").nbs(7);?></td>
-		<td><?php echo form_input(array('name'=>'ending','class'=>'fromday-monthpicker form-control' ,'value'=>''));?>
+		<td><?php echo form_input(array('name'=>'ending','class'=>'fromday-monthpicker form-control' ,'value'=>@$ending));?>
 		<?php echo  $this->form_functions->form_error_session('ending','<p class="text-red">', '</p>');?></td>
 		<td><div  class="tarrif-add" ><?php echo nbs(5);?><i class="fa fa-plus-circle cursor-pointer"></i><?php echo nbs(5);?></div><div class="hide-me"><?php echo form_submit("business-season-add","Add","id=tarrif-add-id","class=btn");?>
 		<?php echo form_close();?>

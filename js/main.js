@@ -2,7 +2,7 @@ $(document).ready(function(){
 
 
 $('.fa-trash-o').click(function(){
-	var con = confirm("Do You realy want to delete this record");
+	var con = confirm("Do you realy want to delete this record?");
 	if(con){
 		return true;
 	}else{

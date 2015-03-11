@@ -36,7 +36,7 @@ class Tour_model extends CI_Model {
 		$this->db->select('dst.*,st.name as status');
 		$this->db->from('destinations dst');
 		$this->db->join('statuses st','st.id=dst.status_id');
-		$this->db->where('id',$id);
+		$this->db->where('dst.id',$id);
 		$query = $this->db->get();
 		$retArray = array();
 		if($query->num_rows() == 1){
@@ -46,8 +46,8 @@ class Tour_model extends CI_Model {
 			$retArray['lat'] = $row->lat;
 			$retArray['lng'] = $row->lng;
 			$retArray['description'] = $row->description;
-			$retArray['status_id'] = $row->status_id,
-			$retArray['status'] = $row->status,
+			$retArray['status_id'] = $row->status_id;
+			$retArray['status'] = $row->status;
 			$retArray['seasons'] = ($row->seasons !='')?unserialize($row->seasons):'';
 			return $retArray;
 		}else{

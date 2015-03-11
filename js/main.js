@@ -1,4 +1,15 @@
 $(document).ready(function(){
+
+
+$('.fa-trash-o').click(function(){
+	var con = confirm("Do You realy want to delete this record");
+	if(con){
+		return true;
+	}else{
+		return false;
+	}
+});
+
 //var ORGANIZATION_NAME="Galaxy";
 //var ORGANIZATION_NAME= '<?php echo $_SESSION['organisation_name']; ?>';
 

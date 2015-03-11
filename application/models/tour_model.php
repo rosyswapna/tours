@@ -33,7 +33,7 @@ class Tour_model extends CI_Model {
 	
 	function getDestination($id)
 	{
-		$this->db->select('id,name,lat,lng,seasons');
+		$this->db->select('id,name,lat,lng,seasons,description');
 		$this->db->from('destinations');
 		$this->db->where('id',$id);
 		$query = $this->db->get();
@@ -44,7 +44,7 @@ class Tour_model extends CI_Model {
 			$retArray['name'] = $row->name;
 			$retArray['lat'] = $row->lat;
 			$retArray['lng'] = $row->lng;
-			$retArray['seasons'] = unserialize($row->seasons);
+			$retArray['seasons'] = ($row['seasons'] !='')?unserialize($row['seasons']):'';
 			return $retArray;
 		}else{
 			return false;
@@ -64,7 +64,7 @@ class Tour_model extends CI_Model {
 						'name'	=> $row['name'],
 						'lat'	=> $row['lat'],
 						'lng'	=> $row['lng'],
-						'seasons' => unserialize($row['seasons'])
+						'seasons' => ($row['seasons'] !='')?unserialize($row['seasons']):''
 						);
 			}
 			return $retArray;
@@ -124,8 +124,74 @@ class Tour_model extends CI_Model {
 		return ($row->occupancy!=null)?$row->occupancy:0;
 		
 
-	
 	}
+
+	function getTrip($trip_id = 0){
+		$this->db->from('trips');
+		$this->db->where('id',$trip_id);
+		$query = $this->db->get();
+		if($query->num_rows() == 1)
+			return $query->row();
+		else
+			return false;	
+	}
+
+	//build itinerary with pickup and drop date of a trip data
+	function buildItinerary($trip_id=0)
+	{
+		$filter = array(
+				'id' => $trip_id,
+				'DATEADD(DAY,number+1,@Date1) < ' => 'drop_date');
+		$this->db->select('DATEADD(DAY,number+1,pickup_date) [itinerary]');
+		$this->db->from('trips');
+		$this->db->where($filter);
+		$query = $this->db->get();
+		if($query->num_rows() > 0)
+		{
+			return $query->result_array();
+		}else{
+			return false;
+		}
+
+	}
+
+	//add itineraries with trip dates
+	function addItineraries($trip_id = 0)
+	{
+		$itineraries = $this->buildItinerary($trip_id);
+		if(!$itineraries)
+			return false;
+
+		$insertData = array();
+		foreach($itineraries as $itinerary){
+			$insertData[] = array(
+					'trip_id' => $trip_id,
+					'date'	  => $itinerary,
+					'user_id' => $this->session->userdata('id'),
+					'organisation_id' => $this->session->userdata('organisation_id')
+					);
+		}
+
+		if($insertData){
+			$this->db->insert_batch('itinerary', $insertData);
+			return true;
+		}else{
+			return false;
+		}
+	}
+
+	function getItineraries($trip_id = 0)
+	{
+		$this->db->from('itinerary');
+		$this->db->where('trip_id',$trip_id);
+		$query = $this->db->get();
+		if($query->num_rows() > 0)
+			return $query->result_array();
+		else
+			return false;
+	}
+
+
 	//-----------------------------------------------------------------------
 
 		

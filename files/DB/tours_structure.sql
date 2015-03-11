@@ -782,12 +782,6 @@ CREATE TABLE IF NOT EXISTS `trips` (
   `from_destination_id` int(11) NOT NULL,
   `to_destination_id` int(11) NOT NULL,
   `pax` int(11) NOT NULL,
-  `vehicle_ac_type_id` int(11) NOT NULL,
-  `vehicle_beacon_light_option_id` int(11) NOT NULL,
-  `pluckcard` tinyint(1) NOT NULL,
-  `uniform` tinyint(1) NOT NULL,
-  `driver_language_id` int(11) NOT NULL,
-  `driver_language_proficiency_id` int(11) NOT NULL,
   `total_amount` double NOT NULL,
   `markup_type` tinyint(1) NOT NULL DEFAULT '1' COMMENT '1 for rupees and 0 for percentage',
   `markup_value` double NOT NULL,
@@ -801,11 +795,9 @@ CREATE TABLE IF NOT EXISTS `trips` (
   KEY `guest_id` (`guest_id`),
   KEY `trip_status_id` (`trip_status_id`,`trip_source_id`),
   KEY `from_destination_id` (`from_destination_id`,`to_destination_id`),
-  KEY `vehicle_ac_type_id` (`vehicle_ac_type_id`,`vehicle_beacon_light_option_id`),
-  KEY `driver_language_id` (`driver_language_id`),
-  KEY `driver_language_proficiency_id` (`driver_language_proficiency_id`),
   KEY `user_id` (`user_id`,`organisation_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+
 
 -- --------------------------------------------------------
 
@@ -951,10 +943,16 @@ CREATE TABLE IF NOT EXISTS `trip_vehicles` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `itinerary_id` int(11) NOT NULL,
   `vehicle_id` int(11) NOT NULL,
+  `vehicle_ac_type_id` int(11) NOT NULL,
+  `vehicle_beacon_light_option_id` int(11) NOT NULL,
   `vehicle_type_id` int(11) NOT NULL,
   `vehicle_model_id` int(11) NOT NULL,
+  `pluckcard` tinyint(1) NOT NULL,
+  `uniform` tinyint(1) NOT NULL,
   `tariff_id` int(11) NOT NULL,
   `driver_id` int(11) NOT NULL,
+  `driver_language_id` int(11) NOT NULL,
+  `driver_language_proficiency_id` int(11) NOT NULL,
   `start_km_reading` double NOT NULL,
   `end_km_reading` double NOT NULL,
   `driver_bata` double NOT NULL,
@@ -968,7 +966,9 @@ CREATE TABLE IF NOT EXISTS `trip_vehicles` (
   KEY `itinerary_id` (`itinerary_id`,`vehicle_id`),
   KEY `vehicle_type_id` (`vehicle_type_id`,`vehicle_model_id`,`tariff_id`),
   KEY `driver_id` (`driver_id`),
-  KEY `user_id` (`user_id`,`organisation_id`)
+  KEY `user_id` (`user_id`,`organisation_id`),
+  KEY `vehicle_ac_type_id` (`vehicle_ac_type_id`,`vehicle_beacon_light_option_id`),
+  KEY `driver_language_id` (`driver_language_id`,`driver_language_proficiency_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------

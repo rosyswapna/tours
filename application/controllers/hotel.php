@@ -7,6 +7,7 @@ class Hotel extends CI_Controller {
 		$this->load->helper('my_helper');
 		$this->load->model('tour_model');
 		$this->load->model('hotel_model');
+		$this->load->model('settings_model');
 		$this->load->model('user_model');
 		no_cache();
 	}
@@ -91,12 +92,11 @@ class Hotel extends CI_Controller {
 	{
 		$id = '';
 		if(isset($_REQUEST['h-profile-add-update'])){
-	
+		
 			$this->form_validation->set_rules('hotel_name','Hotel Name','trim|required|xss_clean');
 			$this->form_validation->set_rules('hotel_address','Hotel Address','trim|required|xss_clean');
 			$this->form_validation->set_rules('category','Hotel Category','trim|required|xss_clean');
 			$this->form_validation->set_rules('destination','Hotel Destination','trim|required|xss_clean');
-			$this->form_validation->set_rules('seasons','Business Season','trim|required|xss_clean');
 			$this->form_validation->set_rules('contact_person','Contact Person','trim|required|xss_clean');
 			$this->form_validation->set_rules('mobile','Contact Mobile','trim|required|numeric|xss_clean');
 			$this->form_validation->set_rules('phone','Contact Phone','trim|numeric|xss_clean');
@@ -107,7 +107,7 @@ class Hotel extends CI_Controller {
 			$data['state'] = $this->input->post('state');
 			$data['contact_person'] = $this->input->post('contact_person');
 			$data['mobile'] = $this->input->post('mobile');
-			$data['land_line_number'] = $this->input->post('phone');
+			$data['phone'] = $this->input->post('phone');
 			$data['hotel_category_id'] = $this->input->post('category');
 			$data['destination_id'] = $this->input->post('destination');
 			$data['hotel_rating_id'] = $this->input->post('rating');
@@ -115,8 +115,13 @@ class Hotel extends CI_Controller {
 			$dbData = $data;
 
 			$data['seasons'] = $this->input->post('seasons');
-
-			$dbData['seasons'] = serialize($this->input->post('seasons'));
+				$seasons=array();
+				$seasons=$this->input->post('seasons');
+				if($seasons[0]==''|| empty($seasons)){
+				   $dbData['seasons'] = '';
+				}else{
+				   $dbData['seasons'] = serialize($this->input->post('seasons'));
+				}
 			$dbData['organisation_id'] = $this->session->userdata('organisation_id'); 
 			$dbData['user_id'] = $this->session->userdata('id'); 
 			if($this->form_validation->run() != False) { 
@@ -127,7 +132,7 @@ class Hotel extends CI_Controller {
 						$this->session->set_userdata(array('dbError'=>''));
 					}
 				}else{//add new hotel
-				echo "<pre>"; print_r($dbData);echo "</pre>";exit;
+				
 					if($id = $this->settings_model->addValues_returnId('hotels',$dbData)){
 						$this->session->set_userdata(array('dbSuccess'=>'Hotel Added Succesfully..!')); 
 						$this->session->set_userdata(array('dbError'=>''));

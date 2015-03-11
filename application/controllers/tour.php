@@ -238,13 +238,24 @@ class Tour extends CI_Controller {
 		}
 	}
 
-	public function getSeasonDestinations($Ajax='NO')
+	//get season destination
+	public function season_destinations($Ajax='NO')
 	{
 		$_date = $_REQUEST['itinerary-date'];
+		$destinations = $this->tour_model->getSeasonDestinations($_date);
+		if($Ajax=='NO'){
+				return $destinations;
+		}else{
+			header('Content-Type: application/json');
+			echo json_encode($destinations);
+		}
 	}
 
 	public function tour_booking()
 	{
+		$seasons = $this->tour_model->getSeasonIdssWithDate('2015-01-12');
+		echo "<pre>";print_r($seasons );echo "</pre>";exit;
+
 		$tblArray=array('booking_sources','available_drivers','trip_models','drivers','vehicle_types',	
 				'vehicle_models','vehicle_makes','vehicle_ac_types','vehicle_fuel_types',
 				'vehicle_seating_capacity','vehicle_beacon_light_options','languages','payment_type',

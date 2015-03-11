@@ -19,7 +19,9 @@
 	 <div class="form-group">
 	 
 			<?php echo form_label('Location Name');
-			echo form_input(array('name'=>'dest_name','class'=>'form-control','id'=>'dest_name','placeholder'=>'','value'=>$name));?>
+			echo form_input(array('name'=>'dest_name','class'=>'form-control','id'=>'dest_name','placeholder'=>'','value'=>$name));
+			echo  $this->form_functions->form_error_session('dest_name','<p class="text-red">', '</p>');?>
+			
 	 
 	
 	</div>
@@ -35,7 +37,8 @@
 		
 		<div class="form-group">
 			<?php echo form_label('Description(Itinerary)');
-			echo form_textarea(array('name'=>'description','class'=>'form-control','id'=>'description','placeholder'=>'','value'=>$description,'rows'=>1));?>
+			echo form_textarea(array('name'=>'description','class'=>'form-control','id'=>'description','placeholder'=>'','value'=>$description,'rows'=>1));
+			echo  $this->form_functions->form_error_session('description','<p class="text-red">', '</p>');?>
 		</div>
 		
 		<div class="form-group">
@@ -118,7 +121,7 @@
 					
 					</tr>
 				     
-				   <?php echo form_hidden(array('name'=>'id','value'=>$list_val['id']));echo form_close();?>
+				   <?php echo form_input(array('name'=>'id','value'=>$list_val['id'],'class'=>'hide-me'));echo form_close();?>
 				     <?php endforeach; ?>
 				</tbody>
 			</table>

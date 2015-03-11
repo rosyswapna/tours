@@ -180,7 +180,7 @@ class Tour extends CI_Controller {
 			}		
 			
 		}else if(isset($_REQUEST['destination-delete'])){//delete season click 
-			echo $id = $this->input->post('id'); exit;
+			$id = $this->input->post('id'); 
 			if($this->settings_model->deleteValues('destinations',$id)){
 				$this->session->set_userdata(array('dbSuccess'=>'Destination Deleted Succesfully..!')); 
 				$this->session->set_userdata(array('dbError'=>''));
@@ -197,7 +197,7 @@ class Tour extends CI_Controller {
 			$this->settings_model->updateValues('destinations',$dbData,$id);
 		}
 
-		$this->show_destination();
+		redirect(base_url().'front-desk/tour/destination/');
 	}
 
 	//-----------------------------------------------------------------------------------------

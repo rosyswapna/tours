@@ -46,8 +46,8 @@ class Tour_model extends CI_Model {
 			$retArray['lat'] = $row->lat;
 			$retArray['lng'] = $row->lng;
 			$retArray['description'] = $row->description;
-			$retArray['status_id'] = $row->status_id;
-			$retArray['status'] = $row->status;
+			$retArray['status_id'] = $row->status_id,
+			$retArray['status'] = $row->status,
 			$retArray['seasons'] = ($row->seasons !='')?unserialize($row->seasons):'';
 			return $retArray;
 		}else{
@@ -70,8 +70,8 @@ class Tour_model extends CI_Model {
 						'lat'	=> $row['lat'],
 						'lng'	=> $row['lng'],
 						'description'	=> $row['description'],
-						'status_id' = $row['status_id'];
-						'status' = $row['status'];
+						'status_id' => $row['status_id'],
+						'status' => $row['status'],
 						'seasons' => ($row['seasons'] !='')?unserialize($row['seasons']):''
 						);
 			}

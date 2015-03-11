@@ -169,6 +169,8 @@ class Tour extends CI_Controller {
 						$this->session->set_userdata(array('dbError'=>''));
 					}
 				}else{//add
+
+					$dbData['status_id'] = STATUS_ACTIVE;
 					if($this->settings_model->addValues('destinations',$dbData)){
 						$this->session->set_userdata(array('dbSuccess'=>'Destination Added Succesfully..!')); 
 						$this->session->set_userdata(array('dbError'=>''));
@@ -182,6 +184,16 @@ class Tour extends CI_Controller {
 				$this->session->set_userdata(array('dbSuccess'=>'Destination Deleted Succesfully..!')); 
 				$this->session->set_userdata(array('dbError'=>''));
 			}
+		}elseif(isset($_REQUEST['destination-enable']) || isset($_REQUEST['destination-disable'])){ 
+
+			$id = $this->input->post('id');
+			if(isset($_REQUEST['destination-enable'])){
+				$dbData['status_id'] = STATUS_ACTIVE;
+			}else{
+				$dbData['status_id'] = STATUS_INACTIVE;
+			}
+
+			$this->settings_model->updateValues('destinations',$dbData,$id)	
 		}
 
 		$this->show_destination();
@@ -208,6 +220,64 @@ class Tour extends CI_Controller {
 		$data['title']="Tour Booking | ".PRODUCT_NAME;  
 		$page='user-pages/tour-booking';
 		$this->load_templates($page,$data);
+	}
+
+	public function manage_tour_booking()
+	{
+		if(isset($_REQUEST['trip-add'])){
+			//validation
+
+
+			//trip data
+			$tripData['id'] 		= $this->input->post('id');
+			$tripData['customer_id'] 	= $this->input->post('customer_id');
+			$tripData['guest_id'] 	= $this->input->post('guest_id');
+			$tripData['booking_date'] 	= $this->input->post('booking_date');
+			$tripData['booking_time'] 	= $this->input->post('booking_time');
+			$tripData['trip_status_id'] = $this->input->post('trip_status_id');
+			$tripData['source_id'] 	= $this->input->post('source_id');
+			$tripData['source_details'] = $this->input->post('source_details');
+			$tripData['source_contact'] = $this->input->post('source_contact');
+			$tripData['pickup_date'] 	= $this->input->post('pickup_date');
+			$tripData['pickup_time'] 	= $this->input->post('pickup_time');
+			$tripData['drop_date'] 	= $this->input->post('drop_date');
+			$tripData['drop_time'] 	= $this->input->post('drop_time');
+			$tripData['trip_from_destination_id'] 	= $this->input->post('trip_from_destination_id');
+			$tripData['trip_to_destination_id'] 	= $this->input->post('trip_to_destination_id');
+			$tripData['pax'] 		= $this->input->post('pax');
+			$tripData['markup_type'] 	= $this->input->post('markup_type');
+			$tripData['markup_value'] 	= $this->input->post('markup_value');
+			$tripData['remarks'] 	= $this->input->post('remarks');
+
+			//trip Vehicle data
+			$vehicleData['vehicle_id'] = $this->input->post('pax');
+			$vehicleData['vehicle_ac_type_id'] = $this->input->post('pax');
+			$vehicleData['vehicle_beacon_light_option_id'] = $this->input->post('pax');
+			$vehicleData['vehicle_type_id'] = $this->input->post('pax');
+			$vehicleData['vehicle_model_id'] = $this->input->post('pax');
+			$vehicleData['pluckcard'] = $this->input->post('pax');
+			$vehicleData['uniform'] = $this->input->post('pax');
+			$vehicleData['tariff_id'] = $this->input->post('pax');
+			$vehicleData['driver_id'] = $this->input->post('pax');
+			$vehicleData['driver_language_id'] = $this->input->post('pax');
+			$vehicleData['driver_language_proficiency_id'] = $this->input->post('pax');
+
+			
+			//form input values
+			$data = array_merge($tripData,$vehicleData);
+
+			$tripData['organisation_id'] 	= $this->session->userdata('organisation_id'); 
+			$tripData['user_id'] 		= $this->session->userdata('user_id');
+			$trip_id = $this->settings_model->addValues_returnId('trips',$tripData);
+			if($trip_id && $trip_id > 0){//trip added
+				//build itinerary
+				$itinerary = $this->tour_model->addItineraries($trip_id);
+				if($itinerary){
+					$tripVehicleUpdate = $this->tour_model->addTripVehicles($vehicleData,$trip_id);
+				}
+			}
+			
+		}
 	}
 
 	//-----------------------------------------------------------------------------------------

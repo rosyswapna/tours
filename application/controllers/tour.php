@@ -193,7 +193,7 @@ class Tour extends CI_Controller {
 				$dbData['status_id'] = STATUS_INACTIVE;
 			}
 
-			$this->settings_model->updateValues('destinations',$dbData,$id)	
+			$this->settings_model->updateValues('destinations',$dbData,$id);
 		}
 
 		$this->show_destination();

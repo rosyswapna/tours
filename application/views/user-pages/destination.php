@@ -43,8 +43,8 @@
 		</div>
 		
 		<div class="form-group">
-			<?php $save_update_button='SAVE';$class_save_update_button="class='btn btn-success'";
-			echo form_submit("destination-add",$save_update_button,$class_save_update_button).nbs(7).form_reset("customer_reset","RESET","class='btn btn-danger'");
+			<?php $save_update_button='SAVE';$class_save_update_button="class='btn btn-success'"; $status='DISABLE';
+			echo form_submit("destination-add",$save_update_button,$class_save_update_button).nbs(7).form_reset("destination-enable-disable",$status,"class='btn btn-danger'");
 			echo form_close();
 			?>
 		</div>
@@ -57,7 +57,7 @@
 		<?php 
 		echo form_label('Season');
 		$class="form-control";
-		$msg="-Select Season-";
+		$msg="Season";
 		$name="seasons";
 		echo $this->form_functions->populate_multiselect($name,$business_seasons,$business_seasons_id='',$class,$id='seasons',$msg)?>
 	   </div>
@@ -77,7 +77,7 @@
 					    <th>Latitude</th>
 					    <th>Longitude</th>
 					    <th>Season</th>
-					    <th colspan="3">Action</th>
+					    <th colspan="2">Action</th>
 					</tr>
 				<?php foreach($destination_list as $list_val): ?>
 					<tr>
@@ -85,10 +85,8 @@
 					<td></td>
 					<td></td>
 					<td></td>
-					<td>
-					<?php $enable_disable_button='Disable';
-					echo anchor(base_url().'organization/admin/front-desk/','Edit','class="btn btn-primary"').nbs(3).anchor(base_url().'organization/admin/front-desk/','Delete','class="btn btn-primary"').nbs(3).anchor(base_url().'organization/admin/front-desk/',$enable_disable_button,'class="btn btn-primary"'); ?>
-					</td>
+					<td style="width:10%"><div  class="tarrif-edit" ><?php echo nbs(5);?><i class="fa fa-edit cursor-pointer"></i><?php echo nbs(5);?></div><div class="hide-me xx"><?php echo form_submit("business-season-edit","Edit","id=tarrif-edit-id","class=btn");?></div></td>
+		<td style="width:10%"><div  class="tarrif-delete" ><?php echo nbs(5);?><i class="fa fa-trash-o cursor-pointer"></i><?php echo nbs(5);?></div><div class="hide-me"><?php echo form_submit("business-season-delete","Delete","id=tarrif-delete-id","class=btn");?></div></td>
 					</tr>
 				     <?php endforeach; ?>
 				</tbody>

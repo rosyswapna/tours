@@ -49,55 +49,56 @@ class user_model extends CI_Model {
    	}
 	
 
+	//get list of data
 	public function getArray($tbl){
-	$org_id=$this->session->userdata('organisation_id'); 
-	$flag=0;
-	if($tbl=='drivers'){
-	$query='SELECT * FROM drivers WHERE drivers.id NOT IN(SELECT driver_id FROM vehicle_drivers WHERE organisation_id='.$org_id.' and to_date="9999-12-30")and organisation_id='.$org_id.' ORDER BY drivers.name ASC ';
-	$qry=$this->db->query($query);
-	}
-	elseif($tbl=='devices'){
-	$query='SELECT * FROM devices WHERE devices.id NOT IN(SELECT device_id FROM vehicle_devices WHERE organisation_id='.$org_id.' and to_date="9999-12-30")and organisation_id='.$org_id.' ORDER BY devices.imei ASC ';
-	$qry=$this->db->query($query);
-	$flag=1;
-	}
-	/*elseif($tbl=='available_vehicles'){
-	//$query='SELECT * FROM vehicles WHERE  organisation_id='.$org_id.' ';
-	$query='SELECT id, SUBSTR(registration_number, -4)as registration_number FROM vehicles WHERE organisation_id='.$org_id;
-	$qry=$this->db->query($query);
-	$flag=2;
-	}*/
-	elseif($tbl=='available_drivers'){
-	$query='SELECT * FROM drivers WHERE  organisation_id='.$org_id.' order by name ASC';
-	$qry=$this->db->query($query);
-	}
-	else{ 
-		$qry=$this->db->where('organisation_id',$org_id);
-		$qry=$this->db->order_by("name", "Asc"); 
-		$qry=$this->db->get($tbl);
-		
+		$org_id=$this->session->userdata('organisation_id'); 
+		$flag=0;
+		if($tbl=='drivers'){
+			$query='SELECT * FROM drivers WHERE drivers.id NOT IN(SELECT driver_id FROM vehicle_drivers WHERE organisation_id='.$org_id.' and to_date="9999-12-30")and organisation_id='.$org_id.' ORDER BY drivers.name ASC ';
+			$qry=$this->db->query($query);
 		}
+		elseif($tbl=='devices'){
+			$query='SELECT * FROM devices WHERE devices.id NOT IN(SELECT device_id FROM vehicle_devices WHERE organisation_id='.$org_id.' and to_date="9999-12-30")and organisation_id='.$org_id.' ORDER BY devices.imei ASC ';
+			$qry=$this->db->query($query);
+			$flag=1;
+		}
+	
+		elseif($tbl=='available_drivers'){
+			$query='SELECT * FROM drivers WHERE  organisation_id='.$org_id.' order by name ASC';
+			$qry=$this->db->query($query);
+		}
+		elseif($tbl=='trip-services'){
+				$qry=$this->db->where(array('organisation_id'=>$org_id,'status_id'=>STATUS_ACTIVE));
+				$qry=$this->db->order_by("name", "Asc"); 
+				$qry=$this->db->get('services');
+		}else{ 
+			$qry=$this->db->where('organisation_id',$org_id);
+			$qry=$this->db->order_by("name", "Asc"); 
+			$qry=$this->db->get($tbl);
+		}
+
 		$count=$qry->num_rows();
-			$l= $qry->result_array();
+		$l= $qry->result_array();
 		
-			for($i=0;$i<$count;$i++){
+		for($i=0;$i<$count;$i++){
 			if($flag==0){
-			$values[$l[$i]['id']]=$l[$i]['name'];
+				$values[$l[$i]['id']]=$l[$i]['name'];
 			}
 			else if($flag==1){
-			$values[$l[$i]['id']]=$l[$i]['imei'];
+				$values[$l[$i]['id']]=$l[$i]['imei'];
 			}else if($flag==2){
-			$values[$l[$i]['id']]=$l[$i]['registration_number'];
+				$values[$l[$i]['id']]=$l[$i]['registration_number'];
 			}
-			}
-			if(!empty($values)){
+		}
+		if(!empty($values)){
 			return $values;
-			}
-			else{
+		}else{
 			return false;
-			}
+		}
 			
 	}
+
+
 	function getStatus(){
 	
 		$qry=$this->db->get('statuses');

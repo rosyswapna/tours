@@ -80,6 +80,20 @@ class Tour_model extends CI_Model {
 			return false;
 		}
 	}
+
+	function getSeasonIdssWithDate($_date)//not completed
+	{
+		$this->db->select('id');
+		$this->db->from('business_seasons');
+		//$this->db->where('DAYOFYEAR('.$this->db->escape($_date).') BETWEEN DAYOFYEAR(starting_date) AND DAYOFYEAR(ending_date)');
+		$query = $this->db->get();
+		if($query->num_rows() > 0){
+			return $query->result();
+		}else{
+			return false;
+		}
+			
+	}
 	//---------------------------------------------------------
 
 

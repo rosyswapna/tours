@@ -90,26 +90,27 @@ class Hotel extends CI_Controller {
 	public function manage_hotel_profile()
 	{
 		$id = '';
-		if(isset($_REQUEST['hotel-add']) || isset($_REQUEST['hotel-edit'])){
-			$this->form_validation->set_rules('name','Hotel Name','trim|required|xss_clean');
-			$this->form_validation->set_rules('address','Hotel Address','trim|required|xss_clean');
-			$this->form_validation->set_rules('category_id','Hotel Category','trim|required|xss_clean');
+		if(isset($_REQUEST['h-profile-add-update'])){
+	
+			$this->form_validation->set_rules('hotel_name','Hotel Name','trim|required|xss_clean');
+			$this->form_validation->set_rules('hotel_address','Hotel Address','trim|required|xss_clean');
+			$this->form_validation->set_rules('category','Hotel Category','trim|required|xss_clean');
 			$this->form_validation->set_rules('destination','Hotel Destination','trim|required|xss_clean');
-			$this->form_validation->set_rules('season','Business Season','trim|required|xss_clean');
+			$this->form_validation->set_rules('seasons','Business Season','trim|required|xss_clean');
 			$this->form_validation->set_rules('contact_person','Contact Person','trim|required|xss_clean');
-			$this->form_validation->set_rules('contact_mobile','Contact Mobile','trim|required|numeric|xss_clean');
-			$this->form_validation->set_rules('contact_mobile','Contact Mobile','trim|numeric|xss_clean');
+			$this->form_validation->set_rules('mobile','Contact Mobile','trim|required|numeric|xss_clean');
+			$this->form_validation->set_rules('phone','Contact Phone','trim|numeric|xss_clean');
 
-			$data['name'] = $this->input->post('name');
-			$data['address'] = $this->input->post('address');
+			$data['name'] = $this->input->post('hotel_name');
+			$data['address'] = $this->input->post('hotel_address');
 			$data['city'] = $this->input->post('city');
 			$data['state'] = $this->input->post('state');
 			$data['contact_person'] = $this->input->post('contact_person');
 			$data['mobile'] = $this->input->post('mobile');
-			$data['land_line_number'] = $this->input->post('land_line_number');
-			$data['hotel_category_id'] = $this->input->post('hotel_category_id');
-			$data['destination_id'] = $this->input->post('destination_id');
-			$data['hotel_rating_id'] = $this->input->post('hotel_rating_id');
+			$data['land_line_number'] = $this->input->post('phone');
+			$data['hotel_category_id'] = $this->input->post('category');
+			$data['destination_id'] = $this->input->post('destination');
+			$data['hotel_rating_id'] = $this->input->post('rating');
 			$data['no_of_rooms'] = $this->input->post('no_of_rooms');
 			$dbData = $data;
 
@@ -117,8 +118,8 @@ class Hotel extends CI_Controller {
 
 			$dbData['seasons'] = serialize($this->input->post('seasons'));
 			$dbData['organisation_id'] = $this->session->userdata('organisation_id'); 
-			$dbData['user_id'] = $this->session->userdata('user_id'); 
-			if($this->form_validation->run() != False) {
+			$dbData['user_id'] = $this->session->userdata('id'); 
+			if($this->form_validation->run() != False) { 
 				$id = $this->input->post('id');		
 				if(is_numeric($id) && $id > 0){//edit hotel
 					if($this->settings_model->updateValues('hotels',$dbData,$id)){
@@ -126,6 +127,7 @@ class Hotel extends CI_Controller {
 						$this->session->set_userdata(array('dbError'=>''));
 					}
 				}else{//add new hotel
+				echo "<pre>"; print_r($dbData);echo "</pre>";exit;
 					if($id = $this->settings_model->addValues_returnId('hotels',$dbData)){
 						$this->session->set_userdata(array('dbSuccess'=>'Hotel Added Succesfully..!')); 
 						$this->session->set_userdata(array('dbError'=>''));

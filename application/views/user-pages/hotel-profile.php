@@ -1,6 +1,7 @@
 <div class="page-outer">
 <fieldset class="body-border">
 <legend class="body-head">Hotel</legend>
+<?php echo form_open(base_url()."hotel/manage_hotel_profile"); ?>
 <div class="nav-tabs-custom">
   <!--  <ul class="nav nav-tabs">
         <li class="active"><a href="#tab_1" data-toggle="tab">Profile</a></li>
@@ -48,15 +49,15 @@
 				<?php echo form_input(array('name'=>'state','class'=>'form-control','id'=>'state','value'=>'')); ?>
 		    </div>
 		    <div class="form-group">
-				<?php echo form_label('Category'); ?>
+				<?php echo form_label('Hotel Categories'); ?>
 				<?php $class="form-control";
 				$msg="-Select-";
 				$name="category";
-			echo $this->form_functions->populate_dropdown($name,$category='',$category_id='',$class,$id='category',$msg); ?>
+			echo $this->form_functions->populate_dropdown($name,$hotel_categories,$category_id='',$class,$id='category',$msg); ?>
 		   </div>
 		    <div class="form-group">
 				<?php echo form_label('No.of Rooms'); ?>
-				<?php echo form_input(array('name'=>'no','class'=>'form-control','id'=>'no','value'=>'')); ?>
+				<?php echo form_input(array('name'=>'no_of_rooms','class'=>'form-control','id'=>'no_of_rooms','value'=>'')); ?>
 		    </div>
 		</fieldset>
 		
@@ -70,17 +71,15 @@
 				<?php $class="form-control";
 				$msg="-Select-";
 				$name="destination";
-			echo $this->form_functions->populate_dropdown($name,$destinations='',$destination='',$class,$id='',$msg); ?>
+			echo $this->form_functions->populate_dropdown($name,$destinations,$destination='',$class,$id='',$msg); ?>
 		   </div>
 		   <div class="form-group">
-			<?php  echo form_open(base_url()."controller/action");
+			<?php 
 			echo form_label('Season');
 			$class="form-control";
-			$msg="-Select Season-";
-			$name="seasons[]";
-			$seasons=array('1'=>'Season','2'=>'Mid-season','3'=>'Off-season');
-			
-			echo $this->form_functions->populate_multiselect($name,$seasons,$season_ids=-1,$class,$id='seasons',$msg)?>
+			$msg="Season";
+			$name="seasons";
+			echo $this->form_functions->populate_multiselect($name,$business_seasons,$seasons='',$class,$id='seasons',$msg)?>
 		    </div>
 		    <div class="form-group">
 				<?php echo form_label('Contact Person'); ?>
@@ -96,7 +95,10 @@
 		    </div>
 		    <div class="form-group">
 				<?php echo form_label('Rating'); ?>
-				<?php echo form_input(array('name'=>'rating','class'=>'form-control','id'=>'rating','value'=>'')); ?>
+				<?php $class="form-control";
+				$msg="-Select-";
+				$name="rating";
+			echo $this->form_functions->populate_dropdown($name,$hotel_ratings,$rating='',$class,$id='',$msg); ?>
 		    </div>
 		    <div class="form-group">
 			<?php $save_update_button='SAVE';$class_save_update_button="class='btn btn-success'";
@@ -159,6 +161,7 @@
 	
 	</table>
 	</fieldset>
+	<?php echo form_close();?>
 		</div>
         </div>
 	<?php } ?>

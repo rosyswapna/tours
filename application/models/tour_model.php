@@ -33,8 +33,9 @@ class Tour_model extends CI_Model {
 	
 	function getDestination($id)
 	{
-		$this->db->select('id,name,lat,lng,seasons,description');
-		$this->db->from('destinations');
+		$this->db->select('dst.*,st.name as status');
+		$this->db->from('destinations dst');
+		$this->db->join('statuses st','st.id=dst.status_id');
 		$this->db->where('id',$id);
 		$query = $this->db->get();
 		$retArray = array();
@@ -45,6 +46,8 @@ class Tour_model extends CI_Model {
 			$retArray['lat'] = $row->lat;
 			$retArray['lng'] = $row->lng;
 			$retArray['description'] = $row->description;
+			$retArray['status_id'] = $row->status_id;
+			$retArray['status'] = $row->status;
 			$retArray['seasons'] = ($row->seasons !='')?unserialize($row->seasons):'';
 			return $retArray;
 		}else{
@@ -54,8 +57,9 @@ class Tour_model extends CI_Model {
 
 	function getDestinationList()
 	{
-		$this->db->select('id,name,lat,lng,seasons,description');
-		$this->db->from('destinations');
+		$this->db->select('dst.*,st.name as status');
+		$this->db->from('destinations dst');
+		$this->db->join('statuses st','st.id=dst.status_id');
 		$this->db->where('organisation_id',$this->session->userdata('organisation_id'));
 		$query = $this->db->get();
 		$retArray = array();
@@ -66,6 +70,8 @@ class Tour_model extends CI_Model {
 						'lat'	=> $row['lat'],
 						'lng'	=> $row['lng'],
 						'description'	=> $row['description'],
+						'status_id' = $row['status_id'];
+						'status' = $row['status'];
 						'seasons' => ($row['seasons'] !='')?unserialize($row['seasons']):''
 						);
 			}
@@ -182,6 +188,7 @@ class Tour_model extends CI_Model {
 		}
 	}
 
+	//get trip itineraries with trip id as parameter
 	function getItineraries($trip_id = 0)
 	{
 		$this->db->from('itinerary');
@@ -193,6 +200,19 @@ class Tour_model extends CI_Model {
 			return false;
 	}
 
+	//get single itinerary with id
+	function getItinerary($id = 0)
+	{
+		$this->db->from('itinerary');
+		$this->db->where('id',$id);
+		$query = $this->db->get();
+		if($query->num_rows() == 1)
+			return $query->row();
+		else
+			return false;
+	}
+
+	//adding Trip Vehicles with trip id and vehicle array
 	function addTripVehicles($vehicleData,$trip_id)
 	{
 		$itineraries = $this->getItineraries($trip_id);
@@ -215,6 +235,117 @@ class Tour_model extends CI_Model {
 		}else{
 			return false;
 		}
+	}
+
+	//adding trip destinations trip id and destination array
+	function addTripDestinations($destinationData,$trip_id)
+	{
+		$itineraries = $this->getItineraries($trip_id);
+		if(!$itineraries || count($destinationData) == 0)
+			return false;
+
+		$destinationData['user_id'] = $this->session->userdata('id');
+		$destinationData['organisation_id'] = $this->session->userdata('organisation_id');
+
+		$insertData = array();$i = 0;
+		foreach($itineraries as $itinerary){
+			$insertData[$i] = $destinationData;
+			$insertData[$i]['itinerary_id'] = $itinerary['id'];
+			$i++;
+		}
+
+		if($insertData){
+			$this->db->insert_batch('trip_destinations', $insertData);
+			return true;
+		}else{
+			return false;
+		}
+	}
+
+	//adding trip accomodation trip id and accommodation array
+	function addTripAccommodation($accommodationData,$trip_id)
+	{
+		$itineraries = $this->getItineraries($trip_id);
+		if(!$itineraries || count($accommodationData) == 0)
+			return false;
+
+		$accommodationData['user_id'] = $this->session->userdata('id');
+		$accommodationData['organisation_id'] = $this->session->userdata('organisation_id');
+
+		$insertData = array();$i = 0;
+		foreach($itineraries as $itinerary){
+			$insertData[$i] = $accommodationData;
+			$insertData[$i]['itinerary_id'] = $itinerary['id'];
+			$i++;
+		}
+
+		if($insertData){
+			$this->db->insert_batch('trip_accommodation', $insertData);
+			return true;
+		}else{
+			return false;
+		}
+	}
+
+	//adding trip services trip id and services array
+	function addTripServices($serviceData,$trip_id)
+	{
+		$itineraries = $this->getItineraries($trip_id);
+		if(!$itineraries || count($serviceData) == 0)
+			return false;
+
+		$serviceData['user_id'] = $this->session->userdata('id');
+		$serviceData['organisation_id'] = $this->session->userdata('organisation_id');
+
+		$insertData = array();$i = 0;
+		foreach($itineraries as $itinerary){
+			$insertData[$i] = $serviceData;
+			$insertData[$i]['itinerary_id'] = $itinerary['id'];
+			$i++;
+		}
+
+		if($insertData){
+			$this->db->insert_batch('trip_services', $insertData);
+			return true;
+		}else{
+			return false;
+		}
+	}
+
+	//get trip vehicles or accommodation or services or destinatins of a particular itinerary
+	function getItineraryData($itinerary_id,$table='')
+	{
+		if($table == '')
+			return false;
+
+		$this->db->from($table);
+		$this->db->where('itinerary_id',$itinerary_id);
+		if($query->num_rows() > 0){
+			return $query->result_array();
+		}else{
+			return false;
+		}
+	}
+
+	//get trip vehicles, accommodation, services and destinatins of a trip
+	function getItineraryDataAll($trip_id=0)
+	{
+		if(!is_numeric($trip_id))
+			return false;
+
+		$itineraries = $this->getItineraries($trip_id);
+
+		$tbls = array('trip_destinations','trip_accommodation','trip_services','trip_vehicles');
+		$retArray = array();
+		foreach($itineraries as $itinerary){
+			$retArray[$itinerary['id']]['label'] = $itinerary['date'];
+			foreach($tbls as $tbl){
+				$retArray[$itinerary['id']][$tbl]=$this->getItineraryData($itinerary['id'],$tbl);
+			}
+		}
+
+		return $retArray;
+		
 	}
 
 

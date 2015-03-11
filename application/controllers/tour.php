@@ -42,6 +42,11 @@ class Tour extends CI_Controller {
 	public function show_business_season($getID='')
 	{
 		if($this->session_check()==true) { 
+
+			if($this->mysession->get('post')!=NULL){ 
+				$data=$this->mysession->get('post');
+				$this->mysession->delete('post');
+			}
 			$data['season_list'] = $this->tour_model->getBusinessSeasonList();
 			$data['title']="Business Season | ".PRODUCT_NAME;  
 			$page='user-pages/business-season';
@@ -61,6 +66,10 @@ class Tour extends CI_Controller {
 			$this->form_validation->set_rules('season_name','Season Name','trim|required|xss_clean');
 			$this->form_validation->set_rules('starting','Season Starting','trim|required|xss_clean');
 			$this->form_validation->set_rules('ending','Season Ending','trim|required|xss_clean');
+
+			$data['season_name'] = $this->input->post('season_name');
+			$data['starting'] = $this->input->post('starting');
+			$data['ending'] = $this->input->post('ending');
 
 			if($this->form_validation->run() != False) {
 			//date conversion to mysql
@@ -86,6 +95,8 @@ class Tour extends CI_Controller {
 						$this->session->set_userdata(array('dbError'=>''));
 					}
 				}
+			}else{
+				$this->mysession->set('post',$data);
 			}		
 			
 		}else if(isset($_REQUEST['business-season-delete'])){//delete season click
@@ -96,7 +107,7 @@ class Tour extends CI_Controller {
 			}
 		}
 
-		$this->show_business_season();
+		redirect(base_url().'front-desk/tour/business-season/');
 	}
 
 	
@@ -107,12 +118,7 @@ class Tour extends CI_Controller {
 	{
 		if($this->session_check()==true) { 
 
-			$data['id']= '';
-			$data['name']= '';
-			$data['latitude']= '';
-			$data['longitude']= '';
-			$data['description']= '';
-			$data['seasons']= '';
+			
 		
 			//if edit get values to form inputs
 			if(is_numeric($getID) && $getID > 0){
@@ -120,14 +126,20 @@ class Tour extends CI_Controller {
 				if($destination){
 					//get default values for form input values
 					$data['id']= $destination['id'];
-					$data['name']= $destination['name'];
-					$data['latitude']= $destination['lat'];
-					$data['longitude']= $destination['lng'];
+					$data['dest_name']= $destination['name'];
+					$data['dest_lat']= $destination['lat'];
+					$data['dest_long']= $destination['lng'];
 					$data['seasons']= $destination['seasons']; 
 					$data['description']= $destination['description']; 
 					$data['status_id']= $destination['status_id'];
 				}
+			}elseif($this->mysession->get('post')!=NULL){ 
+				$data=$this->mysession->get('post');
+				$this->mysession->delete('post');
+			}else{
+				$data['id'] = '';
 			}
+
 			$data['business_seasons']=$this->user_model->getArray('business_seasons');
 			$data['destination_list'] = $this->tour_model->getDestinationList(); 
 			$data['title']="Destination | ".PRODUCT_NAME;  
@@ -149,6 +161,14 @@ class Tour extends CI_Controller {
 			$this->form_validation->set_rules('description','Description','trim|required|xss_clean');
 			$this->form_validation->set_rules('dest_lat','Season Starting','numeric|xss_clean');
 			$this->form_validation->set_rules('dest_long','Season Ending','numeric|xss_clean');
+
+			$data['dest_name'] = $this->input->post('dest_name');
+			$data['description'] = $this->input->post('description');
+			$data['dest_lat'] = $this->input->post('dest_lat');
+			$data['dest_long'] = $this->input->post('dest_long');
+			$data['seasons'] =$this->input->post('seasons');
+			$data['id'] =$this->input->post('id');
+
 			if($this->form_validation->run() != False) {
 				$dbData['organisation_id'] = $this->session->userdata('organisation_id'); 
 				$dbData['user_id'] = $this->session->userdata('id'); 
@@ -177,6 +197,8 @@ class Tour extends CI_Controller {
 						$this->session->set_userdata(array('dbError'=>''));
 					}
 				}
+			}else{
+				$this->mysession->set('post',$data);
 			}		
 			
 		}else if(isset($_REQUEST['destination-delete'])){//delete season click 

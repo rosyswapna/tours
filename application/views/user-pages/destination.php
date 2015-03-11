@@ -19,7 +19,7 @@
 	 <div class="form-group">
 	 
 			<?php echo form_label('Location Name');
-			echo form_input(array('name'=>'dest_name','class'=>'form-control','id'=>'dest_name','placeholder'=>'','value'=>$name));
+			echo form_input(array('name'=>'dest_name','class'=>'form-control','id'=>'dest_name','placeholder'=>'','value'=>@$dest_name));
 			echo  $this->form_functions->form_error_session('dest_name','<p class="text-red">', '</p>');?>
 			
 	 
@@ -28,7 +28,7 @@
 	   <div class="form-group">
 			<?php echo br(1);?>
 			<?php echo form_label('Latitude');
-			echo form_input(array('name'=>'dest_lat','class'=>'form-control','id'=>'dest_lat','placeholder'=>'','value'=>$latitude));?>
+			echo form_input(array('name'=>'dest_lat','class'=>'form-control','id'=>'dest_lat','placeholder'=>'','value'=>@$dest_lat));?>
 	   </div>
 	
 	</div>
@@ -37,13 +37,13 @@
 		
 		<div class="form-group">
 			<?php echo form_label('Description(Itinerary)');
-			echo form_textarea(array('name'=>'description','class'=>'form-control','id'=>'description','placeholder'=>'','value'=>$description,'rows'=>1));
+			echo form_textarea(array('name'=>'description','class'=>'form-control','id'=>'description','placeholder'=>'','value'=>@$description,'rows'=>1));
 			echo  $this->form_functions->form_error_session('description','<p class="text-red">', '</p>');?>
 		</div>
 		
 		<div class="form-group">
 			<?php echo form_label('Longitude');
-			echo form_input(array('name'=>'dest_long','class'=>'form-control','id'=>'dest_long','placeholder'=>'','value'=>$longitude));?>
+			echo form_input(array('name'=>'dest_long','class'=>'form-control','id'=>'dest_long','placeholder'=>'','value'=>@$dest_long));?>
 		</div>
 		
 		<div class="form-group"><div class="hide-me"><?php echo form_input(array('name'=>'id','value'=>$id)); ?></div>
@@ -83,7 +83,7 @@
 		$class="form-control";
 		$msg="Season";
 		$name="seasons";
-		echo $this->form_functions->populate_multiselect($name,$business_seasons,$seasons,$class,$id='seasons',$msg)?>
+		echo $this->form_functions->populate_multiselect($name,$business_seasons,@$seasons,$class,$id='seasons',$msg)?>
 	   </div>
    
 	</div>

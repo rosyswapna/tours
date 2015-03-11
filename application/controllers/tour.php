@@ -125,6 +125,7 @@ class Tour extends CI_Controller {
 					$data['longitude']= $destination['lng'];
 					$data['seasons']= $destination['seasons']; 
 					$data['description']= $destination['description']; 
+					$data['status_id']= $destination['status_id'];
 				}
 			}
 			$data['business_seasons']=$this->user_model->getArray('business_seasons');
@@ -178,8 +179,8 @@ class Tour extends CI_Controller {
 				}
 			}		
 			
-		}else if(isset($_REQUEST['destination-delete'])){//delete season click
-			$id = $this->input->post('id');
+		}else if(isset($_REQUEST['destination-delete'])){//delete season click 
+			echo $id = $this->input->post('id'); exit;
 			if($this->settings_model->deleteValues('destinations',$id)){
 				$this->session->set_userdata(array('dbSuccess'=>'Destination Deleted Succesfully..!')); 
 				$this->session->set_userdata(array('dbError'=>''));

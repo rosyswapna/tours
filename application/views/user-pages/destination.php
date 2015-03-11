@@ -45,16 +45,28 @@
 		
 		<div class="form-group"><div class="hide-me"><?php echo form_input(array('name'=>'id','value'=>$id)); ?></div>
 			<?php 
-			if($id!=''){
-			$save_update_button='UPDATE';
-			$btn_name="destination-edit";
-			}else{
+			if($id==''){
 			$save_update_button='SAVE';
 			$btn_name="destination-add";
-			}
 			$class_save_update_button="class='btn btn-success'"; 
+			echo form_submit($btn_name,$save_update_button,$class_save_update_button).nbs(7);
+			}else{
+			$save_update_button='UPDATE';
+			$btn_name="destination-edit";
+			$class_save_update_button="class='btn btn-success'"; 
+			if($status_id==STATUS_ACTIVE){ 
+			$enable_disable="destination-disable";
 			$status='DISABLE';
-			echo form_submit($btn_name,$save_update_button,$class_save_update_button).nbs(7).form_reset("destination-enable-disable",$status,"class='btn btn-danger'");
+			}else{ 
+			$enable_disable="destination-enable";
+			$status='ENABLE';
+			}
+			echo form_submit($btn_name,$save_update_button,$class_save_update_button).nbs(7);
+			echo form_submit($enable_disable,$status,"class='btn btn-danger'");
+			}
+			
+			
+			
 			?>
 		</div>
 	
@@ -74,7 +86,7 @@
 	</div>
 	<?php echo form_close();?>
 	</fieldset>
-	<?php if(isset($destination_list) ){ ?>
+	<?php if(!empty($destination_list)){ ?>
 	<fieldset class="body-border" >
 	<legend class="body-head">List Destinations</legend>
 		<div class="box-body table-responsive no-padding">
@@ -89,7 +101,7 @@
 					    <th colspan="2">Action</th>
 					</tr>
 					<?php foreach($destination_list as $list_val):?>
-				<?php echo form_open(base_url()."tour/show_destination/".$list_val['id']); ?>
+				<?php echo form_open(base_url()."tour/manage_destination"); ?>
 				
 					<tr>
 					<td><?php echo  $list_val['name'];?></td>
@@ -101,11 +113,12 @@
 					echo $business_seasons[$list_val['seasons'][$i]].',';
 					}
 					}?></td>
-					<td style="width:10%"><div  class="tarrif-edit" ><?php echo nbs(5);?><i class="fa fa-edit cursor-pointer"></i><?php echo nbs(5);?></div><div class="hide-me xx"><?php echo form_submit("destination-edit","Edit","id=tarrif-edit-id","class=btn");?></div></td>
-		<td style="width:10%"><div  class="tarrif-delete" ><?php echo nbs(5);?><i class="fa fa-trash-o cursor-pointer"></i><?php echo nbs(5);?></div><div class="hide-me"><?php echo form_submit("destination-delete","Delete","id=tarrif-delete-id","class=btn");?></div></td>
+					<td style="width:10%"><div  class="tarrif-edit" ><?php echo nbs(5);?><?php echo  anchor(base_url()."front-desk/tour/destination/".$list_val['id'], '<i class="fa fa-edit cursor-pointer"></i>')?><?php echo nbs(5);?></div></td>
+					<td style="width:10%"><div  class="tarrif-delete" ><?php echo nbs(5);?><i class="fa fa-trash-o cursor-pointer"></i><?php echo nbs(5);?></div><div class="hide-me"><?php echo form_submit("destination-delete","Delete","id=tarrif-delete-id","class=btn");?></div></td>
+					
 					</tr>
 				     
-				     <?php echo form_close();?>
+				   <?php echo form_hidden(array('name'=>'id','value'=>$list_val['id']));echo form_close();?>
 				     <?php endforeach; ?>
 				</tbody>
 			</table>

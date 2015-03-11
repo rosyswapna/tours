@@ -105,12 +105,13 @@ class Tour extends CI_Controller {
 	//-----------------------destination ----------------------------------
 	public function show_destination($getID='')
 	{
-		if($this->session_check()==true) {
+		if($this->session_check()==true) { 
 
 			$data['id']= '';
 			$data['name']= '';
 			$data['latitude']= '';
 			$data['longitude']= '';
+			$data['description']= '';
 			$data['seasons']= '';
 		
 			//if edit get values to form inputs
@@ -122,7 +123,7 @@ class Tour extends CI_Controller {
 					$data['name']= $destination['name'];
 					$data['latitude']= $destination['lat'];
 					$data['longitude']= $destination['lng'];
-					$data['seasons']= $destination['seasons'];
+					$data['seasons']= $destination['seasons']; 
 				}
 			}
 			$data['business_seasons']=$this->user_model->getArray('business_seasons');
@@ -146,7 +147,6 @@ class Tour extends CI_Controller {
 			$this->form_validation->set_rules('description','Description','trim|required|xss_clean');
 			$this->form_validation->set_rules('dest_lat','Season Starting','numeric|xss_clean');
 			$this->form_validation->set_rules('dest_long','Season Ending','numeric|xss_clean');
-			
 			if($this->form_validation->run() != False) {
 				$dbData['organisation_id'] = $this->session->userdata('organisation_id'); 
 				$dbData['user_id'] = $this->session->userdata('id'); 
@@ -155,8 +155,13 @@ class Tour extends CI_Controller {
 				$dbData['description'] = $this->input->post('description');
 				$dbData['lat'] = $this->input->post('dest_lat');
 				$dbData['lng'] = $this->input->post('dest_long');
-				$dbData['seasons'] = serialize($this->input->post('seasons'));
-			
+				$seasons=array();
+				$seasons=$this->input->post('seasons');
+				if($seasons[0]==''|| empty($seasons)){
+				   $dbData['seasons'] = '';
+				}else{
+				   $dbData['seasons'] = serialize($this->input->post('seasons'));
+				}
 				if(is_numeric($id) && $id > 0){//edit
 					if($this->settings_model->updateValues('destinations',$dbData,$id)){
 						$this->session->set_userdata(array('dbSuccess'=>'Destination Updated Succesfully..!')); 

@@ -2173,7 +2173,12 @@ $('.vehicle-list').on('keydown',function(){
 
 //-----------------------------------Tour Module-----------------------------------------------
 
-
+$('#seasons').click(function(){
+if ($("#seasons option[value!='']:selected").length > 0){
+    $("#seasons option[value='']").removeAttr("selected");  
+   
+}
+});
 
  });
 

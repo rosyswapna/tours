@@ -18,14 +18,15 @@
 		
 	 <div class="form-group">
 	 
-			<?php echo form_label('Name');
-			echo form_input(array('name'=>'dest_name','class'=>'form-control','id'=>'dest_name','placeholder'=>'','value'=>''));?>
+			<?php echo form_label('Location Name');
+			echo form_input(array('name'=>'dest_name','class'=>'form-control','id'=>'dest_name','placeholder'=>'','value'=>$name));?>
 	 
 	
 	</div>
 	   <div class="form-group">
+			<?php echo br(1);?>
 			<?php echo form_label('Latitude');
-			echo form_input(array('name'=>'dest_lat','class'=>'form-control','id'=>'dest_lat','placeholder'=>'','value'=>''));?>
+			echo form_input(array('name'=>'dest_lat','class'=>'form-control','id'=>'dest_lat','placeholder'=>'','value'=>$latitude));?>
 	   </div>
 	
 	</div>
@@ -33,19 +34,18 @@
 	<div class="div-with-28-percent-width-with-margin-20">
 		
 		<div class="form-group">
-			<?php echo form_label('Description');
-			echo form_input(array('name'=>'description','class'=>'form-control','id'=>'description','placeholder'=>'','value'=>''));?>
+			<?php echo form_label('Description(Itinerary)');
+			echo form_textarea(array('name'=>'description','class'=>'form-control','id'=>'description','placeholder'=>'','value'=>$description,'rows'=>1));?>
 		</div>
 		
 		<div class="form-group">
 			<?php echo form_label('Longitude');
-			echo form_input(array('name'=>'dest_long','class'=>'form-control','id'=>'dest_long','placeholder'=>'','value'=>''));?>
+			echo form_input(array('name'=>'dest_long','class'=>'form-control','id'=>'dest_long','placeholder'=>'','value'=>$longitude));?>
 		</div>
 		
 		<div class="form-group">
 			<?php $save_update_button='SAVE';$class_save_update_button="class='btn btn-success'"; $status='DISABLE';
 			echo form_submit("destination-add",$save_update_button,$class_save_update_button).nbs(7).form_reset("destination-enable-disable",$status,"class='btn btn-danger'");
-			echo form_close();
 			?>
 		</div>
 	
@@ -59,13 +59,13 @@
 		$class="form-control";
 		$msg="Season";
 		$name="seasons";
-		echo $this->form_functions->populate_multiselect($name,$business_seasons,$business_seasons_id='',$class,$id='seasons',$msg)?>
+		echo $this->form_functions->populate_multiselect($name,$business_seasons,$seasons,$class,$id='seasons',$msg)?>
 	   </div>
    
 	</div>
 	<?php echo form_close();?>
 	</fieldset>
-	<?php if(isset($destination_list)){ ?>
+	<?php if(isset($destination_list) ){ ?>
 	<fieldset class="body-border" >
 	<legend class="body-head">List Destinations</legend>
 		<div class="box-body table-responsive no-padding">
@@ -79,15 +79,24 @@
 					    <th>Season</th>
 					    <th colspan="2">Action</th>
 					</tr>
-				<?php foreach($destination_list as $list_val): ?>
+					<?php foreach($destination_list as $list_val):?>
+				<?php echo form_open(base_url()."tour/show_destination/".$list_val['id']); ?>
+				
 					<tr>
-					<td></td>
-					<td></td>
-					<td></td>
-					<td></td>
-					<td style="width:10%"><div  class="tarrif-edit" ><?php echo nbs(5);?><i class="fa fa-edit cursor-pointer"></i><?php echo nbs(5);?></div><div class="hide-me xx"><?php echo form_submit("business-season-edit","Edit","id=tarrif-edit-id","class=btn");?></div></td>
-		<td style="width:10%"><div  class="tarrif-delete" ><?php echo nbs(5);?><i class="fa fa-trash-o cursor-pointer"></i><?php echo nbs(5);?></div><div class="hide-me"><?php echo form_submit("business-season-delete","Delete","id=tarrif-delete-id","class=btn");?></div></td>
+					<td><?php echo  $list_val['name'];?></td>
+					<td><?php echo  $list_val['lat'];?></td>
+					<td><?php echo  $list_val['lng'];?></td>
+					<td><?php if($list_val['seasons']==''){echo $seasons_list='All Season';}
+					else{ 
+					for($i=0;$i<count($list_val['seasons']);$i++){
+					echo $business_seasons[$list_val['seasons'][$i]].',';
+					}
+					}?></td>
+					<td style="width:10%"><div  class="tarrif-edit" ><?php echo nbs(5);?><i class="fa fa-edit cursor-pointer"></i><?php echo nbs(5);?></div><div class="hide-me xx"><?php echo form_submit("destination-edit","Edit","id=tarrif-edit-id","class=btn");?></div></td>
+		<td style="width:10%"><div  class="tarrif-delete" ><?php echo nbs(5);?><i class="fa fa-trash-o cursor-pointer"></i><?php echo nbs(5);?></div><div class="hide-me"><?php echo form_submit("destination-delete","Delete","id=tarrif-delete-id","class=btn");?></div></td>
 					</tr>
+				     
+				     <?php echo form_close();?>
 				     <?php endforeach; ?>
 				</tbody>
 			</table>

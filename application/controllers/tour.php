@@ -27,7 +27,7 @@ class Tour extends CI_Controller {
 				$this->manage_business_season($param2);
 			}elseif($param1=='destination'){	
 				$this->show_destination($param2);
-			}elseif($param1=='tour-booking'){	
+			}elseif($param1=='booking'){	
 				$this->tour_booking($param2);
 			}else{
 				$this->notFound();
@@ -238,8 +238,24 @@ class Tour extends CI_Controller {
 		}
 	}
 
+	public function getSeasonDestinations($Ajax='NO')
+	{
+		$_date = $_REQUEST['itinerary-date'];
+	}
+
 	public function tour_booking()
 	{
+		$tblArray=array('booking_sources','available_drivers','trip_models','drivers','vehicle_types',	
+				'vehicle_models','vehicle_makes','vehicle_ac_types','vehicle_fuel_types',
+				'vehicle_seating_capacity','vehicle_beacon_light_options','languages','payment_type',
+				'customer_types','customer_groups','hotel_categories','trip-services');
+			
+		foreach($tblArray as $table){
+			$data[$table]=$this->user_model->getArray($table);
+		}
+
+		echo "<pre>";print_r($data);echo "</pre>";exit;
+		
 		$data['title']="Tour Booking | ".PRODUCT_NAME;  
 		$page='user-pages/tour-booking';
 		$this->load_templates($page,$data);
@@ -254,34 +270,34 @@ class Tour extends CI_Controller {
 			//trip data
 			$tripData['id'] 		= $this->input->post('id');
 			$tripData['customer_id'] 	= $this->input->post('customer_id');
-			$tripData['guest_id'] 	= $this->input->post('guest_id');
+			$tripData['guest_id'] 		= $this->input->post('guest_id');
 			$tripData['booking_date'] 	= $this->input->post('booking_date');
 			$tripData['booking_time'] 	= $this->input->post('booking_time');
-			$tripData['trip_status_id'] = $this->input->post('trip_status_id');
-			$tripData['source_id'] 	= $this->input->post('source_id');
-			$tripData['source_details'] = $this->input->post('source_details');
-			$tripData['source_contact'] = $this->input->post('source_contact');
+			$tripData['trip_status_id'] 	= $this->input->post('trip_status_id');
+			$tripData['source_id'] 		= $this->input->post('source_id');
+			$tripData['source_details'] 	= $this->input->post('source_details');
+			$tripData['source_contact'] 	= $this->input->post('source_contact');
 			$tripData['pickup_date'] 	= $this->input->post('pickup_date');
 			$tripData['pickup_time'] 	= $this->input->post('pickup_time');
-			$tripData['drop_date'] 	= $this->input->post('drop_date');
-			$tripData['drop_time'] 	= $this->input->post('drop_time');
+			$tripData['drop_date'] 		= $this->input->post('drop_date');
+			$tripData['drop_time'] 		= $this->input->post('drop_time');
 			$tripData['trip_from_destination_id'] 	= $this->input->post('trip_from_destination_id');
 			$tripData['trip_to_destination_id'] 	= $this->input->post('trip_to_destination_id');
 			$tripData['pax'] 		= $this->input->post('pax');
 			$tripData['markup_type'] 	= $this->input->post('markup_type');
 			$tripData['markup_value'] 	= $this->input->post('markup_value');
-			$tripData['remarks'] 	= $this->input->post('remarks');
+			$tripData['remarks'] 		= $this->input->post('remarks');
 
 			//trip Vehicle data
-			$vehicleData['vehicle_id'] = $this->input->post('pax');
-			$vehicleData['vehicle_ac_type_id'] = $this->input->post('pax');
+			$vehicleData['vehicle_id'] 		= $this->input->post('pax');
+			$vehicleData['vehicle_ac_type_id'] 	= $this->input->post('pax');
 			$vehicleData['vehicle_beacon_light_option_id'] = $this->input->post('pax');
-			$vehicleData['vehicle_type_id'] = $this->input->post('pax');
-			$vehicleData['vehicle_model_id'] = $this->input->post('pax');
-			$vehicleData['pluckcard'] = $this->input->post('pax');
-			$vehicleData['uniform'] = $this->input->post('pax');
-			$vehicleData['tariff_id'] = $this->input->post('pax');
-			$vehicleData['driver_id'] = $this->input->post('pax');
+			$vehicleData['vehicle_type_id'] 	= $this->input->post('pax');
+			$vehicleData['vehicle_model_id'] 	= $this->input->post('pax');
+			$vehicleData['pluckcard'] 	= $this->input->post('pax');
+			$vehicleData['uniform'] 	= $this->input->post('pax');
+			$vehicleData['tariff_id'] 	= $this->input->post('pax');
+			$vehicleData['driver_id'] 	= $this->input->post('pax');
 			$vehicleData['driver_language_id'] = $this->input->post('pax');
 			$vehicleData['driver_language_proficiency_id'] = $this->input->post('pax');
 
@@ -298,6 +314,14 @@ class Tour extends CI_Controller {
 				if($itinerary){
 					$tripVehicleUpdate = $this->tour_model->addTripVehicles($vehicleData,$trip_id);
 				}
+
+				$this->session->set_userdata(array('dbSuccess'=>'Trip booked successfully!')); 
+				$this->session->set_userdata(array('dbError'=>''));
+				redirect(base_url().'front-desk/tour/booking/'.$trip_id);
+			}else{
+				$this->session->set_userdata(array('dbSuccess'=>'')); 
+				$this->session->set_userdata(array('dbError'=>'Trip booking Failed'));
+				redirect(base_url().'front-desk/tour/booking/');
 			}
 			
 		}

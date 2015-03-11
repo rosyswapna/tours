@@ -186,6 +186,17 @@ class Tour extends CI_Controller {
 
 	//-------------------------tour module fuctions--------------------------------------------
 
+	public function checkRoomAvailability($Ajax = 'NO')//not completed
+	{
+		$hotel_id	= $_REQUEST['hotel_id'];
+		$room_type_id	= $_REQUEST['room_type_id'];
+		$_date 		= $_REQUEST['booking_date'];
+		$hotel_room = $this->hotel_model->getHotelRoomType($hotel_id,$room_type_id);
+		if($hotel_room){
+			$room_occupancy = $this->tour_model->getRoomOccupancyCount($hotel_id,$room_type_id,$_date);
+		}
+	}
+
 	public function tour_booking()
 	{
 		$data['title']="Tour Booking | ".PRODUCT_NAME;  

@@ -44,6 +44,7 @@ class Tour_model extends CI_Model {
 			$retArray['name'] = $row->name;
 			$retArray['lat'] = $row->lat;
 			$retArray['lng'] = $row->lng;
+			$retArray['description'] = $row->description;
 			$retArray['seasons'] = ($row->seasons !='')?unserialize($row->seasons):'';
 			return $retArray;
 		}else{
@@ -53,7 +54,7 @@ class Tour_model extends CI_Model {
 
 	function getDestinationList()
 	{
-		$this->db->select('id,name,lat,lng,seasons');
+		$this->db->select('id,name,lat,lng,seasons,description');
 		$this->db->from('destinations');
 		$this->db->where('organisation_id',$this->session->userdata('organisation_id'));
 		$query = $this->db->get();

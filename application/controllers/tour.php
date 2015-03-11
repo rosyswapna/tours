@@ -26,6 +26,8 @@ class Tour extends CI_Controller {
 				$this->manage_business_season($param2);
 			}elseif($param1=='destination'){	
 				$this->show_destination($param2);
+			}elseif($param1=='tour-booking'){	
+				$this->tour_booking($param2);
 			}else{
 				$this->notFound();
 			}
@@ -186,9 +188,21 @@ class Tour extends CI_Controller {
 		$this->show_destination();
 	}
 
-	//------------------------------------------------------------------------------------------
+	//-----------------------------------------------------------------------------------------
 
-	//----------------------common functions-----------------------------------------
+
+	//-------------------------tour module fuctions--------------------------------------------
+
+	public function tour_booking()
+	{
+		$data['title']="Tour Booking | ".PRODUCT_NAME;  
+		$page='user-pages/tour-booking';
+		$this->load_templates($page,$data);
+	}
+
+	//-----------------------------------------------------------------------------------------
+
+	//----------------------common functions---------------------------------------------------
 	public function session_check() {
 		if(($this->session->userdata('isLoggedIn')==true ) && ($this->session->userdata('type')==FRONT_DESK)) {
 			return true;

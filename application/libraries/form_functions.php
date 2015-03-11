@@ -91,11 +91,13 @@ function form_error_session($field = '', $container_open ='', $container_close='
 		}
 }
 
-function populate_multiselect($name = '', $options = array(), $selected = array(),$class='',$id='',$msg='select',$disabled='',$max_len='4'){
+function populate_multiselect($name = '', $options = array(), $selected = array(),$class='',$id='',$msg='',$disabled='',$max_len='4'){
 	$CI = & get_instance();
 
 	$form = '<select max_length="'.$max_len.'" multiple="multiple" name="'.$name.'" class="'.$class.'" id="'.$id.'" '.$disabled.'/>';
-	$form .= '<optgroup label="'.$msg.'">';
+	
+
+	$form .= '<option value="'.ALL_TEXT.'">All '.(string) $msg."</option>\n";
 
 	if (!is_array($selected)) $selected = array($selected);
 
@@ -114,7 +116,7 @@ function populate_multiselect($name = '', $options = array(), $selected = array(
 					
 		}
 	}
-	$form .= '</optgroup>';
+	
 	$form .= '</select>';
 
 	return $form;

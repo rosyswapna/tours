@@ -44,7 +44,7 @@ class Tour_model extends CI_Model {
 			$retArray['name'] = $row->name;
 			$retArray['lat'] = $row->lat;
 			$retArray['lng'] = $row->lng;
-			$retArray['seasons'] = ($row['seasons'] !='')?unserialize($row['seasons']):'';
+			$retArray['seasons'] = ($row->seasons !='')?unserialize($row->seasons):'';
 			return $retArray;
 		}else{
 			return false;

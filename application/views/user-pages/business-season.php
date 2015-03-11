@@ -32,7 +32,7 @@
 		</table>
 		</div>
 	</fieldset>
-	<?php if(isset($season_list)){?>
+	<?php if(!empty($season_list)){?>
 	<fieldset class="body-border border-style" >
 	<legend class="body-head">Manage Business Season</legend>
 		<?php echo br(); ?>

@@ -47,30 +47,30 @@
 		<legend class="body-head">Profile</legend>
 		    <div class="form-group">
 				<?php echo form_label('Name'); ?>
-				<?php echo form_input(array('name'=>'hotel_name','class'=>'form-control','id'=>'hotel_name','value'=>@$name)); ?>
+				<?php echo form_input(array('name'=>'hotel_name','class'=>'form-control','id'=>'hotel_name','value'=>@$profile['name'])); ?>
 		    </div>
 		    <div class="form-group">
 				<?php echo form_label('Address'); ?>
-				<?php echo form_textarea(array('name'=>'hotel_address','rows'=>'4','class'=>'form-control','id'=>'hotel_address','value'=>@$address)); ?>
+				<?php echo form_textarea(array('name'=>'hotel_address','rows'=>'4','class'=>'form-control','id'=>'hotel_address','value'=>@$profile['address'])); ?>
 		    </div>
 		    <div class="form-group">
 				<?php echo form_label('City'); ?>
-				<?php echo form_input(array('name'=>'city','class'=>'form-control','id'=>'city','value'=>@$city)); ?>
+				<?php echo form_input(array('name'=>'city','class'=>'form-control','id'=>'city','value'=>@$profile['city'])); ?>
 		    </div>
 		    <div class="form-group">
 				<?php echo form_label('State'); ?>
-				<?php echo form_input(array('name'=>'state','class'=>'form-control','id'=>'state','value'=>@$state)); ?>
+				<?php echo form_input(array('name'=>'state','class'=>'form-control','id'=>'state','value'=>@$profile['state'])); ?>
 		    </div>
 		    <div class="form-group">
 				<?php echo form_label('Hotel Categories'); ?>
 				<?php $class="form-control";
 				$msg="-Select-";
 				$name="category";
-			echo $this->form_functions->populate_dropdown($name,$hotel_categories,@$hotel_category_id,$class,$id='category',$msg); ?>
+			echo $this->form_functions->populate_dropdown($name,$hotel_categories,@$profile['hotel_category_id'],$class,$id='category',$msg); ?>
 		   </div>
 		    <div class="form-group">
 				<?php echo form_label('No.of Rooms'); ?>
-				<?php echo form_input(array('name'=>'no_of_rooms','class'=>'form-control','id'=>'no_of_rooms','value'=>@$no_of_rooms)); ?>
+				<?php echo form_input(array('name'=>'no_of_rooms','class'=>'form-control','id'=>'no_of_rooms','value'=>@$profile['no_of_rooms'])); ?>
 		    </div>
 		</fieldset>
 		
@@ -84,7 +84,7 @@
 				<?php $class="form-control";
 				$msg="-Select-";
 				$name="destination";
-			echo $this->form_functions->populate_dropdown($name,$destinations,@$destination_id,$class,$id='',$msg); ?>
+			echo $this->form_functions->populate_dropdown($name,$destinations,@$profile['destination_id'],$class,$id='',$msg); ?>
 		   </div>
 		   <div class="form-group">
 			<?php 
@@ -92,26 +92,26 @@
 			$class="form-control";
 			$msg="Season";
 			$name="seasons";
-			echo $this->form_functions->populate_multiselect($name,$business_seasons,@$seasons,$class,$id='seasons',$msg)?>
+			echo $this->form_functions->populate_multiselect($name,$business_seasons,@$profile['seasons'],$class,$id='seasons',$msg)?>
 		    </div>
 		    <div class="form-group">
 				<?php echo form_label('Contact Person'); ?>
-				<?php echo form_input(array('name'=>'contact_person','class'=>'form-control','id'=>'contact_person','value'=>@$contact_person)); ?>
+				<?php echo form_input(array('name'=>'contact_person','class'=>'form-control','id'=>'contact_person','value'=>@$profile['contact_person'])); ?>
 		    </div>
 		    <div class="form-group">
 				<?php echo form_label('Mobile'); ?>
-				<?php echo form_input(array('name'=>'mobile','class'=>'form-control','id'=>'mobile','value'=>@$mobile)); ?>
+				<?php echo form_input(array('name'=>'mobile','class'=>'form-control','id'=>'mobile','value'=>@$profile['mobile'])); ?>
 		    </div>
 		    <div class="form-group">
 				<?php echo form_label('Phone'); ?>
-				<?php echo form_input(array('name'=>'phone','class'=>'form-control','id'=>'phone','value'=>@$phone)); ?>
+				<?php echo form_input(array('name'=>'phone','class'=>'form-control','id'=>'phone','value'=>@$profile['land_line_number'])); ?>
 		    </div>
 		    <div class="form-group">
 				<?php echo form_label('Rating'); ?>
 				<?php $class="form-control";
 				$msg="-Select-";
 				$name="rating";
-			echo $this->form_functions->populate_dropdown($name,$hotel_ratings,@$hotel_rating_id,$class,$id='',$msg); ?>
+			echo $this->form_functions->populate_dropdown($name,$hotel_ratings,@$profile['hotel_rating_id'],$class,$id='',$msg); ?>
 		    </div>
 		    <div class="form-group">
 			<?php $save_update_button='SAVE';$class_save_update_button="class='btn btn-success'";

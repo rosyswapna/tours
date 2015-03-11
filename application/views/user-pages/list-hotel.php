@@ -12,22 +12,23 @@
 		</div>
 		<?php  } ?>   
 <fieldset class="body-border">
-<legend class="body-head">List Vehicles</legend>
+<legend class="body-head">List Hotels</legend>
 <div class="box-body table-responsive no-padding">
-<table class="table list-org-table">
+<table class="table table-hover table-bordered table-with-20-percent-td">
 	<tbody>
 	<tr>
 	<th>Name</th>
 	<th>Address</th>
 	<th>Contact Details</th>
 	</tr>
-	
+<?php if(!empty($hotels)){  
+	foreach($hotels as $values):?>
 	<tr>
-	<td></td>
-	<td></td>
-	<td></td>
+	<td><?php  echo anchor(base_url().'front-desk/hotel/profile/'.$values['id'],$values['name']).br();?> </td>
+	<td><?php echo $values['address'];?></td>
+	<td><?php echo $values['mobile'].','.$values['mobile'];?></td>
 	</tr>
-	
+	<?php endforeach; }?>
 	</tbody>
 </table>
 </div>

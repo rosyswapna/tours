@@ -44,7 +44,14 @@
 		</div>
 		
 		<div class="form-group">
-			<?php $save_update_button='SAVE';$class_save_update_button="class='btn btn-success'"; $status='DISABLE';
+			<?php 
+			if($id!=''){
+			$save_update_button='UPDATE';
+			}else{
+			$save_update_button='SAVE';
+			}
+			$class_save_update_button="class='btn btn-success'"; 
+			$status='DISABLE';
 			echo form_submit("destination-add",$save_update_button,$class_save_update_button).nbs(7).form_reset("destination-enable-disable",$status,"class='btn btn-danger'");
 			?>
 		</div>

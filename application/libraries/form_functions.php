@@ -96,9 +96,11 @@ function populate_multiselect($name = '', $options = array(), $selected = array(
 
 	$form = '<select max_length="'.$max_len.'" multiple="multiple" name="'.$name.'[]" class="'.$class.'" id="'.$id.'" '.$disabled.'/>';
 	
-
-	$form .= '<option value="'.ALL_TEXT.'">All '.(string) $msg."</option>\n";
-
+	if($selected==''){
+		$form .= '<option selected="selected" value="'.ALL_TEXT.'">All '.(string) $msg."</option>\n";
+	}else{
+		$form .= '<option value="'.ALL_TEXT.'">All '.(string) $msg."</option>\n";
+	}
 	if (!is_array($selected)) $selected = array($selected);
 
 	if(!empty($options)){

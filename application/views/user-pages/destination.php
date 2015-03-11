@@ -43,16 +43,18 @@
 			echo form_input(array('name'=>'dest_long','class'=>'form-control','id'=>'dest_long','placeholder'=>'','value'=>$longitude));?>
 		</div>
 		
-		<div class="form-group">
+		<div class="form-group"><div class="hide-me"><?php echo form_input(array('name'=>'id','value'=>$id)); ?></div>
 			<?php 
 			if($id!=''){
 			$save_update_button='UPDATE';
+			$btn_name="destination-edit";
 			}else{
 			$save_update_button='SAVE';
+			$btn_name="destination-add";
 			}
 			$class_save_update_button="class='btn btn-success'"; 
 			$status='DISABLE';
-			echo form_submit("destination-add",$save_update_button,$class_save_update_button).nbs(7).form_reset("destination-enable-disable",$status,"class='btn btn-danger'");
+			echo form_submit($btn_name,$save_update_button,$class_save_update_button).nbs(7).form_reset("destination-enable-disable",$status,"class='btn btn-danger'");
 			?>
 		</div>
 	

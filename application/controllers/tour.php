@@ -124,6 +124,7 @@ class Tour extends CI_Controller {
 					$data['latitude']= $destination['lat'];
 					$data['longitude']= $destination['lng'];
 					$data['seasons']= $destination['seasons']; 
+					$data['description']= $destination['description']; 
 				}
 			}
 			$data['business_seasons']=$this->user_model->getArray('business_seasons');

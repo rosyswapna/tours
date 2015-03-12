@@ -136,8 +136,20 @@
 	
 	<?php if (array_key_exists('o_tab', $tabs)) {?>
          	<div class="<?php echo $tabs['o_tab']['content_class'];?>" id="<?php echo $tabs['o_tab']['tab_id'];?>">
-       <!-- <div class="tab-pane" id="tab_2">-->
+	<?php if($this->session->userdata('O_dbSuccess') != '') { ?>
+		<div class="success-message">
+			<div class="alert alert-success alert-dismissable">
+			<i class="fa fa-check"></i>
+			<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+			<?php 
+			echo $this->session->userdata('O_dbSuccess');
+			$this->session->set_userdata('O_dbSuccess','');
+			?>
+		   	</div>
+		</div>
+		<?php  } ?>
             <div class="width-30-percent-with-margin-left-20-Hotel-Profile-View">
+	<?php echo form_open(base_url()."hotel/manage_hotel_owner/".$profile['id']); ?>
 	<fieldset class="body-border-Driver-View border-style-Driver-view" >
 	<legend class="body-head">Owner Details</legend>
 	
@@ -145,37 +157,44 @@
 	<tr>
 	<td><div class="form-group">
 				<?php echo form_label('Name'); ?>
-				<?php echo form_input(array('name'=>'owner-name','class'=>'form-control','id'=>'owner-name','value'=>'')); ?>
+				<?php echo form_input(array('name'=>'owner-name','class'=>'form-control','id'=>'owner-name','value'=>@$owner['name'])); ?>
 		    </div></td>
 	</tr>
 	<td><div class="form-group">
 				<?php echo form_label('Mobile'); ?>
-				<?php echo form_input(array('name'=>'mob-no','class'=>'form-control','id'=>'mob-no','value'=>'')); ?>
+				<?php echo form_input(array('name'=>'mob-no','class'=>'form-control','id'=>'mob-no','value'=>@$owner['mobile'])); ?>
 		    </div></td>
 	</tr>	    
 	<td><div class="form-group">
 				<?php echo form_label('Email'); ?>
-				<?php echo form_input(array('name'=>'mail-id','class'=>'form-control','id'=>'mail-id','value'=>'')); ?>
+				<?php echo form_input(array('name'=>'mail-id','class'=>'form-control','id'=>'mail-id','value'=>@$owner['email'])); ?>
 		    </div></td>
 	</tr>	    
 	<td><div class="form-group">
 				<?php echo form_label('Username'); ?>
-				<?php echo form_input(array('name'=>'owner-uname','class'=>'form-control','id'=>'owner-uname','value'=>'')); ?>
+				<?php echo form_input(array('name'=>'username','class'=>'form-control','id'=>'username','value'=>'')); ?>
 		    </div></td>
 	</tr>	    
 	<td><div class="form-group">
 				<?php echo form_label('Password'); ?>
-				<?php echo form_input(array('name'=>'owner-pwd','class'=>'form-control','id'=>'owner-pwd','value'=>'')); ?>
+				<?php echo form_password(array('name'=>'password','class'=>'form-control','id'=>'password','value'=>'')); ?>
 		    </div></td>
 	</tr>	    
 	<td><div class="form-group">
 				<?php echo form_label('Confirm Password'); ?>
-				<?php echo form_input(array('name'=>'owner-cpwd','class'=>'form-control','id'=>'owner-cpwd','value'=>'')); ?>
+				<?php echo form_password(array('name'=>'cpassword','class'=>'form-control','id'=>'cpassword','value'=>@$owner[''])); ?>
 		    </div></td>
 	</tr>	    
 	<td><div class="form-group">
-			<?php $save_update_button='SAVE';$class_save_update_button="class='btn btn-success'";
-			echo form_submit("h-owner-add-update",$save_update_button,$class_save_update_button).nbs(7).form_reset("customer_reset","RESET","class='btn btn-danger'");
+			<?php 
+			if(isset($owner['id'])){
+			$save_update_button='UPDATE';
+			}else{
+			$save_update_button='SAVE';
+			}$class_save_update_button="class='btn btn-success'";
+			echo form_submit("h-owner-add-update",$save_update_button,$class_save_update_button).nbs(7);
+			// echo form_reset("customer_reset","RESET","class='btn btn-danger'");
+			echo form_input(array('name'=>'owner_id','value'=>@$owner['id'],'class'=>'hide-me'));
 			echo form_close();
 			?>
 		</div></td>
@@ -194,18 +213,18 @@
            <div class="hotel-profile-body">
 		<fieldset class="body-border border-style" >
 		<legend class="body-head">Add Room Availability</legend>
-		
+		<?php echo form_open(base_url()."hotel/manage_hotel_rooms/".$profile['id']); ?>
 		<table>
 		<tr>
 		<td><?php echo form_label('Room Type').nbs(5); ?></td>
 		<td><?php $class="form-control";
 		$msg="-Select-";
-		$name="room_type";
-		echo $this->form_functions->populate_dropdown($name,$room_types='',$room_type_id='',$class,$id='room_type',$msg);?></td>
+		$name="room_type_id";
+		echo $this->form_functions->populate_dropdown($name,$room_types,@$room_type_id,$class,$id='room_type',$msg);?></td>
 		<td><?php echo nbs(10);?></td>
 		<td><?php echo form_label('No:of Rooms').nbs(5); ?></td>
-		<td><?php echo form_input(array('name'=>'no_room','class'=>'form-control','id'=>'no_room','value'=>'','style'=>'margin-top:20px')).nbs(5); ?></td>
-		<td><div  class="tarrif-add" ><?php echo nbs(5);?><i class="fa fa-plus-circle cursor-pointer"></i><?php echo nbs(5);?></div><div class="hide-me"><?php echo form_submit("add","Add","id=tarrif-add-id","class=btn");?></td>
+		<td><?php echo form_input(array('name'=>'no_of_rooms','class'=>'form-control','id'=>'no_of_rooms','value'=>'','style'=>'margin-top:20px')).nbs(5); ?></td>
+		<td><div  class="tarrif-add" ><?php echo nbs(5);?><i class="fa fa-plus-circle cursor-pointer"></i><?php echo nbs(5);?></div><div class="hide-me"><?php echo form_submit("room-add","Add","id=tarrif-add-id","class=btn");?></td>
 		</tr>
 		</table>
 		</fieldset>
@@ -227,7 +246,7 @@
 			<td><?php $class="form-control";
 				$msg="-Select-";
 				$name="m_room_type";
-				echo $this->form_functions->populate_dropdown($name,$room_types='',$room_type_id='',$class,$id='m_room_type',$msg);?>
+				echo $this->form_functions->populate_dropdown($name,$room_types,$room_type_id='',$class,$id='m_room_type',$msg);?>
 				</td>
 			<td><?php echo nbs(10);?></td>
 			<td><?php echo form_input(array('name'=>'m_no_room','class'=>'form-control' ,'id'=>'m_no_room','value'=>''));?></td>
@@ -237,6 +256,7 @@
 		</tr>
 		</table>
 		</fieldset>
+		<?php echo form_close();?>
 	   </div>
         </div>
 	<?php } ?>

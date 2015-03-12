@@ -234,14 +234,15 @@
 		$name="room_type_id";
 		echo $this->form_functions->populate_dropdown($name,$room_types,@$room_type_id,$class,$id='room_type',$msg);?></td>
 		<td><?php echo nbs(10);?></td>
-		<td><?php echo form_label('No:of Rooms').nbs(5); ?></td>
+		<td><?php echo form_label('Number of Rooms').nbs(5); ?></td>
 		<td><?php echo form_input(array('name'=>'no_of_rooms','class'=>'form-control','id'=>'no_of_rooms','value'=>'','style'=>'margin-top:20px')).nbs(5); ?></td>
 		<td><div  class="tarrif-add" ><?php echo nbs(5);?><i class="fa fa-plus-circle cursor-pointer"></i><?php echo nbs(5);?></div><div class="hide-me"><?php echo form_submit("room-add","Add","id=tarrif-add-id","class=btn");?></td>
 		</tr>
 		</table>
+		<?php echo form_close();?>
 		</fieldset>
-		
-		<fieldset class="body-border border-style" >
+		<?php if(!empty($rooms)){ ?>
+		<fieldset class="body-border border-style">
 		<legend class="body-head">Manage Room Availability</legend>
 		<?php echo br(1);?>
 		
@@ -250,25 +251,33 @@
 			
 			<td><?php echo form_label('Room Type '); ?></td>
 			<td><?php echo nbs(10);?></td>
-			<td><?php echo form_label('No:of Rooms '); ?></td>
+			<td><?php echo form_label('Number of Rooms'); ?></td>
 			<td><?php echo nbs(10);?></td>
 			<td colspan="2"><?php echo form_label('Action','action'); ?></td>
 		</tr>
+		
+		<?php  foreach($rooms as $values):
+		echo form_open(base_url()."hotel/manage_hotel_rooms/".$profile['id']); ?>
+		
 		<tr>
 			<td><?php $class="form-control";
 				$msg="-Select-";
-				$name="m_room_type";
-				echo $this->form_functions->populate_dropdown($name,$room_types,$room_type_id='',$class,$id='m_room_type',$msg);?>
+				$name="room_type_id";
+				echo $this->form_functions->populate_dropdown($name,$room_types,$values['room_type_id'],$class,$id='m_room_type',$msg);?>
 				</td>
 			<td><?php echo nbs(10);?></td>
-			<td><?php echo form_input(array('name'=>'m_no_room','class'=>'form-control' ,'id'=>'m_no_room','value'=>''));?></td>
+			<td><?php echo form_input(array('name'=>'no_of_rooms','class'=>'form-control' ,'id'=>'m_no_room','value'=>$values['no_of_rooms']));?></td>
 			<td><?php echo nbs(10);?></td>
-			<td><div  class="tarrif-edit" ><?php echo nbs(5);?><i class="fa fa-edit cursor-pointer"></i><?php echo nbs(5);?></div><div class="hide-me xx"><?php echo form_submit("edit","Edit","id=tarrif-edit-id","class=btn");?></div></td>
+			<td><div  class="tarrif-edit" ><?php echo nbs(5);?><i class="fa fa-edit cursor-pointer"></i><?php echo nbs(5);?></div><div class="hide-me xx"><?php echo form_submit("room-edit","Edit","id=tarrif-edit-id","class=btn");?></div></td>
 			<td><div  class="tarrif-delete" ><?php echo nbs(5);?><i class="fa fa-trash-o cursor-pointer"></i><?php echo nbs(5);?></div><div class="hide-me"><?php echo form_submit("delete","Delete","id=tarrif-delete-id","class=btn");?></div></td>
 		</tr>
+		
+		<?php
+		      echo form_close();
+		      endforeach;?>
 		</table>
 		</fieldset>
-		<?php echo form_close();?>
+		<?php }?>
 	   </div>
         </div>
 	<?php } ?>

@@ -49,10 +49,10 @@ class Hotel extends CI_Controller {
 				$data[$table]=$this->user_model->getArray($table);
 			}
 			$active_tab = 'h_tab';
-			if($param2 != null){//edit profile
+			if($param2 != null){ //edit profile
 				$data['profile'] = $this->hotel_model->getHotelProfile($param2); 
 				$data['owner'] = $this->hotel_model->getHotelOwner(@$data['profile']['hotel_owner_id']); 
-				$data['rooms'] = $this->hotel_model->getHotelRooms($param2);
+				$data['rooms'] = $this->hotel_model->getHotelRooms($param2); 
 				$data['room_attr_tariffs'] = $this->hotel_model->getHotelRoomTariffs($param2);
 
 				if($this->mysession->get('post_profile')){
@@ -210,7 +210,7 @@ class Hotel extends CI_Controller {
 	public function manage_hotel_rooms($hotel_id='')
 	{ 
 		$id = '';
-		if(isset($_REQUEST['room-add']) || isset($_REQUEST['room-edit'])){
+		if(isset($_REQUEST['room-add']) || isset($_REQUEST['room-edit'])){ 
 			$this->form_validation->set_rules('room_type_id','Room Type','trim|required|xss_clean');
 			$this->form_validation->set_rules('no_of_rooms','Number Of Rooms','trim|required|numeric|xss_clean');
 			
@@ -223,7 +223,7 @@ class Hotel extends CI_Controller {
 			$dbData['user_id'] = $this->session->userdata('id');
 			
 			if($this->form_validation->run() != False) { 
-				 
+				
 				$this->hotel_model->updateHotelRooms($dbData);
 					
 				$this->session->set_userdata(array('R_dbSuccess'=>'Hotel Rooms Updated Succesfully..!')); 

@@ -202,7 +202,7 @@ class Hotel_model extends CI_Model {
 	//insert if no record else update hotel rooms
 	function updateHotelRooms($data)
 	{
-		$condition = array('season_id'=>$data['season_id'],'hotel_id'=>$data['hotel_id'],'room_type_id'=>$data['room_type_id']);
+		$condition = array('hotel_id'=>$data['hotel_id'],'room_type_id'=>$data['room_type_id']);
 
 		$this->db->where($condition);
 		$q = $this->db->get('hotel_rooms');

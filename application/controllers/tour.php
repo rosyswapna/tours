@@ -242,9 +242,9 @@ class Tour extends CI_Controller {
 	public function season_destinations($Ajax='NO')
 	{
 		$_date = $_REQUEST['itinerary-date'];
-		$destinations = $this->tour_model->getSeasonDestinations($_date);
+		$destinations = $this->tour_model->getDateSeasonDestinations($_date);
 		if($Ajax=='NO'){
-				return $destinations;
+			return $destinations;
 		}else{
 			header('Content-Type: application/json');
 			echo json_encode($destinations);
@@ -253,8 +253,7 @@ class Tour extends CI_Controller {
 
 	public function tour_booking()
 	{
-		$seasons = $this->tour_model->getSeasonIdssWithDate('2015-01-12');
-		echo "<pre>";print_r($seasons );echo "</pre>";exit;
+		
 
 		$tblArray=array('booking_sources','available_drivers','trip_models','drivers','vehicle_types',	
 				'vehicle_models','vehicle_makes','vehicle_ac_types','vehicle_fuel_types',

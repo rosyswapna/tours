@@ -6,6 +6,7 @@ class Tour extends CI_Controller {
     		parent::__construct();
 		$this->load->helper('my_helper');
 		$this->load->model('tour_model');
+		$this->load->model('hotel_model');
 		$this->load->model('user_model');
 		$this->load->model('settings_model');
 		no_cache();
@@ -251,8 +252,33 @@ class Tour extends CI_Controller {
 		}
 	}
 
+	//get hotel list with hotel category and destination
+	public function getAvailableHotels($Ajax='NO')
+	{
+		$destination_id = $_REQUEST['destination_id'];
+		$category_id = $_REQUEST['category_id'];
+		$_date = $_REQUEST['itinerary-date'];
+		$seasons = $this->tour_model->getSeasonIdssWithDate($_date);
+		$condition = array('hotel.destination_id'=>$destination_id,'hotel.hotel_category_id'=>$category_id);
+		
+		$hotels = $this->hotel_model->getAvailableHotels($condition,$seasons);
+		
+		if($Ajax=='NO'){
+			return $destinations;
+		}else{
+			header('Content-Type: application/json');
+			echo json_encode($destinations);
+		}
+	}
+
 	public function tour_booking()
 	{
+		$condition = array('hotel.destination_id'=>1,'hotel.hotel_category_id'=>1);
+		$seasons = $this->tour_model->getSeasonIdssWithDate('2015-01-12');
+		
+		$hotels = $this->hotel_model->getDateSeasonHotels($condition,$seasons);
+
+		echo "<pre>";print_r($hotels);echo "</pre>";exit;
 		
 
 		$tblArray=array('booking_sources','available_drivers','trip_models','drivers','vehicle_types',	

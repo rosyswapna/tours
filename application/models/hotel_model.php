@@ -76,6 +76,27 @@ class Hotel_model extends CI_Model {
 	
 	}
 
+	//get season hotels with season id array as parameter ,and condition
+	function getDateSeasonHotels($condition = array(),$seasonIds= array()){ 
+		
+		$filtered_hotels = array();
+		$hotels  = $this->getHotelList($condition); 
+		foreach($hotels as $hotel){
+
+			if($hotel['seasons'] == ''){
+				$filtered_hotels[$hotel['id']] = $hotel['name'];
+			}elseif(is_array($hotel['seasons']) && is_array($seasonIds)){
+				if(count(array_intersect($hotel['seasons'],$seasonIds)) > 0){
+					$filtered_hotels[$hotel['id']] = $hotel['name'];
+				}
+			}
+
+		}
+		
+		return $filtered_hotels;
+	
+	}
+
 	//--------------------------------------------------------------------------------------------
 
 	//get owner details
@@ -210,8 +231,9 @@ class Hotel_model extends CI_Model {
 		if ( $q->num_rows() > 0 ) 
 		{
 			$this->db->where($condition);
+			$this->db->set('no_of_rooms', $data['no_of_rooms']);
 			$this->db->set('updated', 'NOW()', FALSE);
-			$this->db->update('hotel_rooms',$data);
+			$this->db->update('hotel_rooms');
 			return true;
 
 		} else {

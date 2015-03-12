@@ -81,18 +81,27 @@ class Tour_model extends CI_Model {
 		}
 	}
 
-	//function returns season ids as array
-	function getSeasonIdssWithDate($_date)//not completed
+	//function returns season ids as array (date format 'yyyy-mm-dd')
+	function getSeasonIdssWithDate($_date = '')//not completed
 	{
-		$this->db->select('id');
+		$_date = ($_date != '')?$_date:date('Y-m-d');
+		$this->db->select("id,DAYOFYEAR(starting_date) st, DAYOFYEAR(ending_date) ed ,DAYOFYEAR('".$_date."') cr");
 		$this->db->from('business_seasons');
-		$this->db->where('DAYOFYEAR('.$this->db->escape($_date).') BETWEEN DAYOFYEAR(starting_date) AND DAYOFYEAR(ending_date)');
-		$query = $this->db->get();
+	
+		//$this->db->where('DAYOFYEAR('.$this->db->escape($_date).') BETWEEN DAYOFYEAR(starting_date) AND DAYOFYEAR(ending_date)');
+		$query = $this->db->get();//echo $this->db->last_query();exit;
 		if($query->num_rows() > 0){
 			$result = $query->result();
 			$idArray = array();
-			foreach($result as $row){
-				array_push($idArray,$row->id);
+			foreach($result as $row){//print_r($row);exit;
+				$cr = ($row->st > $row->ed)?$row->cr+366:$row->cr;
+				$st = $row->st;
+				$ed = ($row->st > $row->ed)?$row->ed+366:$row->ed;
+				
+				if($cr >= $st && $cr <= $ed){
+					array_push($idArray,$row->id);
+				}
+				
 			}
 			return $idArray;
 		}else{
@@ -117,35 +126,42 @@ class Tour_model extends CI_Model {
 	}
 	
 	//get season destinations with season id array as parameter ,default with current season
-	function getSeasonDestinations($seasonIds=array()){ 
+	function getDateSeasonDestinations($_date=''){ 
 		
-		if(!$seasonIds){
-			$current_season = @$this->session->userdata('current_season');
+		$seasonIds = $this->getSeasonIdssWithDate($_date);
+		$filtered_destinations = array();
+		$destinations  = $this->getDestinationList(); 
+		foreach($destinations as $destination){
 
-			$crn_s_id = @$current_season['id'];
+			if($destination['seasons'] == ''){
+				$filtered_destinations[$destination['id']] = $destination['name'];
+			}elseif(is_array($destination['seasons']) && is_array($seasonIds)){
+				if(count(array_intersect($destination['seasons'],$seasonIds)) > 0){
+					$filtered_destinations[$destination['id']] = $destination['name'];
+				}
+			}
 
-			if($crn_s_id!= '')$seasonIds = array($crn_s_id);
 		}
 		
+		return $filtered_destinations;
+	
+	}
+
+	//get current season destinations
+	function getCurrentSeasonDestinations(){ 
+	
+		$current_season = @$this->session->userdata('current_season');
+		$crn_s_id = @$current_season['id'];
+		
 		$filtered_destinations = array();
-		if($current_season){
-			$destinations  = $this->getDestinationList(); 
-			foreach($destinations as $destination){
-
-				if($destination['seasons'] == ''){
-					$filtered_destinations[$destination['id']] = $destination['name'];
-				}elseif(is_array($destination['seasons'])){
-					if(count(array_intersect($destination['seasons'],$seasonIds)) > 0){
-						$filtered_destinations[$destination['id']] = $destination['name'];
-					}
-				}
-
+		$destinations  = $this->getDestinationList(); 
+		foreach($destinations as $destination){
+			if($destination['seasons'] == '' || in_array($destination['seasons'],$crn_s_id)){
+				$filtered_destinations[$destination['id']] = $destination['name'];
 			}
 		}
 		
-
 		return $filtered_destinations;
-	
 	}
 
 

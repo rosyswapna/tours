@@ -50,7 +50,7 @@ class Hotel extends CI_Controller {
 			}
 			
 			if($param2 != null){//edit profile
-				$data['profile'] = $this->hotel_model->getHotelProfile($param2);
+				$data['profile'] = $this->hotel_model->getHotelProfile($param2); 
 				$data['owner'] = $this->hotel_model->getHotelOwner(@$data['profile']['hotel_owner_id']);
 				$data['rooms'] = $this->hotel_model->getHotelRooms($param2);
 				$data['room_attr_tariffs'] = $this->hotel_model->getHotelRoomTariffs($param2);
@@ -77,7 +77,14 @@ class Hotel extends CI_Controller {
 				$this->mysession->delete('post_profile');	
 			}
 			//echo "<pre>";print_r($data);echo "</pre>";exit;
-			
+			switch ($param2){
+					case 'insurance':$active_tab = 'i_tab';break;
+					case 'loan':$active_tab = 'l_tab';break;
+					case 'owner':$active_tab = 'o_tab';break;
+					case 'trip':$active_tab = 't_tab';break;
+					
+							break;
+				}
 			$data['tabs'] = $this->set_up_hotel_tabs($active_tab,$param2);			
 			$data['title']="Hotel | ".PRODUCT_NAME;  
 			$page='user-pages/hotel-profile';
@@ -99,7 +106,7 @@ class Hotel extends CI_Controller {
 			$this->form_validation->set_rules('destination','Hotel Destination','trim|required|xss_clean');
 			$this->form_validation->set_rules('contact_person','Contact Person','trim|required|xss_clean');
 			$this->form_validation->set_rules('mobile','Contact Mobile','trim|required|numeric|xss_clean');
-			$this->form_validation->set_rules('phone','Contact Phone','trim|numeric|xss_clean');
+			$this->form_validation->set_rules('land_line_number','Contact Phone','trim|numeric|xss_clean');
 
 			$data['name'] = $this->input->post('hotel_name');
 			$data['address'] = $this->input->post('hotel_address');
@@ -107,7 +114,7 @@ class Hotel extends CI_Controller {
 			$data['state'] = $this->input->post('state');
 			$data['contact_person'] = $this->input->post('contact_person');
 			$data['mobile'] = $this->input->post('mobile');
-			$data['phone'] = $this->input->post('phone');
+			$data['land_line_number'] = $this->input->post('land_line_number');
 			$data['hotel_category_id'] = $this->input->post('category');
 			$data['destination_id'] = $this->input->post('destination');
 			$data['hotel_rating_id'] = $this->input->post('rating');
@@ -121,9 +128,10 @@ class Hotel extends CI_Controller {
 				   $dbData['seasons'] = '';
 				}else{
 				   $dbData['seasons'] = serialize($this->input->post('seasons'));
-				}
+				} 
 			$dbData['organisation_id'] = $this->session->userdata('organisation_id'); 
 			$dbData['user_id'] = $this->session->userdata('id'); 
+			
 			if($this->form_validation->run() != False) { 
 				$id = $this->input->post('id');		
 				if(is_numeric($id) && $id > 0){//edit hotel
@@ -143,8 +151,8 @@ class Hotel extends CI_Controller {
 				$this->mysession->set('post_profile',$data);
 			}
 		}
-		//redirect(base_url().'front-desk/hotel/profile/'.$id);
-		$this->hotel_profile($id,'h_tab');
+		redirect(base_url().'front-desk/hotel/profile/'.$id);
+		//$this->hotel_profile($id,'h_tab');
 	}
 
 	public function manage_hotel_owner($hotel_id)

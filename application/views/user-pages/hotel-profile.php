@@ -104,7 +104,7 @@
 		    </div>
 		    <div class="form-group">
 				<?php echo form_label('Phone'); ?>
-				<?php echo form_input(array('name'=>'phone','class'=>'form-control','id'=>'phone','value'=>@$profile['land_line_number'])); ?>
+				<?php echo form_input(array('name'=>'land_line_number','class'=>'form-control','id'=>'land_line_number','value'=>@$profile['land_line_number'])); ?>
 		    </div>
 		    <div class="form-group">
 				<?php echo form_label('Rating'); ?>
@@ -114,8 +114,16 @@
 			echo $this->form_functions->populate_dropdown($name,$hotel_ratings,@$profile['hotel_rating_id'],$class,$id='',$msg); ?>
 		    </div>
 		    <div class="form-group">
-			<?php $save_update_button='SAVE';$class_save_update_button="class='btn btn-success'";
-			echo form_submit("h-profile-add-update",$save_update_button,$class_save_update_button).nbs(7).form_reset("customer_reset","RESET","class='btn btn-danger'");
+			<?php 
+			if(isset($profile['id'])){
+			$save_update_button='UPDATE';
+			}else{
+			$save_update_button='SAVE';
+			}
+			$class_save_update_button="class='btn btn-success'";
+			echo form_submit("h-profile-add-update",$save_update_button,$class_save_update_button).nbs(7);
+			//echo form_reset("customer_reset","RESET","class='btn btn-danger'");
+			echo form_input(array('name'=>'id','value'=>@$profile['id'],'class'=>'hide-me'));
 			echo form_close();
 			?>
 		</div>
@@ -132,6 +140,7 @@
             <div class="width-30-percent-with-margin-left-20-Hotel-Profile-View">
 	<fieldset class="body-border-Driver-View border-style-Driver-view" >
 	<legend class="body-head">Owner Details</legend>
+	
 	<table>
 	<tr>
 	<td><div class="form-group">

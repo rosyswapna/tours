@@ -226,8 +226,8 @@ class Hotel extends CI_Controller {
 				 
 				$this->hotel_model->updateHotelRooms($dbData);
 					
-				$this->session->set_userdata(array('dbSuccess'=>'Hotel Rooms Updated Succesfully..!')); 
-				$this->session->set_userdata(array('dbError'=>''));
+				$this->session->set_userdata(array('R_dbSuccess'=>'Hotel Rooms Updated Succesfully..!')); 
+				$this->session->set_userdata(array('R_dbError'=>''));
 				
 			}else{
 				$this->mysession->set('post_room',$data);

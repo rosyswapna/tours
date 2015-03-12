@@ -211,6 +211,18 @@
          	<div class="<?php echo $tabs['r_tab']['content_class'];?>" id="<?php echo $tabs['r_tab']['tab_id'];?>">
        <!-- <div class="tab-pane" id="tab_3">-->
            <div class="hotel-profile-body">
+	   <?php if($this->session->userdata('R_dbSuccess') != '') { ?>
+		<div class="success-message">
+			<div class="alert alert-success alert-dismissable">
+			<i class="fa fa-check"></i>
+			<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+			<?php 
+			echo $this->session->userdata('R_dbSuccess');
+			$this->session->set_userdata('R_dbSuccess','');
+			?>
+		   	</div>
+		</div>
+		<?php  } ?>
 		<fieldset class="body-border border-style" >
 		<legend class="body-head">Add Room Availability</legend>
 		<?php echo form_open(base_url()."hotel/manage_hotel_rooms/".$profile['id']); ?>

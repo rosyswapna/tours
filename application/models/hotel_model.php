@@ -1,14 +1,31 @@
 <?php 
 class Hotel_model extends CI_Model {
 	
-	//get hotel details
+	//get hotel details with its id
 	function getHotelProfile($id)
 	{
 		$this->db->from('hotels');
 		$this->db->where('id',$id);
 		$query = $this->db->get();
+		$retArray = array();
 		if($query->num_rows() == 1){
-			return $query->row_array();
+			$row = $query->row();
+			$retArray['id'] = $row->id;
+			$retArray['name'] = $row->name;
+			$retArray['address'] = $row->address;
+			$retArray['city'] = $row->city;
+			$retArray['state'] = $row->state;
+			$retArray['contact_person'] = $row->contact_person;
+			$retArray['mobile'] = $row->mobile;
+			$retArray['land_line_number'] = $row->land_line_number;
+			$retArray['hotel_category_id'] = $row->hotel_category_id;
+			$retArray['hotel_owner_id'] = $row->hotel_owner_id;
+			$retArray['destination_id'] = $row->destination_id;
+			$retArray['hotel_rating_id'] = $row->hotel_rating_id;
+			$retArray['seasons'] = ($row->seasons !='')?unserialize($row->seasons):'';
+			$retArray['no_of_rooms'] = $row->no_of_rooms;
+			return $retArray;
+			
 		}else{
 			return false;
 		}

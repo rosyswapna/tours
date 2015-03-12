@@ -81,14 +81,20 @@ class Tour_model extends CI_Model {
 		}
 	}
 
+	//function returns season ids as array
 	function getSeasonIdssWithDate($_date)//not completed
 	{
 		$this->db->select('id');
 		$this->db->from('business_seasons');
-		//$this->db->where('DAYOFYEAR('.$this->db->escape($_date).') BETWEEN DAYOFYEAR(starting_date) AND DAYOFYEAR(ending_date)');
+		$this->db->where('DAYOFYEAR('.$this->db->escape($_date).') BETWEEN DAYOFYEAR(starting_date) AND DAYOFYEAR(ending_date)');
 		$query = $this->db->get();
 		if($query->num_rows() > 0){
-			return $query->result();
+			$result = $query->result();
+			$idArray = array();
+			foreach($result as $row){
+				array_push($idArray,$row->id);
+			}
+			return $idArray;
 		}else{
 			return false;
 		}
@@ -110,18 +116,30 @@ class Tour_model extends CI_Model {
 		
 	}
 	
-	//get current season destinations
-	function getSeasonDestinations(){ 
+	//get season destinations with season id array as parameter ,default with current season
+	function getSeasonDestinations($seasonIds=array()){ 
 		
-		$current_season = @$this->session->userdata('current_season');
+		if(!$seasonIds){
+			$current_season = @$this->session->userdata('current_season');
+
+			$crn_s_id = @$current_season['id'];
+
+			if($crn_s_id!= '')$seasonIds = array($crn_s_id);
+		}
+		
 		$filtered_destinations = array();
 		if($current_season){
 			$destinations  = $this->getDestinationList(); 
 			foreach($destinations as $destination){
-				
-				if(is_array($destination['seasons']) && in_array($current_season['id'],$destination['seasons'])){
+
+				if($destination['seasons'] == ''){
 					$filtered_destinations[$destination['id']] = $destination['name'];
+				}elseif(is_array($destination['seasons'])){
+					if(count(array_intersect($destination['seasons'],$seasonIds)) > 0){
+						$filtered_destinations[$destination['id']] = $destination['name'];
+					}
 				}
+
 			}
 		}
 		

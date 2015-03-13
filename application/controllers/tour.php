@@ -310,7 +310,7 @@ class Tour extends CI_Controller {
 			$data[$table]=$this->user_model->getArray($table);
 		}
 
-		echo "<pre>";print_r($data);echo "</pre>";exit;
+		
 		
 		$data['title']="Tour Booking | ".PRODUCT_NAME;  
 		$page='user-pages/tour-booking';
@@ -348,8 +348,8 @@ class Tour extends CI_Controller {
 			$vehicleData['vehicle_id'] 		= $this->input->post('pax');
 			$vehicleData['vehicle_ac_type_id'] 	= $this->input->post('pax');
 			$vehicleData['vehicle_beacon_light_option_id'] = $this->input->post('pax');
-			$vehicleData['vehicle_type_id'] 	= $this->input->post('pax');
-			$vehicleData['vehicle_model_id'] 	= $this->input->post('pax');
+			$vehicleData['vehicle_type_id'] 	= $this->input->post('vehicle_type_id');
+			$vehicleData['vehicle_model_id'] 	= $this->input->post('vehicle_model_id');
 			$vehicleData['pluckcard'] 	= $this->input->post('pax');
 			$vehicleData['uniform'] 	= $this->input->post('pax');
 			$vehicleData['tariff_id'] 	= $this->input->post('pax');

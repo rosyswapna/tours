@@ -119,6 +119,10 @@ margin:20px 0 20px 0;
 	width:95%;
 	margin:0 auto;
 }
+.tour-booking-outer{
+	width:95%;
+	margin:0 auto;
+}
 #captcha_div > .captcha{
 width:40% !important;
 float:left;
@@ -132,7 +136,9 @@ float:none;
 .list-org-table tr > td{
 border-top:none !important;
 }
-
+.tour-booking-tbl tr> td{
+padding-right:14px;
+}
 .tbl-settings{
 width:100%;
 
@@ -751,3 +757,4 @@ font-size: 23px;
 color: #fff;
 font-weight:bold;
 }
+#shows td.td-style { margin-left: 150px;}

@@ -14,7 +14,7 @@
 <fieldset class="body-border">
 <legend class="body-head">List Hotels</legend>
 <div class="box-body table-responsive no-padding">
-<table class="table table-hover table-bordered table-with-20-percent-td">
+<table class="table table-hover table-bordered table-with-20-percent-td" style="width:70%">
 	<tbody>
 	<tr>
 	<th>Name</th>

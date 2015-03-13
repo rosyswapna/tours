@@ -264,23 +264,43 @@ class Tour extends CI_Controller {
 		$hotels = $this->hotel_model->getAvailableHotels($condition,$seasons);
 		
 		if($Ajax=='NO'){
-			return $destinations;
+			return $hotels;
 		}else{
-			header('Content-Type: application/json');
-			echo json_encode($destinations);
+
+			if($destinations){
+				header('Content-Type: application/json');
+				echo json_encode($destinations);
+			}else{
+				echo 'false';
+			}
 		}
 	}
 
+	//get room types with hotel id
+	public function getHotelSettings($Ajax='NO')
+	{
+		$hotel_id = $_REQUEST['hotel_id'];
+		
+		$room_types = $this->hotel_model->getHotelRooms($hotel_id);
+		$room_attributes = $this->hotel_model->getHotelRoomAttributes($hotel_id);
+		$room_meals_package = $this->hotel_model->getHotelRoomMealsPackage($hotel_id);
+
+		
+		if($Ajax=='NO'){
+			return $hotel;
+		}else{
+	
+			header('Content-Type: application/json');
+			echo json_encode($hotel);
+			
+		}
+	}
+
+	
+
 	public function tour_booking()
 	{
-		$condition = array('hotel.destination_id'=>1,'hotel.hotel_category_id'=>1);
-		$seasons = $this->tour_model->getSeasonIdssWithDate('2015-01-12');
 		
-		$hotels = $this->hotel_model->getDateSeasonHotels($condition,$seasons);
-
-		echo "<pre>";print_r($hotels);echo "</pre>";exit;
-		
-
 		$tblArray=array('booking_sources','available_drivers','trip_models','drivers','vehicle_types',	
 				'vehicle_models','vehicle_makes','vehicle_ac_types','vehicle_fuel_types',
 				'vehicle_seating_capacity','vehicle_beacon_light_options','languages','payment_type',
@@ -364,6 +384,31 @@ class Tour extends CI_Controller {
 	}
 
 	//-----------------------------------------------------------------------------------------
+
+	function set_up_trip_tabs($tab_active='t_tab'){
+			
+		$tabs['t_tab'] = array('class'=>'','tab_id'=>'tab_1','text'=>'Travel',
+						'content_class'=>'tab-pane');
+		$tabs['a_tab'] = array('class'=>'','tab_id'=>'tab_2','text'=>'Accommodation',
+						'content_class'=>'tab-pane');
+		$tabs['s_tab'] = array('class'=>'','tab_id'=>'tab_3','text'=>'Services',
+						'content_class'=>'tab-pane');
+		$tabs['v_tab'] = array('class'=>'','tab_id'=>'tab_4','text'=>'Vehicles',
+						'content_class'=>'tab-pane');
+
+		if(array_key_exists($tab_active, $tabs)) {
+			$tabs[$tab_active]['class'] = 'active';
+			$tabs[$tab_active]['content_class'] = 'tab-pane active';
+		}else{
+			$tabs['t_tab']['class'] = 'active';
+			$tabs['t_tab']['content_class'] = 'tab-pane active';
+		}
+
+		return $tabs;
+	}
+
+	//-----------------------------------------------------------------------------------------
+
 
 	//----------------------common functions---------------------------------------------------
 	public function session_check() {

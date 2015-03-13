@@ -44,7 +44,7 @@ class Hotel extends CI_Controller {
 		if($this->session_check()==true) {
 
 			//lists
-			$tblArray = array('hotel_categories','hotel_ratings','room_types','business_seasons','destinations','room_attributes');
+			$tblArray = array('hotel_categories','hotel_ratings','room_types','business_seasons','destinations','room_attributes','meals_options');
 			foreach($tblArray as $table){
 				$data[$table]=$this->user_model->getArray($table);
 			}
@@ -98,15 +98,14 @@ class Hotel extends CI_Controller {
 	{
 		$id = '';
 		if(isset($_REQUEST['h-profile-add-update'])){
-		
+			
 			$this->form_validation->set_rules('hotel_name','Hotel Name','trim|required|xss_clean');
 			$this->form_validation->set_rules('hotel_address','Hotel Address','trim|required|xss_clean');
 			$this->form_validation->set_rules('category','Hotel Category','trim|required|xss_clean');
 			$this->form_validation->set_rules('destination','Hotel Destination','trim|required|xss_clean');
 			$this->form_validation->set_rules('contact_person','Contact Person','trim|required|xss_clean');
-			$this->form_validation->set_rules('mobile','Contact Mobile','trim|required|numeric|xss_clean');
 			$this->form_validation->set_rules('land_line_number','Contact Phone','trim|numeric|xss_clean');
-
+			
 			$data['name'] = $this->input->post('hotel_name');
 			$data['address'] = $this->input->post('hotel_address');
 			$data['city'] = $this->input->post('city');
@@ -118,8 +117,22 @@ class Hotel extends CI_Controller {
 			$data['destination_id'] = $this->input->post('destination');
 			$data['hotel_rating_id'] = $this->input->post('rating');
 			$data['no_of_rooms'] = $this->input->post('no_of_rooms');
+			
+			if($this->input->post('h_mobile')==$data['mobile']){
+			$this->form_validation->set_rules('mobile','10 digit Mobile Number ','trim|required|xss_clean|regex_match[/^[0-9]{10}$/]');
+			}else{
+			$this->form_validation->set_rules('mobile','10 digit Mobile Number ','trim|required|xss_clean|regex_match[/^[0-9]{10}$/]|is_unique[hotels.mobile]');
+			}
 			$dbData = $data;
-
+			$err=false;
+			if($data['hotel_category_id'] ==gINVALID){
+			$err=true;
+			$this->mysession->set('Err_category','Choose Category!');
+			}
+			if($data['destination_id'] ==gINVALID){
+			$err=true;
+			$this->mysession->set('Err_destination','Choose Destination!');
+			}
 			$data['seasons'] = $this->input->post('seasons');
 				$seasons=array();
 				$seasons=$this->input->post('seasons');
@@ -131,7 +144,7 @@ class Hotel extends CI_Controller {
 			$dbData['organisation_id'] = $this->session->userdata('organisation_id'); 
 			$dbData['user_id'] = $this->session->userdata('id'); 
 			
-			if($this->form_validation->run() != False) { 
+			if($this->form_validation->run() != False && $err==false) {
 				$id = $this->input->post('id');		
 				if(is_numeric($id) && $id > 0){//edit hotel
 					if($this->settings_model->updateValues('hotels',$dbData,$id)){
@@ -143,11 +156,13 @@ class Hotel extends CI_Controller {
 					if($id = $this->settings_model->addValues_returnId('hotels',$dbData)){
 						$this->session->set_userdata(array('dbSuccess'=>'Hotel Added Succesfully..!')); 
 						$this->session->set_userdata(array('dbError'=>''));
-					}
+					} 
 				}
 
-			}else{
+			}else{  
+				$data['id']=$this->input->post('id');	
 				$this->mysession->set('post_profile',$data);
+				
 			}
 		}
 		redirect(base_url().'front-desk/hotel/profile/'.$id);
@@ -159,8 +174,8 @@ class Hotel extends CI_Controller {
 		$id = '';
 		if(isset($_REQUEST['h-owner-add-update'])){
 			$this->form_validation->set_rules('owner-name','Hotel Name','trim|required|xss_clean');
-			$this->form_validation->set_rules('mob-no','Mobile Number','trim|required|numeric|xss_clean');
-			$this->form_validation->set_rules('mail-id','E-mail Id','trim|valid_email|is_unique[users.email]');
+			//$this->form_validation->set_rules('mob-no','Mobile Number','trim|required|numeric|xss_clean');
+			$this->form_validation->set_rules('mail-id','E-mail Id','trim|valid_email|is_unique[hotel_owners.email]');
 			if($this->input->post('username')!='') { 
 			$this->form_validation->set_rules('password','Password','trim|min_length[5]|matches[cpassword]|xss_clean');
 			$this->form_validation->set_rules('cpassword','Confirmation','trim|min_length[5]|xss_clean');
@@ -170,6 +185,19 @@ class Hotel extends CI_Controller {
 			$data['name'] = $this->input->post('owner-name');
 			$data['mobile'] = $this->input->post('mob-no');
 			$data['email'] = $this->input->post('mail-id');
+			
+			if($this->input->post('h-mail-id')==$data['email']){
+			$this->form_validation->set_rules('mail-id','E-mail Id','trim|valid_email');
+			}else{
+			$this->form_validation->set_rules('mail-id','E-mail Id','trim|valid_email|is_unique[hotel_owners.email]');
+			}
+			
+			if($this->input->post('h-mob-no')==$data['mobile']){
+			$this->form_validation->set_rules('mob-no','10 digit Mobile Number ','trim|required|xss_clean|regex_match[/^[0-9]{10}$/]');
+			}else{
+			$this->form_validation->set_rules('mob-no','10 digit Mobile Number ','trim|required|xss_clean|regex_match[/^[0-9]{10}$/]|is_unique[hotel_owners.mobile]');
+			}
+			
 			$dbData = $data;
 			$data['username'] = $this->input->post('username');
 
@@ -199,6 +227,7 @@ class Hotel extends CI_Controller {
 				}
 
 			}else{
+				$data['id']=$this->input->post('owner_id');
 				$this->mysession->set('post_owner',$data);
 			}
 		}
@@ -221,8 +250,12 @@ class Hotel extends CI_Controller {
 			$dbData['hotel_id'] = $hotel_id;
 			$dbData['organisation_id'] = $this->session->userdata('organisation_id'); 
 			$dbData['user_id'] = $this->session->userdata('id');
-			
-			if($this->form_validation->run() != False) { 
+			$err=false;
+			if($data['room_type_id']==gINVALID){
+			$err=true;
+			$this->mysession->set('Err_room_type','Choose Room Type!');
+			}
+			if($this->form_validation->run() != False && $err==false) { 
 				
 				$this->hotel_model->updateHotelRooms($dbData);
 					
@@ -237,10 +270,10 @@ class Hotel extends CI_Controller {
 		//$this->hotel_profile($hotel_id,'r_tab');
 	}
 
-	public function manage_hotel_rooms_tariff($hotel_id)
+	public function manage_hotel_rooms_tariff($hotel_id='')
 	{
 		$id = '';$data = array();
-		if(isset($_REQUEST['room-type-tariff-add']) || isset($_REQUEST['room-type-tariff-edit'])){
+		if(isset($_REQUEST['room-type-tariff-add']) || isset($_REQUEST['room-type-tariff-edit'])){ 
 
 			$this->form_validation->set_rules('room_type_id','Room Type','trim|required|xss_clean');
 			$this->form_validation->set_rules('season_id1','Business Season','trim|required|xss_clean');
@@ -256,7 +289,7 @@ class Hotel extends CI_Controller {
 			$this->form_validation->set_rules('season_id2','Business Season','trim|required|xss_clean');
 			$this->form_validation->set_rules('amount2','Amount','trim|required|numeric|xss_clean');
 
-			$data['room_attr_id'] = $this->input->post('room_attr_id');
+			$data['attribute_id'] = $this->input->post('room_attr_id');
 			$data['season_id'] = $this->input->post('season_id2');
 			$data['amount'] = $this->input->post('amount2');
 			$table = 'room_attribute_tariffs';
@@ -266,24 +299,49 @@ class Hotel extends CI_Controller {
 			$this->form_validation->set_rules('season_id3','Business Season','trim|required|xss_clean');
 			$this->form_validation->set_rules('amount3','Amount','trim|required|numeric|xss_clean');
 			
-			$data['meals_package_id'] = $this->input->post('meals_package_id');
+			$data['	meals_id'] = $this->input->post('meals_package_id');
 			$data['season_id'] = $this->input->post('season_id3');
 			$data['amount'] = $this->input->post('amount3');
 			$table = 'room_attribute_tariffs';
 
 		}
+		$err=false;
+			if($data['room_type_id']==gINVALID){
+			$err=true;
+			$this->mysession->set('Err_room_type_tariff','Choose Room Type!');
+			}
+			if($data['season_id1']==gINVALID){
+			$err=true;
+			$this->mysession->set('Err_season_id1','Choose Season!');
+			}
+			if($data['room_attr_id']==gINVALID){
+			$err=true;
+			$this->mysession->set('Err_room_attr','Choose Attribute!');
+			}
+			if($data['season_id2']==gINVALID){
+			$err=true;
+			$this->mysession->set('Err_season_id2','Choose Season!');
+			}
+			if($data['meals_package_id']==gINVALID){
+			$err=true;
+			$this->mysession->set('Err_meals','Choose Meals Package!');
+			}
+			if($data['season_id3']==gINVALID){
+			$err=true;
+			$this->mysession->set('Err_season_id3','Choose Season!');
+			}
 
 		if($data){
 			$dbData = $data;
 			$dbData['hotel_id'] = $hotel_id;
 			$dbData['organisation_id'] = $this->session->userdata('organisation_id'); 
-			$dbData['user_id'] = $this->session->userdata('user_id');
-			if($this->form_validation->run() != False) {
+			$dbData['user_id'] = $this->session->userdata('id');
+			if($this->form_validation->run() != False && $err==false) {
 								
 				$this->hotel_model->updateHotelTariffs($dbData,$table);
 					
-				$this->session->set_userdata(array('dbSuccess'=>'Hotel Tariffs Updated Succesfully..!')); 
-				$this->session->set_userdata(array('dbError'=>''));		
+				$this->session->set_userdata(array('T_dbSuccess'=>'Hotel Tariffs Updated Succesfully..!')); 
+				$this->session->set_userdata(array('T_dbError'=>''));		
 				
 
 			}else{
@@ -291,8 +349,8 @@ class Hotel extends CI_Controller {
 			}
 		}
 		
-		
-		$this->hotel_profile($hotel_id,'t_tab');
+		redirect(base_url().'front-desk/hotel/profile/'.$hotel_id.'/tariff/'.$id,$data);	
+		//$this->hotel_profile($hotel_id,'t_tab');
 	}
 	//------------------------------------------------------------------------------------------
 	

@@ -47,11 +47,14 @@
 		<legend class="body-head">Profile</legend>
 		    <div class="form-group">
 				<?php echo form_label('Name'); ?>
-				<?php echo form_input(array('name'=>'hotel_name','class'=>'form-control','id'=>'hotel_name','value'=>@$profile['name'])); ?>
+				<?php echo form_input(array('name'=>'hotel_name','class'=>'form-control','id'=>'hotel_name','value'=>@$profile['name'])); 
+				echo  $this->form_functions->form_error_session('hotel_name','<p class="text-red">', '</p>');?>
+		    
 		    </div>
 		    <div class="form-group">
 				<?php echo form_label('Address'); ?>
-				<?php echo form_textarea(array('name'=>'hotel_address','rows'=>'4','class'=>'form-control','id'=>'hotel_address','value'=>@$profile['address'])); ?>
+				<?php echo form_textarea(array('name'=>'hotel_address','rows'=>'4','class'=>'form-control','id'=>'hotel_address','value'=>@$profile['address'])); 
+				echo  $this->form_functions->form_error_session('hotel_address','<p class="text-red">', '</p>');?>
 		    </div>
 		    <div class="form-group">
 				<?php echo form_label('City'); ?>
@@ -67,10 +70,17 @@
 				$msg="-Select-";
 				$name="category";
 			echo $this->form_functions->populate_dropdown($name,$hotel_categories,@$profile['hotel_category_id'],$class,$id='category',$msg); ?>
+		   <p class="text-red"><?php
+			if($this->mysession->get('Err_category') != ''){
+			echo $this->mysession->get('Err_category');
+			$this->mysession->delete('Err_category');
+			}
+	           ?></p>
 		   </div>
 		    <div class="form-group">
 				<?php echo form_label('No.of Rooms'); ?>
-				<?php echo form_input(array('name'=>'no_of_rooms','class'=>'form-control','id'=>'no_of_rooms','value'=>@$profile['no_of_rooms'])); ?>
+				<?php echo form_input(array('name'=>'no_of_rooms','class'=>'form-control','id'=>'no_of_rooms','value'=>@$profile['no_of_rooms']));
+				echo  $this->form_functions->form_error_session('no_of_rooms','<p class="text-red">', '</p>');?>
 		    </div>
 		</fieldset>
 		
@@ -85,6 +95,12 @@
 				$msg="-Select-";
 				$name="destination";
 			echo $this->form_functions->populate_dropdown($name,$destinations,@$profile['destination_id'],$class,$id='',$msg); ?>
+		   <p class="text-red"><?php
+			if($this->mysession->get('Err_destination') != ''){
+			echo $this->mysession->get('Err_destination');
+			$this->mysession->delete('Err_destination');
+			}
+	           ?></p>
 		   </div>
 		   <div class="form-group">
 			<?php 
@@ -96,11 +112,14 @@
 		    </div>
 		    <div class="form-group">
 				<?php echo form_label('Contact Person'); ?>
-				<?php echo form_input(array('name'=>'contact_person','class'=>'form-control','id'=>'contact_person','value'=>@$profile['contact_person'])); ?>
+				<?php echo form_input(array('name'=>'contact_person','class'=>'form-control','id'=>'contact_person','value'=>@$profile['contact_person']));
+				echo  $this->form_functions->form_error_session('contact_person','<p class="text-red">', '</p>');?>
 		    </div>
 		    <div class="form-group">
 				<?php echo form_label('Mobile'); ?>
-				<?php echo form_input(array('name'=>'mobile','class'=>'form-control','id'=>'mobile','value'=>@$profile['mobile'])); ?>
+				<?php echo form_input(array('name'=>'mobile','class'=>'form-control','id'=>'mobile','value'=>@$profile['mobile'])); 
+				echo form_input(array('name'=>'h_mobile','class'=>'hide-me','id'=>'mobile','value'=>@$profile['mobile']));
+				echo  $this->form_functions->form_error_session('mobile','<p class="text-red">', '</p>');?>
 		    </div>
 		    <div class="form-group">
 				<?php echo form_label('Phone'); ?>
@@ -115,7 +134,7 @@
 		    </div>
 		    <div class="form-group">
 			<?php 
-			if(isset($profile['id'])){
+			if( isset($profile['id'])&& $profile['id']!=''){
 			$save_update_button='UPDATE';
 			}else{
 			$save_update_button='SAVE';
@@ -157,17 +176,22 @@
 	<tr>
 	<td><div class="form-group">
 				<?php echo form_label('Name'); ?>
-				<?php echo form_input(array('name'=>'owner-name','class'=>'form-control','id'=>'owner-name','value'=>@$owner['name'])); ?>
+				<?php echo form_input(array('name'=>'owner-name','class'=>'form-control','id'=>'owner-name','value'=>@$owner['name']));
+					echo  $this->form_functions->form_error_session('owner-name','<p class="text-red">', '</p>');?>
 		    </div></td>
 	</tr>
 	<td><div class="form-group">
 				<?php echo form_label('Mobile'); ?>
-				<?php echo form_input(array('name'=>'mob-no','class'=>'form-control','id'=>'mob-no','value'=>@$owner['mobile'])); ?>
+				<?php echo form_input(array('name'=>'mob-no','class'=>'form-control','id'=>'mob-no','value'=>@$owner['mobile']));
+				echo form_input(array('name'=>'h-mob-no','class'=>'hide-me','id'=>'mob-no','value'=>@$owner['mobile']));
+				echo  $this->form_functions->form_error_session('mob-no','<p class="text-red">', '</p>');				?>
 		    </div></td>
 	</tr>	    
 	<td><div class="form-group">
 				<?php echo form_label('Email'); ?>
-				<?php echo form_input(array('name'=>'mail-id','class'=>'form-control','id'=>'mail-id','value'=>@$owner['email'])); ?>
+				<?php echo form_input(array('name'=>'mail-id','class'=>'form-control','id'=>'mail-id','value'=>@$owner['email']));
+                                echo form_input(array('name'=>'h-mail-id','class'=>'hide-me','id'=>'mail-id','value'=>@$owner['email']));
+				echo  $this->form_functions->form_error_session('mail-id','<p class="text-red">', '</p>');?>
 		    </div></td>
 	</tr>	    
 	<td><div class="form-group">
@@ -186,8 +210,7 @@
 		    </div></td>
 	</tr>	    
 	<td><div class="form-group">
-			<?php 
-			if(isset($owner['id'])){
+			<?php if( isset($owner['id'])&& $owner['id']!=''){
 			$save_update_button='UPDATE';
 			}else{
 			$save_update_button='SAVE';
@@ -232,10 +255,16 @@
 		<td><?php $class="form-control";
 		$msg="-Select-";
 		$name="room_type_id";
-		echo $this->form_functions->populate_dropdown($name,$room_types,@$room_type_id,$class,$id='room_type',$msg);?></td>
+		echo $this->form_functions->populate_dropdown($name,$room_types,@$room_type_id,$class,$id='room_type',$msg);?>
+		 <p class="text-red"><?php
+			if($this->mysession->get('Err_room_type') != ''){
+			echo $this->mysession->get('Err_room_type');
+			$this->mysession->delete('Err_room_type');
+			}?></td>
 		<td><?php echo nbs(10);?></td>
 		<td><?php echo form_label('Number of Rooms').nbs(5); ?></td>
-		<td><?php echo form_input(array('name'=>'no_of_rooms','class'=>'form-control','id'=>'no_of_rooms','value'=>'','style'=>'margin-top:20px')).nbs(5); ?></td>
+		<td><?php echo form_input(array('name'=>'no_of_rooms','class'=>'form-control','id'=>'no_of_rooms','value'=>'','style'=>'margin-top:20px')).nbs(5); 
+		echo  $this->form_functions->form_error_session('no_of_rooms','<p class="text-red">', '</p>');?></td>
 		<td><div  class="tarrif-add" ><?php echo nbs(5);?><i class="fa fa-plus-circle cursor-pointer"></i><?php echo nbs(5);?></div><div class="hide-me"><?php echo form_submit("room-add","Add","id=tarrif-add-id","class=btn");?></td>
 		</tr>
 		</table>
@@ -262,8 +291,11 @@
 		<tr>
 			<td><?php $class="form-control";
 				$msg="-Select-";
-				$name="room_type_id";
-				echo $this->form_functions->populate_dropdown($name,$room_types,$values['room_type_id'],$class,$id='m_room_type',$msg);?>
+				$name="room_type";
+				$disabled='disabled';
+				echo $this->form_functions->populate_dropdown($name,$room_types,$values['room_type_id'],$class,$id='m_room_type',$msg,$disabled);
+				echo form_input(array('name'=>'room_type_id','value'=>$values['room_type_id'],'class'=>'hide-me'));
+				?>
 				</td>
 			<td><?php echo nbs(10);?></td>
 			<td><?php echo form_input(array('name'=>'no_of_rooms','class'=>'form-control' ,'id'=>'m_no_room','value'=>$values['no_of_rooms']));?></td>
@@ -285,64 +317,92 @@
 	<?php if (array_key_exists('t_tab', $tabs)) {?>
          	<div class="<?php echo $tabs['t_tab']['content_class'];?>" id="<?php echo $tabs['t_tab']['tab_id'];?>">
        <!-- <div class="tab-pane" id="tab_4">-->
+       <?php $attributes = array(
+			'style' => 'margin-top: 15px;');?>
           <div class="hotel-profile-body">
+	  
+	  <?php if($this->session->userdata('T_dbSuccess') != '') { ?>
+		<div class="success-message">
+			<div class="alert alert-success alert-dismissable">
+			<i class="fa fa-check"></i>
+			<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+			<?php 
+			echo $this->session->userdata('T_dbSuccess');
+			$this->session->set_userdata('T_dbSuccess','');
+			?>
+		   	</div>
+		</div>
+		<?php  } ?>
 		<fieldset class="body-border border-style" >
 		<legend class="body-head">Add Tariff</legend>
 		<table>
 		<tbody>
+		<?php echo form_open(base_url()."hotel/manage_hotel_rooms_tariff/".$profile['id']); ?>
 		<tr><?php $attributes = array(
 			'style' => 'margin-top: 15px;',
 );		    ?>
 		<td><?php echo form_label('Room Type ','room_type',$attributes).nbs(5); ?></td><td><?php $class="form-control";
 				$msg="-Select-";
-				$name="t_room_type";
-				echo $this->form_functions->populate_dropdown($name,$room_types='',$room_type_id='',$class,$id='t_room_type',$msg);?></td><td>
+				$name="room_type_id";
+				echo $this->form_functions->populate_dropdown($name,$room_types,$room_type_id='',$class,$id='room_type_id',$msg);?></td><td>
 		</td>
 		<td><?php echo nbs(10);?></td>
 		<td><?php echo form_label('Season ','season',$attributes).nbs(5); ?></td><td><?php $class="form-control";
 				$msg="-Select-";
-				$name="t_season";
-				echo $this->form_functions->populate_dropdown($name,$season='',$season_id='',$class,$id='t_season',$msg);?></td>
+				$name="season_id1";
+				echo $this->form_functions->populate_dropdown($name,$business_seasons,$season_id='',$class,$id='season_id1',$msg);?></td>
 				<td><?php echo nbs(10);?></td>
-		<td><?php echo form_label('Amount ','amount',$attributes).nbs(5); ?></td><td><?php echo form_input(array('name'=>'t_amount','class'=>'form-control' ,'id'=>'t_amount','value'=>''));?></td>
+		<td><?php echo form_label('Amount ','amount',$attributes).nbs(5); ?></td><td><?php echo form_input(array('name'=>'amount1','class'=>'form-control' ,'id'=>'amount1','value'=>''));?></td>
 
-		<td><div  class="tarrif-add" style="margin-top: 15px;" ><?php echo nbs(5);?><i class="fa fa-plus-circle cursor-pointer"></i><?php echo nbs(5);?></div><div class="hide-me"><?php echo form_submit("add","Add","id=tarrif-add-id","class=btn");?></td>
+		<td><div  class="room-tariff" style="margin-top: 15px;" ><?php echo nbs(5);?><i class="fa fa-plus-circle cursor-pointer"></i><?php echo nbs(5);?></div><div class="hide-me"><?php echo form_submit("room-type-tariff-add","Add","id=room-tariff-id","class=btn");?></td>
 		</tr>
-		
+	
+		<?php echo form_close(); ?>
+		<?php echo form_open(base_url()."hotel/manage_hotel_rooms_tariff/".$profile['id']); ?>
+		<tr><?php $attributes = array(
+			'style' => 'margin-top: 15px;',
+);		    ?>
+		<td><?php echo form_label('Room Attributes ','room_attributes',$attributes).nbs(5); ?></td><td><?php $class="form-control";
+				$msg="-Select-";
+				$name="room_attr_id";
+				echo $this->form_functions->populate_dropdown($name,$room_attributes,$room_type_id='',$class,$id='room_attr_id',$msg);?></td><td>
+		</td>
+		<td><?php echo nbs(10);?></td>
+		<td><?php echo form_label('Season ','season',$attributes).nbs(5); ?></td><td><?php $class="form-control";
+				$msg="-Select-";
+				$name="season_id2";
+				echo $this->form_functions->populate_dropdown($name,$business_seasons,$season_id='',$class,$id='season_id2',$msg);?></td>
+				<td><?php echo nbs(10);?></td>
+		<td><?php echo form_label('Amount ','amount',$attributes).nbs(5); ?></td><td><?php echo form_input(array('name'=>'amount2','class'=>'form-control' ,'id'=>'t_amount','value'=>''));?></td>
+
+		<td><div  class="attribute-tariff" style="margin-top: 15px;" ><?php echo nbs(5);?><i class="fa fa-plus-circle cursor-pointer"></i><?php echo nbs(5);?></div><div class="hide-me"><?php echo form_submit("attr-tariff-add","Add","id=attribute-tariff-id","class=btn");?></td>
+		</tr>
+		<?php echo form_close(); ?>
+		<?php echo form_open(base_url()."hotel/manage_hotel_rooms_tariff/".$profile['id']); ?>
+		<tr><?php $attributes = array(
+			'style' => 'margin-top: 15px;',
+);		    ?>
+		<td><?php echo form_label('Meals Package ','meals_package',$attributes).nbs(5); ?></td><td><?php $class="form-control";
+				$msg="-Select-";
+				$name="meals_package_id";
+				echo $this->form_functions->populate_dropdown($name,$meals_options,$room_type_id='',$class,$id='meals_package_id',$msg);?></td><td>
+		</td>
+		<td><?php echo nbs(10);?></td>
+		<td><?php echo form_label('Season ','season',$attributes).nbs(5); ?></td><td><?php $class="form-control";
+				$msg="-Select-";
+				$name="season_id3";
+				echo $this->form_functions->populate_dropdown($name,$business_seasons,$season_id='',$class,$id='season_id3',$msg);?></td>
+				<td><?php echo nbs(10);?></td>
+		<td><?php echo form_label('Amount ','amount',$attributes).nbs(5); ?></td><td><?php echo form_input(array('name'=>'amount3','class'=>'form-control' ,'id'=>'amount3','value'=>''));?></td>
+
+		<td><div  class="meals-tariff" style="margin-top: 15px;" ><?php echo nbs(5);?><i class="fa fa-plus-circle cursor-pointer"></i><?php echo nbs(5);?></div><div class="hide-me"><?php echo form_submit("meals-tariff-add","Add","id=meals-tariff-id","class=btn");?></td>
+		</tr>
+		<?php echo form_close(); ?>
 		</tbody>
 		</table>
 		</fieldset>
 		
-		<fieldset class="body-border border-style" >
-		<legend class="body-head">Manage Tariff</legend>
-		<table>
-		<tr style="text-align: center;">
-			<td><?php echo form_label('Tariff Types  ','attributes'); ?></td>
-			<td><?php echo nbs(10);?></td>
-			<td><?php echo form_label('Season ','season'); ?></td>
-			<td><?php echo nbs(10);?></td>
-			<td><?php echo form_label('Amount','amount'); ?></td>
-			<td><?php echo nbs(10);?></td>
-			<td colspan="2"><?php echo form_label('Action','action'); ?></td>
-		</tr>
-		<tr>
-			<td><?php $class="form-control";
-				$msg="-Select-";
-				$name="t_attributes";
-				echo $this->form_functions->populate_dropdown($name,$season='',$season_id='',$class,$id='t_attributes',$msg);?></td>
-			<td><?php echo nbs(10);?></td>
-			<td><?php $class="form-control";
-				$msg="-Select-";
-				$name="mt_season";
-				echo $this->form_functions->populate_dropdown($name,$season='',$season_id='',$class,$id='mt_season',$msg);?></td>
-			<td><?php echo nbs(10);?></td>
-			<td><?php echo form_input(array('name'=>'mt_amount','class'=>'form-control' ,'id'=>'mt_amount','value'=>''));?></td>
-			<td><?php echo nbs(10);?></td>
-			<td><div  class="tarrif-edit" ><?php echo nbs(5);?><i class="fa fa-edit cursor-pointer"></i><?php echo nbs(5);?></div><div class="hide-me xx"><?php echo form_submit("edit","Edit","id=tarrif-edit-id","class=btn");?></div></td>
-			<td><div  class="tarrif-delete" ><?php echo nbs(5);?><i class="fa fa-trash-o cursor-pointer"></i><?php echo nbs(5);?></div><div class="hide-me"><?php echo form_submit("delete","Delete","id=tarrif-delete-id","class=btn");?></div></td>
-		</tr>
-		</table>
-		</fieldset>
+		
 	  </div>
         </div>
 	<?php } ?>

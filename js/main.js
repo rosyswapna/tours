@@ -385,6 +385,17 @@ $('#service-add-id').trigger('click');
 });
 
 //***************
+$('.room-tariff').click(function(){ 
+$('#room-tariff-id').trigger('click');
+});
+$('.attribute-tariff').click(function(){ 
+$('#attribute-tariff-id').trigger('click');
+});
+$('.meals-tariff').click(function(){ 
+$('#meals-tariff-id').trigger('click');
+});
+
+
 function Trim(strInput) {
 	
     while (true) {

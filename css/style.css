@@ -137,7 +137,8 @@ float:none;
 border-top:none !important;
 }
 .tour-booking-tbl tr> td{
-padding-right:14px;
+margin-left:5px;
+
 }
 .tbl-settings{
 width:100%;
@@ -252,6 +253,14 @@ margin:15px;
 float:left;
 width:56%;
 margin:10px;
+}
+.margin-bottom-10percent{
+margin:10px 0 10px 5px !important;
+}
+.width-56-percent-with-margin-10{
+float:left;
+width:56%;
+margin:10px 0px 10px 10px;
 }
 .margin-left-15-px{
 margin-left:15px;
@@ -757,4 +766,6 @@ font-size: 23px;
 color: #fff;
 font-weight:bold;
 }
-#shows td.td-style { margin-left: 150px;}
+.trip-save-update{
+margin-left:400px;
+}

@@ -9,6 +9,7 @@ class Tour extends CI_Controller {
 		$this->load->model('hotel_model');
 		$this->load->model('user_model');
 		$this->load->model('settings_model');
+		$this->load->model('customers_model');
 		no_cache();
 	}
 
@@ -241,8 +242,11 @@ class Tour extends CI_Controller {
 
 	//get season destination
 	public function season_destinations($Ajax='NO')
-	{
-		$_date = $_REQUEST['itinerary-date'];
+	{	
+		if(isset($_REQUEST['ajax']))
+			$Ajax=$_REQUEST['ajax'];
+			
+		$_date = $_REQUEST['itinerary_date'];
 		$destinations = $this->tour_model->getDateSeasonDestinations($_date);
 		if($Ajax=='NO'){
 			return $destinations;
@@ -321,12 +325,29 @@ class Tour extends CI_Controller {
 	{
 		if(isset($_REQUEST['trip-add'])){
 			//validation
-
+			
 
 			//trip data
 			$tripData['id'] 		= $this->input->post('id');
-			$tripData['customer_id'] 	= $this->input->post('customer_id');
-			$tripData['guest_id'] 		= $this->input->post('guest_id');
+			//check new customer or not
+			$new_customer=$this->input->post('newcustomer');
+			if($new_customer=='true'){
+				$customer['name']=$this->input->post('customer');
+				$customer['mobile']=$this->input->post('customer_contact');
+				$tripData['customer_id']=$this->customers_model->addCustomer($customer,$login=true);
+			}elseif($new_customer=='false'){
+				$tripData['customer_id'] 	= $this->input->post('customer_id');
+			}
+			//check new guest or not
+			$new_guest=$this->input->post('newguest');
+			if($new_guest=='true'){
+				$customer['name']=$this->input->post('guest_name');
+				$customer['mobile']=$this->input->post('guest_contact');
+				$tripData['guest_id']=$this->customers_model->addCustomer($customer,$login=true);
+			}elseif($new_guest=='false'){
+				$tripData['guest_id'] 		= $this->input->post('guest_id');
+			}
+			
 			$tripData['booking_date'] 	= $this->input->post('booking_date');
 			$tripData['booking_time'] 	= $this->input->post('booking_time');
 			$tripData['trip_status_id'] 	= $this->input->post('trip_status_id');
@@ -346,10 +367,11 @@ class Tour extends CI_Controller {
 
 			//trip Vehicle data
 			$vehicleData['vehicle_id'] 		= $this->input->post('pax');
-			$vehicleData['vehicle_ac_type_id'] 	= $this->input->post('pax');
+			$vehicleData['vehicle_ac_type_id'] 	= $this->input->post('vehicle_ac_type_id');
 			$vehicleData['vehicle_beacon_light_option_id'] = $this->input->post('pax');
 			$vehicleData['vehicle_type_id'] 	= $this->input->post('vehicle_type_id');
 			$vehicleData['vehicle_model_id'] 	= $this->input->post('vehicle_model_id');
+			$vehicleData['vehicle_contact'] 	= $this->input->post('vehicle_model_id');// ??
 			$vehicleData['pluckcard'] 	= $this->input->post('pax');
 			$vehicleData['uniform'] 	= $this->input->post('pax');
 			$vehicleData['tariff_id'] 	= $this->input->post('pax');
@@ -360,7 +382,7 @@ class Tour extends CI_Controller {
 			
 			//form input values
 			$data = array_merge($tripData,$vehicleData);
-
+			
 			$tripData['organisation_id'] 	= $this->session->userdata('organisation_id'); 
 			$tripData['user_id'] 		= $this->session->userdata('user_id');
 			$trip_id = $this->settings_model->addValues_returnId('trips',$tripData);

@@ -64,9 +64,9 @@ class Customers extends CI_Controller {
 		if(isset($_REQUEST['mobile']) && $_REQUEST['mobile']!=''){
 			$data['mobile']=$_REQUEST['mobile'];
 		}
-		if(isset($_REQUEST['email']) && $_REQUEST['email']!=''){
+		/*if(isset($_REQUEST['email']) && $_REQUEST['email']!=''){
 			$data['email']=$_REQUEST['email'];
-		}
+		}*/
 		
 		$res=$this->customers_model->getCustomerDetails($data);
 		if(!empty($res)){

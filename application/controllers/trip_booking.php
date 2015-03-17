@@ -797,6 +797,7 @@ class Trip_booking extends CI_Controller {
 		}
 	}
 
+	// check whether to delete or not
 	//get Available vehicles for trip booking
 	public function getAvailableVehicles(){
 		if($_REQUEST['vehicle_ac_type'] &&  $_REQUEST['vehicle_model'] && $_REQUEST['pickupdatetime'] && $_REQUEST['dropdatetime']){

@@ -6,10 +6,12 @@ class Tour extends CI_Controller {
     		parent::__construct();
 		$this->load->helper('my_helper');
 		$this->load->model('tour_model');
+		$this->load->model('driver_model');
 		$this->load->model('hotel_model');
 		$this->load->model('user_model');
 		$this->load->model('settings_model');
 		$this->load->model('customers_model');
+		$this->load->model('trip_booking_model');
 		no_cache();
 	}
 
@@ -314,7 +316,8 @@ class Tour extends CI_Controller {
 			$data[$table]=$this->user_model->getArray($table);
 		}
 
-		
+		$data['driver_availability']=$this->driver_model->getDriversArray();
+		$data['available_vehicles']=$this->trip_booking_model->getVehiclesArray();
 		
 		$data['title']="Tour Booking | ".PRODUCT_NAME;  
 		$page='user-pages/tour-booking';
@@ -334,6 +337,7 @@ class Tour extends CI_Controller {
 			if($new_customer=='true'){
 				$customer['name']=$this->input->post('customer');
 				$customer['mobile']=$this->input->post('customer_contact');
+				if($customer['name']!='')
 				$tripData['customer_id']=$this->customers_model->addCustomer($customer,$login=true);
 			}elseif($new_customer=='false'){
 				$tripData['customer_id'] 	= $this->input->post('customer_id');
@@ -341,9 +345,10 @@ class Tour extends CI_Controller {
 			//check new guest or not
 			$new_guest=$this->input->post('newguest');
 			if($new_guest=='true'){
-				$customer['name']=$this->input->post('guest_name');
-				$customer['mobile']=$this->input->post('guest_contact');
-				$tripData['guest_id']=$this->customers_model->addCustomer($customer,$login=true);
+				$guest['name']=$this->input->post('guest_name');
+				$guest['mobile']=$this->input->post('guest_contact');
+				if($guest['name']!='')
+				$tripData['guest_id']=$this->customers_model->addCustomer($guest,$login=true);
 			}elseif($new_guest=='false'){
 				$tripData['guest_id'] 		= $this->input->post('guest_id');
 			}
@@ -358,8 +363,12 @@ class Tour extends CI_Controller {
 			$tripData['pickup_time'] 	= $this->input->post('pickup_time');
 			$tripData['drop_date'] 		= $this->input->post('drop_date');
 			$tripData['drop_time'] 		= $this->input->post('drop_time');
-			$tripData['trip_from_destination_id'] 	= $this->input->post('trip_from_destination_id');
-			$tripData['trip_to_destination_id'] 	= $this->input->post('trip_to_destination_id');
+			$tripData['pickup'] 		= $this->input->post('pickup');
+			$tripData['pickup_lat'] 	= $this->input->post('pickup_lat');
+			$tripData['pickup_lng'] 	= $this->input->post('pickup_lng');
+			$tripData['drop'] 		= $this->input->post('drop');
+			$tripData['drop_lat'] 		= $this->input->post('drop_lat');
+			$tripData['drop_lng'] 		= $this->input->post('drop_lng');
 			$tripData['pax'] 		= $this->input->post('pax');
 			$tripData['markup_type'] 	= $this->input->post('markup_type');
 			$tripData['markup_value'] 	= $this->input->post('markup_value');
@@ -427,6 +436,24 @@ class Tour extends CI_Controller {
 		}
 
 		return $tabs;
+	}
+	
+	//get Available vehicles for tour booking
+	public function getAvailableVehicles(){
+		if($_REQUEST['vehicle_ac_type'] &&  $_REQUEST['vehicle_model']){
+			$data['vehicle_ac_type']=$_REQUEST['vehicle_ac_type'];
+			$data['vehicle_model']=$_REQUEST['vehicle_model'];
+			$data['organisation_id']=$this->session->userdata('organisation_id');
+			$data['trip_vehicle']=$_REQUEST['available_vehicle_id'];
+			$res['data']=$this->trip_booking_model->selectAvailableVehicles($data);
+			if($res['data']==false){
+				echo 'false';
+			}else{
+				echo json_encode($res);
+			}
+
+		}
+
 	}
 
 	//-----------------------------------------------------------------------------------------

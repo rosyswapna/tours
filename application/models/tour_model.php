@@ -195,16 +195,30 @@ class Tour_model extends CI_Model {
 	//build itinerary with pickup and drop date of a trip data
 	function buildItinerary($trip_id=0)
 	{
-		$filter = array(
+		/*$filter = array(
 				'id' => $trip_id,
 				'DATEADD(DAY,number+1,@Date1) < ' => 'drop_date');
 		$this->db->select('DATEADD(DAY,number+1,pickup_date) [itinerary]');
 		$this->db->from('trips');
-		$this->db->where($filter);
+		$this->db->where($filter);*/
+		$this->db->select('pick_up_date,drop_date');
+		$this->db->from('trips');
+		$this->db->where('id',$trip_id);
 		$query = $this->db->get();
-		if($query->num_rows() > 0)
+		$itinerary = array();
+		if($query->num_rows() == 1)
 		{
-			return $query->result_array();
+			$row = $query->row();
+			
+			$itinerary[] = $row->pick_up_date;
+
+			$next = date('Y-m-d', strtotime($row->pick_up_date . ' + 1 day'));
+			while(strtotime($row->drop_date) >= strtotime($next)){
+				$itinerary[] = $next;
+				$next = date('Y-m-d', strtotime($next . ' + 1 day'));
+			}
+			return $itinerary;
+			
 		}else{
 			return false;
 		}

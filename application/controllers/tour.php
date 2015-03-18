@@ -353,19 +353,18 @@ class Tour extends CI_Controller {
 				$tripData['guest_id'] 		= $this->input->post('guest_id');
 			}
 			
-			$tripData['booking_date'] 	= $this->input->post('booking_date');
-			$tripData['booking_time'] 	= $this->input->post('booking_time');
-			$tripData['trip_status_id'] 	= $this->input->post('trip_status_id');
-			$tripData['source_id'] 		= $this->input->post('source_id');
+			$tripData['booking_date'] 	= date('Y-m-d');
+			$tripData['booking_time'] 	= date('H:i');
+			$tripData['trip_source_id'] 	= $this->input->post('source_id');
 			$tripData['source_details'] 	= $this->input->post('source_details');
 			$tripData['source_contact'] 	= $this->input->post('source_contact');
-			$tripData['pickup_date'] 	= $this->input->post('pickup_date');
-			$tripData['pickup_time'] 	= $this->input->post('pickup_time');
+			$tripData['pick_up_date'] 	= $this->input->post('pick_up_date');
+			$tripData['pick_up_time'] 	= $this->input->post('pick_up_time');
 			$tripData['drop_date'] 		= $this->input->post('drop_date');
 			$tripData['drop_time'] 		= $this->input->post('drop_time');
-			$tripData['pickup'] 		= $this->input->post('pickup');
-			$tripData['pickup_lat'] 	= $this->input->post('pickup_lat');
-			$tripData['pickup_lng'] 	= $this->input->post('pickup_lng');
+			$tripData['pick_up'] 		= $this->input->post('pick_up');
+			$tripData['pick_up_lat'] 	= $this->input->post('pick_up_lat');
+			$tripData['pick_up_lng'] 	= $this->input->post('pick_up_lng');
 			$tripData['drop'] 		= $this->input->post('drop');
 			$tripData['drop_lat'] 		= $this->input->post('drop_lat');
 			$tripData['drop_lng'] 		= $this->input->post('drop_lng');
@@ -373,28 +372,49 @@ class Tour extends CI_Controller {
 			$tripData['markup_type'] 	= $this->input->post('markup_type');
 			$tripData['markup_value'] 	= $this->input->post('markup_value');
 			$tripData['remarks'] 		= $this->input->post('remarks');
-
+					
 			//trip Vehicle data
-			$vehicleData['vehicle_id'] 		= $this->input->post('pax');
+			$vehicleData['vehicle_id'] 		= $this->input->post('vehicle_id');
 			$vehicleData['vehicle_ac_type_id'] 	= $this->input->post('vehicle_ac_type_id');
-			$vehicleData['vehicle_beacon_light_option_id'] = $this->input->post('pax');
 			$vehicleData['vehicle_type_id'] 	= $this->input->post('vehicle_type_id');
 			$vehicleData['vehicle_model_id'] 	= $this->input->post('vehicle_model_id');
-			$vehicleData['vehicle_contact'] 	= $this->input->post('vehicle_model_id');// ??
-			$vehicleData['pluckcard'] 	= $this->input->post('pax');
-			$vehicleData['uniform'] 	= $this->input->post('pax');
-			$vehicleData['tariff_id'] 	= $this->input->post('pax');
-			$vehicleData['driver_id'] 	= $this->input->post('pax');
-			$vehicleData['driver_language_id'] = $this->input->post('pax');
-			$vehicleData['driver_language_proficiency_id'] = $this->input->post('pax');
-
-			
+			$vehicleData['tariff_id'] 		= $this->input->post('tariff_id');//??
+			$vehicleData['driver_id'] 		= $this->input->post('driver_id');
+			$vehicleData['driver_language_id'] = $this->input->post('driver_language_id');
+			$vehicleData['driver_language_proficiency_id'] = $this->input->post('driver_language_proficiency_id');//??
+				
 			//form input values
 			$data = array_merge($tripData,$vehicleData);
 			
+			$data['advanced_option']='';
+			if(isset($_REQUEST['vehicle_beacon_light_option_id'])){
+				$vehicleData['vehicle_beacon_light_option_id']=$data['vehicle_beacon_light_option_id']=TRUE;
+				$data['advanced_option']=TRUE;
+			}else{
+				$vehicleData['vehicle_beacon_light_option_id']='';
+			}
+			if(isset($_REQUEST['pluckcard'])){ 
+				$vehicleData['pluckcard']=$data['pluckcard']=TRUE;
+				$data['advanced_option']=TRUE;
+			}else{
+				$vehicleData['pluckcard']='';
+			} 
+			if(isset($_REQUEST['uniform'])){
+				$vehicleData['uniform']=$data['uniform']=TRUE;
+				$data['advanced_option']=TRUE;
+			}else{
+				$vehicleData['uniform']='';
+			}
+			
+			if($vehicleData['vehicle_id']!=gINVALID && $vehicleData['driver_id']!=gINVALID){
+			$tripData['trip_status_id'] 	= TRIP_STATUS_CONFIRMED;
+			}else{
+			$tripData['trip_status_id'] 	= TRIP_STATUS_PENDING;
+			}
+			
 			$tripData['organisation_id'] 	= $this->session->userdata('organisation_id'); 
-			$tripData['user_id'] 		= $this->session->userdata('user_id');
-			$trip_id = $this->settings_model->addValues_returnId('trips',$tripData);
+			$tripData['user_id'] 		= $this->session->userdata('id');echo "<pre>";print_r($data);echo "</pre>";exit;
+			$trip_id = $this->settings_model->addValues_returnId('trips',$tripData); 
 			if($trip_id && $trip_id > 0){//trip added
 				//build itinerary
 				$itinerary = $this->tour_model->addItineraries($trip_id);

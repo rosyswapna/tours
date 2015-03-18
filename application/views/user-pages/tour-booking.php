@@ -29,7 +29,7 @@
 <td><?php echo form_label('Customer');?></td>
 <td><?php echo form_input(array('name'=>'customer','class'=>'form-control','id'=>'customer','value'=>@$customer));?></td>
 <td><?php echo form_label('From Date');?></td>
-<td><?php echo form_input(array('name'=>'pickup_date','class'=>'form-control width-auto-with-margin-10','id'=>'tour-pickupdatepicker','value'=>@$pickup_date));?></td>
+<td><?php echo form_input(array('name'=>'pick_up_date','class'=>'form-control width-auto-with-margin-10','id'=>'tour-pickupdatepicker','value'=>@$pick_up_date));?></td>
 
 <td><?php echo form_label('Vehicle AC Type');?></td>
 <td><?php $class="form-control";
@@ -37,7 +37,7 @@
 	  $name="vehicle_ac_type_id";
 	  echo $this->form_functions->populate_dropdown($name,$vehicle_ac_types,@$vehicle_ac_type_id,$class,$id='vehicle_ac_type_id',$msg);?></td>
 <td><?php echo form_label('Pickup');?></td>
-<td><?php echo form_input(array('name'=>'pickup','class'=>'form-control','id'=>'pickup','placeholder'=>'','value'=>@$pickup)).form_input(array('name'=>'pickup_lat','class'=>'form-control hide-me','id'=>'pickup_lat','placeholder'=>'','value'=>@$pickup_lat)).form_input(array('name'=>'pickup_lng','class'=>'form-control hide-me','id'=>'pickup_lng','placeholder'=>'','value'=>@$pickup_lng));?></td>
+<td><?php echo form_input(array('name'=>'pick_up','class'=>'form-control','id'=>'pick_up','placeholder'=>'','value'=>@$pick_up)).form_input(array('name'=>'pick_up_lat','class'=>'form-control hide-me','id'=>'pick_up_lat','placeholder'=>'','value'=>@$pick_up_lat)).form_input(array('name'=>'pick_up_lng','class'=>'form-control hide-me','id'=>'pick_up_lng','placeholder'=>'','value'=>@$pick_up_lng));?></td>
 </tr>
 
 <tr>
@@ -45,7 +45,7 @@
 <td><?php echo form_input(array('name'=>'customer_contact','class'=>'form-control','id'=>'customer_contact','value'=>@$customer_contact));?>
 <div><?php $new_customer='true'; echo form_input(array('name'=>'newcustomer','class'=>'form-control newcustomer hide-me','value'=>$new_customer)).form_input(array('name'=>'customer_id','id'=>'customer_id','class'=>'form-control hide-me','value'=>'')); ?></div></td>
 <td><?php echo form_label('Time');?></td>
-<td><?php echo form_input(array('name'=>'pickup_time','class'=>'form-control width-auto-with-margin-10','id'=>'tour-pickuptimepicker','value'=>@$pickup_time));?></td>
+<td><?php echo form_input(array('name'=>'pick_up_time','class'=>'form-control width-auto-with-margin-10','id'=>'tour-pickuptimepicker','value'=>@$pick_up_time));?></td>
 <td><?php echo form_label('Vehicle Model');?></td>
 <td><?php $class="form-control";
 	  $msg="Select";
@@ -62,9 +62,9 @@
 <td><?php echo form_input(array('name'=>'drop_date','class'=>'form-control width-auto-with-margin-10','id'=>'tour-dropdatepicker','value'=>@$drop_date));?></td>
 <td><?php echo form_label('Vehicle No.');?></td>
 <td><?php $class="form-control vehicle-list";
-	  $id="available_vehicle";
+	  $id="vehicle_id";
 	  $msg=' ';
-echo $this->form_functions->populate_editable_dropdown('available_vehicle', @$available_vehicles,$class,'vehicles',array(),$msg,@$available_vehicle,$id);?></td>
+echo $this->form_functions->populate_editable_dropdown('vehicle_id', @$available_vehicles,$class,'vehicles',array(),$msg,@$vehicle_id,$id);?></td>
 <td><?php echo form_label('PAX');?></td>
 <td><?php echo form_input(array('name'=>'pax','class'=>'form-control','id'=>'pax','value'=>@$pax));?></td>
 </tr>
@@ -79,25 +79,25 @@ echo $this->form_functions->populate_editable_dropdown('available_vehicle', @$av
 <td><?php $class="form-control";
 	  $msg=' ';
 
-	  echo $this->form_functions->populate_editable_dropdown('driver_list', @$driver_availability,$class,'drivers',array(),$msg,@$available_driver);?></td>
+	  echo $this->form_functions->populate_editable_dropdown('driver_id', @$driver_availability,$class,'drivers',array(),$msg,@$driver_id);?></td>
 <td><?php echo " ";?></td>
-<td><div class="tour-advanced-container"><?php echo form_checkbox(array('name'=>'advanced','id'=>'advanced-check-box','class'=>'advanced-check-box flat-red','checked'=>@$checked)).nbs(4);?>
+<td><div class="tour-advanced-container"><?php echo form_checkbox(array('name'=>'advanced-option','id'=>'advanced-check-box','class'=>'advanced-check-box flat-red','checked'=>@$advanced_option)).nbs(4);?>
 <?php echo form_label('Advanced');?></div></td>
 </tr>
 <tbody style="display:none;" class="tbody-toggle">
 <tr>
-<td><?php echo form_checkbox(array('name'=> 'beacon_light','class'=>'beacon-light-chek-box flat-red','checked'=>@$beacon_light,'radio_to_be_selected'=>@$beacon_light_radio));
+<td><?php echo form_checkbox(array('name'=> 'vehicle_beacon_light_option_id','class'=>'beacon-light-chek-box flat-red','checked'=>@$vehicle_beacon_light_option_id));
 	  ?></td>
-<td><?php echo form_label('Beacon Light');?></td>
-<td><?php echo form_checkbox(array('name'=> 'pluck_card','class'=>'pluckcard-chek-box flat-red','checked'=>@$pluck_card));?></td>
+<td><?php echo form_label('Red Beacon Light');?></td>
+<td><?php echo form_checkbox(array('name'=> 'pluckcard','class'=>'pluckcard-chek-box flat-red','checked'=>@$pluckcard));?></td>
 <td><?php echo form_label('Placard');?></td>
 <td><?php echo form_checkbox(array('name'=> 'uniform','class'=>'uniform-chek-box flat-red','checked'=>@$uniform));?></td>
 <td><?php echo form_label('Uniform');?></td>
 <td><?php echo form_label('Languages');?></td>
 <td><?php $class="form-control";
 	  $msg="Select";
-	  $name="language";
-echo $this->form_functions->populate_dropdown($name,@$languages,@$language,$class,$id='',$msg);?>
+	  $name="driver_language_id";
+echo $this->form_functions->populate_dropdown($name,@$languages,@$driver_language_id,$class,$id='',$msg);?>
 </td>
 </tr>
 </tbody>

@@ -328,8 +328,9 @@ class Tour extends CI_Controller {
 	{
 		if(isset($_REQUEST['trip-add'])){
 			//validation
-			
-
+			$this->form_validation->set_rules('customer','Customer Name','trim|required|xss_clean');
+			$this->form_validation->set_rules('pick_up_date','From Date','trim|required|xss_clean');
+			$this->form_validation->set_rules('drop_date','To Date','trim|required|xss_clean');
 			//trip data
 			$tripData['id'] 		= $this->input->post('id');
 			//check new customer or not
@@ -362,10 +363,10 @@ class Tour extends CI_Controller {
 			$tripData['pick_up_time'] 	= $this->input->post('pick_up_time');
 			$tripData['drop_date'] 		= $this->input->post('drop_date');
 			$tripData['drop_time'] 		= $this->input->post('drop_time');
-			$tripData['pick_up'] 		= $this->input->post('pick_up');
+			$tripData['pick_up_location'] 	= $this->input->post('pick_up');
 			$tripData['pick_up_lat'] 	= $this->input->post('pick_up_lat');
 			$tripData['pick_up_lng'] 	= $this->input->post('pick_up_lng');
-			$tripData['drop'] 		= $this->input->post('drop');
+			$tripData['drop_location'] 	= $this->input->post('drop');
 			$tripData['drop_lat'] 		= $this->input->post('drop_lat');
 			$tripData['drop_lng'] 		= $this->input->post('drop_lng');
 			$tripData['pax'] 		= $this->input->post('pax');
@@ -413,7 +414,10 @@ class Tour extends CI_Controller {
 			}
 			
 			$tripData['organisation_id'] 	= $this->session->userdata('organisation_id'); 
-			$tripData['user_id'] 		= $this->session->userdata('id');echo "<pre>";print_r($data);echo "</pre>";exit;
+			$tripData['user_id'] 		= $this->session->userdata('id');   //echo "<pre>";print_r($tripData);echo "</pre>";exit;
+		     
+		     if($this->form_validation->run() != False) {
+			
 			$trip_id = $this->settings_model->addValues_returnId('trips',$tripData); 
 			if($trip_id && $trip_id > 0){//trip added
 				//build itinerary
@@ -430,7 +434,10 @@ class Tour extends CI_Controller {
 				$this->session->set_userdata(array('dbError'=>'Trip booking Failed'));
 				redirect(base_url().'front-desk/tour/booking/');
 			}
-			
+		    }else{
+				echo "post data";exit;
+				//$this->mysession->set('post',$data);
+			}	
 		}
 	}
 

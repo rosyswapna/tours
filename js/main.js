@@ -990,37 +990,7 @@ getDistance();
 	
 	
 		
-	//pickup auto complete
-	 $('#pickup').on('click',function(){
-	 var options = {
-		componentRestrictions: {country: "IN"} 
-		};
-	var autocompletepickup = new google.maps.places.Autocomplete($("#pickup")[0], options);
-	google.maps.event.addListener(autocompletepickup, 'place_changed', function() {
-			var place = autocompletepickup.getPlace();
-			var cityLat = place.geometry.location.lat();
-			var cityLng = place.geometry.location.lng();
-			$('#pickup_lat').attr('value',cityLat);
-			$('#pickup_lng').attr('value',cityLng);
-			$("#pickup").attr('value',place.name);
-		});
-	 });
-	 
-	 //drop auto complete
-	 $('#drop').on('click',function(){
-	 var options = {
-		componentRestrictions: {country: "IN"} 
-		};
-	var autocompletedrop = new google.maps.places.Autocomplete($("#drop")[0], options);
-	google.maps.event.addListener(autocompletedrop, 'place_changed', function() {
-			var place = autocompletedrop.getPlace();
-			var cityLat = place.geometry.location.lat();
-			var cityLng = place.geometry.location.lng();
-			$('#drop_lat').attr('value',cityLat);
-			$('#drop_lng').attr('value',cityLng);
-			$("#drop").attr('value',place.name);
-		});
-	 });
+	
 		 
 		 //--------ends-- new google maps
 function getDistance(){
@@ -2124,7 +2094,7 @@ $('.tour-advanced-container > .icheckbox_minimal > .iCheck-helper').on('click',f
 	$('.tbody-toggle').toggle();
 });
 
-$('.tour-booking-tbl #available_vehicle').on('change',function(){
+$('.tour-booking-tbl #vehicle_id').on('change',function(){
 	var vehicle_id = $(this).val();
 	get_vehicle_driver(vehicle_id);
 });
@@ -2176,14 +2146,63 @@ function get_vehicle_driver(vehicle_id=0){
 		if(data!=false){
 			data=jQuery.parseJSON(data);
 			
-			$('select[name="driver_list"]').val(data.driver_id);
+			$('select[name="driver_id"]').val(data.driver_id);
 		}else{
-			$('select[name="driver_list"]').val('');
+			$('select[name="driver_id"]').val('');
 		}
 	});
 	
 }
+//pickup auto complete
+	 $('#pick_up').on('click',function(){
+	 var options = {
+		componentRestrictions: {country: "IN"} 
+		};
+	var autocompletepickup = new google.maps.places.Autocomplete($("#pick_up")[0], options);
+	google.maps.event.addListener(autocompletepickup, 'place_changed', function() {
+			var place = autocompletepickup.getPlace();
+			var cityLat = place.geometry.location.lat();
+			var cityLng = place.geometry.location.lng();
+			$('#pick_up_lat').attr('value',cityLat);
+			$('#pick_up_lng').attr('value',cityLng);
+			$("#pick_up").attr('value',place.name);
+		});
+	 });
+	 
+//drop auto complete
+	 $('#drop').on('click',function(){
+	 var options = {
+		componentRestrictions: {country: "IN"} 
+		};
+	var autocompletedrop = new google.maps.places.Autocomplete($("#drop")[0], options);
+	google.maps.event.addListener(autocompletedrop, 'place_changed', function() {
+			var place = autocompletedrop.getPlace();
+			var cityLat = place.geometry.location.lat();
+			var cityLng = place.geometry.location.lng();
+			$('#drop_lat').attr('value',cityLat);
+			$('#drop_lng').attr('value',cityLng);
+			$("#drop").attr('value',place.name);
+		});
+	 });
+// check whether drop time earlier than pickup time or not
+$('#tour-pickuptimepicker,#tour-droptimepicker,#tour-pickupdatepicker,#tour-dropdatepicker').on('blur',function(){ 
+	var pickupdatepicker = $('#tour-pickupdatepicker').val();
+	var dropdatepicker = $('#tour-dropdatepicker').val();
+	var pickuptimepicker = $('#tour-pickuptimepicker').val();
+	var droptimepicker =$('#tour-droptimepicker').val();
+if(pickupdatepicker!='' && dropdatepicker!='' && pickuptimepicker!='' && droptimepicker!=''){
+	pickupdatepicker=pickupdatepicker.split('-');
+	dropdatepicker=dropdatepicker.split('-');
 
+	var start_time=new Date(pickupdatepicker[2]+'/'+pickupdatepicker[1]+'/'+pickupdatepicker[0]+' '+pickuptimepicker+':00');
+	var end_time=new Date(dropdatepicker[2]+'/'+dropdatepicker[1]+'/'+dropdatepicker[0]+' '+droptimepicker+':00');
+	if( start_time < end_time){
+	}
+	else{
+		alert("Correct drop time");
+	}
+}
+});
 
 //-----------------------------------Tour Module ends here-----------------------------------------------
 	

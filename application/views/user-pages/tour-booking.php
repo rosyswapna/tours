@@ -1,4 +1,16 @@
 <div class="tour-booking-outer">
+<?php if($this->session->userdata('dbSuccess') != '') { ?>
+		<div class="success-message">
+			<div class="alert alert-success alert-dismissable">
+			<i class="fa fa-check"></i>
+			<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+			<?php 
+			echo $this->session->userdata('dbSuccess');
+			$this->session->set_userdata('dbSuccess','');
+			?>
+		   	</div>
+		</div>
+		<?php  } ?>
 <?php echo form_open(base_url()."tour/manage_tour_booking"); ?>
 <fieldset class="body-border">
 <legend class="body-head">Booking Source</legend>

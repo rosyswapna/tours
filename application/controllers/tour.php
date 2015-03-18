@@ -435,10 +435,11 @@ class Tour extends CI_Controller {
 				redirect(base_url().'front-desk/tour/booking/');
 			}
 		    }else{
-				echo "post data";exit;
-				//$this->mysession->set('post',$data);
+				
+				$this->mysession->set('post',$data);
 			}	
 		}
+		redirect(base_url().'front-desk/tour/booking/');
 	}
 
 	//-----------------------------------------------------------------------------------------

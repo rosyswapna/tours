@@ -2071,70 +2071,36 @@ $('.vehicle-list').on('keydown',function(){
 
 // season-multiselect
 $('#seasons').click(function(){
-if ($("#seasons option[value!='']:selected").length > 0){
-    $("#seasons option[value='']").removeAttr("selected");  
-   
-}
+	if ($("#seasons option[value!='']:selected").length > 0){
+	    $("#seasons option[value='']").removeAttr("selected");  
+	   
+	}
 });
 
 //for checking customer in db
 $('#customer_contact').on('keyup click blur',function(){
-var mobile=$('#customer_contact').val();
-	if(Trim(mobile)==""){
-       
-    }else{
-   var regEx = /^(\+91|\+91|0)?\d{10}$/;
-   
-	if (!mobile.match(regEx)) {
- 		 mobile='';
-		
-     }
-	}
+	var mobile=$('#customer_contact').val();
 	if(Trim(mobile)!=""){
-	$.post(base_url+'/customers/customer-check',{
-	mobile:mobile,
-	customer:'yes'
-	},function(data){
-	if(data!=false){
-		data=jQuery.parseJSON(data);
-		$('#customer').val(data[0].name);
-		$('#customer_contact').val(data[0].mobile);
-		$('#customer_id').val(data[0].id);
-		$('.newcustomer').attr('value',false);
+		var regEx = /^(\+91|\+91|0)?\d{10}$/;
+		if (!mobile.match(regEx)) {
+			mobile='';
 		}
-	});
 	}
-	});
-	
-	
-	//for checking guest in db
+	set_customer_for_booking(mobile);
+});
+
+
+//for checking guest in db
 $('#guest_contact').on('keyup click',function(){
-var mobile=$('#guest_contact').val();
-	if(Trim(mobile)==""){
-       
-    }else{
-   var regEx = /^(\+91|\+91|0)?\d{10}$/;
-   
-	if (!mobile.match(regEx)) {
- 		 mobile='';
-		
-     }
-	}
+	var mobile=$('#guest_contact').val();
 	if(Trim(mobile)!=""){
-	$.post(base_url+'/customers/customer-check',{
-	mobile:mobile,
-	customer:'yes'
-	},function(data){ 
-	if(data!=false){
-		data=jQuery.parseJSON(data);
-		$('#guest_name').val(data[0].name);
-		$('#guest_contact').val(data[0].mobile);
-		$('#guest_id').val(data[0].id);
-		$('.newguest').attr('value',false);
-		}
-	});
+   		var regEx = /^(\+91|\+91|0)?\d{10}$/;
+		if (!mobile.match(regEx)) {
+			mobile='';
+     		}
 	}
-	});
+	set_guest_for_booking(mobile);
+});
 	
 // tour date pickers, time pickers,month pickers
 $('#tour-pickupdatepicker').datetimepicker({timepicker:false,format:'Y-m-d',formatDate:'Y-m-d'});
@@ -2143,27 +2109,62 @@ $('#tour-pickuptimepicker').datetimepicker({datepicker:false,
 	format:'H:i',
 	step:30
 });
+
 $('#tour-droptimepicker').datetimepicker({datepicker:false,
 	format:'H:i',
 	step:30
 });
+
 $('.fromday-monthpicker').each(function(){
 	$(this).datetimepicker({timepicker:false,format:'d M'});
-	});
-
-// advanced checkbox toggle
-
-if($('.advanced-check-box').attr('checked')=='checked'){ alert("hi");return false;
-
-$('.tbody-toggle').toggle();
-
-}
-$('.tour-advanced-container > .icheckbox_minimal > .iCheck-helper').on('click',function(){
-
-$('.tbody-toggle').toggle();
-
-
 });
+
+// vehicle advanced checkbox toggle(show or hide row)
+$('.tour-advanced-container > .icheckbox_minimal > .iCheck-helper').on('click',function(){
+	$('.tbody-toggle').toggle();
+});
+
+
+//------------------------functions----------------------------
+
+//set customer for tour booking 
+function set_customer_for_booking(mobile){
+	if(Trim(mobile)!=""){
+		$.post(base_url+'/customers/customer-check',{
+		mobile:mobile,
+		customer:'yes'
+		},function(data){
+		if(data!=false){
+			data=jQuery.parseJSON(data);
+			$('#customer').val(data[0].name);
+			$('#customer_contact').val(data[0].mobile);
+			$('#customer_id').val(data[0].id);
+			$('.newcustomer').attr('value',false);
+			}
+		});
+	}
+}
+
+//set guest for tour booking 
+function set_guest_for_booking(mobile){
+	if(Trim(mobile)!=""){
+		$.post(base_url+'/customers/customer-check',{
+		mobile:mobile,
+		customer:'yes'
+		},function(data){ 
+		if(data!=false){
+			data=jQuery.parseJSON(data);
+			$('#guest_name').val(data[0].name);
+			$('#guest_contact').val(data[0].mobile);
+			$('#guest_id').val(data[0].id);
+			$('.newguest').attr('value',false);
+			}
+		});
+	}
+}
+
+
+//-----------------------------------Tour Module ends here-----------------------------------------------
 	
  });
 

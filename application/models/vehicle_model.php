@@ -392,4 +392,17 @@ return true;
 	}
 	}
 
+public function getVehicleDriver($vehicle_id = 0){ 
+		$this->db->from('vehicle_drivers');
+		$this->db->where('vehicle_id',$vehicle_id);
+		$qry = $this->db->get();
+		
+		if($qry->num_rows() > 0){
+			return $qry->row_array();
+		}else{
+			return false;
+		}
+
+	}
+
 }?>

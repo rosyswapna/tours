@@ -29,7 +29,7 @@
 <td><?php echo form_label('Customer');?></td>
 <td><?php echo form_input(array('name'=>'customer','class'=>'form-control','id'=>'customer','value'=>@$customer));?></td>
 <td><?php echo form_label('From Date');?></td>
-<td><?php echo form_input(array('name'=>'pickup_date','class'=>'form-control width-60-percent-with-margin-10','id'=>'tour-pickupdatepicker','value'=>@$pickup_date));?></td>
+<td><?php echo form_input(array('name'=>'pickup_date','class'=>'form-control width-auto-with-margin-10','id'=>'tour-pickupdatepicker','value'=>@$pickup_date));?></td>
 
 <td><?php echo form_label('Vehicle AC Type');?></td>
 <td><?php $class="form-control";
@@ -45,7 +45,7 @@
 <td><?php echo form_input(array('name'=>'customer_contact','class'=>'form-control','id'=>'customer_contact','value'=>@$customer_contact));?>
 <div><?php $new_customer='true'; echo form_input(array('name'=>'newcustomer','class'=>'form-control newcustomer hide-me','value'=>$new_customer)).form_input(array('name'=>'customer_id','id'=>'customer_id','class'=>'form-control hide-me','value'=>'')); ?></div></td>
 <td><?php echo form_label('Time');?></td>
-<td><?php echo form_input(array('name'=>'pickup_time','class'=>'form-control width-60-percent-with-margin-10','id'=>'tour-pickuptimepicker','value'=>@$pickup_time));?></td>
+<td><?php echo form_input(array('name'=>'pickup_time','class'=>'form-control width-auto-with-margin-10','id'=>'tour-pickuptimepicker','value'=>@$pickup_time));?></td>
 <td><?php echo form_label('Vehicle Model');?></td>
 <td><?php $class="form-control";
 	  $msg="Select";
@@ -59,7 +59,7 @@
 <td><?php echo form_label('Guest');?></td>
 <td><?php echo form_input(array('name'=>'guest_name','class'=>'form-control','id'=>'guest_name','value'=>@$guest_name));?></td>
 <td><?php echo form_label('To Date');?></td>
-<td><?php echo form_input(array('name'=>'drop_date','class'=>'form-control width-60-percent-with-margin-10','id'=>'tour-dropdatepicker','value'=>@$drop_date));?></td>
+<td><?php echo form_input(array('name'=>'drop_date','class'=>'form-control width-auto-with-margin-10','id'=>'tour-dropdatepicker','value'=>@$drop_date));?></td>
 <td><?php echo form_label('Vehicle No.');?></td>
 <td><?php $class="form-control vehicle-list";
 	  $id="available_vehicle";
@@ -74,15 +74,15 @@ echo $this->form_functions->populate_editable_dropdown('available_vehicle', @$av
 <td><?php echo form_input(array('name'=>'guest_contact','class'=>'form-control','id'=>'guest_contact','value'=>@$guest_contact));?>
 <div><?php $new_guest='true'; echo form_input(array('name'=>'newguest','class'=>'form-control newguest hide-me','value'=>$new_guest)).form_input(array('name'=>'guest_id','id'=>'guest_id','class'=>'form-control hide-me','value'=>'')); ?></div></td>
 <td><?php echo form_label('Time');?></td>
-<td><?php echo form_input(array('name'=>'drop_time','class'=>'form-control width-60-percent-with-margin-10','id'=>'tour-droptimepicker','value'=>@$drop_time));?></td>
+<td><?php echo form_input(array('name'=>'drop_time','class'=>'form-control width-auto-with-margin-10','id'=>'tour-droptimepicker','value'=>@$drop_time));?></td>
 <td><?php echo form_label('Driver');?></td>
 <td><?php $class="form-control";
 	  $msg=' ';
 
 	  echo $this->form_functions->populate_editable_dropdown('driver_list', @$driver_availability,$class,'drivers',array(),$msg,@$available_driver);?></td>
 <td><?php echo " ";?></td>
-<td><?php echo form_checkbox(array('name'=>'advanced','id'=>'advanced-check-box','class'=>'advanced-check-box flat-red','checked'=>@$advanced)).nbs(4);?>
-<?php echo form_label('Advanced');?></td>
+<td><div class="tour-advanced-container"><?php echo form_checkbox(array('name'=>'advanced','id'=>'advanced-check-box','class'=>'advanced-check-box flat-red','checked'=>@$checked)).nbs(4);?>
+<?php echo form_label('Advanced');?></div></td>
 </tr>
 <tbody style="display:none;" class="tbody-toggle">
 <tr>

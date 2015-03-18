@@ -2124,6 +2124,11 @@ $('.tour-advanced-container > .icheckbox_minimal > .iCheck-helper').on('click',f
 	$('.tbody-toggle').toggle();
 });
 
+$('.tour-booking-tbl #available_vehicle').on('change',function(){
+	var vehicle_id = $(this).val();
+	get_vehicle_driver(vehicle_id);
+});
+
 
 //------------------------functions----------------------------
 
@@ -2161,6 +2166,22 @@ function set_guest_for_booking(mobile){
 			}
 		});
 	}
+}
+
+//set driver with vehicle id for tour booking
+function get_vehicle_driver(vehicle_id=0){
+	
+	$.post(base_url+'/vehicle/get-vehicle-driver',{vehicle_id:vehicle_id},
+	function(data){
+		if(data!=false){
+			data=jQuery.parseJSON(data);
+			
+			$('select[name="driver_list"]').val(data.driver_id);
+		}else{
+			$('select[name="driver_list"]').val('');
+		}
+	});
+	
 }
 
 

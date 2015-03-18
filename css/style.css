@@ -249,6 +249,12 @@ width:47%;
 margin:15px;
 }
 
+.width-auto-with-margin-10{
+float:left;
+width:auto;
+margin:10px;
+}
+
 .width-60-percent-with-margin-10{
 float:left;
 width:56%;

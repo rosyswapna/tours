@@ -2152,17 +2152,19 @@ $('.fromday-monthpicker').each(function(){
 	});
 
 // advanced checkbox toggle
-	
 
+if($('.advanced-check-box').attr('checked')=='checked'){ alert("hi");return false;
 
-if(pathname[3]=="booking"){
-
-if($('.advanced-check-box').attr('checked')=='checked'){ 
-
-alert("hi");//trigger check box click
+$('.tbody-toggle').toggle();
 
 }
-}	
+$('.tour-advanced-container > .icheckbox_minimal > .iCheck-helper').on('click',function(){
+
+$('.tbody-toggle').toggle();
+
+
+});
+	
  });
 
 

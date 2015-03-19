@@ -305,7 +305,11 @@ class Tour extends CI_Controller {
 	
 
 	public function tour_booking()
-	{
+	{	
+		if($this->mysession->get('post_booking')){
+				$data = $this->mysession->get('post_booking');
+				$this->mysession->delete('post_booking');	
+			}
 		
 		$tblArray=array('booking_sources','available_drivers','trip_models','drivers','vehicle_types',	
 				'vehicle_models','vehicle_makes','vehicle_ac_types','vehicle_fuel_types',
@@ -315,7 +319,7 @@ class Tour extends CI_Controller {
 		foreach($tblArray as $table){
 			$data[$table]=$this->user_model->getArray($table);
 		}
-
+		
 		$data['driver_availability']=$this->driver_model->getDriversArray();
 		$data['available_vehicles']=$this->trip_booking_model->getVehiclesArray();
 		
@@ -413,6 +417,11 @@ class Tour extends CI_Controller {
 			$tripData['trip_status_id'] 	= TRIP_STATUS_PENDING;
 			}
 			
+			$data['customer']		= $this->input->post('customer');
+			$data['customer_contact']	= $this->input->post('customer_contact');
+			$data['guest_name']		= $this->input->post('guest_name');
+			$data['guest_contact']		= $this->input->post('guest_contact');
+			
 			$tripData['organisation_id'] 	= $this->session->userdata('organisation_id'); 
 			$tripData['user_id'] 		= $this->session->userdata('id');   //echo "<pre>";print_r($tripData);echo "</pre>";exit;
 		     
@@ -436,7 +445,7 @@ class Tour extends CI_Controller {
 			}
 		    }else{
 				
-				$this->mysession->set('post',$data);
+				$this->mysession->set('post_booking',$data);
 			}	
 		}
 		redirect(base_url().'front-desk/tour/booking/');

@@ -411,7 +411,7 @@ class Tour extends CI_Controller {
 				$vehicleData['uniform']='';
 			}
 			
-			if($vehicleData['vehicle_id']!=gINVALID && $vehicleData['driver_id']!=gINVALID){
+			if($vehicleData['vehicle_id']!='' && $vehicleData['driver_id']!=''){
 			$tripData['trip_status_id'] 	= TRIP_STATUS_CONFIRMED;
 			}else{
 			$tripData['trip_status_id'] 	= TRIP_STATUS_PENDING;
@@ -425,6 +425,53 @@ class Tour extends CI_Controller {
 			$tripData['organisation_id'] 	= $this->session->userdata('organisation_id'); 
 			$tripData['user_id'] 		= $this->session->userdata('id');   //echo "<pre>";print_r($tripData);echo "</pre>";exit;
 		     
+		     //-------------------get vehicle -----------------------------
+				
+			if(is_numeric($this->input->post('available_vehicle')) && $this->input->post('available_vehicle') > 0){
+				$data['vehicle_id'] = $this->input->post('available_vehicle');
+			}elseif($this->input->post('available_vehicle') == '' || $this->input->post('available_vehicle') == gINVALID){
+				$data['vehicle_id'] = gINVALID;
+			}else{
+				$v_details['vehicle_model_id']=$data['vehicle_model'];
+				$v_details['vehicle_ac_type_id']=$data['vehicle_ac_type'];
+				$v_details['registration_number']=$this->input->post('available_vehicle');
+				$exp_match=True;
+				if ( !preg_match('/^[A-Z]{2}[ -][0-9]{1,2}(?: [A-Z])?(?: [A-Z]*)? [0-9]{4}$/', $this->input->post('available_vehicle')) ){
+				$exp_match=False;
+				$err=False;
+				$this->mysession->set('Err_reg_num','Invalid Registration Number');
+				}
+				//$this->form_validation->set_rules('available_vehicle','Registration Number','trim|required|xss_clean|regex_match[/^[A-Z]{2}[ -][0-9]{1,2}(?: [A-Z])?(?: [A-Z]*)? [0-9]{4}$/]');
+				if($data['vehicle_model'] ==gINVALID){
+					 $data['vehicle_model'] ='';
+					 $err=False;
+					 $this->mysession->set('Err_Vmodel','Choose Model Type');
+				}
+				if($data['vehicle_ac_type'] ==gINVALID){
+					 $data['vehicle_ac_type'] ='';
+					 $err=False;
+					 $this->mysession->set('Err_V_Ac','Choose AC Type');
+				}
+				if($data['vehicle_model'] !=gINVALID  && $data['vehicle_ac_type']!=gINVALID && $exp_match==True){
+				$data['vehicle_id'] = $this->vehicle_model->addVehicleFromTripBooking($v_details);
+				}else{
+				$data['vehicle_id']='';
+				}
+			}
+
+			//----------------------get driver--------------------------------------------
+			
+			if(is_numeric($this->input->post('driver_list')) && $this->input->post('driver_list') > 0){
+
+				$data['driver_id'] = $this->input->post('driver_list');
+
+			}else if($this->input->post('driver_list') == '' || $this->input->post('driver_list') == gINVALID){
+				$data['driver_id'] = gINVALID;
+			}else{ 
+				 $data['driver_id'] = $this->driver_model->addDriverFromTripBooking($this->input->post('driver_list'));
+			}
+
+		     //-------------------------------------------------------------------------------------
 		     if($this->form_validation->run() != False) {
 			
 			$trip_id = $this->settings_model->addValues_returnId('trips',$tripData); 

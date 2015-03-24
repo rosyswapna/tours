@@ -12,6 +12,7 @@ class Tour extends CI_Controller {
 		$this->load->model('settings_model');
 		$this->load->model('customers_model');
 		$this->load->model('trip_booking_model');
+		$this->load->model('vehicle_model');
 		no_cache();
 	}
 
@@ -335,6 +336,9 @@ class Tour extends CI_Controller {
 			$this->form_validation->set_rules('customer','Customer Name','trim|required|xss_clean');
 			$this->form_validation->set_rules('pick_up_date','From Date','trim|required|xss_clean');
 			$this->form_validation->set_rules('drop_date','To Date','trim|required|xss_clean');
+			$this->form_validation->set_rules('source_contact','Mobile Number','trim|regex_match[/^[0-9]{10}$/]|xss_clean');
+			$this->form_validation->set_rules('customer_contact','Mobile Number','trim|regex_match[/^[0-9]{10}$/]|xss_clean');
+			$this->form_validation->set_rules('guest_contact','Mobile Number','trim|regex_match[/^[0-9]{10}$/]|xss_clean');
 			//trip data
 			$tripData['id'] 		= $this->input->post('id');
 			//check new customer or not
@@ -424,58 +428,60 @@ class Tour extends CI_Controller {
 			
 			$tripData['organisation_id'] 	= $this->session->userdata('organisation_id'); 
 			$tripData['user_id'] 		= $this->session->userdata('id');   //echo "<pre>";print_r($tripData);echo "</pre>";exit;
+			$err=True;
+		    
+		     if($this->form_validation->run() != False ) {
 		     
-		     //-------------------get vehicle -----------------------------
+		      //-------------------get vehicle -----------------------------
 				
-			if(is_numeric($this->input->post('available_vehicle')) && $this->input->post('available_vehicle') > 0){
-				$data['vehicle_id'] = $this->input->post('available_vehicle');
-			}elseif($this->input->post('available_vehicle') == '' || $this->input->post('available_vehicle') == gINVALID){
-				$data['vehicle_id'] = gINVALID;
+			if(is_numeric($this->input->post('vehicle_id')) && $this->input->post('vehicle_id') > 0){ 
+				$vehicleData['vehicle_id'] = $this->input->post('vehicle_id');
+			}elseif($this->input->post('vehicle_id') == '' || $this->input->post('vehicle_id') == gINVALID){ 
+				$vehicleData['vehicle_id'] = gINVALID;
 			}else{
-				$v_details['vehicle_model_id']=$data['vehicle_model'];
-				$v_details['vehicle_ac_type_id']=$data['vehicle_ac_type'];
-				$v_details['registration_number']=$this->input->post('available_vehicle');
-				$exp_match=True;
-				if ( !preg_match('/^[A-Z]{2}[ -][0-9]{1,2}(?: [A-Z])?(?: [A-Z]*)? [0-9]{4}$/', $this->input->post('available_vehicle')) ){
+				$v_details['vehicle_model_id']=$vehicleData['vehicle_model_id'];
+				$v_details['vehicle_ac_type_id']=$vehicleData['vehicle_ac_type_id'];
+				$v_details['registration_number']=$this->input->post('vehicle_id');
+				$exp_match=True; 
+				if (!preg_match('/^[A-Z]{2}[ -][0-9]{1,2}(?: [A-Z])?(?: [A-Z]*)? [0-9]{4}$/', $this->input->post('vehicle_id')) ){ 
 				$exp_match=False;
 				$err=False;
 				$this->mysession->set('Err_reg_num','Invalid Registration Number');
-				}
+				} 
 				//$this->form_validation->set_rules('available_vehicle','Registration Number','trim|required|xss_clean|regex_match[/^[A-Z]{2}[ -][0-9]{1,2}(?: [A-Z])?(?: [A-Z]*)? [0-9]{4}$/]');
-				if($data['vehicle_model'] ==gINVALID){
-					 $data['vehicle_model'] ='';
+				if($vehicleData['vehicle_model_id'] ==gINVALID){
 					 $err=False;
 					 $this->mysession->set('Err_Vmodel','Choose Model Type');
 				}
-				if($data['vehicle_ac_type'] ==gINVALID){
-					 $data['vehicle_ac_type'] ='';
+				if($vehicleData['vehicle_ac_type_id'] ==gINVALID){
 					 $err=False;
 					 $this->mysession->set('Err_V_Ac','Choose AC Type');
 				}
-				if($data['vehicle_model'] !=gINVALID  && $data['vehicle_ac_type']!=gINVALID && $exp_match==True){
-				$data['vehicle_id'] = $this->vehicle_model->addVehicleFromTripBooking($v_details);
+				if($vehicleData['vehicle_model_id'] !=gINVALID  && $vehicleData['vehicle_ac_type_id'] !=gINVALID && $exp_match==True){
+				$vehicleData['vehicle_id'] = $this->vehicle_model->addVehicleFromTripBooking($v_details);
 				}else{
-				$data['vehicle_id']='';
+				$vehicleData['vehicle_id']='';
 				}
 			}
 
 			//----------------------get driver--------------------------------------------
 			
-			if(is_numeric($this->input->post('driver_list')) && $this->input->post('driver_list') > 0){
+			if(is_numeric($this->input->post('driver_id')) && $this->input->post('driver_id') > 0){
 
-				$data['driver_id'] = $this->input->post('driver_list');
+				$vehicleData['driver_id'] = $this->input->post('driver_id');
 
-			}else if($this->input->post('driver_list') == '' || $this->input->post('driver_list') == gINVALID){
-				$data['driver_id'] = gINVALID;
+			}else if($this->input->post('driver_id') == '' || $this->input->post('driver_id') == gINVALID){
+				$vehicleData['driver_id'] = gINVALID;
 			}else{ 
-				 $data['driver_id'] = $this->driver_model->addDriverFromTripBooking($this->input->post('driver_list'));
+				 $vehicleData['driver_id'] = $this->driver_model->addDriverFromTripBooking($this->input->post('driver_id'));
 			}
 
 		     //-------------------------------------------------------------------------------------
-		     if($this->form_validation->run() != False) {
-			
+
+			if($err==True){
+		     
 			$trip_id = $this->settings_model->addValues_returnId('trips',$tripData); 
-			if($trip_id && $trip_id > 0){//trip added
+				if($trip_id && $trip_id > 0){//trip added
 				//build itinerary
 				$itinerary = $this->tour_model->addItineraries($trip_id);
 				if($itinerary){
@@ -485,15 +491,16 @@ class Tour extends CI_Controller {
 				$this->session->set_userdata(array('dbSuccess'=>'Trip booked successfully!')); 
 				$this->session->set_userdata(array('dbError'=>''));
 				redirect(base_url().'front-desk/tour/booking/'.$trip_id);
-			}else{
+				}else{
 				$this->session->set_userdata(array('dbSuccess'=>'')); 
 				$this->session->set_userdata(array('dbError'=>'Trip booking Failed'));
 				redirect(base_url().'front-desk/tour/booking/');
+				}
 			}
-		    }else{
+		    }
 				
 				$this->mysession->set('post_booking',$data);
-			}	
+				
 		}
 		redirect(base_url().'front-desk/tour/booking/');
 	}

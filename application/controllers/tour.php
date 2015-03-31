@@ -13,6 +13,8 @@ class Tour extends CI_Controller {
 		$this->load->model('customers_model');
 		$this->load->model('trip_booking_model');
 		$this->load->model('vehicle_model');
+
+		$this->load->library('tour_cart');
 		no_cache();
 	}
 
@@ -34,6 +36,8 @@ class Tour extends CI_Controller {
 				$this->show_destination($param2);
 			}elseif($param1=='booking'){	
 				$this->tour_booking($param2);
+			}elseif($param1 == 'create-cart'){
+				$this->create_cart();
 			}else{
 				$this->notFound();
 			}
@@ -305,8 +309,25 @@ class Tour extends CI_Controller {
 
 	
 
-	public function tour_booking()
-	{	
+	public function tour_booking($param2='')
+	{
+		
+		if($param2!='' && is_numeric($param2) && $param2 > 0){//valid trip id
+			$tour_itms = $this->tour_model->getItineraryDataAll($param2);
+			if($tour_itms){
+				$this->tour_cart->create($tour_itms);				
+			}
+			$cart = $this->tour_cart->contents();
+		}else{
+			$cart = false;
+			$this->tour_cart->destroy();
+		}
+
+		//build itinerary table
+		$itinerary_table = $this->build_itinerary_data($cart);
+
+		
+	
 		if($this->mysession->get('post_booking')){
 				$data = $this->mysession->get('post_booking');
 				$this->mysession->delete('post_booking');	
@@ -504,6 +525,55 @@ class Tour extends CI_Controller {
 		}
 		redirect(base_url().'front-desk/tour/booking/');
 	}
+	//-----------------------------------------------------------------------------------------
+
+	function build_itinerary_data($cart){
+
+		$tableData = array('th'=>array('Date','Particulars','Accommodation','Service','Vehicle','Others'));
+		$tableData['tr'] = array();
+		foreach($cart as $item){
+
+			$destinations = array();
+			if($item['trip_destinations']){
+				foreach($item['trip_destinations'] as $destination){
+					array_push($destinations,$destinations['destination_name']);
+				}
+			}
+
+			$hotels = array();
+			if($item['trip_accommodation']){
+				foreach($item['trip_accommodation'] as $accommodation){
+					array_push($hotels,$accommodation['hotel_name']);
+				}
+			}
+
+			$services = array();
+			if($item['trip_services']){
+				foreach($item['trip_services'] as $service){
+					array_push($services,$services['service_name']);
+				}
+			}
+			
+			$vehicles = array();
+			if($item['trip_vehicles']){
+				foreach($item['trip_vehicles'] as $vehicle){
+					array_push($vehicles,$vehicle['registration_number']);
+				}
+			}
+
+			$tr = array($item['label'],
+				implode(',',$destinations),
+				implode(',',$hotels),
+				implode(',',$services),
+				implode(',',$vehicles),
+				''
+				);
+			array_push($tableData['tr'],$tr);
+		} 
+
+		//echo "<pre>";print_r($tableData);echo "</pre>";exit;
+		return $tableData;
+	}
 
 	//-----------------------------------------------------------------------------------------
 
@@ -546,6 +616,9 @@ class Tour extends CI_Controller {
 		}
 
 	}
+
+
+	
 
 	//-----------------------------------------------------------------------------------------
 

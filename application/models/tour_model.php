@@ -380,8 +380,38 @@ class Tour_model extends CI_Model {
 		if($table == '')
 			return false;
 
-		$this->db->from($table);
-		$this->db->where('itinerary_id',$itinerary_id);
+		switch($table){
+			case 'trip_destinations':$this->db->select($table.'.*,dst.name as destination_name');
+						$this->db->from($table);
+						$this->db->join('destinations dst',$table.'.destination_id = dst.id','left');			
+						$this->db->where('itinerary_id',$itinerary_id);
+						$query = $this->db->get();
+						break;
+			case 'trip_accommodation':$this->db->select($table.'.*,H.name as hotel_name');
+						$this->db->from($table);
+						$this->db->join('hotels H',$table.'.hotel_id = H.id','left');			
+						$this->db->where('itinerary_id',$itinerary_id);
+						$query = $this->db->get();
+						break;
+			case 'trip_services':$this->db->select($table.'.*,S.name as service_name');
+						$this->db->from($table);
+						$this->db->join('services S',$table.'.service_id = S.id','left');			
+						$this->db->where('itinerary_id',$itinerary_id);
+						$query = $this->db->get();
+						break;
+			case 'trip_vehicles':$this->db->select($table.'.*,V.registration_number');
+						$this->db->from($table);
+						$this->db->join('vehicles V',$table.'.vehicle_id = V.id','left');			
+						$this->db->where('itinerary_id',$itinerary_id);
+						$query = $this->db->get();
+						break;
+			default:$this->db->select($table.'.*');
+				$this->db->from($table);
+				$this->db->where('itinerary_id',$itinerary_id);
+				$query = $this->db->get();
+						
+		}
+		
 		if($query->num_rows() > 0){
 			return $query->result_array();
 		}else{

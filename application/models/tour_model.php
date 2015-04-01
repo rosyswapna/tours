@@ -262,6 +262,8 @@ class Tour_model extends CI_Model {
 			return false;
 	}
 
+	
+
 	//get single itinerary with id
 	function getItinerary($id = 0)
 	{
@@ -270,6 +272,18 @@ class Tour_model extends CI_Model {
 		$query = $this->db->get();
 		if($query->num_rows() == 1)
 			return $query->row();
+		else
+			return false;
+	}
+
+	//get single itinerary with id
+	function getItineraryWithDate($date = '',$trip_id)
+	{
+		$this->db->from('itinerary');
+		$this->db->where(array('trip_id'=>$trip_id,'date'=>$date));
+		$query = $this->db->get();
+		if($query->num_rows() == 1)
+			return $query->row_array();
 		else
 			return false;
 	}
@@ -380,7 +394,7 @@ class Tour_model extends CI_Model {
 		if($table == '')
 			return false;
 
-		switch($table){
+		/*switch($table){
 			case 'trip_destinations':$this->db->select($table.'.*,dst.name as destination_name');
 						$this->db->from($table);
 						$this->db->join('destinations dst',$table.'.destination_id = dst.id','left');			
@@ -410,7 +424,10 @@ class Tour_model extends CI_Model {
 				$this->db->where('itinerary_id',$itinerary_id);
 				$query = $this->db->get();
 						
-		}
+		}*/
+		$this->db->from($table);
+		$this->db->where('itinerary_id',$itinerary_id);
+		$query = $this->db->get();
 		
 		if($query->num_rows() > 0){
 			return $query->result_array();
@@ -418,6 +435,23 @@ class Tour_model extends CI_Model {
 			return false;
 		}
 	}
+	
+	function getNamesByIds($table,$select,$idArray){
+
+		$this->db->select($select);
+		$this->db->from($table);
+		$this->db->where_in('id', $idArray);
+		$query = $this->db->get();
+		if($query->num_rows() > 0){
+			foreach($query->result_array() as $row){
+				$ret[]=$row[$select];
+			}
+			return $ret;
+		}else{
+			return array();
+		}
+	}
+
 
 	//get trip vehicles, accommodation, services and destinatins of a trip
 	function getItineraryDataAll($trip_id=0)

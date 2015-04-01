@@ -36,8 +36,10 @@ class Tour extends CI_Controller {
 				$this->show_destination($param2);
 			}elseif($param1=='booking'){	
 				$this->tour_booking($param2);
-			}elseif($param1 == 'create-cart'){
-				$this->create_cart();
+			}elseif($param1 == 'add-to-cart'){
+				$this->add_to_cart();
+			}elseif($param1 == 'get-itm-dt'){
+				$this->getItinerary();
 			}else{
 				$this->notFound();
 			}
@@ -318,15 +320,17 @@ class Tour extends CI_Controller {
 				$this->tour_cart->create($tour_itms);				
 			}
 			$cart = $this->tour_cart->contents();
+
+			$data['header'] = $this->set_tour_header($param2);
 		}else{
 			$cart = false;
 			$this->tour_cart->destroy();
 		}
 
 		//build itinerary table
-		$itinerary_table = $this->build_itinerary_data($cart);
+		$data['itineraries'] = $this->build_itinerary_data($cart);
 
-		
+		//echo "<pre>";print_r($itinerary_table);echo "</pre>";exit;
 	
 		if($this->mysession->get('post_booking')){
 				$data = $this->mysession->get('post_booking');
@@ -336,7 +340,7 @@ class Tour extends CI_Controller {
 		$tblArray=array('booking_sources','available_drivers','trip_models','drivers','vehicle_types',	
 				'vehicle_models','vehicle_makes','vehicle_ac_types','vehicle_fuel_types',
 				'vehicle_seating_capacity','vehicle_beacon_light_options','languages','payment_type',
-				'customer_types','customer_groups','hotel_categories','trip-services');
+				'customer_types','customer_groups','hotel_categories','trip-services','destinations');
 			
 		foreach($tblArray as $table){
 			$data[$table]=$this->user_model->getArray($table);
@@ -344,6 +348,8 @@ class Tour extends CI_Controller {
 		
 		$data['driver_availability']=$this->driver_model->getDriversArray();
 		$data['available_vehicles']=$this->trip_booking_model->getVehiclesArray();
+		$active_tab = 't_tab';
+		$data['tabs'] = $this->set_up_trip_tabs($active_tab);
 		
 		$data['title']="Tour Booking | ".PRODUCT_NAME;  
 		$page='user-pages/tour-booking';
@@ -527,52 +533,127 @@ class Tour extends CI_Controller {
 	}
 	//-----------------------------------------------------------------------------------------
 
-	function build_itinerary_data($cart){
+	function set_tour_header($trip_id=''){
+		$data = array();
+		if(is_numeric($trip_id) && $trip_id > 0){
+			$trip = $this->tour_model->getTrip($trip_id);
+			$data['pick_up_date'] = $trip->pick_up_date;
+			$data['drop_date'] = $trip->drop_date;
+			$data['trip_id'] = $trip->id;
+		}
+		return $data;
+		
+	}
 
-		$tableData = array('th'=>array('Date','Particulars','Accommodation','Service','Vehicle','Others'));
-		$tableData['tr'] = array();
-		foreach($cart as $item){
+	function getItinerary(){
+		$itineraryId = -1;
+		/*if(isset($_REQUEST['itmDate']) && isset($_REQUEST['trip_id'])){
+			$itinerary = $this->tour_model->getItineraryWithDate($_REQUEST['itmDate'],$_REQUEST['trip_id']);
 
-			$destinations = array();
-			if($item['trip_destinations']){
-				foreach($item['trip_destinations'] as $destination){
-					array_push($destinations,$destinations['destination_name']);
-				}
+			if($itinerary){
+				echo json_encode($itinerary);
+			}else{
+				echo 'false';
 			}
+		}*/
+		echo $itineraryId;
+	}
 
-			$hotels = array();
-			if($item['trip_accommodation']){
-				foreach($item['trip_accommodation'] as $accommodation){
-					array_push($hotels,$accommodation['hotel_name']);
-				}
-			}
 
-			$services = array();
-			if($item['trip_services']){
-				foreach($item['trip_services'] as $service){
-					array_push($services,$services['service_name']);
+	function add_to_cart()//from ajax call
+	{
+		if(isset($_REQUEST['table'])){
+			$tble = $_REQUEST['table'];
+			$fields = $_REQUEST;print_r($fields);exit;
+			$fields['id'] = gINVALID;
+			unset($fields[$tble]);
+			$data[$tble] = $fields;
+			$this->tour_cart->insert($data);
+
+			$cart = $this->tour_cart->contents();
+			$this->build_itinerary_data($cart,$ajax = 'YES');
+		}
+	}
+
+	function get_from_cart(){
+		$cart = $this->tour_cart->contents();
+		$this->build_itinerary_data($cart,$ajax = 'YES');
+	}
+
+
+	function build_itinerary_data($cart,$ajax = 'NO'){
+
+		if($cart){
+
+			$tableData['th'] = array(
+					array('label'=>'Date','attr'=>'width="20%"'),
+					array('label'=>'Particulars','attr'=>'width="20%"'),
+					array('label'=>'Accommodation','attr'=>'width="20%"'),
+					array('label'=>'Service','attr'=>'width="20%"'),
+					array('label'=>'Vehicle','attr'=>'width="20%"'),
+					array('label'=>'Others','attr'=>'width="20%"'),
+					);
+			$tableData['tr'] = array();
+			foreach($cart as $item){
+
+				$destinations = array();
+				if($item['trip_destinations']){
+					foreach($item['trip_destinations'] as $destination){
+						array_push($destinations,$destinations['destination_id']);
+					}
+
+					$destinations = $this->tour_model->getNamesByIds('destinations','name',$destinations);
 				}
+
+				$hotels = array();
+				if($item['trip_accommodation']){
+					foreach($item['trip_accommodation'] as $accommodation){
+						array_push($hotels,$accommodation['hotel_id']);
+					}
+					$hotels = $this->tour_model->getNamesByIds('hotels','name',$hotels);
+				}
+
+				$services = array();
+				if($item['trip_services']){
+					foreach($item['trip_services'] as $service){
+						array_push($services,$services['service_id']);
+					}
+					$services = $this->tour_model->getNamesByIds('services','name',$services);
+				}
+			
+				$vehicles = array();
+				if($item['trip_vehicles']){
+					foreach($item['trip_vehicles'] as $vehicle){
+						array_push($vehicles,$vehicle['vehicle_id']);
+					}
+					$vehicles = $this->tour_model->getNamesByIds('vehicles','registration_number',$vehicles);
+				}
+
+				$tr = array($item['label'],
+					implode(',',$destinations),
+					implode(',',$hotels),
+					implode(',',$services),
+					implode(',',$vehicles),
+					''
+					);
+				array_push($tableData['tr'],$tr);
+			} 
+
+			//echo "<pre>";print_r($tableData);echo "</pre>";exit;
+
+			if($ajax == 'YES'){
+				echo json_encode($tableData);
+			}else{
+				return $tableData;
 			}
 			
-			$vehicles = array();
-			if($item['trip_vehicles']){
-				foreach($item['trip_vehicles'] as $vehicle){
-					array_push($vehicles,$vehicle['registration_number']);
-				}
+		}else{
+			if($ajax == 'YES'){			
+				echo 'false';
+			}else{
+				return false;
 			}
-
-			$tr = array($item['label'],
-				implode(',',$destinations),
-				implode(',',$hotels),
-				implode(',',$services),
-				implode(',',$vehicles),
-				''
-				);
-			array_push($tableData['tr'],$tr);
-		} 
-
-		//echo "<pre>";print_r($tableData);echo "</pre>";exit;
-		return $tableData;
+		}
 	}
 
 	//-----------------------------------------------------------------------------------------

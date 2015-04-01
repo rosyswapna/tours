@@ -56,6 +56,20 @@ class CI_Tour_cart {
 		$this->CI->session->set_userdata(array('tour_cart_contents' => $this->_tour_cart_contents));
 	}
 
+
+	function insert($items){//new cart item
+		if ( ! is_array($items) OR count($items) == 0)
+		{
+			log_message('error', 'The insert method must be passed an array containing data.');
+			return FALSE;
+		}
+		
+		
+
+
+		$this->_cart_contents[$rowid]['rowid'] = $rowid;
+	}
+
 	// --------------------------------------------------------------------
 
 	/**

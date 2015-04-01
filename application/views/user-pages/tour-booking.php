@@ -11,7 +11,10 @@
 		   	</div>
 		</div>
 		<?php  } ?>
-<?php echo form_open(base_url()."tour/manage_tour_booking"); ?>
+<?php  
+echo form_open(base_url()."tour/manage_tour_booking");
+echo form_hidden('trip_id',@$header['trip_id']);
+?>
 <fieldset class="body-border">
 <legend class="body-head">Booking Source</legend>
 <table class="tour-booking-tbl">
@@ -44,7 +47,7 @@
 <td><?php echo form_input(array('name'=>'customer','class'=>'form-control mandatory','id'=>'customer','value'=>@$customer));
 echo  $this->form_functions->form_error_session('customer','<p class="text-red">', '</p>');?></td>
 <td><?php echo form_label('From Date');?></td>
-<td><?php echo form_input(array('name'=>'pick_up_date','class'=>'form-control  mandatory','id'=>'tour-pickupdatepicker','value'=>@$pick_up_date));?>
+<td><?php echo form_input(array('name'=>'pick_up_date','class'=>'form-control  mandatory','id'=>'tour-pickupdatepicker','value'=>@$header['pick_up_date']));?>
 <?php echo  $this->form_functions->form_error_session('pick_up_date','<p class="text-red">', '</p>');?></td>
 
 <td><?php echo form_label('Vehicle AC Type');?></td>
@@ -89,7 +92,7 @@ echo  $this->form_functions->form_error_session('customer','<p class="text-red">
 <td><?php echo form_label('Guest');?></td>
 <td><?php echo form_input(array('name'=>'guest_name','class'=>'form-control','id'=>'guest_name','value'=>@$guest_name));?></td>
 <td><?php echo form_label('To Date');?></td>
-<td><?php echo form_input(array('name'=>'drop_date','class'=>'form-control  mandatory','id'=>'tour-dropdatepicker','value'=>@$drop_date));?>
+<td><?php echo form_input(array('name'=>'drop_date','class'=>'form-control  mandatory','id'=>'tour-dropdatepicker','value'=>@$header['drop_date']));?>
 <?php echo  $this->form_functions->form_error_session('drop_date','<p class="text-red">', '</p>');?></td>
 <td><?php echo form_label('Vehicle No.');?></td>
 <td><?php $class="form-control vehicle-list";
@@ -144,4 +147,103 @@ echo form_submit("trip-add",$save_update_button,$class_save_update_button).nbs(7
 
 </fieldset>
 <?php echo form_close(); ?>
+
+<!--itinerary table starts here-->
+<?php if($itineraries){?>
+<div class="box-body table-responsive no-padding">
+<table id="itinerary-tbl" class="table table-hover table-bordered table-with-20-percent-td">
+	<tr>
+	<?php foreach($itineraries['th'] as $th){?>
+	<th <?php echo $th['attr'];?>><?php echo $th['label'];?></th>
+	<?php }?>
+	</tr>
+
+	<?php foreach($itineraries['tr'] as $tr){?>
+	<tr>
+		<?php foreach($tr as $td){?>
+		<td><?php echo $td;?></td>
+		<?php }?>
+	</tr>
+	<?php }?>
+	
+</table>
+</div>
+
+<?php }?>
+<!--itinerary table ends here-->
+
+<!--itinerary tabs starts-->
+
+<div class="nav-tabs-custom itinerary">
+	<ul class="nav nav-tabs">
+	<?php 
+		foreach($tabs as $tab=>$attr){
+			echo '<li class="'.$attr['class'].'">
+				<a href="#'.$attr['tab_id'].'" data-toggle="tab">'.$attr['text'].'</a>
+			      </li>';
+		}
+	?>
+	</ul>
+	<div class="tab-content">
+		<?php if (array_key_exists('t_tab', $tabs)) {?>
+		<div class="<?php echo $tabs['t_tab']['content_class'];?>" id="<?php echo $tabs['t_tab']['tab_id'];?>">
+
+			<div class="page-outer">
+	   		<fieldset class="body-border">
+				<div class="row-source-100-percent-width-with-margin-8">
+					<div class="form-group div-with-20-percent-width-with-margin-10">
+					<?php echo form_label('Date','travel_date'); 
+				    	echo form_input(array('name'=>'travel_date','class'=>'form-control initialize-date-picker  ','id'=>'tour-travel_date','value'=>@$travel_date));
+					
+					echo $this->form_functions->form_error_session('travel_date', '<p class="text-red">', '</p>'); ?>			</div>
+				</div>
+				<div class="row-source-100-percent-width-with-margin-8">
+
+					<div id="div-via-destination">
+						<div class="form-group div-with-20-percent-width-with-margin-10">
+						<?php echo form_label('Destination','destination_id'); 
+					    	
+						$class="form-control";
+						$msg="Select Destination";
+						$name = $id = "destination_id";
+						echo $this->form_functions->populate_dropdown($name,$destinations,@$destination_id,$class,$id,$msg); 
+						echo $this->form_functions->form_error_session('travel_date', '<p class="text-red">', '</p>'); ?>			</div>
+
+						<div class="form-group div-with-20-percent-width-with-margin-10">
+						<?php echo form_label('Priority','destination_priority'); 
+					    	echo form_input(array('name'=>'destination_priority','class'=>'form-control  ','id'=>'destination_priority','value'=>@$travel_date));
+					
+						echo $this->form_functions->form_error_session('priority', '<p class="text-red">', '</p>'); ?>			</div>
+					</div>
+					<div  class="form-group div-with-20-percent-width-with-margin-10" >
+						<?php echo form_label(''); ?><br/>
+						<?php echo form_submit("via-add","ADD VIA","class='btn btn-primary' id='add-travel'");?>
+					</div>
+				</div>
+				<div class="row-source-100-percent-width-with-margin-8">
+					<div class="form-group div-with-46-percent-width-with-margin-10">
+						<?php echo form_label('Particulars','particulars');
+					    	$input = array('name'=>'particulars','class'=>'form-control',
+								'value'=>@$particulars,'rows'=>4,'id'=>'particulars');
+						echo form_textarea($input); 
+						echo form_error('particulars', '<p class="text-red">', '</p>'); ?>
+					</div>
+				</div>
+				<div class="row-source-100-percent-width-with-margin-8">
+					<div class="box-footer ">
+					<?php echo form_submit("add-travel","Add","class='btn btn-primary' id='add-travel'");?>
+					</div>
+				</div>
+			
+			</fieldset>
+			</div>
+		</div>
+		<?php }?>
+	</div>
+</div>
+
+
+<!--itinerary tabs ends here-->
+
+
 </div>

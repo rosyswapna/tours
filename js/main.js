@@ -2159,7 +2159,96 @@ $('.tour-booking-tbl #vehicle_id').on('change',function(){
 });
 
 
+//ajax calls for add itinerary
+$('.itinerary #add-travel').click(function(){
+	var trip_id = $('input[name="trip_id"]').val();
+	var _date = $('input[name="travel_date"]').val();
+	var destination_id = $('#destination_id').val();
+	var priority = $('input[name="destination_priority"]').val();
+	var particulars = $('#particulars').val();
+
+	var itinerary_id = get_itinerary_id(_date,trip_id);
+	if(itinerary_id > 0){
+		var dataArr = {table:"trip_destinations", trip_id:trip_id, itinerary_id:itinerary_id, destination_id:destination_id, priority:priority, particulars:particulars};
+	}else{
+		var dataArr = {table:"trip_destinations", trip_id:trip_id, _date:_date, destination_id:destination_id, priority:priority, particulars:particulars};
+	}
+	
+
+	//itinerary date validation
+	date_check = check_itinerary_date(_date);
+	if(date_check){//valid date
+		add_itinerary_for_tour(dataArr);
+	}else{
+		alert("Invalid date");
+	}
+	
+	
+});
+
+$('.itinerary #add-accommodation').click(function(){
+
+});
+
+$('.itinerary #add-service').click(function(){
+
+});
+
+$('.itinerary #add-vehicle').click(function(){
+
+});
+
+
 //------------------------functions----------------------------
+function get_itinerary_id(itmDate,trip_id){
+	
+	$.post(base_url+'/tour/get-itm-dt',{itmDate:itmDate, trip_id:trip_id},function(data){
+		if(data != 'false'){
+			data=jQuery.parseJSON(data);alert(data);return false;
+			//return data.id;
+		}else{alert(-1);
+			//return -1;
+		}
+	});
+
+	
+}
+
+
+//post itinerary to tour cart
+function add_itinerary_for_tour(dataArr){
+	$.post(base_url+'/tour/add-to-cart',dataArr,function(data){
+		if(data!=false){
+
+			data=jQuery.parseJSON(data);alert(data);
+			/*var new_tr = '<tr><td>'+data.label+'</td><td>'+data.particulars+'</td><td>'+data.accommodation+'</td><td>'+data.service+'</td><td>'+data.vehicle+'</td><td>'+data.others+'</td></tr>';
+			$('#itinerary-tbl').append(new_tr);*/
+		}
+	});
+}
+
+
+//checking date lies between pickup and drop date, all dates must be in mysql format'yyyy-mm-dd'
+function check_itinerary_date(dateCheck){
+	var pick_up_date	= $('input[name="pick_up_date"]').val();
+	var drop_date 		= $('input[name="drop_date"]').val();
+
+	var d1 = pick_up_date.split("-");
+	var d2 = drop_date.split("-");
+	var c = dateCheck.split("-");
+
+	var from = new Date(d1[0], d1[1]-1, d1[2]);  // -1 because months are from 0 to 11
+	var to   = new Date(d2[0], d2[1]-1, d2[2]);
+	var check = new Date(c[0], c[1]-1, c[2]);
+
+	//console.log(check > from && check < to);
+	if((check > from && check < to)){
+		return true;
+	}else{
+		return false;
+	}
+}
+//---------------------------------------------------------------------------------
 
 //set customer for tour booking 
 function set_customer_for_booking(mobile){

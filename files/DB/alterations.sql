@@ -15,3 +15,7 @@ ALTER TABLE `trips` CHANGE `pick_up` `pick_up_location` VARCHAR(250) CHARACTER S
 ALTER TABLE `trips` CHANGE `drop` `drop_location` VARCHAR(250) CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL;
 
 ALTER TABLE `trips` CHANGE `booking-time` `booking_time` TIME NOT NULL;
+
+
+--2015 Apr 1---
+ALTER TABLE `trip_destinations`  ADD `particulars` TEXT NOT NULL AFTER `destination_priority`;

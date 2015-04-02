@@ -2167,16 +2167,16 @@ $('.itinerary #add-travel').click(function(){
 	var priority = $('input[name="destination_priority"]').val();
 	var particulars = $('#particulars').val();
 
-	var itinerary_id = get_itinerary_id(_date,trip_id);
-	if(itinerary_id > 0){
+	itinerary_id = get_itinerary_id(_date,trip_id);
+	if($.isNumeric(itinerary_id) && itinerary_id > 0){
 		var dataArr = {table:"trip_destinations", trip_id:trip_id, itinerary_id:itinerary_id, destination_id:destination_id, priority:priority, particulars:particulars};
+		date_check = true;
 	}else{
+		date_check = check_itinerary_date(_date);
 		var dataArr = {table:"trip_destinations", trip_id:trip_id, _date:_date, destination_id:destination_id, priority:priority, particulars:particulars};
 	}
 	
-
 	//itinerary date validation
-	date_check = check_itinerary_date(_date);
 	if(date_check){//valid date
 		add_itinerary_for_tour(dataArr);
 	}else{
@@ -2202,12 +2202,13 @@ $('.itinerary #add-vehicle').click(function(){
 //------------------------functions----------------------------
 function get_itinerary_id(itmDate,trip_id){
 	
-	$.post(base_url+'/tour/get-itm-dt',{itmDate:itmDate, trip_id:trip_id},function(data){
+	$.post(base_url+'/tour/get-itinerary',{itmDate:itmDate, trip_id:trip_id},
+	function(data){
 		if(data != 'false'){
-			data=jQuery.parseJSON(data);alert(data);return false;
-			//return data.id;
+			data=jQuery.parseJSON(data);
+			return data.id;
 		}else{alert(-1);
-			//return -1;
+			return -1;
 		}
 	});
 

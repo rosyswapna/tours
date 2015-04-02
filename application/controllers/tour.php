@@ -38,7 +38,7 @@ class Tour extends CI_Controller {
 				$this->tour_booking($param2);
 			}elseif($param1 == 'add-to-cart'){
 				$this->add_to_cart();
-			}elseif($param1 == 'get-itm-dt'){
+			}elseif($param1 == 'get-itinerary'){
 				$this->getItinerary();
 			}else{
 				$this->notFound();
@@ -547,7 +547,8 @@ class Tour extends CI_Controller {
 
 	function getItinerary(){
 		$itineraryId = -1;
-		/*if(isset($_REQUEST['itmDate']) && isset($_REQUEST['trip_id'])){
+		if(isset($_REQUEST['itmDate']) && isset($_REQUEST['trip_id'])){
+			
 			$itinerary = $this->tour_model->getItineraryWithDate($_REQUEST['itmDate'],$_REQUEST['trip_id']);
 
 			if($itinerary){
@@ -555,8 +556,10 @@ class Tour extends CI_Controller {
 			}else{
 				echo 'false';
 			}
-		}*/
-		echo $itineraryId;
+		}else{
+			echo 'false';
+		}
+		
 	}
 
 

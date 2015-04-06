@@ -1,3 +1,9 @@
+<?php 
+$trip_id = @$header['trip_id'];
+?>
+
+
+
 <div class="tour-booking-outer">
 <?php if($this->session->userdata('dbSuccess') != '') { ?>
 		<div class="success-message">
@@ -13,7 +19,7 @@
 		<?php  } ?>
 <?php  
 echo form_open(base_url()."tour/manage_tour_booking");
-echo form_hidden('trip_id',@$header['trip_id']);
+echo form_hidden('trip_id',$trip_id);
 ?>
 <fieldset class="body-border">
 <legend class="body-head">Booking Source</legend>
@@ -141,8 +147,24 @@ echo $this->form_functions->populate_dropdown($name,@$languages,@$driver_languag
 </td>
 </tr>
 </tbody>
-<table><tr><td><?php $save_update_button='SAVE';$class_save_update_button="class='btn btn-success trip-save-update'";
-echo form_submit("trip-add",$save_update_button,$class_save_update_button).nbs(7);?></td></tr></table>
+<table><tr><td>
+	<?php if(isset($trip_id) && $trip_id>0){
+		$save="UPDATE";
+	}else{
+
+		$save="ADD";
+	}?>
+
+	<button class="btn btn-success book-tour-validate" type="button" enable_redirect='false'>
+	<?php echo $save; ?></button>
+	<div class="hide-me">
+	<?php $save_update_button='SAVE';
+		$class_save_update_button="class='btn btn-success trip-save-update'";
+
+		echo form_submit("trip-add",$save_update_button,$class_save_update_button).nbs(7);
+	?>
+	</div>
+</td></tr></table>
 </table>
 
 </fieldset>
@@ -169,8 +191,22 @@ echo form_submit("trip-add",$save_update_button,$class_save_update_button).nbs(7
 </table>
 </div>
 
+<div class="form-submit-reset-buttons-group">
+	<?php 
+		echo form_open(base_url()."front-desk/tour/save_cart/".$trip_id);
+			
+			echo form_submit("save-itry","Save","class='btn btn-success hide-me save-itry'");
+		echo form_close();
+	?>
+	<button class="btn btn-success save-itry-btn" type="button">Save</button>
+	<button class="btn btn-success tour-estimate" type="button">Estimate</button>
+</div>
+<br/>
 <?php }?>
+
 <!--itinerary table ends here-->
+
+
 
 <!--itinerary tabs starts-->
 

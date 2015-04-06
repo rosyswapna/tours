@@ -36,10 +36,12 @@ class Tour extends CI_Controller {
 				$this->show_destination($param2);
 			}elseif($param1=='booking'){	
 				$this->tour_booking($param2);
-			}elseif($param1 == 'add-to-cart'){
-				$this->add_to_cart();
-			}elseif($param1 == 'get-itinerary'){
+			}elseif($param1 == 'addToCart'){
+				$this->addToCart();
+			}elseif($param1 == 'getItinerary'){
 				$this->getItinerary();
+			}elseif($param1 == 'save_cart'){
+				$this->save_cart($param2);
 			}else{
 				$this->notFound();
 			}
@@ -48,6 +50,7 @@ class Tour extends CI_Controller {
 			$this->notAuthorized();
 		}
 	}
+	
 
 	//-----------------------business season ----------------------------------
 	public function show_business_season($getID='')
@@ -322,7 +325,9 @@ class Tour extends CI_Controller {
 			$cart = $this->tour_cart->contents();
 
 			$data['header'] = $this->set_tour_header($param2);
+			$trip_id = $param2;
 		}else{
+			$trip_id = -1;
 			$cart = false;
 			$this->tour_cart->destroy();
 		}
@@ -563,19 +568,63 @@ class Tour extends CI_Controller {
 	}
 
 
-	function add_to_cart()//from ajax call
-	{
-		if(isset($_REQUEST['table'])){
-			$tble = $_REQUEST['table'];
-			$fields = $_REQUEST;print_r($fields);exit;
-			$fields['id'] = gINVALID;
-			unset($fields[$tble]);
-			$data[$tble] = $fields;
-			$this->tour_cart->insert($data);
 
-			$cart = $this->tour_cart->contents();
-			$this->build_itinerary_data($cart,$ajax = 'YES');
+	function addToCart()//from ajax call
+	{
+		
+		if(isset($_REQUEST['table'])&& isset($_REQUEST['_date']) && isset($_REQUEST['trip_id'])){
+			$tble = $_REQUEST['table'];
+			$fields = $_REQUEST;
+
+			$itinerary = $this->tour_model->getItineraryWithDate($_REQUEST['_date'],$_REQUEST['trip_id']);
+			
+			if($itinerary){
+				$itinerary_id = $itinerary['id'];
+			}else{
+				//add itinerary
+				$insertData[] = array(
+					'trip_id' => $_REQUEST['trip_id'],
+					'date'	  => $_REQUEST['_date'],
+					'user_id' => $this->session->userdata('id'),
+					'organisation_id' => $this->session->userdata('organisation_id')
+					);
+				$itinerary_id = $this->settings_model->addValues_returnId('itineraries',$insertData); 
+			}
+
+			if(is_numeric($itinerary_id) && $itinerary_id > 0){
+
+				array_shift($fields);//pop first element(url data from ajax call)
+				unset($fields['table']);
+				unset($fields['_date']);
+				unset($fields['trip_id']);
+				$fields['id'] = gINVALID;
+				$fields['itinerary_id'] = $itinerary_id;
+				$data[$tble] = $fields;
+				$this->tour_cart->insert($data,$itinerary_id);
+			}
+
+			
+				
 		}
+		$cart = $this->tour_cart->contents();
+		$this->build_itinerary_data($cart,$ajax = 'YES');
+	}
+
+
+	function save_cart($trip_id)
+	{
+		$cart = $this->tour_cart->contents();
+		if(isset($_REQUEST['save-itry'])){
+
+			if($trip_id==gINVALID){
+				//SAVE AS PACKAGE
+			}else{
+				//SAVE ITINERARY DATA
+
+				$this->tour_model->save_tour_cart($cart);
+			}
+		}
+		redirect(base_url().'front-desk/tour/booking/'.$trip_id);
 	}
 
 	function get_from_cart(){
@@ -602,7 +651,7 @@ class Tour extends CI_Controller {
 				$destinations = array();
 				if($item['trip_destinations']){
 					foreach($item['trip_destinations'] as $destination){
-						array_push($destinations,$destinations['destination_id']);
+						array_push($destinations,$destination['destination_id']);
 					}
 
 					$destinations = $this->tour_model->getNamesByIds('destinations','name',$destinations);

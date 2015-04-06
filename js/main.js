@@ -1212,6 +1212,27 @@ window.onbeforeunload = function(){
     return "If you leave this page, data may be lost.";
 	}
 }
+
+//-----------------tour booking leave alert----------------------
+window.onbeforeunload = function(){
+	var redirect=$('.book-tour-validate').attr('enable_redirect');
+	var pathname = window.location.pathname.split("/");
+	if(pathname[2]=="tour" && pathname[3]=="booking" && redirect!='true'){
+    		setTimeout(function(){
+        		test = 2;
+    		},500)
+    		return "If you leave this page, data may be lost.";
+	}
+}
+
+$('.save-itry-btn').on('click',function(){
+	$('.book-tour-validate').attr('enable_redirect','true');
+	$('.save-itry').trigger('click');
+});
+
+
+
+
     setInterval(function(){
     if (test === 2) {
        test = 3; 
@@ -2164,24 +2185,27 @@ $('.itinerary #add-travel').click(function(){
 	var trip_id = $('input[name="trip_id"]').val();
 	var _date = $('input[name="travel_date"]').val();
 	var destination_id = $('#destination_id').val();
-	var priority = $('input[name="destination_priority"]').val();
+	var destination_priority = $('input[name="destination_priority"]').val();
 	var particulars = $('#particulars').val();
 
-	itinerary_id = get_itinerary_id(_date,trip_id);
+	/*itinerary_id = get_itinerary_id(_date,trip_id);alert(itinerary_id);return false;
 	if($.isNumeric(itinerary_id) && itinerary_id > 0){
 		var dataArr = {table:"trip_destinations", trip_id:trip_id, itinerary_id:itinerary_id, destination_id:destination_id, priority:priority, particulars:particulars};
 		date_check = true;
 	}else{
 		date_check = check_itinerary_date(_date);
 		var dataArr = {table:"trip_destinations", trip_id:trip_id, _date:_date, destination_id:destination_id, priority:priority, particulars:particulars};
-	}
+	}*/
 	
 	//itinerary date validation
-	if(date_check){//valid date
-		add_itinerary_for_tour(dataArr);
-	}else{
-		alert("Invalid date");
-	}
+	//if(date_check){//valid date
+		//add_itinerary_for_tour(dataArr);
+	//}else{
+		//alert("Invalid date");
+	//}
+
+	var dataArr = {table:"trip_destinations", trip_id:trip_id, _date:_date, destination_id:destination_id, destination_priority:destination_priority, particulars:particulars};
+	add_itinerary_for_tour(dataArr);
 	
 	
 });
@@ -2200,32 +2224,73 @@ $('.itinerary #add-vehicle').click(function(){
 
 
 //------------------------functions----------------------------
-function get_itinerary_id(itmDate,trip_id){
+/*function get_itinerary_id(itmDate,trip_id){
 	
-	$.post(base_url+'/tour/get-itinerary',{itmDate:itmDate, trip_id:trip_id},
+	$.post(base_url+'/tour/getItinerary',{itmDate:itmDate, trip_id:trip_id},
 	function(data){
 		if(data != 'false'){
 			data=jQuery.parseJSON(data);
 			return data.id;
-		}else{alert(-1);
-			return -1;
 		}
 	});
 
 	
+	
 }
+*/
+function get_itinerary_id(itmDate,trip_id) {
+        var itmId = -1;
+        $.ajax({
+		type: "POST",
+		async: false,
+            	url: base_url+'/tour/getItinerary',
+            	data: {itmDate:itmDate, trip_id:trip_id},
+            	success: function (data) {
+               		data=jQuery.parseJSON(data);alert(data.id);
+                	return data.id;
+            	},
+            	error: function (jqXHR, textStatus, errorThrown) {
+                	return -1;
+            	}
+        });
+       
+    };
+
 
 
 //post itinerary to tour cart
 function add_itinerary_for_tour(dataArr){
-	$.post(base_url+'/tour/add-to-cart',dataArr,function(data){
+	$.post(base_url+'/tour/addToCart',dataArr,function(data){
 		if(data!=false){
 
-			data=jQuery.parseJSON(data);alert(data);
-			/*var new_tr = '<tr><td>'+data.label+'</td><td>'+data.particulars+'</td><td>'+data.accommodation+'</td><td>'+data.service+'</td><td>'+data.vehicle+'</td><td>'+data.others+'</td></tr>';
-			$('#itinerary-tbl').append(new_tr);*/
+			data=jQuery.parseJSON(data);
+			build_itinerary_table(data);
 		}
 	});
+}
+
+//build itineray table with dat
+function build_itinerary_table(data){
+	$("#itinerary-tbl").find("tr").remove();
+	if(data != 'false' && data!=''){
+		var table = '<tr>';
+		for(i=0;i < data.th.length;i++){
+			table += '<th '+data.th[i].attr+'>'+data.th[i].label+'</th>';
+		}
+		table += '</tr>';
+	
+		$.each( data.tr, function( key, tr ) {
+			table += '<tr>';
+			$.each(tr, function( key, td ) {
+				table += '<td>'+td+'</td>';
+			});
+			table += '</tr>';
+		});
+			
+		
+	
+	}
+	$("#itinerary-tbl").append(table);
 }
 
 

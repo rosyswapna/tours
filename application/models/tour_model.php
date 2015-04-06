@@ -388,34 +388,84 @@ class Tour_model extends CI_Model {
 		}
 	}
 
+
+
+	//save tour cart with tour cart class
+	function save_tour_cart($cart){
+
+		//create insert and update array
+		foreach($cart as $itry){
+			foreach($itry as $table=>$tableData){
+				if($table != "label" && $tableData!=null){
+					foreach($tableData as $data){
+						$id = $data['id'];
+						unset($data['id']);
+						
+						if($id == gINVALID) {
+							$insertData[$table][] = $data;
+						}else{
+							$updateData[$table][$id] = $data;
+						}
+					}
+				}
+					
+			}
+		}
+
+		//echo "<pre>";print_r($updateData);echo "</pre>";;exit;
+
+		//insert batch
+		if($insertData){
+			foreach($insertData as $tbl=>$dataArray){
+				$this->db->insert_batch($tbl,$dataArray);
+			}
+		}
+
+		//update batch
+		if($updateData){
+
+			foreach($updateData as $tbl=>$dataBatch){
+
+				foreach($dataBatch as $id=>$dataArray){
+					
+					$this->db->where('id', $id);
+					$this->db->set('updated', 'NOW()', FALSE);
+					$this->db->update($tbl, $dataArray); 
+				}
+				
+			}
+				
+		}
+	}
+	//---------------------------------------------------------
+
 	//get trip vehicles or accommodation or services or destinatins of a particular itinerary
 	function getItineraryData($itinerary_id,$table='')
 	{
 		if($table == '')
 			return false;
 
-		/*switch($table){
-			case 'trip_destinations':$this->db->select($table.'.*,dst.name as destination_name');
+		switch($table){
+			case 'trip_destinations':$this->db->select('id,itinerary_id,destination_id,destination_priority,particulars');
 						$this->db->from($table);
-						$this->db->join('destinations dst',$table.'.destination_id = dst.id','left');			
 						$this->db->where('itinerary_id',$itinerary_id);
 						$query = $this->db->get();
 						break;
-			case 'trip_accommodation':$this->db->select($table.'.*,H.name as hotel_name');
+			case 'trip_accommodation':$this->db->select('id,itinerary_id,hotel_id,room_type_id,room_quantity,from_date,to_date,check_in_time,check_out_time,room_attributes,meals_package,meals_quantity,amount');
 						$this->db->from($table);
-						$this->db->join('hotels H',$table.'.hotel_id = H.id','left');			
+						
 						$this->db->where('itinerary_id',$itinerary_id);
 						$query = $this->db->get();
 						break;
-			case 'trip_services':$this->db->select($table.'.*,S.name as service_name');
+			case 'trip_services':$this->db->select('id,itinerary_id, service_id, description, location, quantity, amount');
 						$this->db->from($table);
-						$this->db->join('services S',$table.'.service_id = S.id','left');			
+						
 						$this->db->where('itinerary_id',$itinerary_id);
 						$query = $this->db->get();
 						break;
-			case 'trip_vehicles':$this->db->select($table.'.*,V.registration_number');
+			case 'trip_vehicles':$this->db->select('id,itinerary_id,vehicle_id,vehicle_ac_type_id, vehicle_beacon_light_option_id,vehicle_type_id,vehicle_model_id, pluckcard, uniform, tariff_id, driver_id, driver_language_id, driver_language_proficiency_id, start_km_reading, end_km_reading, driver_bata, night_halt_charges, trip_expense');
 						$this->db->from($table);
-						$this->db->join('vehicles V',$table.'.vehicle_id = V.id','left');			
+						
 						$this->db->where('itinerary_id',$itinerary_id);
 						$query = $this->db->get();
 						break;
@@ -424,10 +474,10 @@ class Tour_model extends CI_Model {
 				$this->db->where('itinerary_id',$itinerary_id);
 				$query = $this->db->get();
 						
-		}*/
-		$this->db->from($table);
-		$this->db->where('itinerary_id',$itinerary_id);
-		$query = $this->db->get();
+		}
+		//$this->db->from($table);
+		//$this->db->where('itinerary_id',$itinerary_id);
+		//$query = $this->db->get();
 		
 		if($query->num_rows() > 0){
 			return $query->result_array();

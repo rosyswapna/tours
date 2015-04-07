@@ -244,16 +244,7 @@ class Tour extends CI_Controller {
 
 	//-------------------------tour module fuctions--------------------------------------------
 
-	public function checkRoomAvailability($Ajax = 'NO')//not completed
-	{
-		$hotel_id	= $_REQUEST['hotel_id'];
-		$room_type_id	= $_REQUEST['room_type_id'];
-		$_date 		= $_REQUEST['booking_date'];
-		$hotel_room = $this->hotel_model->getHotelRoomType($hotel_id,$room_type_id);
-		if($hotel_room){
-			$room_occupancy = $this->tour_model->getRoomOccupancyCount($hotel_id,$room_type_id,$_date);
-		}
-	}
+	
 
 	//get season destination
 	public function season_destinations($Ajax='NO')
@@ -271,32 +262,10 @@ class Tour extends CI_Controller {
 		}
 	}
 
-	//get hotel list with hotel category and destination
-	public function getAvailableHotels($Ajax='NO')
-	{
-		$destination_id = $_REQUEST['destination_id'];
-		$category_id = $_REQUEST['category_id'];
-		$_date = $_REQUEST['itinerary-date'];
-		$seasons = $this->tour_model->getSeasonIdssWithDate($_date);
-		$condition = array('hotel.destination_id'=>$destination_id,'hotel.hotel_category_id'=>$category_id);
-		
-		$hotels = $this->hotel_model->getAvailableHotels($condition,$seasons);
-		
-		if($Ajax=='NO'){
-			return $hotels;
-		}else{
-
-			if($destinations){
-				header('Content-Type: application/json');
-				echo json_encode($destinations);
-			}else{
-				echo 'false';
-			}
-		}
-	}
+	
 
 	//get room types with hotel id
-	public function getHotelSettings($Ajax='NO')
+	public function getHotelSettings($Ajax='NO')//not used yet
 	{
 		$hotel_id = $_REQUEST['hotel_id'];
 		
@@ -356,7 +325,7 @@ class Tour extends CI_Controller {
 		
 		$data['driver_availability']=$this->driver_model->getDriversArray();
 		$data['available_vehicles']=$this->trip_booking_model->getVehiclesArray();
-		$active_tab = 't_tab';
+		$active_tab = 'a_tab';
 		$data['tabs'] = $this->set_up_trip_tabs($active_tab);
 		
 		$data['title']="Tour Booking | ".PRODUCT_NAME;  

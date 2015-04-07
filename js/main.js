@@ -2179,6 +2179,8 @@ $('.tour-booking-tbl #vehicle_id').on('change',function(){
 	get_vehicle_driver(vehicle_id);
 });
 
+
+//get hotels when change destination and category
 $('#hotel_destination_id').on('change',function(){
 	var destination = $(this).val();
 	var category = $('#hotel_category_id').val();
@@ -2189,7 +2191,20 @@ $('#hotel_category_id').on('change',function(){
 	var category = $(this).val();
 	getHotels(destination,category);
 });
+//---------------------------------------------------
 
+//get hotel rooms on change hotel
+$('#hotel_id').on('change',function(){
+	var hotel_id = $(this).val();
+	getHotelRooms(hotel_id);
+});
+//-------------------------------------------------
+
+//check room availability event
+$('#room_quantity').on('keyup',function(){
+	var qty = $(this).val();
+	checkRoomAvailability(qty);
+});
 
 //ajax calls for add itinerary
 $('.itinerary #add-travel').click(function(){
@@ -2408,8 +2423,11 @@ function get_vehicle_driver(vehicle_id=0){
 
 //get hotels with destination and category
 function getHotels(destination,category,hotel_id=''){
+	var id ='#hotel_id';
+	$(id+' option').remove();
+	$(id).append($("<option ></option>").attr("value",'-1').text('--Select Hotel--'));
 	if(destination > 0 && category > 0){
-		 var id ='#hotel_id';
+		 
 		var _date = $('input[name="accommodation_date"]').val();
 		 $.post(base_url+"/hotel/getAvailableHotels",
 		  {
@@ -2419,25 +2437,59 @@ function getHotels(destination,category,hotel_id=''){
 		  },function(data){
 			if(data!='false'){
 				data=jQuery.parseJSON(data);
-				$(id+' option').remove();
-				$(id).append($("<option></option>").attr("value",'-1').text('--Select Hotel--'));
+				
 				var selected="";
 				for(var i=0;i< data.length;i++){
 					$(id).append($("<option "+selected+"></option>").attr("value",data[i].id).text(data[i].name));
 				}
 			
-			}else{
-			 	$(id+' option').remove();
-			 	$(id).append($("<option ></option>").attr("value",'-1').text('--Select Hotels--'));
-				$('.display-me').css('display','none');
 			}
-		
 		});
 		
-		return true;
-	}else{
-		return false;
 	}
+	return true;
+}
+
+
+//get hotel rooms for selected hotel and set room types list
+function getHotelRooms(hotel_id,room_type_id=''){
+	var id ='#room_type_id';
+	$(id+' option').remove();
+	$(id).append($("<option ></option>").attr("value",'-1').text('--Select Room Type--'));
+	$.post(base_url+"/hotel/getHotelRooms",{hotel_id:hotel_id},
+	function(data){
+		if(data!='false'){
+			data=jQuery.parseJSON(data);
+			var selected="";
+			for(var i=0;i< data.length;i++){
+				$(id).append($("<option "+selected+"></option>").attr("value",data[i].room_type_id).text(data[i].room_type_name));
+			}
+		
+		}
+	});
+		
+}
+
+//check room availability with quantity and rooms in trip accommodation table
+function checkRoomAvailability(reqQTY)
+{
+	var hotel_id = $('#hotel_id').val();
+	var room_type_id = $('#room_type_id').val();
+	var _date = $('#accommodation_date').val();
+	$.post(base_url+"/hotel/getRoomAvailability",{
+		hotel_id:hotel_id, room_type_id:room_type_id, booking_date:_date, qty:reqQTY},
+	function(avlQTY){
+		$("#room_quantity").val('');
+		if(reqQTY > avlQTY){
+			var cnRoom = confirm("Insufficient rooms.Do you want to continue with Availabe Rooms?");
+			if(cnRoom){
+				$("#room_quantity").val(avlQTY);
+			}
+		}else{
+			$("#room_quantity").val(reqQTY);
+		}	
+			
+	});
 }
 
 

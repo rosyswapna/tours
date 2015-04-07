@@ -117,7 +117,9 @@ class Hotel_model extends CI_Model {
 	//get list of rooms with hotel id
 	function getHotelRooms($hotel_id)
 	{
+		$this->db->select('hotel_rooms.room_type_id,hotel_rooms.no_of_rooms,room_types.name as room_type_name');
 		$this->db->from('hotel_rooms');
+		$this->db->join('room_types','room_types.id=hotel_rooms.room_type_id','left');
 		$this->db->where('hotel_id',$hotel_id);
 		$query = $this->db->get();
 		if($query->num_rows() > 0){

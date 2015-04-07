@@ -387,6 +387,38 @@ class Hotel extends CI_Controller {
 
 		
 	}
+
+	public function getHotelRooms()
+	{
+		$rooms = $this->hotel_model->getHotelRooms($_REQUEST['hotel_id']);
+		
+		if(!$rooms){
+			echo 'false';
+		}else{
+			echo json_encode($rooms);
+		}
+
+		
+	}
+	
+	public function getRoomAvailability($Ajax = 'NO')//not completed
+	{
+		$hotel_id	= $_REQUEST['hotel_id'];
+		$room_type_id	= $_REQUEST['room_type_id'];
+		$_date 		= '2015-04-07';//$_REQUEST['booking_date'];
+		$requiredQTY	= $_REQUEST['qty'];
+		$hotel_room = $this->hotel_model->getHotelRoomType($hotel_id,$room_type_id);
+		if($hotel_room){
+			$room_occupancy = $this->tour_model->getRoomOccupancyCount($hotel_id,$room_type_id,$_date);
+			$availableQTY = $hotel_room['no_of_rooms']-$room_occupancy;
+			if($requiredQTY >= $availableQTY)
+				echo $availableQTY;
+			else
+				echo $requiredQTY;
+		}else{
+			echo 0;
+		}
+	}
 	//------------------------------------------------------------------------------------------
 
 

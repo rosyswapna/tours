@@ -317,7 +317,7 @@ class Tour extends CI_Controller {
 		$tblArray=array('booking_sources','available_drivers','trip_models','drivers','vehicle_types',	
 				'vehicle_models','vehicle_makes','vehicle_ac_types','vehicle_fuel_types',
 				'vehicle_seating_capacity','vehicle_beacon_light_options','languages','payment_type',
-				'customer_types','customer_groups','hotel_categories','trip-services','destinations','room_attributes','meals_options');
+				'customer_types','customer_groups','hotel_categories','trip-services','destinations','room_attributes','meals_options','services');
 			
 		foreach($tblArray as $table){
 			$data[$table]=$this->user_model->getArray($table);
@@ -325,7 +325,7 @@ class Tour extends CI_Controller {
 		
 		$data['driver_availability']=$this->driver_model->getDriversArray();
 		$data['available_vehicles']=$this->trip_booking_model->getVehiclesArray();
-		$active_tab = 'a_tab';
+		$active_tab = 's_tab';
 		$data['tabs'] = $this->set_up_trip_tabs($active_tab);
 		
 		$data['title']="Tour Booking | ".PRODUCT_NAME;  

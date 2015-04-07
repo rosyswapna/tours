@@ -399,7 +399,57 @@ echo $this->form_functions->populate_dropdown($name,@$languages,@$driver_languag
 
 			<div class="page-outer">
 	   		<fieldset class="body-border">
-			services
+
+				<div class="row-source-100-percent-width-with-margin-8">
+					<div class="form-group div-with-20-percent-width-with-margin-10">
+					<?php echo form_label('Date','service_date'); 
+				    	echo form_input(array('name'=>'service_date','class'=>'form-control initialize-date-picker  ','id'=>'tour-service_date','value'=>@$service_date));
+					
+					echo $this->form_functions->form_error_session('service_date', '<p class="text-red">', '</p>'); ?>			</div>
+				</div>
+				
+				<div class="row-source-100-percent-width-with-margin-8">
+					<div class="form-group div-with-20-percent-width-with-margin-10">
+					<?php echo form_label('Service','service_id'); 
+				    	
+					$class="form-control";
+					$msg="Select Service";
+					$name = $id = "service_id";
+					echo $this->form_functions->populate_dropdown($name,$services,@$service_id,$class,$id,$msg); 
+					echo $this->form_functions->form_error_session('service_id', '<p class="text-red">', '</p>'); ?>			</div>
+					
+					<div class="form-group div-with-20-percent-width-with-margin-10">
+						<?php echo form_label('Rate','service_rate');
+						echo form_input(array('name'=>'service_rate','class'=>'form-control','id'=>'service_rate','value'=>@$service_rate));
+						?>
+					</div>
+
+					<div class="form-group div-with-20-percent-width-with-margin-10">
+						<?php echo form_label('Location','service_location');
+						echo form_input(array('name'=>'service_location','class'=>'form-control','id'=>'service_location','value'=>@$service_location));
+						?>
+					</div>
+					
+					<div class="form-group div-with-20-percent-width-with-margin-10">
+						<?php echo form_label('Quantity','service_quantity');
+						echo form_input(array('name'=>'service_quantity','class'=>'form-control','id'=>'service_quantity','value'=>@$service_quantity));
+						?>
+					</div>
+
+				</div>
+
+
+				<div class="row-source-100-percent-width-with-margin-8">
+					<div class="form-group div-with-46-percent-width-with-margin-10">
+						<?php echo form_label('Description','service_description');
+					    	$input = array('name'=>'service_description','class'=>'form-control',
+								'value'=>@$service_description,'rows'=>4,'id'=>'service_description');
+						echo form_textarea($input); 
+						echo form_error('service_description', '<p class="text-red">', '</p>'); ?>
+					</div>
+				</div>
+				
+
 			</fieldset>
 			</div>
 		</div>

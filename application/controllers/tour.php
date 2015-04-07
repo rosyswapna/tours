@@ -38,6 +38,9 @@ class Tour extends CI_Controller {
 				$this->tour_booking($param2);
 			}elseif($param1 == 'addToCart'){
 				$this->addToCart();
+			}elseif($param1 == 'addToCartPackage'){
+				$this->addToCartPackage();
+			
 			}elseif($param1 == 'getItinerary'){
 				$this->getItinerary();
 			}elseif($param1 == 'save_cart'){
@@ -345,7 +348,7 @@ class Tour extends CI_Controller {
 		$tblArray=array('booking_sources','available_drivers','trip_models','drivers','vehicle_types',	
 				'vehicle_models','vehicle_makes','vehicle_ac_types','vehicle_fuel_types',
 				'vehicle_seating_capacity','vehicle_beacon_light_options','languages','payment_type',
-				'customer_types','customer_groups','hotel_categories','trip-services','destinations');
+				'customer_types','customer_groups','hotel_categories','trip-services','destinations','room_attributes','meals_options');
 			
 		foreach($tblArray as $table){
 			$data[$table]=$this->user_model->getArray($table);
@@ -608,6 +611,12 @@ class Tour extends CI_Controller {
 		}
 		$cart = $this->tour_cart->contents();
 		$this->build_itinerary_data($cart,$ajax = 'YES');
+	}
+
+	//package save
+	function addToCartPackage(){
+		//create cart
+		
 	}
 
 

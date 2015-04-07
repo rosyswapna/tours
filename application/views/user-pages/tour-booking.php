@@ -275,6 +275,123 @@ echo $this->form_functions->populate_dropdown($name,@$languages,@$driver_languag
 			</div>
 		</div>
 		<?php }?>
+
+
+		<?php if (array_key_exists('a_tab', $tabs)) {?>
+		<div class="<?php echo $tabs['a_tab']['content_class'];?>" id="<?php echo $tabs['a_tab']['tab_id'];?>">
+
+			<div class="page-outer">
+	   		<fieldset class="body-border">
+				<div class="row-source-100-percent-width-with-margin-8">
+					<div class="form-group div-with-20-percent-width-with-margin-10">
+					<?php echo form_label('Date','accommodation_date'); 
+				    	echo form_input(array('name'=>'accommodation_date','class'=>'form-control initialize-date-picker  ','id'=>'tour-accommodation_date','value'=>@$accommodation_date));
+					
+					echo $this->form_functions->form_error_session('accommodation_date', '<p class="text-red">', '</p>'); ?>		</div>
+				</div>
+				<div class="row-source-100-percent-width-with-margin-8">
+					<div class="form-group div-with-20-percent-width-with-margin-10">
+					<?php echo form_label('Destination','hotel_destination_id'); 
+				    	
+					$class="form-control";
+					$msg="Select Destination";
+					$name = $id = "hotel_destination_id";
+					echo $this->form_functions->populate_dropdown($name,$destinations,@$hotel_destination_id,$class,$id,$msg); 
+					echo $this->form_functions->form_error_session('hotel_destination_id', '<p class="text-red">', '</p>'); ?>		</div>
+
+					<div class="form-group div-with-20-percent-width-with-margin-10">
+					<?php echo form_label('Category','hotel_category_id'); 
+				    	
+					$class="form-control";
+					$msg="Select Category";
+					$name = $id = "hotel_category_id";
+					echo $this->form_functions->populate_dropdown($name,$hotel_categories,@$hotel_category_id,$class,$id,$msg); 
+					echo $this->form_functions->form_error_session('hotel_category_id', '<p class="text-red">', '</p>'); ?>		</div>
+
+					<div class="form-group div-with-20-percent-width-with-margin-10">
+					<?php echo form_label('Hotel','hotel_id'); 
+				    	
+					$class="form-control";
+					$msg="Select Hotel";
+					$name = $id = "hotel_id";
+					echo $this->form_functions->populate_dropdown($name,null,@$hotel_id,$class,$id,$msg); 
+					echo $this->form_functions->form_error_session('hotel_id', '<p class="text-red">', '</p>'); ?>			</div>
+				</div>
+
+				<div class="row-source-100-percent-width-with-margin-8">
+
+					<div class="div-with-20-percent-width-with-margin-10">
+						<div class="form-group">
+						<?php echo form_label('Room Type','room_type_id'); 
+					    	
+						$class="form-control";
+						$msg="Select Room Type";
+						$name = $id = "room_type_id";
+						echo $this->form_functions->populate_dropdown($name,null,@$room_type_id,$class,$id,$msg); 
+						echo $this->form_functions->form_error_session('room_type_id', '<p class="text-red">', '</p>'); ?>			</div>
+
+						<div class="form-group">
+						<?php echo form_label('Room Quantity','room_quantity');
+						echo form_input(array('name'=>'room_quantity','class'=>'form-control','id'=>'room_quantity','value'=>@$room_quantity));
+						?>
+						</div>
+
+					</div>
+
+					
+					<div class="div-with-20-percent-width-with-margin-10">
+
+						<div class="form-group">
+						<?php 
+						echo form_label('Room Attributes');
+						$class="form-control";
+						$msg="Room Attributes";
+						$name="room_attributes";
+						echo $this->form_functions->populate_multiselect($name,$room_attributes,@$accomodation['room_attributes'],$class,$id='room_attributes',$msg)?>
+						</div>
+
+					</div>
+					<?php if($meals_options){?>
+					<div class="div-with-20-percent-width-with-margin-10">
+
+						<div class="form-group">
+						<?php echo form_label('Meals Package','meals_package'); 
+						foreach($meals_options as $meals_id=>$meals_name){
+							$data = array(
+						    'name'        => 'meals_package[]',
+						    'id'          => 'meals_package'.$meals_id,
+						    'value'       => $meals_id,
+						    'style'       => 'margin:10px',
+						    'class'	  =>'meals_package',
+						    );
+						echo br();
+						echo form_checkbox($data).nbs(2).$meals_name;
+						}
+					
+						?>
+						</div>
+
+						<div class="form-group">
+						<?php echo form_label('Meals Quantity','meals_quantity');
+						echo form_input(array('name'=>'meals_quantity','class'=>'form-control','id'=>'meals_quantity','value'=>@$meals_quantity));
+						?>
+						</div>
+					</div>
+					<?php }?>
+
+				</div>
+
+				<div class="row-source-100-percent-width-with-margin-8">
+					<div class="box-footer ">
+					<?php echo form_submit("add-accommodation","Add","class='btn btn-primary' id='add-accommodation'");?>
+					</div>
+				</div>
+
+			</fieldset>
+			</div>
+		</div>
+		<?php }?>
+
 	</div>
 </div>
 

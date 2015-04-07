@@ -44,7 +44,7 @@ class Hotel_model extends CI_Model {
 			$this->db->where('hotel.organisation_id',$this->session->userdata('organisation_id'));
 		}
 		
-		$query = $this->db->get();
+		$query = $this->db->get();//echo $this->db->last_query();exit;
 		if($query->num_rows() > 0){
 			return $query->result_array();
 		}else{
@@ -84,10 +84,12 @@ class Hotel_model extends CI_Model {
 		foreach($hotels as $hotel){
 
 			if($hotel['seasons'] == ''){
-				$filtered_hotels[$hotel['id']] = $hotel['name'];
+				$filtered_hotels[] = array('id'=>$hotel['id'],
+							'name'=>$hotel['name']);
 			}elseif(is_array($hotel['seasons']) && is_array($seasonIds)){
 				if(count(array_intersect($hotel['seasons'],$seasonIds)) > 0){
-					$filtered_hotels[$hotel['id']] = $hotel['name'];
+					$filtered_hotels[] = array('id'=>$hotel['id'],
+							'name'=>$hotel['name']);
 				}
 			}
 

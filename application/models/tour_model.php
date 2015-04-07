@@ -88,7 +88,7 @@ class Tour_model extends CI_Model {
 		$this->db->select("id,DAYOFYEAR(starting_date) st, DAYOFYEAR(ending_date) ed ,DAYOFYEAR('".$_date."') cr");
 		$this->db->from('business_seasons');
 	
-		//$this->db->where('DAYOFYEAR('.$this->db->escape($_date).') BETWEEN DAYOFYEAR(starting_date) AND DAYOFYEAR(ending_date)');
+		$this->db->where('DAYOFYEAR('.$this->db->escape($_date).') BETWEEN DAYOFYEAR(starting_date) AND DAYOFYEAR(ending_date)');
 		$query = $this->db->get();//echo $this->db->last_query();exit;
 		if($query->num_rows() > 0){
 			$result = $query->result();

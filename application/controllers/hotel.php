@@ -371,26 +371,18 @@ class Hotel extends CI_Controller {
 	//------------------------------------------------------------------------------------------
 	
 	//-----------------ajax related functions---------------------------------------------------
-	public function getAvailableHotels($ajax = 'NO')
+	public function getAvailableHotels()
 	{
-		$destination_id=$_REQUEST['destination_id'];
-		$category_id=$_REQUEST['category_id'];
+		$filter['hotel.destination_id']=$_REQUEST['destination_id'];
+		$filter['hotel.hotel_category_id']=$_REQUEST['category_id'];
+		$season_ids = $this->tour_model->getSeasonIdssWithDate($_REQUEST['_date']);
 
-		$hotels = $this->hotel_model->getSeasonHotels();
+		$hotels = $this->hotel_model->getDateSeasonHotels($filter,$season_ids);
 
 		if(!$hotels){
-			if($ajax=='NO'){
-				return false;
-			}else{
-				echo 'false';
-			}
+			echo 'false';
 		}else{
-			if($ajax=='NO'){
-				return $hotels;
-			}else{
-				header('Content-Type: application/json');
-				echo json_encode($hotels);
-			}
+			echo json_encode($hotels);
 		}
 
 		

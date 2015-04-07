@@ -392,6 +392,31 @@ echo $this->form_functions->populate_dropdown($name,@$languages,@$driver_languag
 		</div>
 		<?php }?>
 
+
+		<!--services tab contents-->
+		<?php if (array_key_exists('s_tab', $tabs)) {?>
+		<div class="<?php echo $tabs['s_tab']['content_class'];?>" id="<?php echo $tabs['s_tab']['tab_id'];?>">
+
+			<div class="page-outer">
+	   		<fieldset class="body-border">
+			services
+			</fieldset>
+			</div>
+		</div>
+		<?php }?>
+
+		<!--vehicles tab contents-->
+		<?php if (array_key_exists('v_tab', $tabs)) {?>
+		<div class="<?php echo $tabs['v_tab']['content_class'];?>" id="<?php echo $tabs['v_tab']['tab_id'];?>">
+
+			<div class="page-outer">
+	   		<fieldset class="body-border">
+			vehicles
+			</fieldset>
+			</div>
+		</div>
+		<?php }?>
+
 	</div>
 </div>
 

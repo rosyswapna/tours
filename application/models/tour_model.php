@@ -392,7 +392,7 @@ class Tour_model extends CI_Model {
 
 	//save tour cart with tour cart class
 	function save_tour_cart($cart){
-
+		//echo "<pre>";print_r($cart);echo "</pre>";;exit;
 		//create insert and update array
 		foreach($cart as $itry){
 			foreach($itry as $table=>$tableData){
@@ -400,6 +400,16 @@ class Tour_model extends CI_Model {
 					foreach($tableData as $data){
 						$id = $data['id'];
 						unset($data['id']);
+						
+						
+						//if found array values serialize them
+						foreach($data as $colName=>$colVal){
+							
+							if(is_array($colVal)){
+								$data[$colName] = serialize($colVal);
+							}
+							
+						}
 						
 						if($id == gINVALID) {
 							$insertData[$table][] = $data;
@@ -412,7 +422,7 @@ class Tour_model extends CI_Model {
 			}
 		}
 
-		//echo "<pre>";print_r($updateData);echo "</pre>";;exit;
+		//echo "<pre>";print_r($insertData);echo "</pre>";;exit;
 
 		//insert batch
 		if($insertData){

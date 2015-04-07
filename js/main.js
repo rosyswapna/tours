@@ -2251,8 +2251,8 @@ $('.itinerary #add-accommodation').click(function(){
 		var dataArr = {table:"trip_accommodation", _date:_date, hotel_id:hotel_id, room_type_id:room_type_id, room_quantity:room_quantity,room_attributes:room_attributes,meals_package:meals_package};
 		add_itinerary_for_package();
 	}else{
-		var dataArr = {table:"trip_accommodation", trip_id:trip_id, _date:_date, hotel_id:hotel_id, room_type_id:room_type_id, room_quantity:room_quantity,room_attributes:room_attributes,meals_package:meals_package};
-		alert(dataArr);return false;
+		var dataArr = {table:"trip_accommodation", trip_id:trip_id, _date:_date, hotel_id:hotel_id, room_type_id:room_type_id, room_quantity:room_quantity,room_attributes:room_attributes,meals_package:meals_package, meals_quantity:meals_quantity};
+		
 		add_itinerary_for_tour(dataArr);
 	}
 	

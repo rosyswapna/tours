@@ -43,6 +43,8 @@ class Tour extends CI_Controller {
 				$this->addToCart();
 			}elseif($param1 == 'addToCartPackage'){
 				$this->addToCartPackage();
+			}elseif($param1 == 'getFromCart'){
+				$this->getFromCart();
 			
 			}elseif($param1 == 'getItinerary'){
 				$this->getItinerary();
@@ -320,7 +322,7 @@ class Tour extends CI_Controller {
 		$tblArray=array('booking_sources','available_drivers','trip_models','drivers','vehicle_types',	
 				'vehicle_models','vehicle_makes','vehicle_ac_types','vehicle_fuel_types',
 				'vehicle_seating_capacity','vehicle_beacon_light_options','languages','payment_type',
-				'customer_types','customer_groups','hotel_categories','trip-services','destinations','room_attributes','meals_options','services','vehicles');
+				'customer_types','customer_groups','hotel_categories','trip-services','destinations','room_attributes','meals_options','services','vehicles','packages');
 			
 		foreach($tblArray as $table){
 			$data[$table]=$this->user_model->getArray($table);
@@ -328,7 +330,7 @@ class Tour extends CI_Controller {
 		
 		$data['driver_availability']=$this->driver_model->getDriversArray();
 		$data['available_vehicles']=$this->trip_booking_model->getVehiclesArray();
-		$active_tab = 'v_tab';
+		$active_tab = 't_tab';
 		$data['tabs'] = $this->set_up_trip_tabs($active_tab);
 		
 		$data['title']="Tour Booking | ".PRODUCT_NAME;  
@@ -599,7 +601,28 @@ class Tour extends CI_Controller {
 
 	//package save
 	function addToCartPackage(){
+
 		//create cart
+		if($this->tour_cart->total_itineraries() == 0){
+			$this->tour_cart->create();
+		}
+
+		if(isset($_REQUEST['table'])&& isset($_REQUEST['_date'])){
+			$tble = $_REQUEST['table'];
+			$fields = $_REQUEST;
+			$itinerary = $fields['_date'];
+			array_shift($fields);//pop first element(url data from ajax call)
+			unset($fields['table']);
+			unset($fields['_date']);
+			$fields['id'] = gINVALID;
+			$data[$tble] = $fields;
+			//echo "<pre>";print_r($data);echo "</pre>";exit;
+			$this->tour_cart->insert($data,$itinerary);
+		}
+
+		$cart = $this->tour_cart->contents();
+		
+		$this->build_itinerary_data($cart,$ajax = 'YES');
 		
 	}
 
@@ -614,13 +637,13 @@ class Tour extends CI_Controller {
 			}else{
 				//SAVE ITINERARY DATA
 
-				$this->tour_model->save_tour_cart($cart);
+				$this->tour_model->save_tour_cart($cart,$trip_id);
 			}
 		}
 		redirect(base_url().'front-desk/tour/booking/'.$trip_id);
 	}
 
-	function get_from_cart(){
+	function getFromCart(){
 		$cart = $this->tour_cart->contents();
 		$this->build_itinerary_data($cart,$ajax = 'YES');
 	}
@@ -639,10 +662,11 @@ class Tour extends CI_Controller {
 					array('label'=>'Others','attr'=>'width="20%"'),
 					);
 			$tableData['tr'] = array();
-			foreach($cart as $item){
+			foreach($cart as $itinerary=>$item){
+				//echo "<pre>";print_r($item);echo "</pre>";exit;
 
 				$destinations = array();
-				if($item['trip_destinations']){
+				if(isset($item['trip_destinations'])){
 					foreach($item['trip_destinations'] as $destination){
 						array_push($destinations,$destination['destination_id']);
 					}
@@ -651,7 +675,7 @@ class Tour extends CI_Controller {
 				}
 
 				$hotels = array();
-				if($item['trip_accommodation']){
+				if(isset($item['trip_accommodation'])){
 					foreach($item['trip_accommodation'] as $accommodation){
 						array_push($hotels,$accommodation['hotel_id']);
 					}
@@ -659,7 +683,7 @@ class Tour extends CI_Controller {
 				}
 
 				$services = array();
-				if($item['trip_services']){
+				if(isset($item['trip_services'])){
 					foreach($item['trip_services'] as $service){
 					
 						array_push($services,$service['service_id']);
@@ -668,7 +692,7 @@ class Tour extends CI_Controller {
 				}
 			
 				$vehicles = array();
-				if($item['trip_vehicles']){
+				if(isset($item['trip_vehicles'])){
 					foreach($item['trip_vehicles'] as $vehicle){
 						array_push($vehicles,$vehicle['vehicle_id']);
 					}
@@ -676,7 +700,7 @@ class Tour extends CI_Controller {
 					//echo "<pre>";print_r($vehicles);echo "</pre>";exit;
 				}
 
-				$tr = array($item['label'],
+				$tr = array($itinerary,
 					implode(',',$destinations),
 					implode(',',$hotels),
 					implode(',',$services),

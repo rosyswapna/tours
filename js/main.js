@@ -1213,28 +1213,7 @@ window.onbeforeunload = function(){
 	}
 }
 
-//-----------------tour booking leave alert----------------------
-window.onbeforeunload = function(){
-	var redirect=$('.book-tour-validate').attr('enable_redirect');
-	var pathname = window.location.pathname.split("/");
-	if(pathname[2]=="tour" && pathname[3]=="booking" && redirect!='true'){
-    		setTimeout(function(){
-        		test = 2;
-    		},500)
-    		return "If you leave this page, data may be lost.";
-	}
-}
 
-$('.book-tour-validate').on('click',function(){
-	$(this).attr('enable_redirect','true');
-	$('.trip-save-update').trigger('click');
-
-});
-
-$('.save-itry-btn').on('click',function(){
-	$('.book-tour-validate').attr('enable_redirect','true');
-	$('.save-itry').trigger('click');
-});
 
 
 
@@ -2066,6 +2045,46 @@ $('.vehicle-list').on('keydown',function(){
 
 //-----------------------------------Tour Module-----------------------------------------------
 
+//-----------------tour booking leave alert----------------------
+window.onbeforeunload = function(){
+	var redirect=$('.book-tour-validate').attr('enable_redirect');
+	var pathname = window.location.pathname.split("/");
+	if(pathname[2]=="tour" && pathname[3]=="booking" && redirect!='true'){
+    		setTimeout(function(){
+        		test = 2;
+    		},500)
+    		return "If you leave this page, data may be lost.";
+	}
+}
+
+$('.book-tour-validate').on('click',function(){
+	$(this).attr('enable_redirect','true');
+	$('.trip-save-update').trigger('click');
+
+});
+
+$('.save-itry-btn').on('click',function(){
+	$('.book-tour-validate').attr('enable_redirect','true');
+	$('.save-itry').trigger('click');
+});
+//--------------------------------------------------------
+
+//if edit tour get cart elements
+var pathname = window.location.pathname.split("/");
+if(pathname[2]=="tour" && pathname[3]=="booking" && pathname[4] > 0){ 
+	$("#itinerary-div").css('display','block');
+	$.post(base_url+'/tour/getFromCart',{},function(data){
+		if(data!=false){
+			data=jQuery.parseJSON(data);
+			build_itinerary_table(data);
+		}
+	});
+}else{
+	$("#itinerary-div").css('display','none');
+}
+
+
+
 // season-multiselect
 $('#seasons').click(function(){
 	if ($("#seasons option[value!='']:selected").length > 0){
@@ -2241,7 +2260,7 @@ $('.itinerary #add-travel').click(function(){
 
 	if(trip_id == ''){
 		var dataArr = {table:"trip_destinations", _date:_date, destination_id:destination_id, destination_priority:destination_priority, particulars:particulars};
-		add_itinerary_for_package();
+		add_itinerary_for_package(dataArr);
 
 		
 	}else{
@@ -2272,7 +2291,7 @@ $('.itinerary #add-accommodation').click(function(){
 
 	if(trip_id == ''){
 		var dataArr = {table:"trip_accommodation", _date:_date, hotel_id:hotel_id, room_type_id:room_type_id, room_quantity:room_quantity,room_attributes:room_attributes,meals_package:meals_package};
-		add_itinerary_for_package();
+		add_itinerary_for_package(dataArr);
 	}else{
 		var dataArr = {table:"trip_accommodation", trip_id:trip_id, _date:_date, hotel_id:hotel_id, room_type_id:room_type_id, room_quantity:room_quantity,room_attributes:room_attributes,meals_package:meals_package, meals_quantity:meals_quantity};
 		
@@ -2292,7 +2311,7 @@ $('.itinerary #add-service').click(function(){
 
 	if(trip_id == ''){
 		var dataArr = {table:"trip_services", _date:_date, service_id:service_id, description:description, location:location,quantity:quantity,amount:amount};
-		add_itinerary_for_package();
+		add_itinerary_for_package(dataArr);
 	}else{
 		var dataArr = {table:"trip_services", trip_id:trip_id, _date:_date, service_id:service_id, description:description, location:location,quantity:quantity,amount:amount};
 		
@@ -2313,7 +2332,7 @@ $('.itinerary #add-vehicle').click(function(){
 	
 	if(trip_id == ''){
 		var dataArr = {table:"trip_vehicles", _date:_date, vehicle_id:vehicle_id,  vehicle_type_id: vehicle_type_id, vehicle_ac_type_id:vehicle_ac_type_id,vehicle_model_id:vehicle_model_id,tariff_id:tariff_id,driver_id:driver_id};
-		add_itinerary_for_package();
+		add_itinerary_for_package(dataArr);
 	}else{
 		var dataArr = {table:"trip_vehicles", trip_id:trip_id, _date:_date, vehicle_id:vehicle_id,  vehicle_type_id: vehicle_type_id, vehicle_ac_type_id:vehicle_ac_type_id,vehicle_model_id:vehicle_model_id,tariff_id:tariff_id,driver_id:driver_id};
 		
@@ -2366,6 +2385,7 @@ function build_itinerary_table(data){
 		
 	
 	}
+	
 	$("#itinerary-tbl").append(table);
 }
 

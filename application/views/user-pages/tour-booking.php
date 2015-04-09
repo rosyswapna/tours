@@ -173,38 +173,26 @@ echo $this->form_functions->populate_dropdown($name,@$languages,@$driver_languag
 <?php echo form_close(); ?>
 
 <!--itinerary table starts here-->
-<?php if($itineraries){?>
-<div class="box-body table-responsive no-padding">
-<table id="itinerary-tbl" class="table table-hover table-bordered table-with-20-percent-td">
-	<tr>
-	<?php foreach($itineraries['th'] as $th){?>
-	<th <?php echo $th['attr'];?>><?php echo $th['label'];?></th>
-	<?php }?>
-	</tr>
+<?php //if($this->session->userdata('tour_cart_contents')){?>
+<div class="box-body table-responsive no-padding" id="itinerary-div" onload="javascript:getItinerary()">
+	<table id="itinerary-tbl" class="table table-hover table-bordered table-with-20-percent-td">
 
-	<?php foreach($itineraries['tr'] as $tr){?>
-	<tr>
-		<?php foreach($tr as $td){?>
-		<td><?php echo $td;?></td>
-		<?php }?>
-	</tr>
-	<?php }?>
-	
-</table>
-</div>
+	</table>
 
-<div class="form-submit-reset-buttons-group">
-	<?php 
-		echo form_open(base_url()."front-desk/tour/save_cart/".$trip_id);
+
+	<div class="form-submit-reset-buttons-group">
+		<?php 
+			echo form_open(base_url()."front-desk/tour/save_cart/".$trip_id);
 			
-			echo form_submit("save-itry","Save","class='btn btn-success hide-me save-itry'");
-		echo form_close();
-	?>
-	<button class="btn btn-success save-itry-btn" type="button">Save</button>
-	<button class="btn btn-success tour-estimate" type="button">Estimate</button>
+				echo form_submit("save-itry","Save","class='btn btn-success hide-me save-itry'");
+			echo form_close();
+		?>
+		<button class="btn btn-success save-itry-btn" type="button">Save</button>
+		<button class="btn btn-success tour-estimate" type="button">Estimate</button>
+	</div>
 </div>
 <br/>
-<?php }?>
+<?php //}?>
 
 <!--itinerary table ends here-->
 

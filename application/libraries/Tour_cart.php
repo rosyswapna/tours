@@ -53,13 +53,15 @@ class CI_Tour_cart {
 			log_message('error', 'The create method must be passed an array containing data.');
 			return FALSE;
 		}
+
+		
 		//echo "<pre>";print_r($items);echo "</pre>";exit;
 		$this->_tour_cart_contents = $items;
-		$this->CI->session->set_userdata(array('tour_cart_contents' => $this->_tour_cart_contents));
+		$this->save_cart();
 	}
 
 
-	function insert($items,$id){//new cart item
+	function insert($items,$itinerary){//new cart item
 		if ( ! is_array($items) OR count($items) == 0)
 		{
 			log_message('error', 'The insert method must be passed an array containing data.');
@@ -67,7 +69,7 @@ class CI_Tour_cart {
 		}
 		
 		foreach($items as $tbl=>$dataArr){
-			$this->_tour_cart_contents[$id][$tbl][] = $dataArr;
+			$this->_tour_cart_contents[$itinerary][$tbl][] = $dataArr;
 		}
 		
 		$this->save_cart();
@@ -89,11 +91,30 @@ class CI_Tour_cart {
 			// Nothing more to do... coffee time!
 			return FALSE;
 		}
+		$total_itinerary = 0;
+		foreach($this->_tour_cart_contents as $cart_itinerary){
+			$total_itinerary++;
+			
+		}
+		$this->_tour_cart_contents['total_itineraries'] = $total_itinerary;
 
 		$this->CI->session->set_userdata(array('tour_cart_contents' => $this->_tour_cart_contents));
 
 		// Woot!
 		return TRUE;
+	}
+
+	/**
+	 * Total Items
+	 *
+	 * Returns the total item count
+	 *
+	 * @access	public
+	 * @return	integer
+	 */
+	function total_itineraries()
+	{
+		return $this->_tour_cart_contents['total_itineraries'];
 	}
 
 	// --------------------------------------------------------------------

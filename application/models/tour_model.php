@@ -250,6 +250,40 @@ class Tour_model extends CI_Model {
 		}
 	}
 
+	//add single itineray with date and trip id
+	function addItinerary($_date,$trip_id = 0)
+	{
+
+		$is_valid = $this->validateItinerary($_date);
+		if($is_valid){
+			$insertData = array(
+				'trip_id' => $trip_id,
+				'date'	  => $_date,
+				'user_id' => $this->session->userdata('id'),
+				'organisation_id' => $this->session->userdata('organisation_id'),
+				'created' => 'NOW()'
+				);
+			$this->db->insert('itinerary', $insertData);
+			return $this->db->insert_id();
+		}else{
+			return false;
+		}
+		
+		
+	}
+
+	//validate itinerary before add 
+	function validateItinerary($input=''){
+		$date_format = 'Y-m-d';
+		$input = trim($input);
+		$time = strtotime($input);
+
+		$is_valid = date($date_format, $time) == $input;
+
+		return $is_valid;
+		
+	}
+
 	//get trip itineraries with trip id as parameter
 	function getItineraries($trip_id = 0)
 	{
@@ -391,41 +425,51 @@ class Tour_model extends CI_Model {
 
 
 	//save tour cart with tour cart class
-	function save_tour_cart($cart){
+	function save_tour_cart($cart,$trip_id){
 		//echo "<pre>";print_r($cart);echo "</pre>";;exit;
 		//create insert and update array
-		foreach($cart as $itry){
-			foreach($itry as $table=>$tableData){
-				if($table != "label" && $tableData!=null){
-					foreach($tableData as $data){
-						$id = $data['id'];
-						unset($data['id']);
+		foreach($cart as $_date=>$itry){
+			//get itinerary id
+			$itinerary_id = $this->getItineraryWithDate($_date,$trip_id);
+			if(!$itinerary_id){
+				$itinerary_id = $this->addItinerary($_date,$trip_id);
+			}
+
+			if($itinerary_id){
+				foreach($itry as $table=>$tableData){
+					if($table != "label" && $tableData!=null){
+						foreach($tableData as $data){
+							$data['itinerary_id'] = $itinerary_id;
+							$id = $data['id'];
+							unset($data['id']);
 						
 						
-						//if found array values serialize them
-						foreach($data as $colName=>$colVal){
+							//if found array values serialize them
+							foreach($data as $colName=>$colVal){
 							
-							if(is_array($colVal)){
-								$data[$colName] = serialize($colVal);
+								if(is_array($colVal)){
+									$data[$colName] = serialize($colVal);
+								}
+							
 							}
-							
-						}
 	
-						if($id == gINVALID) {
-							$data['created'] = date("Y-m-d H:i:s");
-							$data['organisation_id'] = $this->session->userdata('organisation_id');
-							$data['user_id'] = $this->session->userdata('id');
-							$insertData[$table][] = $data;
-						}else{
-							$updateData[$table][$id] = $data;
+							if($id == gINVALID) {
+								$data['created'] = date("Y-m-d H:i:s");
+								$data['organisation_id'] = $this->session->userdata('organisation_id');
+								$data['user_id'] = $this->session->userdata('id');
+								$insertData[$table][] = $data;
+							}else{
+								$updateData[$table][$id] = $data;
+							}
 						}
 					}
 				}
-					
 			}
+
+			
 		}
 
-		//echo "<pre>";print_r($insertData);echo "</pre>";;exit;
+		echo "<pre>";print_r($insertData);echo "</pre>";exit;
 
 		//insert batch
 		if($insertData){
@@ -528,9 +572,10 @@ class Tour_model extends CI_Model {
 		$tbls = array('trip_destinations','trip_accommodation','trip_services','trip_vehicles');
 		$retArray = array();
 		foreach($itineraries as $itinerary){
-			$retArray[$itinerary['id']]['label'] = $itinerary['date'];
 			foreach($tbls as $tbl){
-				$retArray[$itinerary['id']][$tbl]=$this->getItineraryData($itinerary['id'],$tbl);
+				$tbleData = $this->getItineraryData($itinerary['id'],$tbl);
+				if($tbleData)
+					$retArray[$itinerary['date']][$tbl]=$tbleData;
 			}
 		}
 

@@ -66,3 +66,125 @@ CREATE TABLE IF NOT EXISTS `tariffs` (
   KEY `user_id` (`user_id`),
   KEY `vehicle_model_id` (`vehicle_model_id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+
+
+-------------------------------------------package tables-------------------------------
+--
+-- Table structure for table `packages`
+--
+
+CREATE TABLE IF NOT EXISTS `packages` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(225) NOT NULL,
+  `status_id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `organisation_id` int(11) NOT NULL,
+  `created` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `updated` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
+  PRIMARY KEY (`id`),
+  KEY `status_id` (`status_id`,`user_id`,`organisation_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `package_accomodation`
+--
+
+CREATE TABLE IF NOT EXISTS `package_accomodation` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `package_itinerary_id` int(11) NOT NULL,
+  `hotel_id` int(11) NOT NULL,
+  `room_type_id` int(11) NOT NULL,
+  `room_quantity` int(11) NOT NULL,
+  `room_attributes` text NOT NULL,
+  `meals_package` text NOT NULL,
+  `meals_quantity` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `organisation_id` int(11) NOT NULL,
+  `created` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `updated` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
+  PRIMARY KEY (`id`),
+  KEY `package_itinerary_id` (`package_itinerary_id`,`hotel_id`,`room_type_id`,`user_id`,`organisation_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `package_destinations`
+--
+
+CREATE TABLE IF NOT EXISTS `package_destinations` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `package_itinerary_id` int(11) NOT NULL,
+  `destination_id` int(11) NOT NULL,
+  `destination_priority` int(11) NOT NULL,
+  `description` text NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `organisation_id` int(11) NOT NULL,
+  `created` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `updated` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
+  PRIMARY KEY (`id`),
+  KEY `package_itinerary_id` (`package_itinerary_id`,`destination_id`,`user_id`,`organisation_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `package_itinerary`
+--
+
+CREATE TABLE IF NOT EXISTS `package_itinerary` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `package_id` int(11) NOT NULL,
+  `day_no` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `organisation_id` int(11) NOT NULL,
+  `created` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `updated` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
+  PRIMARY KEY (`id`),
+  KEY `package_id` (`package_id`,`day_no`),
+  KEY `user_id` (`user_id`,`organisation_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `package_services`
+--
+
+CREATE TABLE IF NOT EXISTS `package_services` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `package_itinerary_id` int(11) NOT NULL,
+  `service_id` int(11) NOT NULL,
+  `location` varchar(225) NOT NULL,
+  `quantity` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `organisation_id` int(11) NOT NULL,
+  `created` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `updated` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
+  PRIMARY KEY (`id`),
+  KEY `package_itinerary_id` (`package_itinerary_id`,`service_id`,`user_id`,`organisation_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `package_vehicles`
+--
+
+CREATE TABLE IF NOT EXISTS `package_vehicles` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `package_itinerary_id` int(11) NOT NULL,
+  `vehicle_type_id` int(11) NOT NULL,
+  `vehicle_ac_type_id` int(11) NOT NULL,
+  `vehicle_model_id` int(11) NOT NULL,
+  `vehicle_id` int(11) NOT NULL,
+  `driver_id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `organisation_id` int(11) NOT NULL,
+  `created` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `updated` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
+  PRIMARY KEY (`id`),
+  KEY `package_itinerary_id` (`package_itinerary_id`,`vehicle_type_id`,`vehicle_ac_type_id`,`vehicle_model_id`,`vehicle_id`,`driver_id`,`user_id`,`organisation_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;

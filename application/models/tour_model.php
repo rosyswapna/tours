@@ -181,7 +181,7 @@ class Tour_model extends CI_Model {
 		
 
 	}
-
+	//get trip with an id
 	function getTrip($trip_id = 0){
 		$this->db->from('trips');
 		$this->db->where('id',$trip_id);
@@ -191,6 +191,16 @@ class Tour_model extends CI_Model {
 		else
 			return false;	
 	}
+	//get all trips
+	function getTrips(){
+		$this->db->from('trips');
+		$query = $this->db->get();
+		if($query->num_rows() >0)
+			return $query->result_array();
+		else
+			return false;	
+	}
+
 
 	//build itinerary with pickup and drop date of a trip data
 	function buildItinerary($trip_id=0)

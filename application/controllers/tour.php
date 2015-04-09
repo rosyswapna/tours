@@ -36,7 +36,10 @@ class Tour extends CI_Controller {
 				$this->show_destination($param2);
 			}elseif($param1=='booking'){	
 				$this->tour_booking($param2);
-			}elseif($param1 == 'addToCart'){
+			}elseif($param1=='list'){
+			        $this->show_tour_list();
+			}
+			elseif($param1 == 'addToCart'){
 				$this->addToCart();
 			}elseif($param1 == 'addToCartPackage'){
 				$this->addToCartPackage();
@@ -507,6 +510,18 @@ class Tour extends CI_Controller {
 				
 		}
 		redirect(base_url().'front-desk/tour/booking/');
+	}
+	
+	
+	public function show_tour_list(){
+		if($this->session_check()==true) { 
+			$data['tours']=$this->tour_model->getTrips();
+			$data['title']="Tour List | ".PRODUCT_NAME;  
+			$page='user-pages/tour-list';
+			$this->load_templates($page,$data);
+		}else{
+				$this->notAuthorized();
+		}
 	}
 	//-----------------------------------------------------------------------------------------
 

@@ -38,9 +38,11 @@ echo form_hidden('trip_id',$trip_id);
 <td><?php echo form_input(array('name'=>'source_details','class'=>'form-control','id'=>'source_details','value'=>@$source_details));?></td>
 <td><?php echo form_label('Package','package');?></td>
 <td><?php $class="form-control";
-	  $msg="Select";
-	  $name="package_id";
-	  echo $this->form_functions->populate_dropdown($name,$packages='',@$package_id,$class,$id='package_id',$msg);?></td>
+	  $msg="Package";
+	  $id = $name ="package_id";
+	  //echo $this->form_functions->populate_dropdown($name,$packages='',@$package_id,$class,$id='package_id',$msg);
+	echo $this->form_functions->populate_editable_dropdown($name, $packages,$class,'Packages',array(),$msg,@$package_id,$id);
+?></td>
 </tr>
 </table>
 </fieldset>

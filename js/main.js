@@ -1225,6 +1225,12 @@ window.onbeforeunload = function(){
 	}
 }
 
+$('.book-tour-validate').on('click',function(){
+	$(this).attr('enable_redirect','true');
+	$('.trip-save-update').trigger('click');
+
+});
+
 $('.save-itry-btn').on('click',function(){
 	$('.book-tour-validate').attr('enable_redirect','true');
 	$('.save-itry').trigger('click');

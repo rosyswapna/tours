@@ -393,7 +393,9 @@ return true;
 	}
 
 public function getVehicleDriver($vehicle_id = 0){ 
+		$this->db->select('vehicle_drivers.*,drivers.mobile');
 		$this->db->from('vehicle_drivers');
+		$this->db->join('drivers','vehicle_drivers.driver_id=drivers.id','left');
 		$this->db->where('vehicle_id',$vehicle_id);
 		$qry = $this->db->get();
 		

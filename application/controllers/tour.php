@@ -317,7 +317,7 @@ class Tour extends CI_Controller {
 		$tblArray=array('booking_sources','available_drivers','trip_models','drivers','vehicle_types',	
 				'vehicle_models','vehicle_makes','vehicle_ac_types','vehicle_fuel_types',
 				'vehicle_seating_capacity','vehicle_beacon_light_options','languages','payment_type',
-				'customer_types','customer_groups','hotel_categories','trip-services','destinations','room_attributes','meals_options','services');
+				'customer_types','customer_groups','hotel_categories','trip-services','destinations','room_attributes','meals_options','services','vehicles');
 			
 		foreach($tblArray as $table){
 			$data[$table]=$this->user_model->getArray($table);
@@ -325,7 +325,7 @@ class Tour extends CI_Controller {
 		
 		$data['driver_availability']=$this->driver_model->getDriversArray();
 		$data['available_vehicles']=$this->trip_booking_model->getVehiclesArray();
-		$active_tab = 's_tab';
+		$active_tab = 'v_tab';
 		$data['tabs'] = $this->set_up_trip_tabs($active_tab);
 		
 		$data['title']="Tour Booking | ".PRODUCT_NAME;  
@@ -612,7 +612,7 @@ class Tour extends CI_Controller {
 
 
 	function build_itinerary_data($cart,$ajax = 'NO'){
-
+	//echo "<pre>";print_r($cart);echo "</pre>";exit;
 		if($cart){
 
 			$tableData['th'] = array(
@@ -646,7 +646,8 @@ class Tour extends CI_Controller {
 				$services = array();
 				if($item['trip_services']){
 					foreach($item['trip_services'] as $service){
-						array_push($services,$services['service_id']);
+					
+						array_push($services,$service['service_id']);
 					}
 					$services = $this->tour_model->getNamesByIds('services','name',$services);
 				}
@@ -657,6 +658,7 @@ class Tour extends CI_Controller {
 						array_push($vehicles,$vehicle['vehicle_id']);
 					}
 					$vehicles = $this->tour_model->getNamesByIds('vehicles','registration_number',$vehicles);
+					//echo "<pre>";print_r($vehicles);echo "</pre>";exit;
 				}
 
 				$tr = array($item['label'],

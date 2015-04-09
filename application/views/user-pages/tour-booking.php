@@ -448,6 +448,13 @@ echo $this->form_functions->populate_dropdown($name,@$languages,@$driver_languag
 						echo form_error('service_description', '<p class="text-red">', '</p>'); ?>
 					</div>
 				</div>
+
+
+				<div class="row-source-100-percent-width-with-margin-8">
+					<div class="box-footer ">
+					<?php echo form_submit("add-service","Add","class='btn btn-primary' id='add-service'");?>
+					</div>
+				</div>
 				
 
 			</fieldset>
@@ -457,11 +464,90 @@ echo $this->form_functions->populate_dropdown($name,@$languages,@$driver_languag
 
 		<!--vehicles tab contents-->
 		<?php if (array_key_exists('v_tab', $tabs)) {?>
-		<div class="<?php echo $tabs['v_tab']['content_class'];?>" id="<?php echo $tabs['v_tab']['tab_id'];?>">
+		<div class="<?php echo $tabs['v_tab']['content_class'];?> tour-vehicle-tab" id="<?php echo $tabs['v_tab']['tab_id'];?>">
 
 			<div class="page-outer">
 	   		<fieldset class="body-border">
-			vehicles
+				<div class="row-source-100-percent-width-with-margin-8">
+					<div class="form-group div-with-20-percent-width-with-margin-10">
+					<?php echo form_label('Date','vehicle_date'); 
+				    	echo form_input(array('name'=>'vehicle_date','class'=>'form-control initialize-date-picker  ','id'=>'tour-vehicle_date','value'=>@$vehicle_date));
+					
+					echo $this->form_functions->form_error_session('vehicle_date', '<p class="text-red">', '</p>'); ?>			</div>
+				</div>
+
+
+				<div class="row-source-100-percent-width-with-margin-8">
+					<div class="form-group div-with-20-percent-width-with-margin-10">
+					<?php echo form_label('Vehicle Type','vehicle_type_id'); 
+				    	
+					$class="form-control";
+					$msg="Select Vehicle Type";
+					$name = $id = "vehicle_type_id";
+					echo $this->form_functions->populate_dropdown($name,$vehicle_types,@$vehicle_type_id,$class,$id,$msg); 
+					echo $this->form_functions->form_error_session('vehicle_type_id', '<p class="text-red">', '</p>'); ?>		</div>
+
+					<div class="form-group div-with-20-percent-width-with-margin-10">
+					<?php echo form_label('Vehicle AC Type','vehicle_ac_type_id'); 
+				    	
+					$class="form-control";
+					$msg="Select Vehicle AC Type";
+					$name = $id = "vehicle_ac_type_id";
+					echo $this->form_functions->populate_dropdown($name,$vehicle_ac_types,@$vehicle_ac_type_id,$class,$id,$msg); 
+					echo $this->form_functions->form_error_session('vehicle_ac_type_id', '<p class="text-red">', '</p>'); ?>		</div>
+
+					<div class="form-group div-with-20-percent-width-with-margin-10">
+					<?php echo form_label('Vehicle Model','vehicle_model_id'); 
+				    	
+					$class="form-control";
+					$msg="Select Vehicle Model";
+					$name = $id = "vehicle_model_id";
+					echo $this->form_functions->populate_dropdown($name,$vehicle_models,@$vehicle_model_id,$class,$id,$msg); 
+					echo $this->form_functions->form_error_session('vehicle_model_id', '<p class="text-red">', '</p>'); ?>		</div>
+
+					<div class="form-group div-with-20-percent-width-with-margin-10">
+					<?php echo form_label('Vehicle No','vehicle_id'); 
+				    	
+					$class="form-control";
+					$msg="Select Vehicle";
+					$name = $id = "vehicle_id";
+					echo $this->form_functions->populate_dropdown($name,$vehicles,@$vehicle_id,$class,$id,$msg); 
+					echo $this->form_functions->form_error_session('vehicle_id', '<p class="text-red">', '</p>'); ?>			</div>
+
+					
+				</div>
+
+				<div class="row-source-100-percent-width-with-margin-8">
+					<div class="form-group div-with-20-percent-width-with-margin-10">
+					<?php echo form_label('Driver','driver_id'); 
+				    	
+					$class="form-control";
+					$msg="Select Driver";
+					$name = $id = "driver_id";
+					echo $this->form_functions->populate_dropdown($name,$drivers,@$driver_id,$class,$id,$msg); 
+					echo $this->form_functions->form_error_session('driver_id', '<p class="text-red">', '</p>'); ?>			</div>
+					
+					<div class="form-group div-with-20-percent-width-with-margin-10">
+					<?php echo form_label('Vehicle Contact','vehicle_contact'); 
+				    	echo form_input(array('name'=>'vehicle_contact','class'=>'form-control','id'=>'vehicle_contact','value'=>@$vehicle_contact));
+					
+					echo $this->form_functions->form_error_session('vehicle_contact', '<p class="text-red">', '</p>'); ?>		</div>
+
+					<div class="form-group div-with-20-percent-width-with-margin-10">
+					<?php echo form_label('Tariff','vehicle_tariff_id'); 
+				    	
+					$class="form-control";
+					$msg="Select Tariff";
+					$name = $id = "vehicle_tariff_id";
+					echo $this->form_functions->populate_dropdown($name,null,@$vehicle_tariff_id,$class,$id,$msg); 
+					echo $this->form_functions->form_error_session('vehicle_tariff_id', '<p class="text-red">', '</p>'); ?>			</div>
+				</div>
+
+				<div class="row-source-100-percent-width-with-margin-8">
+					<div class="box-footer ">
+					<?php echo form_submit("add-vehicle","Add","class='btn btn-primary' id='add-vehicle'");?>
+					</div>
+				</div>
 			</fieldset>
 			</div>
 		</div>

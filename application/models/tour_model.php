@@ -410,8 +410,11 @@ class Tour_model extends CI_Model {
 							}
 							
 						}
-						
+	
 						if($id == gINVALID) {
+							$data['created'] = date("Y-m-d H:i:s");
+							$data['organisation_id'] = $this->session->userdata('organisation_id');
+							$data['user_id'] = $this->session->userdata('id');
 							$insertData[$table][] = $data;
 						}else{
 							$updateData[$table][$id] = $data;
@@ -427,6 +430,7 @@ class Tour_model extends CI_Model {
 		//insert batch
 		if($insertData){
 			foreach($insertData as $tbl=>$dataArray){
+				
 				$this->db->insert_batch($tbl,$dataArray);
 			}
 		}

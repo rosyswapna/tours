@@ -18,7 +18,7 @@
 		<th style="width:13%">Action</th>
         <tr>
 	<tr class="row_click common" limited="true">
-	
+	<?php print_r($trips);?>
 	
 	</tr>
 	

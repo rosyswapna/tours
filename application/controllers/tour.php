@@ -515,9 +515,9 @@ class Tour extends CI_Controller {
 	
 	public function show_tour_list(){
 		if($this->session_check()==true) { 
-			$data['tours']=$this->tour_model->getTrips();
+			$data['trips']=$this->tour_model->getTrips();
 			$data['title']="Tour List | ".PRODUCT_NAME;  
-			$page='user-pages/tour-list';
+			$page='user-pages/trip-list';
 			$this->load_templates($page,$data);
 		}else{
 				$this->notAuthorized();

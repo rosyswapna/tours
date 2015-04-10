@@ -48,7 +48,8 @@ class Tour extends CI_Controller {
 				$this->getFromCart();
 			}elseif($param1 == 'createCartFromPackage'){
 				$this->createCartFromPackage();
-			
+			}elseif($param1 == 'getItineraryCount'){
+				$this->getItineraryCount();
 			}elseif($param1 == 'getItinerary'){
 				$this->getItinerary();
 			}elseif($param1 == 'save_cart'){
@@ -651,6 +652,11 @@ class Tour extends CI_Controller {
 		}else{
 			echo 'false';
 		}
+	}
+	
+	function getItineraryCount()
+	{
+		echo $this->tour_cart->total_itineraries();
 	}
 
 

@@ -2074,12 +2074,19 @@ $('#package_id').on('change',function(){
 		$.post(base_url+'/tour/createCartFromPackage',{package_id:package_id},function(data){
 			if(data!=false){
 				data=jQuery.parseJSON(data);
+				set_trip_date();
 				build_itinerary_table(data);
+				
 			}
 		});
 	}else{
 		reset_itinerary_table();
 	}
+});
+
+$("#tour-pickupdatepicker").change(function(){
+  	set_trip_date();
+	
 });
 
 
@@ -2592,6 +2599,52 @@ function checkRoomAvailability(reqQTY)
 	});
 }
 
+
+function set_trip_date(){
+	
+	var date = $("#tour-pickupdatepicker").val();
+	if(date != ''){
+		$.post(base_url+"/tour/getItineraryCount",{},function(data){
+			days = Number(data)-1;
+			if(days > 0){
+				str = date.split("-");
+				y = str[0];m = str[1];d = str[2];
+				d = new Date(date);
+				d.setDate(d.getDate() + days);
+				var day2 = d.getDate();
+				if(day2 < 10)day2 ="0"+day2;
+				var month2 = d.getMonth() + 1;if(month2 < 10)month2 ="0"+month2;
+				var year2 = d.getFullYear();
+				date2 = year2+"-"+month2+"-"+day2;
+		  
+				$("#tour-dropdatepicker").val(date2);
+			}
+		});
+	}	
+}
+
+
+
+
+
+function DateFromString(str,days){ 
+        
+        str = new Date(str[2],str[0]-1,(parseInt(str[1])+days));
+        return MMDDYYYY(str);
+    }
+    function MMDDYYYY(str) {
+        var ndateArr = str.toString().split(' ');
+        var Months = 'Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec';
+        return (parseInt(Months.indexOf(ndateArr[1])/4)+1)+'/'+ndateArr[2]+'/'+ndateArr[3];
+    }
+
+    function AddDays(days) {
+        var date = $('input[name="pick_up_date"]').val();
+        var ndate = DateFromString(date,days);
+        return ndate;
+    }
+
+   
 
 
 //-----------------------------------Tour Module ends here-----------------------------------------------

@@ -36,13 +36,16 @@ echo form_hidden('trip_id',$trip_id);
 </td>
 <td><?php echo form_label('Details','details');?></td>
 <td><?php echo form_input(array('name'=>'source_details','class'=>'form-control','id'=>'source_details','value'=>@$source_details));?></td>
+
+<?php if(!is_numeric($trip_id)){?>
 <td><?php echo form_label('Package','package');?></td>
 <td><?php $class="form-control";
 	  $msg="Package";
 	  $id = $name ="package_id";
-	  //echo $this->form_functions->populate_dropdown($name,$packages='',@$package_id,$class,$id='package_id',$msg);
 	echo $this->form_functions->populate_editable_dropdown($name, $packages,$class,'Packages',array(),$msg,@$package_id,$id);
 ?></td>
+<?php }?>
+
 </tr>
 </table>
 </fieldset>
@@ -173,6 +176,7 @@ echo $this->form_functions->populate_dropdown($name,@$languages,@$driver_languag
 <?php echo form_close(); ?>
 
 <!--itinerary table starts here ,table illed by jquery-->
+
 <div class="box-body table-responsive no-padding hide-me" id="itinerary-div">
 	<table id="itinerary-tbl" class="table table-hover table-bordered table-with-20-percent-td">
 
@@ -188,6 +192,7 @@ echo $this->form_functions->populate_dropdown($name,@$languages,@$driver_languag
 		<button class="btn btn-success save-itry-btn" type="button">Save</button>
 		<button class="btn btn-success tour-estimate" type="button">Estimate</button>
 	</div>
+	
 </div>
 
 <br/>

@@ -13,6 +13,7 @@ class Tour extends CI_Controller {
 		$this->load->model('customers_model');
 		$this->load->model('trip_booking_model');
 		$this->load->model('vehicle_model');
+		$this->load->model('package_model');
 
 		$this->load->library('tour_cart');
 		no_cache();
@@ -45,6 +46,8 @@ class Tour extends CI_Controller {
 				$this->addToCartPackage();
 			}elseif($param1 == 'getFromCart'){
 				$this->getFromCart();
+			}elseif($param1 == 'createCartFromPackage'){
+				$this->createCartFromPackage();
 			
 			}elseif($param1 == 'getItinerary'){
 				$this->getItinerary();
@@ -300,24 +303,18 @@ class Tour extends CI_Controller {
 				$this->tour_cart->create($tour_itms);				
 			}
 			$cart = $this->tour_cart->contents();
-
 			$data['header'] = $this->set_tour_header($param2);
-			$trip_id = $param2;
+			$this->tour_cart->trip_id = $param2;
 		}else{
-			$trip_id = -1;
+			$this->tour_cart->trip_id = gINVALID;
 			$cart = false;
 			$this->tour_cart->destroy();
 		}
-
-		//build itinerary table
-		$data['itineraries'] = $this->build_itinerary_data($cart);
-
-		//echo "<pre>";print_r($itinerary_table);echo "</pre>";exit;
 	
 		if($this->mysession->get('post_booking')){
-				$data = $this->mysession->get('post_booking');
-				$this->mysession->delete('post_booking');	
-			}
+			$data = $this->mysession->get('post_booking');
+			$this->mysession->delete('post_booking');	
+		}
 		
 		$tblArray=array('booking_sources','available_drivers','trip_models','drivers','vehicle_types',	
 				'vehicle_models','vehicle_makes','vehicle_ac_types','vehicle_fuel_types',
@@ -328,6 +325,12 @@ class Tour extends CI_Controller {
 			$data[$table]=$this->user_model->getArray($table);
 		}
 		
+		$data['days'] = array();
+		for($i=1;$i<=10;$i++){
+			$data['days'][$i] = $i;
+		}
+		
+		$data['trip_id'] = $this->tour_cart->trip_id;
 		$data['driver_availability']=$this->driver_model->getDriversArray();
 		$data['available_vehicles']=$this->trip_booking_model->getVehiclesArray();
 		$active_tab = 't_tab';
@@ -560,39 +563,18 @@ class Tour extends CI_Controller {
 
 	function addToCart()//from ajax call
 	{
-		
 		if(isset($_REQUEST['table'])&& isset($_REQUEST['_date']) && isset($_REQUEST['trip_id'])){
 			$tble = $_REQUEST['table'];
 			$fields = $_REQUEST;
+			$itinerary = $fields['_date'];
 
-			$itinerary = $this->tour_model->getItineraryWithDate($_REQUEST['_date'],$_REQUEST['trip_id']);
-			
-			if($itinerary){
-				$itinerary_id = $itinerary['id'];
-			}else{
-				//add itinerary
-				$insertData[] = array(
-					'trip_id' => $_REQUEST['trip_id'],
-					'date'	  => $_REQUEST['_date'],
-					'user_id' => $this->session->userdata('id'),
-					'organisation_id' => $this->session->userdata('organisation_id')
-					);
-				$itinerary_id = $this->settings_model->addValues_returnId('itineraries',$insertData); 
-			}
-
-			if(is_numeric($itinerary_id) && $itinerary_id > 0){
-
-				array_shift($fields);//pop first element(url data from ajax call)
-				unset($fields['table']);
-				unset($fields['_date']);
-				unset($fields['trip_id']);
-				$fields['id'] = gINVALID;
-				$fields['itinerary_id'] = $itinerary_id;
-				$data[$tble] = $fields;
-				$this->tour_cart->insert($data,$itinerary_id);
-			}
-
-			
+			array_shift($fields);//pop first element(url data from ajax call)
+			unset($fields['table']);
+			unset($fields['_date']);
+			unset($fields['trip_id']);
+			$fields['id'] = gINVALID;
+			$data[$tble] = $fields;
+			$this->tour_cart->insert($data,$itinerary);
 				
 		}
 		$cart = $this->tour_cart->contents();
@@ -606,7 +588,7 @@ class Tour extends CI_Controller {
 		if($this->tour_cart->total_itineraries() == 0){
 			$this->tour_cart->create();
 		}
-
+		//print_r($_REQUEST);exit;
 		if(isset($_REQUEST['table'])&& isset($_REQUEST['_date'])){
 			$tble = $_REQUEST['table'];
 			$fields = $_REQUEST;
@@ -627,19 +609,26 @@ class Tour extends CI_Controller {
 	}
 
 
-	function save_cart($trip_id)
+	function save_cart($trip_id=gINVALID)
 	{
 		$cart = $this->tour_cart->contents();
 		if(isset($_REQUEST['save-itry'])){
-
-			if($trip_id==gINVALID){
-				//SAVE AS PACKAGE
-			}else{
+			
+			if(is_numeric($trip_id) && $trip_id > 0){
 				//SAVE ITINERARY DATA
-
 				$this->tour_model->save_tour_cart($cart,$trip_id);
+				$Msg = "Tour Updated Successfully";
+				
+			}else{
+				//SAVE AS PACKAGE
+				$package = $_REQUEST['hid_package'];
+				$this->package_model->save_package($cart,$package);
+				$Msg = "Package Updated Successfully";
 			}
 		}
+
+		$this->session->set_userdata(array('dbSuccess'=>$Msg)); 
+		$this->session->set_userdata(array('dbError'=>''));
 		redirect(base_url().'front-desk/tour/booking/'.$trip_id);
 	}
 
@@ -648,13 +637,35 @@ class Tour extends CI_Controller {
 		$this->build_itinerary_data($cart,$ajax = 'YES');
 	}
 
+	function createCartFromPackage(){
+		$this->tour_cart->destroy();
+		if(isset($_REQUEST['package_id']) && is_numeric($_REQUEST['package_id']) && $_REQUEST['package_id'] > 0)
+		{
+			$package = $this->package_model->getPackage($_REQUEST['package_id']);
+			
+			if($package){
+				$this->tour_cart->create($package);
+				$cart = $this->tour_cart->contents();
+				$this->build_itinerary_data($cart,$ajax = 'YES');
+			}
+		}else{
+			echo 'false';
+		}
+	}
+
 
 	function build_itinerary_data($cart,$ajax = 'NO'){
-	//echo "<pre>";print_r($cart);echo "</pre>";exit;
-		if($cart){
 
+		//echo "<pre>";print_r($cart);echo "</pre>";exit;
+		if($cart){
+			$trip_id = $this->tour_cart->trip_id;
+			if(is_numeric($trip_id) && $trip_id > 0){
+				$firstTH = "Date";
+			}else{
+				$firstTH = "Day";
+			}
 			$tableData['th'] = array(
-					array('label'=>'Date','attr'=>'width="20%"'),
+					array('label'=>$firstTH,'attr'=>'width="20%"'),
 					array('label'=>'Particulars','attr'=>'width="20%"'),
 					array('label'=>'Accommodation','attr'=>'width="20%"'),
 					array('label'=>'Service','attr'=>'width="20%"'),

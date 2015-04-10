@@ -188,3 +188,21 @@ CREATE TABLE IF NOT EXISTS `package_vehicles` (
   PRIMARY KEY (`id`),
   KEY `package_itinerary_id` (`package_itinerary_id`,`vehicle_type_id`,`vehicle_ac_type_id`,`vehicle_model_id`,`vehicle_id`,`driver_id`,`user_id`,`organisation_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+
+
+---Apr 10 2015---
+ALTER TABLE `trip_destinations` CHANGE `particulars` `description` TEXT CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL;
+
+ALTER TABLE `package_services`  ADD `description` TEXT NOT NULL AFTER `quantity`;
+
+RENAME TABLE `tours`.`package_accomodation`
+                  TO `tours`.`package_accommodation`;
+
+ALTER TABLE `package_services`  ADD `amount` DOUBLE NOT NULL AFTER `description`;
+
+ALTER TABLE `package_vehicles`  ADD `tariff_id` INT(11) NOT NULL AFTER `driver_id`,  ADD INDEX (`tariff_id`) 
+
+
+
+
+

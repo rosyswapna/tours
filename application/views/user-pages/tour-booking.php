@@ -172,30 +172,26 @@ echo $this->form_functions->populate_dropdown($name,@$languages,@$driver_languag
 </fieldset>
 <?php echo form_close(); ?>
 
-<!--itinerary table starts here-->
-<?php //if($this->session->userdata('tour_cart_contents')){?>
-<div class="box-body table-responsive no-padding" id="itinerary-div" onload="javascript:getItinerary()">
+<!--itinerary table starts here ,table illed by jquery-->
+<div class="box-body table-responsive no-padding hide-me" id="itinerary-div">
 	<table id="itinerary-tbl" class="table table-hover table-bordered table-with-20-percent-td">
 
 	</table>
 
-
 	<div class="form-submit-reset-buttons-group">
 		<?php 
 			echo form_open(base_url()."front-desk/tour/save_cart/".$trip_id);
-			
-				echo form_submit("save-itry","Save","class='btn btn-success hide-me save-itry'");
+			echo form_hidden('hid_package','');
+			echo form_submit("save-itry","Save","class='btn btn-success hide-me save-itry'");
 			echo form_close();
 		?>
 		<button class="btn btn-success save-itry-btn" type="button">Save</button>
 		<button class="btn btn-success tour-estimate" type="button">Estimate</button>
 	</div>
 </div>
+
 <br/>
-<?php //}?>
-
 <!--itinerary table ends here-->
-
 
 
 <!--itinerary tabs starts-->
@@ -218,10 +214,22 @@ echo $this->form_functions->populate_dropdown($name,@$languages,@$driver_languag
 	   		<fieldset class="body-border">
 				<div class="row-source-100-percent-width-with-margin-8">
 					<div class="form-group div-with-20-percent-width-with-margin-10">
-					<?php echo form_label('Date','travel_date'); 
-				    	echo form_input(array('name'=>'travel_date','class'=>'form-control initialize-date-picker  ','id'=>'tour-travel_date','value'=>@$travel_date));
+					<?php 
+					if(is_numeric($trip_id) && $trip_id > 0){
+						echo form_label('Date','travel_date'); 
+				    		echo form_input(array('name'=>'travel_date','class'=>'form-control initialize-date-picker  ','id'=>'tour-travel_date','value'=>@$travel_date));
 					
-					echo $this->form_functions->form_error_session('travel_date', '<p class="text-red">', '</p>'); ?>			</div>
+					}else{
+						echo form_label('Day','travel_date'); 
+						$name = $id = 'travel_date';$class = 'form-control';
+						$msg = "Select Day";
+						
+						echo $this->form_functions->populate_dropdown($name,$days,@$travel_date,$class,$id,$msg); 
+					}
+					echo $this->form_functions->form_error_session('travel_date', '<p class="text-red">', '</p>'); 
+					?>			
+				</div>
+
 				</div>
 				<div class="row-source-100-percent-width-with-margin-8">
 
@@ -248,11 +256,11 @@ echo $this->form_functions->populate_dropdown($name,@$languages,@$driver_languag
 				</div>
 				<div class="row-source-100-percent-width-with-margin-8">
 					<div class="form-group div-with-46-percent-width-with-margin-10">
-						<?php echo form_label('Particulars','particulars');
-					    	$input = array('name'=>'particulars','class'=>'form-control',
-								'value'=>@$particulars,'rows'=>4,'id'=>'particulars');
+						<?php echo form_label('Description','travel_description');
+					    	$input = array('name'=>'travel_description','class'=>'form-control',
+								'value'=>@$travel_description,'rows'=>4,'id'=>'travel_description');
 						echo form_textarea($input); 
-						echo form_error('particulars', '<p class="text-red">', '</p>'); ?>
+						echo form_error('travel_description', '<p class="text-red">', '</p>'); ?>
 					</div>
 				</div>
 				<div class="row-source-100-percent-width-with-margin-8">
@@ -274,8 +282,18 @@ echo $this->form_functions->populate_dropdown($name,@$languages,@$driver_languag
 	   		<fieldset class="body-border">
 				<div class="row-source-100-percent-width-with-margin-8">
 					<div class="form-group div-with-20-percent-width-with-margin-10">
-					<?php echo form_label('Date','accommodation_date'); 
-				    	echo form_input(array('name'=>'accommodation_date','class'=>'form-control initialize-date-picker  ','id'=>'tour-accommodation_date','value'=>@$accommodation_date));
+					<?php 
+					if(is_numeric($trip_id) && $trip_id > 0){
+						echo form_label('Date','accommodation_date'); 
+				    		echo form_input(array('name'=>'accommodation_date','class'=>'form-control initialize-date-picker  ','id'=>'tour-accommodation_date','value'=>@$accommodation_date));
+					
+					}else{
+						echo form_label('Day','accommodation_date'); 
+						$name = $id = 'accommodation_date';$class = 'form-control';
+						$msg = "Select Day";
+						
+						echo $this->form_functions->populate_dropdown($name,$days,@$accommodation_date,$class,$id,$msg); 
+					}
 					
 					echo $this->form_functions->form_error_session('accommodation_date', '<p class="text-red">', '</p>'); ?>		</div>
 				</div>
@@ -392,8 +410,19 @@ echo $this->form_functions->populate_dropdown($name,@$languages,@$driver_languag
 
 				<div class="row-source-100-percent-width-with-margin-8">
 					<div class="form-group div-with-20-percent-width-with-margin-10">
-					<?php echo form_label('Date','service_date'); 
-				    	echo form_input(array('name'=>'service_date','class'=>'form-control initialize-date-picker  ','id'=>'tour-service_date','value'=>@$service_date));
+					<?php 
+					if(is_numeric($trip_id) && $trip_id > 0){
+						echo form_label('Date','service_date'); 
+				    		echo form_input(array('name'=>'service_date','class'=>'form-control initialize-date-picker  ','id'=>'tour-service_date','value'=>@$service_date));
+					
+					}else{
+						echo form_label('Day','service_date'); 
+						$name = $id = 'service_date';$class = 'form-control';
+						$msg = "Select Day";
+						
+						echo $this->form_functions->populate_dropdown($name,$days,@$service_date,$class,$id,$msg); 
+					}
+					
 					
 					echo $this->form_functions->form_error_session('service_date', '<p class="text-red">', '</p>'); ?>			</div>
 				</div>
@@ -460,8 +489,19 @@ echo $this->form_functions->populate_dropdown($name,@$languages,@$driver_languag
 	   		<fieldset class="body-border">
 				<div class="row-source-100-percent-width-with-margin-8">
 					<div class="form-group div-with-20-percent-width-with-margin-10">
-					<?php echo form_label('Date','vehicle_date'); 
-				    	echo form_input(array('name'=>'vehicle_date','class'=>'form-control initialize-date-picker  ','id'=>'tour-vehicle_date','value'=>@$vehicle_date));
+					<?php 
+					
+					if(is_numeric($trip_id) && $trip_id > 0){
+						echo form_label('Date','vehicle_date'); 
+				    		echo form_input(array('name'=>'vehicle_date','class'=>'form-control initialize-date-picker  ','id'=>'tour-vehicle_date','value'=>@$vehicle_date));
+					
+					}else{
+						echo form_label('Day','vehicle_date'); 
+						$name = $id = 'vehicle_date';$class = 'form-control';
+						$msg = "Select Day";
+						
+						echo $this->form_functions->populate_dropdown($name,$days,@$vehicle_date,$class,$id,$msg); 
+					}
 					
 					echo $this->form_functions->form_error_session('vehicle_date', '<p class="text-red">', '</p>'); ?>			</div>
 				</div>

@@ -375,7 +375,19 @@ class Hotel extends CI_Controller {
 	{
 		$filter['hotel.destination_id']=$_REQUEST['destination_id'];
 		$filter['hotel.hotel_category_id']=$_REQUEST['category_id'];
-		$season_ids = $this->tour_model->getSeasonIdssWithDate($_REQUEST['_date']);
+		if(is_numeric($_REQUEST['_date']) && $_REQUEST['_date'] > 0){
+			$seasons = $this->tour_model->getBusinessSeasonList();
+			$season_ids = array();
+			if($seasons){
+				foreach($seasons as $season){
+					array_push($season_ids,$season['id']);
+				}
+			}
+			
+		}else{
+			$season_ids = $this->tour_model->getSeasonIdssWithDate($_REQUEST['_date']);
+		}
+		
 
 		$hotels = $this->hotel_model->getDateSeasonHotels($filter,$season_ids);
 

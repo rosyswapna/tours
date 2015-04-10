@@ -8,7 +8,7 @@ class CI_Tour_cart {
 
 	// Private variables.  Do not change!
 	var $CI;
-	var $trip_id=false;
+	var $trip_id=gINVALID;
 	var $_itineraries = array();
 	var $_tour_cart_contents = array();
 	

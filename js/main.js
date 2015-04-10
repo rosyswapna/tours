@@ -2063,24 +2063,63 @@ $('.book-tour-validate').on('click',function(){
 
 });
 
+$('#package_id').on('blur',function(){
+	var package_name = $(this).val();
+	$('input[name="hid_package"]').val(package_name);
+});
+
+$('#package_id').on('change',function(){
+	var package_id = $(this).val();
+	if($.isNumeric(package_id) && package_id > 0){
+		$.post(base_url+'/tour/createCartFromPackage',{package_id:package_id},function(data){
+			if(data!=false){
+				data=jQuery.parseJSON(data);
+				build_itinerary_table(data);
+			}
+		});
+	}else{
+		reset_itinerary_table();
+	}
+});
+
+
+
+//save itinerary table on click itinerary save button
 $('.save-itry-btn').on('click',function(){
-	$('.book-tour-validate').attr('enable_redirect','true');
-	$('.save-itry').trigger('click');
+	var errFlag = 0;
+	var errMsg = '';
+	var pathname = window.location.pathname.split("/");
+	if(pathname[4]){//tour module
+		errFlag = 0;errMsg='';
+	}else{//package module
+		//get package
+		var _package = $('input[name="hid_package"]').val();
+		if(_package == ''){
+			errFlag = 1;
+			errMsg = "Package Name Required";
+		}
+	}
+
+	if(errFlag == 0){
+		$('.book-tour-validate').attr('enable_redirect','true');
+		$('.save-itry').trigger('click');
+	}else{
+		alert(errMsg);return false;
+	}
+	
+	
 });
 //--------------------------------------------------------
 
 //if edit tour get cart elements
 var pathname = window.location.pathname.split("/");
 if(pathname[2]=="tour" && pathname[3]=="booking" && pathname[4] > 0){ 
-	$("#itinerary-div").css('display','block');
 	$.post(base_url+'/tour/getFromCart',{},function(data){
 		if(data!=false){
 			data=jQuery.parseJSON(data);
 			build_itinerary_table(data);
 		}
 	});
-}else{
-	$("#itinerary-div").css('display','none');
 }
 
 
@@ -2251,20 +2290,20 @@ $('.tour-vehicle-tab #vehicle_id').on('change',function(){
 //ajax calls for add itinerary
 $('.itinerary #add-travel').click(function(){
 	var trip_id = $('input[name="trip_id"]').val();
-	var _date = $('input[name="travel_date"]').val();
+	var _date = $('#travel_date').val();
 	var destination_id = $('#destination_id').val();
 	var destination_priority = $('input[name="destination_priority"]').val();
-	var particulars = $('#particulars').val();
+	var description = $('#travel_description').val();
 
 	
 
 	if(trip_id == ''){
-		var dataArr = {table:"trip_destinations", _date:_date, destination_id:destination_id, destination_priority:destination_priority, particulars:particulars};
+		var dataArr = {table:"trip_destinations", _date:_date, destination_id:destination_id, destination_priority:destination_priority, description:description};
 		add_itinerary_for_package(dataArr);
 
 		
 	}else{
-		var dataArr = {table:"trip_destinations", trip_id:trip_id, _date:_date, destination_id:destination_id, destination_priority:destination_priority, particulars:particulars};
+		var dataArr = {table:"trip_destinations", trip_id:trip_id, _date:_date, destination_id:destination_id, destination_priority:destination_priority, description:description};
 		add_itinerary_for_tour(dataArr);
 	}
 	
@@ -2273,7 +2312,7 @@ $('.itinerary #add-travel').click(function(){
 
 $('.itinerary #add-accommodation').click(function(){
 	var trip_id = $('input[name="trip_id"]').val();
-	var _date = $('input[name="accommodation_date"]').val();
+	var _date = $('#accommodation_date').val();
 	var hotel_id = $('#hotel_id').val();
 	var room_type_id = $('#room_type_id').val();
 	var room_quantity = $('#room_quantity').val();
@@ -2302,7 +2341,7 @@ $('.itinerary #add-accommodation').click(function(){
 
 $('.itinerary #add-service').click(function(){
 	var trip_id 	= $('input[name="trip_id"]').val();
-	var _date 	= $('input[name="service_date"]').val();
+	var _date 	= $('#service_date').val();
 	var service_id 	= $('#service_id').val();
 	var description = $('#service_description').val();
 	var location 	= $('#service_location').val();
@@ -2322,7 +2361,7 @@ $('.itinerary #add-service').click(function(){
 $('.itinerary #add-vehicle').click(function(){
 
 	var trip_id 		= $('input[name="trip_id"]').val();
-	var _date 		= $('input[name="vehicle_date"]').val();
+	var _date 		= $('#vehicle_date').val();
 	var vehicle_id 		= $('.tour-vehicle-tab #vehicle_id').val();
 	var vehicle_type_id 	= $('.tour-vehicle-tab #vehicle_type_id').val();
 	var vehicle_ac_type_id 	= $('.tour-vehicle-tab #vehicle_ac_type_id').val();
@@ -2366,7 +2405,8 @@ function add_itinerary_for_package(dataArr){
 
 //build itineray table with dat
 function build_itinerary_table(data){
-	$("#itinerary-tbl").find("tr").remove();
+	reset_itinerary_table();
+	
 	if(data != 'false' && data!=''){
 		var table = '<tr>';
 		for(i=0;i < data.th.length;i++){
@@ -2385,8 +2425,19 @@ function build_itinerary_table(data){
 		
 	
 	}
-	
+	if(table != ''){
+		$("#itinerary-div").removeClass("hide-me");
+	}else{
+		$( "#itinerary-div" ).addClass("hide-me");
+	}
+
 	$("#itinerary-tbl").append(table);
+}
+
+function reset_itinerary_table()
+{
+	$("#itinerary-tbl").find("tr").remove();
+	$( "#itinerary-div" ).addClass("hide-me");
 }
 
 
@@ -2477,7 +2528,7 @@ function getHotels(destination,category,hotel_id=''){
 	$(id).append($("<option ></option>").attr("value",'-1').text('--Select Hotel--'));
 	if(destination > 0 && category > 0){
 		 
-		var _date = $('input[name="accommodation_date"]').val();
+		var _date = $('#accommodation_date').val();
 		 $.post(base_url+"/hotel/getAvailableHotels",
 		  {
 			destination_id:destination,

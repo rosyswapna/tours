@@ -110,6 +110,7 @@ class Tour_model extends CI_Model {
 			
 	}
 	//---------------------------------------------------------
+	
 
 
 	//get current season
@@ -429,13 +430,15 @@ class Tour_model extends CI_Model {
 		//echo "<pre>";print_r($cart);echo "</pre>";;exit;
 		//create insert and update array
 		foreach($cart as $_date=>$itry){
-			//get itinerary id
-			$itinerary_id = $this->getItineraryWithDate($_date,$trip_id);
-			if(!$itinerary_id){
+			//get itinerary id or get from insert
+			$itinerary = $this->getItineraryWithDate($_date,$trip_id);
+			if($itinerary){
+				$itinerary_id = $itinerary['id'];
+			}else{
 				$itinerary_id = $this->addItinerary($_date,$trip_id);
 			}
-
-			if($itinerary_id){
+			
+			if(is_numeric($itinerary_id) && $itinerary_id > 0){
 				foreach($itry as $table=>$tableData){
 					if($table != "label" && $tableData!=null){
 						foreach($tableData as $data){
@@ -469,7 +472,7 @@ class Tour_model extends CI_Model {
 			
 		}
 
-		echo "<pre>";print_r($insertData);echo "</pre>";exit;
+		//echo "<pre>";print_r($insertData);echo "</pre>";exit;
 
 		//insert batch
 		if($insertData){
@@ -504,7 +507,7 @@ class Tour_model extends CI_Model {
 			return false;
 
 		switch($table){
-			case 'trip_destinations':$this->db->select('id,itinerary_id,destination_id,destination_priority,particulars');
+			case 'trip_destinations':$this->db->select('id,itinerary_id,destination_id,destination_priority,description');
 						$this->db->from($table);
 						$this->db->where('itinerary_id',$itinerary_id);
 						$query = $this->db->get();

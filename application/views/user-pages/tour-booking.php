@@ -222,7 +222,7 @@ echo $this->form_functions->populate_dropdown($name,@$languages,@$driver_languag
 					<?php 
 					if(is_numeric($trip_id) && $trip_id > 0){
 						echo form_label('Date','travel_date'); 
-				    		echo form_input(array('name'=>'travel_date','class'=>'form-control initialize-date-picker  ','id'=>'tour-travel_date','value'=>@$travel_date));
+				    		echo form_input(array('name'=>'travel_date','class'=>'form-control initialize-date-picker  ','id'=>'travel_date','value'=>@$travel_date));
 					
 					}else{
 						echo form_label('Day','travel_date'); 
@@ -246,11 +246,11 @@ echo $this->form_functions->populate_dropdown($name,@$languages,@$driver_languag
 						$msg="Select Destination";
 						$name = $id = "destination_id";
 						echo $this->form_functions->populate_dropdown($name,$destinations,@$destination_id,$class,$id,$msg); 
-						echo $this->form_functions->form_error_session('travel_date', '<p class="text-red">', '</p>'); ?>			</div>
+						echo $this->form_functions->form_error_session('destination_id', '<p class="text-red">', '</p>'); ?>			</div>
 
 						<div class="form-group div-with-20-percent-width-with-margin-10">
 						<?php echo form_label('Priority','destination_priority'); 
-					    	echo form_input(array('name'=>'destination_priority','class'=>'form-control  ','id'=>'destination_priority','value'=>@$travel_date));
+					    	echo form_input(array('name'=>'destination_priority','class'=>'form-control  ','id'=>'destination_priority','value'=>@$destination_priority));
 					
 						echo $this->form_functions->form_error_session('priority', '<p class="text-red">', '</p>'); ?>			</div>
 					</div>
@@ -290,7 +290,7 @@ echo $this->form_functions->populate_dropdown($name,@$languages,@$driver_languag
 					<?php 
 					if(is_numeric($trip_id) && $trip_id > 0){
 						echo form_label('Date','accommodation_date'); 
-				    		echo form_input(array('name'=>'accommodation_date','class'=>'form-control initialize-date-picker  ','id'=>'tour-accommodation_date','value'=>@$accommodation_date));
+				    		echo form_input(array('name'=>'accommodation_date','class'=>'form-control initialize-date-picker  ','id'=>'accommodation_date','value'=>@$accommodation_date));
 					
 					}else{
 						echo form_label('Day','accommodation_date'); 
@@ -418,7 +418,7 @@ echo $this->form_functions->populate_dropdown($name,@$languages,@$driver_languag
 					<?php 
 					if(is_numeric($trip_id) && $trip_id > 0){
 						echo form_label('Date','service_date'); 
-				    		echo form_input(array('name'=>'service_date','class'=>'form-control initialize-date-picker  ','id'=>'tour-service_date','value'=>@$service_date));
+				    		echo form_input(array('name'=>'service_date','class'=>'form-control initialize-date-picker  ','id'=>'service_date','value'=>@$service_date));
 					
 					}else{
 						echo form_label('Day','service_date'); 
@@ -498,7 +498,7 @@ echo $this->form_functions->populate_dropdown($name,@$languages,@$driver_languag
 					
 					if(is_numeric($trip_id) && $trip_id > 0){
 						echo form_label('Date','vehicle_date'); 
-				    		echo form_input(array('name'=>'vehicle_date','class'=>'form-control initialize-date-picker  ','id'=>'tour-vehicle_date','value'=>@$vehicle_date));
+				    		echo form_input(array('name'=>'vehicle_date','class'=>'form-control initialize-date-picker  ','id'=>'vehicle_date','value'=>@$vehicle_date));
 					
 					}else{
 						echo form_label('Day','vehicle_date'); 

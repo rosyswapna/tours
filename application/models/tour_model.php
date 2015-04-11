@@ -423,6 +423,28 @@ class Tour_model extends CI_Model {
 		}
 	}
 
+	//delete trip itinerary data 
+	function resetTripItineraryData($table='',$trip_id=''){
+		if($table !='' && $trip_id != ''){
+			$this->db->select('id');
+			$this->db->from('itinerary');
+			$this->db->where('trip_id',$trip_id);
+			$qry = $this->db->get();
+			$rows = $qry->result_array();
+			$itineraries = array();
+			if($rows){
+				foreach($rows as $row){
+				array_push($itineraries,$row['id']);
+				}
+			}
+			
+			if($itineraries){
+				$this->db->where_in('itinerary_id', $itineraries);
+				$this->db->delete($table); 
+			}
+		}
+	}
+
 
 
 	//save tour cart with tour cart class
@@ -477,8 +499,9 @@ class Tour_model extends CI_Model {
 		//insert batch
 		if($insertData){
 			foreach($insertData as $tbl=>$dataArray){
-				
+				//echo "<pre>";print_r($dataArray);echo "</pre>";exit;
 				$this->db->insert_batch($tbl,$dataArray);
+				
 			}
 		}
 
@@ -497,6 +520,7 @@ class Tour_model extends CI_Model {
 			}
 				
 		}
+		return true;
 	}
 	//---------------------------------------------------------
 

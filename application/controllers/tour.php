@@ -54,6 +54,8 @@ class Tour extends CI_Controller {
 				$this->getItinerary();
 			}elseif($param1 == 'save_cart'){
 				$this->save_cart($param2);
+			}elseif($param1 == 'voucher'){
+				$this->voucher($param2);
 			}else{
 				$this->notFound();
 			}
@@ -305,6 +307,7 @@ class Tour extends CI_Controller {
 			}
 			$cart = $this->tour_cart->contents();
 			$data['header'] = $this->set_tour_header($param2);
+
 			$this->tour_cart->trip_id = $param2;
 		}else{
 			$this->tour_cart->trip_id = gINVALID;
@@ -595,11 +598,16 @@ class Tour extends CI_Controller {
 		$data = array();
 		if(is_numeric($trip_id) && $trip_id > 0){
 			$trip = $this->tour_model->getTrip($trip_id);
-			$data['pick_up_date'] = $trip->pick_up_date;
-			$data['drop_date'] = $trip->drop_date;
-			$data['trip_id'] = $trip->id;
+			//echo "<pre>";print_r($trip);echo "</pre>";exit;
+			if($trip){
+				return $trip;
+			}else{
+				redirect(base_url().'front-desk/tour/booking');
+			}
+			
+		}else{
+			return false;
 		}
-		return $data;
 		
 	}
 
@@ -827,6 +835,8 @@ class Tour extends CI_Controller {
 
 		return $tabs;
 	}
+
+	
 	
 	//get Available vehicles for tour booking
 	public function getAvailableVehicles(){
@@ -850,6 +860,82 @@ class Tour extends CI_Controller {
 	
 
 	//-----------------------------------------------------------------------------------------
+
+
+	//--------------------------------voucher module functins start----------------------------
+	public function voucher($trip_id='')
+	{
+		if($this->session_check()==true) {
+
+			$tblArray=array('booking_sources','available_drivers','trip_models','drivers','vehicle_types',	
+				'vehicle_models','vehicle_makes','vehicle_ac_types','vehicle_fuel_types',
+				'vehicle_seating_capacity','vehicle_beacon_light_options','languages','payment_type',
+				'customer_types','customer_groups','hotel_categories','trip-services','destinations','room_attributes','meals_options','services','vehicles','packages');
+			
+			foreach($tblArray as $table){
+				$data[$table]=$this->user_model->getArray($table);
+			}
+
+			$data['header'] = $this->set_tour_header($trip_id);
+
+			//print_r($data['header']);exit;
+			$data['tabs'] = $this->set_up_voucher_tabs('v_tab');
+			$data['trip_expenses'] = $this->getTripExpenses();
+			//print_r($data['trip_expenses']);exit;
+			$data['trip_id'] = gINVALID;
+			$data['title']="Tour Booking | ".PRODUCT_NAME;  
+			$page='user-pages/tour-voucher';
+			$this->load_templates($page,$data);
+		}else{
+			$this->notAuthorized();
+		}
+	}
+
+	public function getTripExpenses($ajax='NO')
+	{
+		if(isset($_REQUEST['ajax']))
+			$ajax=$_REQUEST['ajax'];
+
+		$expense = $this->tour_model->getTripExpenses();
+
+		if($expense==gINVALID){
+			if($ajax=='NO'){
+				return false;
+			}else{
+				echo 'false';
+			}
+		}else{
+			if($ajax=='NO'){
+				return $expense;
+			}else{
+				header('Content-Type: application/json');
+				echo json_encode($expense);
+			}
+		}
+	}
+
+
+	function set_up_voucher_tabs($tab_active='v_tab'){
+			
+		$tabs['v_tab'] = array('class'=>'','tab_id'=>'tab_1','text'=>'Vehicle',
+						'content_class'=>'tab-pane');
+		$tabs['a_tab'] = array('class'=>'','tab_id'=>'tab_2','text'=>'Accommodation',
+						'content_class'=>'tab-pane');
+		$tabs['s_tab'] = array('class'=>'','tab_id'=>'tab_3','text'=>'Services',
+						'content_class'=>'tab-pane');
+
+		if(array_key_exists($tab_active, $tabs)) {
+			$tabs[$tab_active]['class'] = 'active';
+			$tabs[$tab_active]['content_class'] = 'tab-pane active';
+		}else{
+			$tabs['t_tab']['class'] = 'active';
+			$tabs['t_tab']['content_class'] = 'tab-pane active';
+		}
+
+		return $tabs;
+	}
+
+	//-------------------------------voucher module functins end----------------------------------
 
 
 	//----------------------common functions---------------------------------------------------

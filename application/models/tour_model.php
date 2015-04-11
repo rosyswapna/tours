@@ -184,11 +184,17 @@ class Tour_model extends CI_Model {
 	}
 
 	function getTrip($trip_id = 0){
-		$this->db->from('trips');
-		$this->db->where('id',$trip_id);
+		$this->db->select('T.*,C.name as customer_name,C.mobile as customer_mobile,G.name as guest_name,G.mobile as guest_mobile,TS.name as trip_status_name,BS.name as booking_source_name');
+		$this->db->from('trips T');
+		$this->db->join('customers C','T.customer_id = C.id','left');
+		$this->db->join('customers G','T.guest_id = G.id','left');
+		$this->db->join('trip_statuses TS','T.trip_status_id = TS.id','left');
+		$this->db->join('booking_sources BS','T.trip_source_id = BS.id','left');
+
+		$this->db->where('T.id',$trip_id);
 		$query = $this->db->get();
 		if($query->num_rows() == 1)
-			return $query->row();
+			return $query->row_array();
 		else
 			return false;	
 	}
@@ -612,6 +618,21 @@ class Tour_model extends CI_Model {
 
 
 	//-----------------------------------------------------------------------
+
+
+
+	function getTripExpenses(){
+		$org_id=$this->session->userdata('organisation_id');
+		$this->db->from('trip_expenses');
+    		$this->db->where( 'organisation_id', $org_id );
+		//---
+    		$results = $this->db->get()->result_array();
+		if(count($results)>0){//print_r($results);
+			return $results;
+		}else{
+			return gINVALID;
+		}
+	}
 
 		
 

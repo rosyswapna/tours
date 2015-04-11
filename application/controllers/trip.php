@@ -16,7 +16,7 @@ class Trip extends CI_Controller {
 	
 		if($this->session_check()==true) {
 	
-		$tbl=array('trip-models'=>'trip_models','trip-statuses'=>'trip_statuses','booking-sources'=>'booking_sources','trip-expense'=>'trip_expense_type','services'=>'services');
+		$tbl=array('trip-models'=>'trip_models','trip-statuses'=>'trip_statuses','booking-sources'=>'booking_sources','trip-expense'=>'trip_expenses','services'=>'services');
 			if($param1=='getDescription') {
 			$this->getDescription();
 			}

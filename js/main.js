@@ -2177,6 +2177,12 @@ $('#tour-droptimepicker').datetimepicker({datepicker:false,
 	step:30
 });
 
+$('.time-picker').datetimepicker({datepicker:false,
+	format:'H:i',
+	step:30
+});
+
+
 $('.fromday-monthpicker').each(function(){
 	$(this).datetimepicker({timepicker:false,format:'d M'});
 });

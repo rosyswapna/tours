@@ -1,22 +1,18 @@
-<?php 
-$trip_id = @$header['trip_id'];
-?>
-
-
 
 <div class="tour-booking-outer">
 <?php if($this->session->userdata('dbSuccess') != '') { ?>
-		<div class="success-message">
-			<div class="alert alert-success alert-dismissable">
-			<i class="fa fa-check"></i>
-			<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-			<?php 
-			echo $this->session->userdata('dbSuccess');
-			$this->session->set_userdata('dbSuccess','');
-			?>
-		   	</div>
-		</div>
-		<?php  } ?>
+	<div class="success-message">
+		<div class="alert alert-success alert-dismissable">
+		<i class="fa fa-check"></i>
+		<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+		<?php 
+		echo $this->session->userdata('dbSuccess');
+		$this->session->set_userdata('dbSuccess','');
+		?>
+	   	</div>
+	</div>
+<?php  } ?>
+
 <?php  
 echo form_open(base_url()."tour/manage_tour_booking");
 echo form_hidden('trip_id',$trip_id);
@@ -82,7 +78,7 @@ echo  $this->form_functions->form_error_session('customer','<p class="text-red">
 <?php echo  $this->form_functions->form_error_session('customer_contact','<p class="text-red">', '</p>');?>
 <div><?php $new_customer='true'; echo form_input(array('name'=>'newcustomer','class'=>'form-control newcustomer hide-me','value'=>$new_customer)).form_input(array('name'=>'customer_id','id'=>'customer_id','class'=>'form-control hide-me','value'=>'')); ?></div></td>
 <td><?php echo form_label('Time');?></td>
-<td><?php echo form_input(array('name'=>'pick_up_time','class'=>'form-control ','id'=>'tour-pickuptimepicker','value'=>@$pick_up_time));?></td>
+<td><?php echo form_input(array('name'=>'pick_up_time','class'=>'form-control ','id'=>'tour-pickuptimepicker','value'=>@$header['pick_up_time']));?></td>
 <td><?php echo form_label('Vehicle Model');?></td>
 <td><?php $class="form-control";
 	  $msg="Select";
@@ -125,7 +121,7 @@ echo $this->form_functions->populate_editable_dropdown('vehicle_id', @$available
 <td><?php echo form_input(array('name'=>'guest_contact','class'=>'form-control','id'=>'guest_contact','value'=>@$guest_contact)); echo  $this->form_functions->form_error_session('guest_contact','<p class="text-red">', '</p>');?>
 <div><?php $new_guest='true'; echo form_input(array('name'=>'newguest','class'=>'form-control newguest hide-me','value'=>$new_guest)).form_input(array('name'=>'guest_id','id'=>'guest_id','class'=>'form-control hide-me','value'=>'')); ?></div></td>
 <td><?php echo form_label('Time');?></td>
-<td><?php echo form_input(array('name'=>'drop_time','class'=>'form-control ','id'=>'tour-droptimepicker','value'=>@$drop_time));?></td>
+<td><?php echo form_input(array('name'=>'drop_time','class'=>'form-control ','id'=>'tour-droptimepicker','value'=>@$header['drop_time']));?></td>
 <td><?php echo form_label('Driver');?></td>
 <td><?php $class="form-control";
 	  $msg=' ';

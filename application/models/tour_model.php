@@ -594,6 +594,23 @@ class Tour_model extends CI_Model {
 	}
 
 
+	function getItineraryDataLink($table,$select,$idArray,$tab=''){
+
+		$this->db->select('id,'.$select);
+		$this->db->from($table);
+		$this->db->where_in('id', $idArray);
+		$query = $this->db->get();
+		if($query->num_rows() > 0){
+			foreach($query->result_array() as $row){
+				$ret[]='<a href="#" itr-id="'.$row['id'].'">'.$row[$select]."</a>";
+			}
+			return $ret;
+		}else{
+			return array();
+		}
+	}
+
+
 	//get trip vehicles, accommodation, services and destinatins of a trip
 	function getItineraryDataAll($trip_id=0)
 	{

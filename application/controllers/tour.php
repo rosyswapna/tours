@@ -756,7 +756,7 @@ class Tour extends CI_Controller {
 						array_push($destinations,$destination['destination_id']);
 					}
 
-					$destinations = $this->tour_model->getNamesByIds('destinations','name',$destinations);
+					$destinations = $this->tour_model->getItineraryDataLink('destinations','name',$destinations);
 				}
 
 				$hotels = array();
@@ -764,7 +764,7 @@ class Tour extends CI_Controller {
 					foreach($item['trip_accommodation'] as $accommodation){
 						array_push($hotels,$accommodation['hotel_id']);
 					}
-					$hotels = $this->tour_model->getNamesByIds('hotels','name',$hotels);
+					$hotels = $this->tour_model->getItineraryDataLink('hotels','name',$hotels);
 				}
 
 				$services = array();
@@ -773,7 +773,7 @@ class Tour extends CI_Controller {
 					
 						array_push($services,$service['service_id']);
 					}
-					$services = $this->tour_model->getNamesByIds('services','name',$services);
+					$services = $this->tour_model->getItineraryDataLink('services','name',$services);
 				}
 			
 				$vehicles = array();
@@ -781,7 +781,7 @@ class Tour extends CI_Controller {
 					foreach($item['trip_vehicles'] as $vehicle){
 						array_push($vehicles,$vehicle['vehicle_id']);
 					}
-					$vehicles = $this->tour_model->getNamesByIds('vehicles','registration_number',$vehicles);
+					$vehicles = $this->tour_model->getItineraryDataLink('vehicles','registration_number',$vehicles);
 					//echo "<pre>";print_r($vehicles);echo "</pre>";exit;
 				}
 

@@ -57,19 +57,19 @@
 		<table class="tour-booking-tbl">
 		<tr>
 		<td><?php echo form_label('Customer');?></td>
-		<td><?php echo form_label(@$header['customer_name'],'',array('class'=>'form-control label-value'));
+		<td width="20%"><?php echo form_label(@$header['customer_name'],'',array('class'=>'form-control label-value'));
 		?></td>
 
 		<td><?php echo form_label('From Date');?></td>
-		<td><?php echo form_label(@$header['pick_up_date'],'',array('class'=>'form-control label-value'));
+		<td width="20%"><?php echo form_label(@$header['pick_up_date'],'',array('class'=>'form-control label-value'));
 		;?></td>
 
 		<td><?php echo form_label('Vehicle AC Type');?></td>
-		<td><?php echo form_label(@$header['vehicle_id'],'',array('class'=>'form-control label-value'));
+		<td width="20%"><?php echo form_label(@$header['vehicle_id'],'',array('class'=>'form-control label-value'));
 		?></span></td>
 
 		<td><?php echo form_label('Pickup');?></td>
-		<td><?php echo form_label(@$header['pick_up_location'],'',array('class'=>'form-control label-value'));
+		<td width="15%"><?php echo form_label(@$header['pick_up_location'],'',array('class'=>'form-control label-value'));
 		?></td>
 
 		</tr>
@@ -78,63 +78,53 @@
 		<td><?php echo form_label('Contact');?></td>
 		<td><?php echo form_label(@$header['customer_mobile'],'',array('class'=>'form-control label-value'));
 		?></td>
+
 		<td><?php echo form_label('Time');?></td>
-		<td><?php echo form_input(array('name'=>'pick_up_time','class'=>'form-control ','id'=>'tour-pickuptimepicker','value'=>@$header['pick_up_time'],'disabled'=>'disabled'));?></td>
+		<td><?php echo form_label(@$header['pick_up_time'],'',array('class'=>'form-control label-value'));
+		?></td>
+
 		<td><?php echo form_label('Vehicle Model');?></td>
-		<td><?php $class="form-control";
-			  $msg="Select";
-			  $name="vehicle_model_id";
-			  echo $this->form_functions->populate_dropdown($name,$vehicle_models,@$vehicle_model_id,$class,$id='vehicle_model_id',$msg,'disabled');?>
-			  <span class="text-red"><?php
-				if($this->mysession->get('Err_Vmodel') != ''){
-					echo $this->mysession->get('Err_Vmodel');
-					$this->mysession->delete('Err_Vmodel');
-				 }
-			 ?></span>
-		</td>
+		<td><?php echo form_label(@$header['vehicle_model_name'],'',array('class'=>'form-control label-value'));
+		?></td>
+
 		<td><?php echo form_label('Drop');?></td>
-		<td><?php echo form_input(array('name'=>'drop','class'=>'form-control','id'=>'drop','placeholder'=>'','value'=>@$drop_location,'disabled'=>'disabled')).form_input(array('name'=>'drop_lat','class'=>'form-control hide-me','id'=>'drop_lat','placeholder'=>'','value'=>@$drop_lat)).form_input(array('name'=>'drop_lng','class'=>'form-control hide-me','id'=>'drop_lng','placeholder'=>'','value'=>@$drop_lng));?></td>
+		<td><?php echo form_label(@$header['drop_location'],'',array('class'=>'form-control label-value'));
+		?></td>
+
 		</tr>
 
 		<tr>
 		<td><?php echo form_label('Guest');?></td>
-		<td><?php echo form_input(array('name'=>'guest_name','class'=>'form-control','id'=>'guest_name','value'=>@$header['guest_name'],'disabled'=>'disabled'));?></td>
-		<td><?php echo form_label('To Date');?></td>
-		<td><?php echo form_input(array('name'=>'drop_date','class'=>'form-control  mandatory','id'=>'tour-dropdatepicker','value'=>@$header['drop_date'],'disabled'=>'disabled'));?>
-		<?php echo  $this->form_functions->form_error_session('drop_date','<p class="text-red">', '</p>');?></td>
-		<td><?php echo form_label('Vehicle No.');?></td>
-		<td><?php $class="form-control vehicle-list";
-			  $id = $name = "vehicle_id";
-			  $msg=' ';
-			 
-			echo $this->form_functions->populate_dropdown($name,@$available_vehicles,@$vehicle_id,$class,$id,$msg,'disabled');
+		<td><?php echo form_label(@$header['guest_name'],'',array('class'=>'form-control label-value'));
+		?></td>
 
-				?>
-			<span class="text-red"><?php
-				if($this->mysession->get('Err_reg_num') != ''){
-					echo $this->mysession->get('Err_reg_num');
-					$this->mysession->delete('Err_reg_num');
-				} 
-						
-			?></span></td>
+		<td><?php echo form_label('To Date');?></td>
+		<td><?php echo form_label(@$header['drop_date'],'',array('class'=>'form-control label-value'));
+		?></td>
+
+		<td><?php echo form_label('Vehicle No.');?></td>
+		<td><?php echo form_label(@$header['vehicle_no'],'',array('class'=>'form-control label-value'));
+		?></td>
+
 		<td><?php echo form_label('PAX');?></td>
-		<td><?php echo form_input(array('name'=>'pax','class'=>'form-control','id'=>'pax','value'=>@$pax,'disabled'=>'disabled'));?></td>
+		<td><?php echo form_label(@$header['pax'],'',array('class'=>'form-control label-value'));
+		?></td>
+
 		</tr>
 
 		<tr>
 		<td><?php echo form_label('Contact');?></td>
-		<td><?php echo form_input(array('name'=>'guest_contact','class'=>'form-control','id'=>'guest_contact','value'=>@$header['guest_mobile'],'disabled'=>'disabled')); echo  $this->form_functions->form_error_session('guest_contact','<p class="text-red">', '</p>');?>
-		<div><?php $new_guest='true'; echo form_input(array('name'=>'newguest','class'=>'form-control newguest hide-me','value'=>$new_guest)).form_input(array('name'=>'guest_id','id'=>'guest_id','class'=>'form-control hide-me','value'=>'')); ?></div></td>
+		<td><?php echo form_label(@$header['guest_mobile'],'',array('class'=>'form-control label-value'));
+		?></td>
+	
 		<td><?php echo form_label('Time');?></td>
-		<td><?php echo form_input(array('name'=>'drop_time','class'=>'form-control ','id'=>'tour-droptimepicker','value'=>@$header['drop_time'],'disabled'=>'disabled'));?></td>
-		<td><?php echo form_label('Driver');?></td>
-		<td><?php $class="form-control";
-			  $msg=' ';
-				$id=$name='driver_id';
-			echo $this->form_functions->populate_dropdown($name,@$driver_availability,@$header['driver_id'],$class,$id,$msg,'disabled');
+		<td><?php echo form_label(@$header['drop_time'],'',array('class'=>'form-control label-value'));
+		?></td>
 
-			  
-			?></td>
+		<td><?php echo form_label('Driver');?></td>
+		<td><?php echo form_label(@$header['driver_name'],'',array('class'=>'form-control label-value'));
+		?></td>
+
 		<td><?php echo " ";?></td>
 		<td><div class="tour-advanced-container"><?php echo form_checkbox(array('name'=>'advanced-option','id'=>'advanced-check-box','class'=>'advanced-check-box flat-red','checked'=>@$advanced_option)).nbs(4);?>
 		<?php echo form_label('Advanced');?></div></td>

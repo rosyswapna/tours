@@ -1,6 +1,19 @@
 <?php
 class Vehicle_model extends CI_Model {
 
+	public function getVehicle($vehicle_id)
+	{
+		$this->db->from('vehicles');
+		$this->db->where('id',$vehicle_id);
+		$qry = $this->db->get();
+		if($qry->num_rows() > 0){
+			return $qry->row();
+		}else{
+			return false;
+		}
+		
+	}
+
 
 	public function getVehiclePercentages($regNo = null)
 	{

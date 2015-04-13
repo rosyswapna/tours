@@ -1523,6 +1523,46 @@ function generateTariffs(vehicle_model,vehicle_ac_type,tarif_id='',id){
 		  });
 		
 
+}
+
+
+function generateTariffsWithVehicleId(vehicle_id,tarif_id='',id){
+	var tarif_id=tarif_id;
+	 $.post(base_url+"/tarrif/vehicleTariffSelecter",
+		  {
+			vehicle_id:vehicle_id
+		  },function(data){
+			if(data!='false'){
+			data=jQuery.parseJSON(data);
+			$(id+' option').remove();
+			 $(id).append($("<option rate='-1' additional_kilometer_rate='-1' minimum_kilometers='-1'></option>").attr("value",'-1').text('--Select Tariff--'));
+			i=0;//alert(data.data.length);
+			for(var i=0;i<data.data.length;i++){
+			if(tarif_id==data.data[i].id){
+			var selected="selected=selected";
+			}else{
+			var selected="";
+			}
+			  $(id).append($("<option rate='"+data.data[i].rate+"' additional_kilometer_rate='"+data.data[i].additional_kilometer_rate+"' minimum_kilometers='"+data.data[i].minimum_kilometers+"' vehicle_model_id='"+data.data[i].vehicle_model_id+"' vehicle_ac_type_id ='"+data.data[i].vehicle_ac_type_id+"' tariff_master_id='"+data.data[i].tariff_master_id+"' "+selected+"></option>").attr("value",data.data[i].id).text(data.data[i].title));
+				
+			}
+			if(id=='#tarrif'){
+				$('.display-me').css('display','none');
+				if(tarif_id!=''){
+
+				SetRoughEstimate();
+
+				}
+				}
+			}else{
+			 $(id+' option').remove();
+			 $(id).append($("<option rate='-1' additional_kilometer_rate='-1' minimum_kilometers='-1'></option>").attr("value",'-1').text('--Select Tariff--'));
+				$('.display-me').css('display','none');
+			}
+			
+		  });
+		
+
 }	
 
 
@@ -2678,6 +2718,17 @@ function DateFromString(str,days){
 
 
 //-----------------------------------Tour Module ends here-----------------------------------------------
+
+
+
+
+//---------------------------tour voucher starts -----------------------------
+
+	$('.voucher-tabs #vehicle_id').on('change',function(){
+		var vehicle_id = $(this).val();
+		alert(vehicle_id);
+	});
+//----------------------------------------tour vocuher ends---------------------------
 	
  });
 

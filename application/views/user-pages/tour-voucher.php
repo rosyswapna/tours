@@ -43,7 +43,7 @@
 			<td><?php echo form_label('Package','package');?></td>
 			<td width="20%">
 			<?php
-			echo form_label(@$header['package_id'],'',array('class'=>'form-control label-value'));
+			echo form_label(@$header['package_name'],'',array('class'=>'form-control label-value'));
 			?>
 			</td>
 			</tr>
@@ -171,7 +171,7 @@
 
 
 	<!--itinerary tabs starts-->
-	<div class="nav-tabs-custom voucher-itinerary">
+	<div class="nav-tabs-custom voucher-tabs">
 		<ul class="nav nav-tabs">
 		<?php 
 			foreach($tabs as $tab=>$attr){
@@ -239,7 +239,7 @@
 							$name = $id = 'vehicle_id';
 							$class = 'form-control';
 							$msg = "Select Vehicle";
-							echo $this->form_functions->populate_dropdown($name,@$tour_vehicles,@$vehicle_id,$class,$id,$msg); 
+							echo $this->form_functions->populate_dropdown($name,@$tour_arrays['tour_vehicles'],@$vehicle_id,$class,$id,$msg); 
 						?>
 						</div>
 
@@ -417,7 +417,7 @@
 							$class="form-control";
 						  	$msg="Select";
 						  	$name=$id="acmd_hotel_id";
-						  	echo $this->form_functions->populate_dropdown($name,@$trip_hotels,@$acmd_hotel_id,$class,$id,$msg); 
+						  	echo $this->form_functions->populate_dropdown($name,@$tour_arrays['tour_hotels'],@$acmd_hotel_id,$class,$id,$msg); 
 						?>
 						</div>
 
@@ -534,7 +534,7 @@
 					    		$class="form-control";
 						  	$msg="Select";
 						  	$name=$id="service_id";
-						  	echo $this->form_functions->populate_dropdown($name,@$trip_services,@$service_id,$class,$id,$msg); 
+						  	echo $this->form_functions->populate_dropdown($name,@$tour_arrays['tour_services'],@$service_id,$class,$id,$msg); 
 						?>
 						</div>
 

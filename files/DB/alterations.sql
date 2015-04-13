@@ -363,3 +363,7 @@ CREATE TABLE IF NOT EXISTS `uom_master` (
 ----------------------voucher tables ends--------------------------------------------------------
 
 
+
+ALTER TABLE `trips`  ADD `package_id` INT(11) NOT NULL AFTER `id`;
+
+

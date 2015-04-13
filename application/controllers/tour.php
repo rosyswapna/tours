@@ -380,6 +380,7 @@ class Tour extends CI_Controller {
 			
 			$tripData['booking_date'] 	= date('Y-m-d');
 			$tripData['booking_time'] 	= date('H:i');
+			$tripData['package_id'] 	= $this->input->post('package_id');
 			$tripData['trip_source_id'] 	= $this->input->post('source_id');
 			$tripData['source_details'] 	= $this->input->post('source_details');
 			$tripData['source_contact'] 	= $this->input->post('source_contact');
@@ -869,16 +870,11 @@ class Tour extends CI_Controller {
 
 			$trip = $this->tour_model->getTrip($trip_id);
 			if($trip){//valid trip
-				$tblArray=array('booking_sources','available_drivers','trip_models','drivers','vehicle_types',	
-				'vehicle_models','vehicle_makes','vehicle_ac_types','vehicle_fuel_types',
-				'vehicle_seating_capacity','vehicle_beacon_light_options','languages','payment_type',
-				'customer_types','customer_groups','hotel_categories','trip-services','destinations','room_attributes','meals_options','services','vehicles','packages');
-			
-				foreach($tblArray as $table){
-					$data[$table]=$this->user_model->getArray($table);
-				}
 
 				$data['header'] = $this->set_tour_header($trip_id);
+
+				$data['tour_arrays'] = $this->tour_model->getTourValues($trip_id);
+				
 
 				//print_r($data['header']);exit;
 				$data['tabs'] = $this->set_up_voucher_tabs('v_tab');

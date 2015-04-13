@@ -184,12 +184,13 @@ class Tour_model extends CI_Model {
 	}
 
 	function getTrip($trip_id = 0){
-		$this->db->select('T.*,C.name as customer_name,C.mobile as customer_mobile,G.name as guest_name,G.mobile as guest_mobile,TS.name as trip_status_name,BS.name as booking_source_name');
+		$this->db->select('T.*,C.name as customer_name,C.mobile as customer_mobile,G.name as guest_name,G.mobile as guest_mobile,TS.name as trip_status_name,BS.name as booking_source_name,P.name as package_name');
 		$this->db->from('trips T');
 		$this->db->join('customers C','T.customer_id = C.id','left');
 		$this->db->join('customers G','T.guest_id = G.id','left');
 		$this->db->join('trip_statuses TS','T.trip_status_id = TS.id','left');
 		$this->db->join('booking_sources BS','T.trip_source_id = BS.id','left');
+		$this->db->join('packages P','T.package_id = P.id','left');
 
 		$this->db->where('T.id',$trip_id);
 		$query = $this->db->get();
@@ -649,6 +650,70 @@ class Tour_model extends CI_Model {
 		}else{
 			return gINVALID;
 		}
+	}
+
+
+	//get tour params array for voucher
+	function getTourValues($trip_id){
+
+		$itineraries = $this->getItineraries($trip_id);
+		$retArray = array('tour_vehicles'=>array(),
+				'tour_hotels'=>array(),
+				'tour_services'=>array()
+				);
+		if($itineraries){
+			$itryIds = array();
+			foreach($itineraries as $itry){
+				array_push($itryIds,$itry['id']);
+			}
+
+			//tour vehicles
+			$this->db->select('v.id,v.registration_number');
+			$this->db->from('trip_vehicles tv');
+			$this->db->join('vehicles v','v.id = tv.vehicle_id','left');
+			$qry=$this->db->where_in('itinerary_id',$itryIds);
+			$qry=$this->db->get();
+			if($qry->num_rows() > 0){
+				$list = $qry->result_array();
+				foreach($list as $row){
+					$retArray['tour_vehicles'][$row['id']]=$row['registration_number'];
+				}
+			}
+
+			//tour hotels
+			$this->db->select('h.id,h.name');
+			$this->db->from('trip_accommodation ta');
+			$this->db->join('hotels h','h.id = ta.hotel_id','left');
+			$qry=$this->db->where_in('itinerary_id',$itryIds);
+			$qry=$this->db->get();
+			if($qry->num_rows() > 0){
+				$list = $qry->result_array();
+				foreach($list as $row){
+					$retArray['tour_hotels'][$row['id']]=$row['name'];
+				}
+			}
+
+
+			//tour services
+			$this->db->select('s.id,s.name');
+			$this->db->from('trip_services ts');
+			$this->db->join('services s','s.id = ts.service_id','left');
+			$qry=$this->db->where_in('itinerary_id',$itryIds);
+			$qry=$this->db->get();
+			if($qry->num_rows() > 0){
+				$list = $qry->result_array();
+				foreach($list as $row){
+					$retArray['tour_services'][$row['id']]=$row['name'];
+				}
+			}
+
+
+			
+		}
+
+		//echo "<pre>";print_r($retArray);echo "</pre>";exit;
+		return $retArray;
+
 	}
 
 		

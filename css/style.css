@@ -780,3 +780,9 @@ font-weight:bold;
 .trip-save-update{
 margin-left:400px;
 }
+
+
+.label-value{
+	font-weight: normal !important;
+	background:#EEE;
+}

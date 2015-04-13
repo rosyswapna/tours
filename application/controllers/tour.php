@@ -334,7 +334,7 @@ class Tour extends CI_Controller {
 			$data['days'][$i] = $i;
 		}
 		
-		$data['trip_id'] = $this->tour_cart->trip_id;
+		$data['trip_id'] = $param2;
 		$data['driver_availability']=$this->driver_model->getDriversArray();
 		$data['available_vehicles']=$this->trip_booking_model->getVehiclesArray();
 		$active_tab = 't_tab';
@@ -867,29 +867,38 @@ class Tour extends CI_Controller {
 	{
 		if($this->session_check()==true) {
 
-			$tblArray=array('booking_sources','available_drivers','trip_models','drivers','vehicle_types',	
+			$trip = $this->tour_model->getTrip($trip_id);
+			if($trip){//valid trip
+				$tblArray=array('booking_sources','available_drivers','trip_models','drivers','vehicle_types',	
 				'vehicle_models','vehicle_makes','vehicle_ac_types','vehicle_fuel_types',
 				'vehicle_seating_capacity','vehicle_beacon_light_options','languages','payment_type',
 				'customer_types','customer_groups','hotel_categories','trip-services','destinations','room_attributes','meals_options','services','vehicles','packages');
 			
-			foreach($tblArray as $table){
-				$data[$table]=$this->user_model->getArray($table);
+				foreach($tblArray as $table){
+					$data[$table]=$this->user_model->getArray($table);
+				}
+
+				$data['header'] = $this->set_tour_header($trip_id);
+
+				//print_r($data['header']);exit;
+				$data['tabs'] = $this->set_up_voucher_tabs('v_tab');
+				$data['trip_expenses'] = $this->getTripExpenses();
+				//print_r($data['trip_expenses']);exit;
+				$data['trip_id'] = gINVALID;
+				$data['title']="Tour Booking | ".PRODUCT_NAME;  
+				$page='user-pages/tour-voucher';
+				$this->load_templates($page,$data);
+			}else{
+				$this->notFound();
 			}
 
-			$data['header'] = $this->set_tour_header($trip_id);
-
-			//print_r($data['header']);exit;
-			$data['tabs'] = $this->set_up_voucher_tabs('v_tab');
-			$data['trip_expenses'] = $this->getTripExpenses();
-			//print_r($data['trip_expenses']);exit;
-			$data['trip_id'] = gINVALID;
-			$data['title']="Tour Booking | ".PRODUCT_NAME;  
-			$page='user-pages/tour-voucher';
-			$this->load_templates($page,$data);
+			
 		}else{
 			$this->notAuthorized();
 		}
 	}
+
+	
 
 	public function getTripExpenses($ajax='NO')
 	{

@@ -2118,7 +2118,7 @@ $('.save-itry-btn').on('click',function(){
 });
 //--------------------------------------------------------
 
-//if edit tour get cart elements
+//if edit tour get cart elements (tour booking form)
 var pathname = window.location.pathname.split("/");
 if(pathname[2]=="tour" && pathname[3]=="booking" && pathname[4] > 0){ 
 	$.post(base_url+'/tour/getFromCart',{},function(data){
@@ -2127,6 +2127,14 @@ if(pathname[2]=="tour" && pathname[3]=="booking" && pathname[4] > 0){
 			build_itinerary_table(data);
 		}
 	});
+}
+
+//if edit tour voucher elements (tour voucher form)
+var pathname = window.location.pathname.split("/");
+if(pathname[2]=="tour" && pathname[3]=="voucher" && pathname[4] > 0){ 
+	
+	build_voucher_table(data='');
+	
 }
 
 
@@ -2446,6 +2454,22 @@ function build_itinerary_table(data){
 
 	$("#itinerary-tbl").append(table);
 }
+
+
+//voucher itinerary table
+function build_voucher_table(data){
+	
+	var table = '';
+
+	if(table != ''){
+		$("#voucher-itinerary-div").removeClass("hide-me");
+	}else{
+		$( "#voucher-itinerary-div" ).addClass("hide-me");
+	}
+
+	$("#voucher-itinerary-tbl").append(table);
+}
+
 
 function reset_itinerary_table()
 {

@@ -205,4 +205,161 @@ ALTER TABLE `package_vehicles`  ADD `tariff_id` INT(11) NOT NULL AFTER `driver_i
 
 
 
+--------------------------------voucher tables start here----------------------------------
+
+--
+-- Table structure for table `trip_vouchers`
+--
+
+DROP TABLE IF EXISTS `trip_vouchers`;
+CREATE TABLE IF NOT EXISTS `trip_vouchers` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `voucher_number` varchar(50) NOT NULL,
+  `total_trip_km` double NOT NULL,
+  `total_night_halt_charge` double NOT NULL,
+  `total_accomodation_amount` double NOT NULL,
+  `total_service_amount` double NOT NULL,
+  `toatal_travel_amount` double NOT NULL,
+  `total_trip_amount` double NOT NULL,
+  `trip_starting_time` time NOT NULL,
+  `trip_ending_time` time NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `organisation_id` int(11) NOT NULL,
+  `created` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `updated` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
+  PRIMARY KEY (`id`),
+  KEY `trip_id` (`user_id`,`organisation_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `trip_voucher_accommodation`
+--
+
+DROP TABLE IF EXISTS `trip_voucher_accommodation`;
+CREATE TABLE IF NOT EXISTS `trip_voucher_accommodation` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `trip_voucher_id` int(11) NOT NULL,
+  `hotel_id` int(11) NOT NULL,
+  `room_type_id` int(11) NOT NULL,
+  `from_date` date NOT NULL,
+  `to_date` date NOT NULL,
+  `checkin` time NOT NULL,
+  `checkout` time NOT NULL,
+  `no_of_days` int(11) NOT NULL,
+  `room_attributes` text NOT NULL,
+  `meals_package` text NOT NULL,
+  `room_tariff_amount` double NOT NULL,
+  `room_attributes_amount` double NOT NULL,
+  `meals_package_amount` double NOT NULL,
+  `unit_amount` double NOT NULL,
+  `advance_amount` double NOT NULL,
+  `tax_group_id` int(11) NOT NULL,
+  `tax_amount` double NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `organisation_id` int(11) NOT NULL,
+  `created` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `updated` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
+  PRIMARY KEY (`id`),
+  KEY `trip_voucher_id` (`trip_voucher_id`,`hotel_id`,`room_type_id`,`user_id`,`organisation_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `trip_voucher_services`
+--
+
+DROP TABLE IF EXISTS `trip_voucher_services`;
+CREATE TABLE IF NOT EXISTS `trip_voucher_services` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `trip_voucher_id` int(11) NOT NULL,
+  `service_id` int(11) NOT NULL,
+  `from_date` date NOT NULL,
+  `to_date` date NOT NULL,
+  `checkin` time NOT NULL,
+  `checkout` time NOT NULL,
+  `rate` double NOT NULL,
+  `quantity` int(11) NOT NULL,
+  `uom_id` int(11) NOT NULL,
+  `unit_amount` double NOT NULL,
+  `advance_amount` double NOT NULL,
+  `tax_group_id` int(11) NOT NULL,
+  `tax_amount` double NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `organisation_id` int(11) NOT NULL,
+  `created` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `updated` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
+  PRIMARY KEY (`id`),
+  KEY `trip_voucher_id` (`trip_voucher_id`,`service_id`,`uom_id`,`user_id`,`organisation_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `trip_voucher_vehicles`
+--
+
+DROP TABLE IF EXISTS `trip_voucher_vehicles`;
+CREATE TABLE IF NOT EXISTS `trip_voucher_vehicles` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `trip_voucher_id` int(11) NOT NULL,
+  `vehicle_id` int(11) NOT NULL,
+  `driver_id` int(11) NOT NULL,
+  `tariff_id` int(11) NOT NULL,
+  `from_date` date NOT NULL,
+  `to_date` date NOT NULL,
+  `start_time` time NOT NULL,
+  `end_time` time NOT NULL,
+  `start_km` int(11) NOT NULL,
+  `end_km` int(11) NOT NULL,
+  `km_hr` tinyint(1) NOT NULL COMMENT '1 for KM 0 for HR',
+  `base_km` int(11) NOT NULL,
+  `base_km_amount` double NOT NULL,
+  `adt_km` int(11) NOT NULL,
+  `adt_km_amount` double NOT NULL,
+  `base_hr` int(11) NOT NULL,
+  `base_hr_amount` double NOT NULL,
+  `adt_hr` int(11) NOT NULL,
+  `adt_hr_amount` double NOT NULL,
+  `driver_bata` double NOT NULL,
+  `night_halt_charge` double NOT NULL,
+  `trip_expense` text NOT NULL,
+  `unit_amount` double NOT NULL,
+  `advance_amount` double NOT NULL,
+  `tax_group_id` int(11) NOT NULL,
+  `tax_amount` double NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `organisation_id` int(11) NOT NULL,
+  `created` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `updated` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
+  PRIMARY KEY (`id`),
+  KEY `trip_voucher_id` (`trip_voucher_id`,`vehicle_id`,`driver_id`,`tariff_id`),
+  KEY `user_id` (`user_id`,`organisation_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `uom_master`
+--
+
+DROP TABLE IF EXISTS `uom_master`;
+CREATE TABLE IF NOT EXISTS `uom_master` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(50) DEFAULT NULL,
+  `description` text NOT NULL,
+  `value` int(11) DEFAULT NULL,
+  `organisation_id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `created` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
+  PRIMARY KEY (`id`),
+  KEY `id` (`id`),
+  KEY `organisation_id` (`organisation_id`),
+  KEY `user_id` (`user_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+----------------------voucher tables ends--------------------------------------------------------
+
 

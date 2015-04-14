@@ -1504,6 +1504,8 @@ function generateTariffs(vehicle_model,vehicle_ac_type,tarif_id='',id){
 			var selected="";
 			}
 			  $(id).append($("<option rate='"+data.data[i].rate+"' additional_kilometer_rate='"+data.data[i].additional_kilometer_rate+"' minimum_kilometers='"+data.data[i].minimum_kilometers+"' vehicle_model_id='"+data.data[i].vehicle_model_id+"' vehicle_ac_type_id ='"+data.data[i].vehicle_ac_type_id+"' tariff_master_id='"+data.data[i].tariff_master_id+"' "+selected+"></option>").attr("value",data.data[i].id).text(data.data[i].title));
+
+			
 				
 			}
 			if(id=='#tarrif'){
@@ -2083,171 +2085,165 @@ $('.vehicle-list').on('keydown',function(){
 });
 
 
-//-----------------------------------Tour Module-----------------------------------------------
+	//-----------------------------------Tour events-----------------------------------------------
 
-//-----------------tour booking leave alert----------------------
-window.onbeforeunload = function(){
-	var redirect=$('.book-tour-validate').attr('enable_redirect');
-	var pathname = window.location.pathname.split("/");
-	if(pathname[2]=="tour" && pathname[3]=="booking" && redirect!='true'){
-    		setTimeout(function(){
-        		test = 2;
-    		},500)
-    		return "If you leave this page, data may be lost.";
-	}
-}
-
-$('.book-tour-validate').on('click',function(){
-	$(this).attr('enable_redirect','true');
-	$('.trip-save-update').trigger('click');
-
-});
-
-$('#package_id').on('blur',function(){
-	var package_name = $(this).val();
-	$('input[name="hid_package"]').val(package_name);
-});
-
-$('#package_id').on('change',function(){
-	var package_id = $(this).val();
-	if($.isNumeric(package_id) && package_id > 0){
-		$.post(base_url+'/tour/createCartFromPackage',{package_id:package_id},function(data){
-			if(data!=false){
-				data=jQuery.parseJSON(data);
-				set_trip_date();
-				build_itinerary_table(data);
-				
-			}
-		});
-	}else{
-		reset_itinerary_table();
-	}
-});
-
-$("#tour-pickupdatepicker").change(function(){
-  	set_trip_date();
-	
-});
-
-
-
-//save itinerary table on click itinerary save button
-$('.save-itry-btn').on('click',function(){
-	var errFlag = 0;
-	var errMsg = '';
-	var pathname = window.location.pathname.split("/");
-	if(pathname[4]){//tour module
-		errFlag = 0;errMsg='';
-	}else{//package module
-		//get package
-		var _package = $('input[name="hid_package"]').val();
-		if(_package == ''){
-			errFlag = 1;
-			errMsg = "Package Name Required";
+	//-----------------tour booking leave alert----------------------
+	window.onbeforeunload = function(){
+		var redirect=$('.book-tour-validate').attr('enable_redirect');
+		var pathname = window.location.pathname.split("/");
+		if(pathname[2]=="tour" && pathname[3]=="booking" && redirect!='true'){
+	    		setTimeout(function(){
+				test = 2;
+	    		},500)
+	    		return "If you leave this page, data may be lost.";
 		}
 	}
 
-	if(errFlag == 0){
-		$('.book-tour-validate').attr('enable_redirect','true');
-		$('.save-itry').trigger('click');
-	}else{
-		alert(errMsg);return false;
-	}
-	
-	
-});
-//--------------------------------------------------------
+	$('.book-tour-validate').on('click',function(){
+		$(this).attr('enable_redirect','true');
+		$('.trip-save-update').trigger('click');
 
-//if edit tour get cart elements (tour booking form)
-var pathname = window.location.pathname.split("/");
-if(pathname[2]=="tour" && pathname[3]=="booking" && pathname[4] > 0){ 
-	$.post(base_url+'/tour/getFromCart',{},function(data){
-		if(data!=false){
-			data=jQuery.parseJSON(data);
-			build_itinerary_table(data);
+	});
+
+	$('#package_id').on('blur',function(){
+		var package_name = $(this).val();
+		$('input[name="hid_package"]').val(package_name);
+	});
+
+	$('#package_id').on('change',function(){
+		var package_id = $(this).val();
+		if($.isNumeric(package_id) && package_id > 0){
+			$.post(base_url+'/tour/createCartFromPackage',{package_id:package_id},function(data){
+				if(data!=false){
+					data=jQuery.parseJSON(data);
+					set_trip_date();
+					build_itinerary_table(data);
+				
+				}
+			});
+		}else{
+			reset_itinerary_table();
 		}
 	});
-}
 
-//if edit tour voucher elements (tour voucher form)
-var pathname = window.location.pathname.split("/");
-if(pathname[2]=="tour" && pathname[3]=="voucher" && pathname[4] > 0){ 
+	$("#tour-pickupdatepicker").change(function(){
+	  	set_trip_date();
 	
-	build_voucher_table(data='');
-	
-}
+	});
 
 
 
-// season-multiselect
-$('#seasons').click(function(){
-	if ($("#seasons option[value!='']:selected").length > 0){
-	    $("#seasons option[value='']").removeAttr("selected");  
-	   
-	}
-});
-
-//for checking customer in db
-$('#customer_contact').on('keyup click blur',function(){
-	var mobile=$('#customer_contact').val();
-	if(Trim(mobile)!=""){
-		var regEx = /^(\+91|\+91|0)?\d{10}$/;
-		if (!mobile.match(regEx)) {
-			mobile='';
+	//save itinerary table on click itinerary save button
+	$('.save-itry-btn').on('click',function(){
+		var errFlag = 0;
+		var errMsg = '';
+		var pathname = window.location.pathname.split("/");
+		if(pathname[4]){//tour module
+			errFlag = 0;errMsg='';
+		}else{//package module
+			//get package
+			var _package = $('input[name="hid_package"]').val();
+			if(_package == ''){
+				errFlag = 1;
+				errMsg = "Package Name Required";
+			}
 		}
-	}
-	set_customer_for_booking(mobile);
-});
 
-
-//for checking guest in db
-$('#guest_contact').on('keyup click',function(){
-	var mobile=$('#guest_contact').val();
-	if(Trim(mobile)!=""){
-   		var regEx = /^(\+91|\+91|0)?\d{10}$/;
-		if (!mobile.match(regEx)) {
-			mobile='';
-     		}
-	}
-	set_guest_for_booking(mobile);
-});
+		if(errFlag == 0){
+			$('.book-tour-validate').attr('enable_redirect','true');
+			$('.save-itry').trigger('click');
+		}else{
+			alert(errMsg);return false;
+		}
 	
-// tour date pickers, time pickers,month pickers
-$('#tour-pickupdatepicker').datetimepicker({timepicker:false,format:'Y-m-d',formatDate:'Y-m-d'});
-$('#tour-dropdatepicker').datetimepicker({timepicker:false,format:'Y-m-d',formatDate:'Y-m-d'});
-$('#tour-pickuptimepicker').datetimepicker({datepicker:false,
-	format:'H:i',
-	step:30
-});
+	
+	});
+	//--------------------------------------------------------
 
-$('#tour-droptimepicker').datetimepicker({datepicker:false,
-	format:'H:i',
-	step:30
-});
-
-$('.time-picker').datetimepicker({datepicker:false,
-	format:'H:i',
-	step:30
-});
-
-
-$('.fromday-monthpicker').each(function(){
-	$(this).datetimepicker({timepicker:false,format:'d M'});
-});
-
-// vehicle advanced checkbox toggle(show or hide row)
-$('.tour-advanced-container > .icheckbox_minimal > .iCheck-helper').on('click',function(){
-	if($('.advanced-check-box').attr('checked')=='checked'){
-	$('.tbody-toggle').show();
-	}else{
-	$('.tbody-toggle').css('display','none');
+	//if edit tour get cart elements (tour booking form)
+	var pathname = window.location.pathname.split("/");
+	if(pathname[2]=="tour" && pathname[3]=="booking" && pathname[4] > 0){ 
+		$.post(base_url+'/tour/getFromCart',{},function(data){
+			if(data!=false){
+				data=jQuery.parseJSON(data);
+				build_itinerary_table(data);
+			}
+		});
 	}
-	//$('.tbody-toggle').toggle();
-});
-if($('.advanced-check-box').attr('checked')=='checked'){ //for edit and post values to advanced block
+
+
+
+	// season-multiselect
+	$('#seasons').click(function(){
+		if ($("#seasons option[value!='']:selected").length > 0){
+		    $("#seasons option[value='']").removeAttr("selected");  
+		   
+		}
+	});
+
+	//for checking customer in db
+	$('#customer_contact').on('keyup click blur',function(){
+		var mobile=$('#customer_contact').val();
+		if(Trim(mobile)!=""){
+			var regEx = /^(\+91|\+91|0)?\d{10}$/;
+			if (!mobile.match(regEx)) {
+				mobile='';
+			}
+		}
+		set_customer_for_booking(mobile);
+	});
+
+
+	//for checking guest in db
+	$('#guest_contact').on('keyup click',function(){
+		var mobile=$('#guest_contact').val();
+		if(Trim(mobile)!=""){
+	   		var regEx = /^(\+91|\+91|0)?\d{10}$/;
+			if (!mobile.match(regEx)) {
+				mobile='';
+	     		}
+		}
+		set_guest_for_booking(mobile);
+	});
+	
+	// tour date pickers, time pickers,month pickers
+	$('#tour-pickupdatepicker').datetimepicker({timepicker:false,format:'Y-m-d',formatDate:'Y-m-d'});
+	$('#tour-dropdatepicker').datetimepicker({timepicker:false,format:'Y-m-d',formatDate:'Y-m-d'});
+	$('#tour-pickuptimepicker').datetimepicker({datepicker:false,
+		format:'H:i',
+		step:30
+	});
+
+	$('#tour-droptimepicker').datetimepicker({datepicker:false,
+		format:'H:i',
+		step:30
+	});
+
+	$('.time-picker').datetimepicker({datepicker:false,
+		format:'H:i',
+		step:30
+	});
+
+
+	$('.fromday-monthpicker').each(function(){
+		$(this).datetimepicker({timepicker:false,format:'d M'});
+	});
+
+	// vehicle advanced checkbox toggle(show or hide row)
+	$('.tour-advanced-container > .icheckbox_minimal > .iCheck-helper').on('click',function(){
+		if($('.advanced-check-box').attr('checked')=='checked'){
+		$('.tbody-toggle').show();
+		}else{
+		$('.tbody-toggle').css('display','none');
+		}
+		//$('.tbody-toggle').toggle();
+	});
+
+	if($('.advanced-check-box').attr('checked')=='checked'){ //for edit and post values to advanced block
 	$('.tbody-toggle').show();
 	}
-//pickup auto complete
+
+	//pickup auto complete
 	 $('#pick_up').on('click',function(){
 	 var options = {
 		componentRestrictions: {country: "IN"} 
@@ -2263,7 +2259,7 @@ if($('.advanced-check-box').attr('checked')=='checked'){ //for edit and post val
 		});
 	 });
 	 
-//drop auto complete
+	//drop auto complete
 	 $('#drop').on('click',function(){
 	 var options = {
 		componentRestrictions: {country: "IN"} 
@@ -2278,457 +2274,445 @@ if($('.advanced-check-box').attr('checked')=='checked'){ //for edit and post val
 			$("#drop").attr('value',place.name);
 		});
 	 });
-// check whether drop time earlier than pickup time or not
-$('#tour-pickuptimepicker,#tour-droptimepicker,#tour-pickupdatepicker,#tour-dropdatepicker').on('blur',function(){ 
-	var pickupdatepicker = $('#tour-pickupdatepicker').val();
-	var dropdatepicker = $('#tour-dropdatepicker').val();
-	var pickuptimepicker = $('#tour-pickuptimepicker').val();
-	var droptimepicker =$('#tour-droptimepicker').val();
-if(pickupdatepicker!='' && dropdatepicker!='' && pickuptimepicker!='' && droptimepicker!=''){
-	pickupdatepicker=pickupdatepicker.split('-');
-	dropdatepicker=dropdatepicker.split('-');
 
-	var start_time=new Date(pickupdatepicker[2]+'/'+pickupdatepicker[1]+'/'+pickupdatepicker[0]+' '+pickuptimepicker+':00');
-	var end_time=new Date(dropdatepicker[2]+'/'+dropdatepicker[1]+'/'+dropdatepicker[0]+' '+droptimepicker+':00');
-	if( start_time < end_time){
-	}
-	else{
-		alert("Correct drop time");
-	}
-}
-});
+	// check whether drop time earlier than pickup time or not
+	$('#tour-pickuptimepicker,#tour-droptimepicker,#tour-pickupdatepicker,#tour-dropdatepicker').on('blur',function(){ 
+		var pickupdatepicker = $('#tour-pickupdatepicker').val();
+		var dropdatepicker = $('#tour-dropdatepicker').val();
+		var pickuptimepicker = $('#tour-pickuptimepicker').val();
+		var droptimepicker =$('#tour-droptimepicker').val();
+	if(pickupdatepicker!='' && dropdatepicker!='' && pickuptimepicker!='' && droptimepicker!=''){
+		pickupdatepicker=pickupdatepicker.split('-');
+		dropdatepicker=dropdatepicker.split('-');
 
-// get driver assigned for a vehicle in the select box
-$('.tour-booking-tbl #vehicle_id').on('change',function(){
-	var vehicle_id = $(this).val();
-	get_vehicle_driver(vehicle_id);
-});
-
-
-//get hotels when change destination and category
-$('#hotel_destination_id').on('change',function(){
-	var destination = $(this).val();
-	var category = $('#hotel_category_id').val();
-	getHotels(destination,category);
-});
-$('#hotel_category_id').on('change',function(){
-	var destination = $('#hotel_destination_id').val();
-	var category = $(this).val();
-	getHotels(destination,category);
-});
-//---------------------------------------------------
-
-//get hotel rooms on change hotel
-$('#hotel_id').on('change',function(){
-	var hotel_id = $(this).val();
-	getHotelRooms(hotel_id);
-});
-//-------------------------------------------------
-
-//check room availability event
-$('#room_quantity').on('keyup',function(){
-	var qty = $(this).val();
-	checkRoomAvailability(qty);
-});
-
-//get tariff for tour booking vehicle tab
-$('.tour-vehicle-tab #vehicle_model_id,.tour-vehicle-tab #vehicle_ac_type_id').on('change',function(){
-	var vehicle_ac_type_id = $('.tour-vehicle-tab #vehicle_ac_type_id').val();
-	var vehicle_model_id = $('.tour-vehicle-tab #vehicle_model_id').val();
-
-	if(vehicle_ac_type_id > 0 && vehicle_model_id > 0){
-		generateTariffs(vehicle_model_id,vehicle_ac_type_id,'','.tour-vehicle-tab #vehicle_tariff_id');
-	}
-
-});
-
-$('.tour-vehicle-tab #vehicle_id').on('change',function(){
-	var vehicle_id = $(this).val();
-	get_vehicle_driver(vehicle_id,'.tour-vehicle-tab #driver_id','.tour-vehicle-tab #vehicle_contact');
-});
-
-
-//ajax calls for add itinerary
-$('.itinerary #add-travel').click(function(){
-	var trip_id = $('input[name="trip_id"]').val();
-	var _date = $('#travel_date').val();
-	var destination_id = $('#destination_id').val();
-	var destination_priority = $('input[name="destination_priority"]').val();
-	var description = $('#travel_description').val();
-
-	
-
-	if(trip_id == ''){
-		var dataArr = {table:"trip_destinations", _date:_date, destination_id:destination_id, destination_priority:destination_priority, description:description};
-		add_itinerary_for_package(dataArr);
-
-		
-	}else{
-		var dataArr = {table:"trip_destinations", trip_id:trip_id, _date:_date, destination_id:destination_id, destination_priority:destination_priority, description:description};
-		add_itinerary_for_tour(dataArr);
-	}
-	
-	
-});
-
-$('.itinerary #add-accommodation').click(function(){
-	var trip_id = $('input[name="trip_id"]').val();
-	var _date = $('#accommodation_date').val();
-	var hotel_id = $('#hotel_id').val();
-	var room_type_id = $('#room_type_id').val();
-	var room_quantity = $('#room_quantity').val();
-	var room_attributes = [];
-	$('#room_attributes option:selected').each(function(){
-        	room_attributes.push($(this).val());
-        });
-	
-	var meals_package = [];
-	$('.meals_package').each(function(){
-        	if(this.checked)
-			meals_package.push($(this).val());
-        });
-	var meals_quantity = $('#meals_quantity').val();
-
-	if(trip_id == ''){
-		var dataArr = {table:"trip_accommodation", _date:_date, hotel_id:hotel_id, room_type_id:room_type_id, room_quantity:room_quantity,room_attributes:room_attributes,meals_package:meals_package};
-		add_itinerary_for_package(dataArr);
-	}else{
-		var dataArr = {table:"trip_accommodation", trip_id:trip_id, _date:_date, hotel_id:hotel_id, room_type_id:room_type_id, room_quantity:room_quantity,room_attributes:room_attributes,meals_package:meals_package, meals_quantity:meals_quantity};
-		
-		add_itinerary_for_tour(dataArr);
-	}
-	
-});
-
-$('.itinerary #add-service').click(function(){
-	var trip_id 	= $('input[name="trip_id"]').val();
-	var _date 	= $('#service_date').val();
-	var service_id 	= $('#service_id').val();
-	var description = $('#service_description').val();
-	var location 	= $('#service_location').val();
-	var quantity 	= $('#service_quantity').val();
-	var amount 	= $('#service_rate').val();
-
-	if(trip_id == ''){
-		var dataArr = {table:"trip_services", _date:_date, service_id:service_id, description:description, location:location,quantity:quantity,amount:amount};
-		add_itinerary_for_package(dataArr);
-	}else{
-		var dataArr = {table:"trip_services", trip_id:trip_id, _date:_date, service_id:service_id, description:description, location:location,quantity:quantity,amount:amount};
-		
-		add_itinerary_for_tour(dataArr);
-	}
-});
-
-$('.itinerary #add-vehicle').click(function(){
-
-	var trip_id 		= $('input[name="trip_id"]').val();
-	var _date 		= $('#vehicle_date').val();
-	var vehicle_id 		= $('.tour-vehicle-tab #vehicle_id').val();
-	var vehicle_type_id 	= $('.tour-vehicle-tab #vehicle_type_id').val();
-	var vehicle_ac_type_id 	= $('.tour-vehicle-tab #vehicle_ac_type_id').val();
-	var vehicle_model_id 	= $('.tour-vehicle-tab #vehicle_model_id').val();
-	var tariff_id	 	= $('.tour-vehicle-tab #vehicle_tariff_id').val();
-	var driver_id	 	= $('.tour-vehicle-tab #driver_id').val();
-	
-	if(trip_id == ''){
-		var dataArr = {table:"trip_vehicles", _date:_date, vehicle_id:vehicle_id,  vehicle_type_id: vehicle_type_id, vehicle_ac_type_id:vehicle_ac_type_id,vehicle_model_id:vehicle_model_id,tariff_id:tariff_id,driver_id:driver_id};
-		add_itinerary_for_package(dataArr);
-	}else{
-		var dataArr = {table:"trip_vehicles", trip_id:trip_id, _date:_date, vehicle_id:vehicle_id,  vehicle_type_id: vehicle_type_id, vehicle_ac_type_id:vehicle_ac_type_id,vehicle_model_id:vehicle_model_id,tariff_id:tariff_id,driver_id:driver_id};
-		
-		add_itinerary_for_tour(dataArr);
-	}
-
-});
-
-
-//------------------------functions----------------------------
-
-//post itinerary to tour cart
-function add_itinerary_for_tour(dataArr){
-	$.post(base_url+'/tour/addToCart',dataArr,function(data){
-		if(data!=false){
-
-			data=jQuery.parseJSON(data);
-			build_itinerary_table(data);
+		var start_time=new Date(pickupdatepicker[2]+'/'+pickupdatepicker[1]+'/'+pickupdatepicker[0]+' '+pickuptimepicker+':00');
+		var end_time=new Date(dropdatepicker[2]+'/'+dropdatepicker[1]+'/'+dropdatepicker[0]+' '+droptimepicker+':00');
+		if( start_time < end_time){
 		}
+		else{
+			alert("Correct drop time");
+		}
+	}
 	});
-}
-function add_itinerary_for_package(dataArr){
-	$.post(base_url+'/tour/addToCartPackage',dataArr,function(data){
-		if(data!=false){
-			data=jQuery.parseJSON(data);
-			build_itinerary_table(data);
-		}
+
+	// get driver assigned for a vehicle in the select box
+	$('.tour-booking-tbl #vehicle_id').on('change',function(){
+		var vehicle_id = $(this).val();
+		get_vehicle_driver(vehicle_id);
 	});
-}
 
 
-//build itineray table with dat
-function build_itinerary_table(data){
-	reset_itinerary_table();
-	
-	if(data != 'false' && data!=''){
-		var table = '<tr>';
-		for(i=0;i < data.th.length;i++){
-			table += '<th '+data.th[i].attr+'>'+data.th[i].label+'</th>';
+	//get hotels when change destination and category
+	$('#hotel_destination_id').on('change',function(){
+		var destination = $(this).val();
+		var category = $('#hotel_category_id').val();
+		getHotels(destination,category);
+	});
+	$('#hotel_category_id').on('change',function(){
+		var destination = $('#hotel_destination_id').val();
+		var category = $(this).val();
+		getHotels(destination,category);
+	});
+	//---------------------------------------------------
+
+	//get hotel rooms on change hotel
+	$('#hotel_id').on('change',function(){
+		var hotel_id = $(this).val();
+		getHotelRooms(hotel_id);
+	});
+	//-------------------------------------------------
+
+	//check room availability event
+	$('#room_quantity').on('keyup',function(){
+		var qty = $(this).val();
+		checkRoomAvailability(qty);
+	});
+
+	//get tariff for tour booking vehicle tab
+	$('.tour-vehicle-tab #vehicle_model_id,.tour-vehicle-tab #vehicle_ac_type_id').on('change',function(){
+		var vehicle_ac_type_id = $('.tour-vehicle-tab #vehicle_ac_type_id').val();
+		var vehicle_model_id = $('.tour-vehicle-tab #vehicle_model_id').val();
+
+		if(vehicle_ac_type_id > 0 && vehicle_model_id > 0){
+			generateTariffs(vehicle_model_id,vehicle_ac_type_id,'','.tour-vehicle-tab #vehicle_tariff_id');
 		}
-		table += '</tr>';
+
+	});
+
+	$('.tour-vehicle-tab #vehicle_id').on('change',function(){
+		var vehicle_id = $(this).val();
+		get_vehicle_driver(vehicle_id,'.tour-vehicle-tab #driver_id','.tour-vehicle-tab #vehicle_contact');
+	});
+
+
+	//ajax calls for add itinerary
+	$('.itinerary #add-travel').click(function(){
+		var trip_id = $('input[name="trip_id"]').val();
+		var _date = $('#travel_date').val();
+		var destination_id = $('#destination_id').val();
+		var destination_priority = $('input[name="destination_priority"]').val();
+		var description = $('#travel_description').val();
+
 	
-		$.each( data.tr, function( key, tr ) {
-			table += '<tr>';
-			$.each(tr, function( key, td ) {
-				table += '<td>'+td+'</td>';
-			});
-			table += '</tr>';
+
+		if(trip_id == ''){
+			var dataArr = {table:"trip_destinations", _date:_date, destination_id:destination_id, destination_priority:destination_priority, description:description};
+			add_itinerary_for_package(dataArr);
+
+		
+		}else{
+			var dataArr = {table:"trip_destinations", trip_id:trip_id, _date:_date, destination_id:destination_id, destination_priority:destination_priority, description:description};
+			add_itinerary_for_tour(dataArr);
+		}
+	
+	
+	});
+
+	$('.itinerary #add-accommodation').click(function(){
+		var trip_id = $('input[name="trip_id"]').val();
+		var _date = $('#accommodation_date').val();
+		var hotel_id = $('#hotel_id').val();
+		var room_type_id = $('#room_type_id').val();
+		var room_quantity = $('#room_quantity').val();
+		var room_attributes = [];
+		$('#room_attributes option:selected').each(function(){
+			room_attributes.push($(this).val());
 		});
+	
+		var meals_package = [];
+		$('.meals_package').each(function(){
+			if(this.checked)
+				meals_package.push($(this).val());
+		});
+		var meals_quantity = $('#meals_quantity').val();
+
+		if(trip_id == ''){
+			var dataArr = {table:"trip_accommodation", _date:_date, hotel_id:hotel_id, room_type_id:room_type_id, room_quantity:room_quantity,room_attributes:room_attributes,meals_package:meals_package};
+			add_itinerary_for_package(dataArr);
+		}else{
+			var dataArr = {table:"trip_accommodation", trip_id:trip_id, _date:_date, hotel_id:hotel_id, room_type_id:room_type_id, room_quantity:room_quantity,room_attributes:room_attributes,meals_package:meals_package, meals_quantity:meals_quantity};
+		
+			add_itinerary_for_tour(dataArr);
+		}
+	
+	});
+
+	$('.itinerary #add-service').click(function(){
+		var trip_id 	= $('input[name="trip_id"]').val();
+		var _date 	= $('#service_date').val();
+		var service_id 	= $('#service_id').val();
+		var description = $('#service_description').val();
+		var location 	= $('#service_location').val();
+		var quantity 	= $('#service_quantity').val();
+		var amount 	= $('#service_rate').val();
+
+		if(trip_id == ''){
+			var dataArr = {table:"trip_services", _date:_date, service_id:service_id, description:description, location:location,quantity:quantity,amount:amount};
+			add_itinerary_for_package(dataArr);
+		}else{
+			var dataArr = {table:"trip_services", trip_id:trip_id, _date:_date, service_id:service_id, description:description, location:location,quantity:quantity,amount:amount};
+		
+			add_itinerary_for_tour(dataArr);
+		}
+	});
+
+	$('.itinerary #add-vehicle').click(function(){
+
+		var trip_id 		= $('input[name="trip_id"]').val();
+		var _date 		= $('#vehicle_date').val();
+		var vehicle_id 		= $('.tour-vehicle-tab #vehicle_id').val();
+		var vehicle_type_id 	= $('.tour-vehicle-tab #vehicle_type_id').val();
+		var vehicle_ac_type_id 	= $('.tour-vehicle-tab #vehicle_ac_type_id').val();
+		var vehicle_model_id 	= $('.tour-vehicle-tab #vehicle_model_id').val();
+		var tariff_id	 	= $('.tour-vehicle-tab #vehicle_tariff_id').val();
+		var driver_id	 	= $('.tour-vehicle-tab #driver_id').val();
+	
+		if(trip_id == ''){
+			var dataArr = {table:"trip_vehicles", _date:_date, vehicle_id:vehicle_id,  vehicle_type_id: vehicle_type_id, vehicle_ac_type_id:vehicle_ac_type_id,vehicle_model_id:vehicle_model_id,tariff_id:tariff_id,driver_id:driver_id};
+			add_itinerary_for_package(dataArr);
+		}else{
+			var dataArr = {table:"trip_vehicles", trip_id:trip_id, _date:_date, vehicle_id:vehicle_id,  vehicle_type_id: vehicle_type_id, vehicle_ac_type_id:vehicle_ac_type_id,vehicle_model_id:vehicle_model_id,tariff_id:tariff_id,driver_id:driver_id};
+		
+			add_itinerary_for_tour(dataArr);
+		}
+
+	});
+
+	//-----------------------------------Tour events ends-----------------------------------------------
+
+
+	
+
+
+	//------------------------functions----------------------------
+
+	
+
+
+	//post itinerary to tour cart
+	function add_itinerary_for_tour(dataArr){
+		$.post(base_url+'/tour/addToCart',dataArr,function(data){
+			if(data!=false){
+
+				data=jQuery.parseJSON(data);
+				build_itinerary_table(data);
+			}
+		});
+	}
+	function add_itinerary_for_package(dataArr){
+		$.post(base_url+'/tour/addToCartPackage',dataArr,function(data){
+			if(data!=false){
+				data=jQuery.parseJSON(data);
+				build_itinerary_table(data);
+			}
+		});
+	}
+
+
+	//build itineray table with dat
+	function build_itinerary_table(data){
+		reset_itinerary_table();
+	
+		if(data != 'false' && data!=''){
+			var table = '<tr>';
+			for(i=0;i < data.th.length;i++){
+				table += '<th '+data.th[i].attr+'>'+data.th[i].label+'</th>';
+			}
+			table += '</tr>';
+	
+			$.each( data.tr, function( key, tr ) {
+				table += '<tr>';
+				$.each(tr, function( key, td ) {
+					table += '<td>'+td+'</td>';
+				});
+				table += '</tr>';
+			});
 			
 		
 	
+		}
+		if(table != ''){
+			$("#itinerary-div").removeClass("hide-me");
+		}else{
+			$( "#itinerary-div" ).addClass("hide-me");
+		}
+
+		$("#itinerary-tbl").append(table);
 	}
-	if(table != ''){
-		$("#itinerary-div").removeClass("hide-me");
-	}else{
+
+
+	function reset_itinerary_table()
+	{
+		$("#itinerary-tbl").find("tr").remove();
 		$( "#itinerary-div" ).addClass("hide-me");
 	}
 
-	$("#itinerary-tbl").append(table);
-}
 
+	//checking date lies between pickup and drop date, all dates must be in mysql format'yyyy-mm-dd'
+	function check_itinerary_date(dateCheck){
+		var pick_up_date	= $('input[name="pick_up_date"]').val();
+		var drop_date 		= $('input[name="drop_date"]').val();
 
-//voucher itinerary table
-function build_voucher_table(data){
-	
-	var table = '';
+		var d1 = pick_up_date.split("-");
+		var d2 = drop_date.split("-");
+		var c = dateCheck.split("-");
 
-	if(table != ''){
-		$("#voucher-itinerary-div").removeClass("hide-me");
-	}else{
-		$( "#voucher-itinerary-div" ).addClass("hide-me");
-	}
+		var from = new Date(d1[0], d1[1]-1, d1[2]);  // -1 because months are from 0 to 11
+		var to   = new Date(d2[0], d2[1]-1, d2[2]);
+		var check = new Date(c[0], c[1]-1, c[2]);
 
-	$("#voucher-itinerary-tbl").append(table);
-}
-
-
-function reset_itinerary_table()
-{
-	$("#itinerary-tbl").find("tr").remove();
-	$( "#itinerary-div" ).addClass("hide-me");
-}
-
-
-//checking date lies between pickup and drop date, all dates must be in mysql format'yyyy-mm-dd'
-function check_itinerary_date(dateCheck){
-	var pick_up_date	= $('input[name="pick_up_date"]').val();
-	var drop_date 		= $('input[name="drop_date"]').val();
-
-	var d1 = pick_up_date.split("-");
-	var d2 = drop_date.split("-");
-	var c = dateCheck.split("-");
-
-	var from = new Date(d1[0], d1[1]-1, d1[2]);  // -1 because months are from 0 to 11
-	var to   = new Date(d2[0], d2[1]-1, d2[2]);
-	var check = new Date(c[0], c[1]-1, c[2]);
-
-	//console.log(check > from && check < to);
-	if((check > from && check < to)){
-		return true;
-	}else{
-		return false;
-	}
-}
-//---------------------------------------------------------------------------------
-
-//set customer for tour booking 
-function set_customer_for_booking(mobile){
-	if(Trim(mobile)!=""){
-		$.post(base_url+'/customers/customer-check',{
-		mobile:mobile,
-		customer:'yes'
-		},function(data){
-		if(data!=false){
-			data=jQuery.parseJSON(data);
-			$('#customer').val(data[0].name);
-			$('#customer_contact').val(data[0].mobile);
-			$('#customer_id').val(data[0].id);
-			$('.newcustomer').attr('value',false);
-			}
-		});
-	}
-}
-
-//set guest for tour booking 
-function set_guest_for_booking(mobile){
-	if(Trim(mobile)!=""){
-		$.post(base_url+'/customers/customer-check',{
-		mobile:mobile,
-		customer:'yes'
-		},function(data){ 
-		if(data!=false){
-			data=jQuery.parseJSON(data);
-			$('#guest_name').val(data[0].name);
-			$('#guest_contact').val(data[0].mobile);
-			$('#guest_id').val(data[0].id);
-			$('.newguest').attr('value',false);
-			}
-		});
-	}
-}
-
-//set driver with vehicle id for tour booking
-function get_vehicle_driver(vehicle_id=0,obj_driver='select[name="driver_id"]',obj_contact=''){
-	
-	$.post(base_url+'/vehicle/get-vehicle-driver',{vehicle_id:vehicle_id},
-	function(data){
-		if(data!=false){
-			data=jQuery.parseJSON(data);
-			
-			$(obj_driver).val(data.driver_id);
-			if(obj_contact !=''){
-				$(obj_contact).val(data.mobile);
-			}
+		//console.log(check > from && check < to);
+		if((check > from && check < to)){
+			return true;
 		}else{
-			$(obj_driver).val('');
-			if(obj_contact !=''){
-				$(obj_contact).val('');
-			}
+			return false;
 		}
-	});
-	
-}
+	}
+	//---------------------------------------------------------------------------------
 
-//get hotels with destination and category
-function getHotels(destination,category,hotel_id=''){
-	var id ='#hotel_id';
-	$(id+' option').remove();
-	$(id).append($("<option ></option>").attr("value",'-1').text('--Select Hotel--'));
-	if(destination > 0 && category > 0){
-		 
-		var _date = $('#accommodation_date').val();
-		 $.post(base_url+"/hotel/getAvailableHotels",
-		  {
-			destination_id:destination,
-			category_id:category,
-			_date:_date
-		  },function(data){
+	//set customer for tour booking 
+	function set_customer_for_booking(mobile){
+		if(Trim(mobile)!=""){
+			$.post(base_url+'/customers/customer-check',{
+			mobile:mobile,
+			customer:'yes'
+			},function(data){
+			if(data!=false){
+				data=jQuery.parseJSON(data);
+				$('#customer').val(data[0].name);
+				$('#customer_contact').val(data[0].mobile);
+				$('#customer_id').val(data[0].id);
+				$('.newcustomer').attr('value',false);
+				}
+			});
+		}
+	}
+
+	//set guest for tour booking 
+	function set_guest_for_booking(mobile){
+		if(Trim(mobile)!=""){
+			$.post(base_url+'/customers/customer-check',{
+			mobile:mobile,
+			customer:'yes'
+			},function(data){ 
+			if(data!=false){
+				data=jQuery.parseJSON(data);
+				$('#guest_name').val(data[0].name);
+				$('#guest_contact').val(data[0].mobile);
+				$('#guest_id').val(data[0].id);
+				$('.newguest').attr('value',false);
+				}
+			});
+		}
+	}
+
+	//set driver with vehicle id for tour booking
+	function get_vehicle_driver(vehicle_id=0,obj_driver='select[name="driver_id"]',obj_contact=''){
+	
+		$.post(base_url+'/vehicle/get-vehicle-driver',{vehicle_id:vehicle_id},
+		function(data){
+			if(data!=false){
+				data=jQuery.parseJSON(data);
+			
+				$(obj_driver).val(data.driver_id);
+				if(obj_contact !=''){
+					$(obj_contact).val(data.mobile);
+				}
+			}else{
+				$(obj_driver).val('');
+				if(obj_contact !=''){
+					$(obj_contact).val('');
+				}
+			}
+		});
+	
+	}
+
+	//get hotels with destination and category
+	function getHotels(destination,category,hotel_id=''){
+		var id ='#hotel_id';
+		$(id+' option').remove();
+		$(id).append($("<option ></option>").attr("value",'-1').text('--Select Hotel--'));
+		if(destination > 0 && category > 0){
+			 
+			var _date = $('#accommodation_date').val();
+			 $.post(base_url+"/hotel/getAvailableHotels",
+			  {
+				destination_id:destination,
+				category_id:category,
+				_date:_date
+			  },function(data){
+				if(data!='false'){
+					data=jQuery.parseJSON(data);
+				
+					var selected="";
+					for(var i=0;i< data.length;i++){
+						$(id).append($("<option "+selected+"></option>").attr("value",data[i].id).text(data[i].name));
+					}
+			
+				}
+			});
+		
+		}
+		return true;
+	}
+
+
+	//get hotel rooms for selected hotel and set room types list
+	function getHotelRooms(hotel_id,room_type_id=''){
+		var id ='#room_type_id';
+		$(id+' option').remove();
+		$(id).append($("<option ></option>").attr("value",'-1').text('--Select Room Type--'));
+		$.post(base_url+"/hotel/getHotelRooms",{hotel_id:hotel_id},
+		function(data){
 			if(data!='false'){
 				data=jQuery.parseJSON(data);
-				
 				var selected="";
 				for(var i=0;i< data.length;i++){
-					$(id).append($("<option "+selected+"></option>").attr("value",data[i].id).text(data[i].name));
+					$(id).append($("<option "+selected+"></option>").attr("value",data[i].room_type_id).text(data[i].room_type_name));
 				}
-			
+		
 			}
 		});
 		
 	}
-	return true;
-}
 
-
-//get hotel rooms for selected hotel and set room types list
-function getHotelRooms(hotel_id,room_type_id=''){
-	var id ='#room_type_id';
-	$(id+' option').remove();
-	$(id).append($("<option ></option>").attr("value",'-1').text('--Select Room Type--'));
-	$.post(base_url+"/hotel/getHotelRooms",{hotel_id:hotel_id},
-	function(data){
-		if(data!='false'){
-			data=jQuery.parseJSON(data);
-			var selected="";
-			for(var i=0;i< data.length;i++){
-				$(id).append($("<option "+selected+"></option>").attr("value",data[i].room_type_id).text(data[i].room_type_name));
-			}
-		
-		}
-	});
-		
-}
-
-//check room availability with quantity and rooms in trip accommodation table
-function checkRoomAvailability(reqQTY)
-{
-	var hotel_id = $('#hotel_id').val();
-	var room_type_id = $('#room_type_id').val();
-	var _date = $('#accommodation_date').val();
-	$.post(base_url+"/hotel/getRoomAvailability",{
-		hotel_id:hotel_id, room_type_id:room_type_id, booking_date:_date, qty:reqQTY},
-	function(avlQTY){
-		$("#room_quantity").val('');
-		if(reqQTY > avlQTY){
-			var cnRoom = confirm("Insufficient rooms.Do you want to continue with Availabe Rooms?");
-			if(cnRoom){
-				$("#room_quantity").val(avlQTY);
-			}
-		}else{
-			$("#room_quantity").val(reqQTY);
-		}	
+	//check room availability with quantity and rooms in trip accommodation table
+	function checkRoomAvailability(reqQTY)
+	{
+		var hotel_id = $('#hotel_id').val();
+		var room_type_id = $('#room_type_id').val();
+		var _date = $('#accommodation_date').val();
+		$.post(base_url+"/hotel/getRoomAvailability",{
+			hotel_id:hotel_id, room_type_id:room_type_id, booking_date:_date, qty:reqQTY},
+		function(avlQTY){
+			$("#room_quantity").val('');
+			if(reqQTY > avlQTY){
+				var cnRoom = confirm("Insufficient rooms.Do you want to continue with Availabe Rooms?");
+				if(cnRoom){
+					$("#room_quantity").val(avlQTY);
+				}
+			}else{
+				$("#room_quantity").val(reqQTY);
+			}	
 			
-	});
-}
-
-
-function set_trip_date(){
-	
-	var date = $("#tour-pickupdatepicker").val();
-	if(date != ''){
-		$.post(base_url+"/tour/getItineraryCount",{},function(data){
-			days = Number(data)-1;
-			if(days > 0){
-				str = date.split("-");
-				y = str[0];m = str[1];d = str[2];
-				d = new Date(date);
-				d.setDate(d.getDate() + days);
-				var day2 = d.getDate();
-				if(day2 < 10)day2 ="0"+day2;
-				var month2 = d.getMonth() + 1;if(month2 < 10)month2 ="0"+month2;
-				var year2 = d.getFullYear();
-				date2 = year2+"-"+month2+"-"+day2;
-		  
-				$("#tour-dropdatepicker").val(date2);
-			}
 		});
-	}	
-}
+	}
+
+
+	function set_trip_date(){
+	
+		var date = $("#tour-pickupdatepicker").val();
+		if(date != ''){
+			$.post(base_url+"/tour/getItineraryCount",{},function(data){
+				days = Number(data)-1;
+				if(days > 0){
+					str = date.split("-");
+					y = str[0];m = str[1];d = str[2];
+					d = new Date(date);
+					d.setDate(d.getDate() + days);
+					var day2 = d.getDate();
+					if(day2 < 10)day2 ="0"+day2;
+					var month2 = d.getMonth() + 1;if(month2 < 10)month2 ="0"+month2;
+					var year2 = d.getFullYear();
+					date2 = year2+"-"+month2+"-"+day2;
+			  
+					$("#tour-dropdatepicker").val(date2);
+				}
+			});
+		}	
+	}
 
 
 
 
 
-function DateFromString(str,days){ 
-        
-        str = new Date(str[2],str[0]-1,(parseInt(str[1])+days));
-        return MMDDYYYY(str);
-    }
-    function MMDDYYYY(str) {
-        var ndateArr = str.toString().split(' ');
-        var Months = 'Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec';
-        return (parseInt(Months.indexOf(ndateArr[1])/4)+1)+'/'+ndateArr[2]+'/'+ndateArr[3];
-    }
+	function DateFromString(str,days){ 
 
-    function AddDays(days) {
-        var date = $('input[name="pick_up_date"]').val();
-        var ndate = DateFromString(date,days);
-        return ndate;
-    }
+		str = new Date(str[2],str[0]-1,(parseInt(str[1])+days));
+		return MMDDYYYY(str);
+		}
+		function MMDDYYYY(str) {
+		var ndateArr = str.toString().split(' ');
+		var Months = 'Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec';
+		return (parseInt(Months.indexOf(ndateArr[1])/4)+1)+'/'+ndateArr[2]+'/'+ndateArr[3];
+		}
+
+		function AddDays(days) {
+		var date = $('input[name="pick_up_date"]').val();
+		var ndate = DateFromString(date,days);
+		return ndate;
+	}
+
+
+	
+
+
+
+	
 
    
-
-
-//-----------------------------------Tour Module ends here-----------------------------------------------
-
-
-
-
-//---------------------------tour voucher starts -----------------------------
-
-	$('.voucher-tabs #vehicle_id').on('change',function(){
-		var vehicle_id = $(this).val();
-		alert(vehicle_id);
-	});
-//----------------------------------------tour vocuher ends---------------------------
+//-------------------------------------------------------------------------
 	
  });
 

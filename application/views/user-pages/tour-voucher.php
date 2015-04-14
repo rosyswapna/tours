@@ -1,3 +1,5 @@
+<!--tour-voucher.js -->
+<script src="<?php echo base_url();?>js/tour-voucher.js" type="text/javascript"></script>
 
 <div class="tour-booking-outer">
 <?php if($this->session->userdata('dbSuccess') != '') { ?>
@@ -190,60 +192,48 @@
 				<div class="page-outer">
 		   		<fieldset class="body-border">
 					<div class="row-source-100-percent-width-with-margin-8">
-						<div class="form-group div-with-20-percent-width-with-margin-10">
+
+						<div class="form-group div-with-17-percent-width-with-margin-10">
 						<?php
-							echo form_label('Start Date','vehicle_start_date'); 
-					    		echo form_input(array('name'=>'vehicle_start_date','class'=>'form-control initialize-date-picker  ','id'=>'vehicle_start_date','value'=>@$vehicle_start_date));
+							echo form_label('Vehicle Model','vehicle_model_id'); 
+							$name = $id = 'vehicle_model_id';
+							$class = 'form-control';
+							$msg = "Select";
+							echo $this->form_functions->populate_dropdown($name,@$vehicle_models,@$vehicle_model_id,$class,$id,$msg); 
 						?>
 						</div>
 
-						<div class="form-group div-with-20-percent-width-with-margin-10">
+						<div class="form-group div-with-17-percent-width-with-margin-10">
 						<?php
-							echo form_label('To Date','vehicle_to_date'); 
-					    		echo form_input(array('name'=>'vehicle_to_date','class'=>'form-control initialize-date-picker  ','id'=>'vehicle_to_date','value'=>@$vehicle_to_date));
+							echo form_label('Vehicle AC Type','vehicle_ac_type_id'); 
+							$name = $id = 'vehicle_ac_type_id';
+							$class = 'form-control';
+							$msg = "Select";
+							echo $this->form_functions->populate_dropdown($name,@$vehicle_ac_types,@$vehicle_ac_type_id,$class,$id,$msg); 
 						?>
 						</div>
 
-						<div class="form-group div-with-20-percent-width-with-margin-10">
-						<?php
-							echo form_label('Start Time','vehicle_start_time'); 
-					    		echo form_input(array('name'=>'vehicle_start_time','class'=>'form-control time-picker','id'=>'vehicle_start_time','value'=>@$vehicle_start_time));
-						?>
-						</div>
-
-						<div class="form-group div-with-20-percent-width-with-margin-10">
-						<?php
-							echo form_label('End Time','vehicle_end_time'); 
-					    		echo form_input(array('name'=>'vehicle_end_time','class'=>'form-control time-picker  ','id'=>'vehicle_end_time','value'=>@$vehicle_end_time));
-						?>
-						</div>
-				
-
-						<div class="form-group div-with-20-percent-width-with-margin-10">
-						<?php
-							echo form_label('Start KM','start_km'); 
-					    		echo form_input(array('name'=>'start_km','class'=>'form-control','id'=>'start_km','value'=>@$start_km));
-						?>
-						</div>
-
-						<div class="form-group div-with-20-percent-width-with-margin-10">
-						<?php
-							echo form_label('End KM','end_km'); 
-					    		echo form_input(array('name'=>'end_km','class'=>'form-control','id'=>'end_km','value'=>@$end_km));
-						?>
-						</div>
-
-						<div class="form-group div-with-20-percent-width-with-margin-10">
+						<div class="form-group div-with-17-percent-width-with-margin-10">
 						<?php
 							echo form_label('Vehicle','vehicle_id'); 
 							$name = $id = 'vehicle_id';
 							$class = 'form-control';
 							$msg = "Select Vehicle";
-							echo $this->form_functions->populate_dropdown($name,@$tour_arrays['tour_vehicles'],@$vehicle_id,$class,$id,$msg); 
+							echo $this->form_functions->populate_dropdown($name,@$vehicles,@$vehicle_id,$class,$id,$msg); 
 						?>
 						</div>
 
-						<div class="form-group div-with-20-percent-width-with-margin-10">
+						<div class="form-group div-with-17-percent-width-with-margin-10">
+						<?php
+							echo form_label('Driver','driver_id'); 
+							$name = $id = 'driver_id';
+							$class = 'form-control';
+							$msg = "Select";
+							echo $this->form_functions->populate_dropdown($name,@$drivers,@$driver_id,$class,$id,$msg); 
+						?>
+						</div>
+
+						<div class="form-group div-with-17-percent-width-with-margin-10">
 						<?php
 							echo form_label('Tariff','vehicle_tariff_id'); 
 							$name = $id = 'vehicle_tariff_id';
@@ -253,63 +243,191 @@
 						?>
 						</div>
 
+						<div class="form-group div-with-14-percent-width-with-margin-6">
+						<?php
+							echo form_label('From Date','vehicle_from_date'); 
+					    		echo form_input(array('name'=>'vehicle_from_date','class'=>'form-control initialize-date-picker  ','id'=>'vehicle_from_date','value'=>@$vehicle_from_date));
+						?>
+						</div>
 
-						<div class="form-group div-with-20-percent-width-with-margin-10">
+						<div class="form-group div-with-14-percent-width-with-margin-6">
+						<?php
+							echo form_label('To Date','vehicle_to_date'); 
+					    		echo form_input(array('name'=>'vehicle_to_date','class'=>'form-control initialize-date-picker  ','id'=>'vehicle_to_date','value'=>@$vehicle_to_date));
+						?>
+						</div>
+
+						<div class="form-group div-with-14-percent-width-with-margin-6">
+						<?php
+							echo form_label('Start Time','vehicle_start_time'); 
+					    		echo form_input(array('name'=>'vehicle_start_time','class'=>'form-control time-picker','id'=>'vehicle_start_time','value'=>@$vehicle_start_time));
+						?>
+						</div>
+
+						<div class="form-group div-with-14-percent-width-with-margin-6">
+						<?php
+							echo form_label('End Time','vehicle_end_time'); 
+					    		echo form_input(array('name'=>'vehicle_end_time','class'=>'form-control time-picker  ','id'=>'vehicle_end_time','value'=>@$vehicle_end_time));
+						?>
+						</div>
+				
+
+						<div class="form-group div-with-14-percent-width-with-margin-6">
+						<?php
+							echo form_label('Start KM','start_km'); 
+					    		echo form_input(array('name'=>'start_km','class'=>'form-control','id'=>'start_km','value'=>@$start_km));
+						?>
+						</div>
+
+						<div class="form-group div-with-14-percent-width-with-margin-6">
+						<?php
+							echo form_label('End KM','end_km'); 
+					    		echo form_input(array('name'=>'end_km','class'=>'form-control','id'=>'end_km','value'=>@$end_km));
+						?>
+						</div>
+			
+						<div class="form-group div-with-14-percent-width-with-margin-6">
+						<?php
+							echo form_label('Total KM','total_km'); 
+					    		echo form_input(array('name'=>'total_km','class'=>'form-control','id'=>'total_km','value'=>@$total_km,'readonly'=>'readonly'));
+						?>
+						</div>
+
+						<div class="form-group div-with-14-percent-width-with-margin-6">
+						<?php
+							echo form_label('Total HR','total_hr'); 
+					    		echo form_input(array('name'=>'total_hr','class'=>'form-control','id'=>'total_hr','value'=>@$total_hr,'disabled'=>'disabled'));
+						?>
+						</div>
+
+						
+					</div>
+
+					<div class="row-source-100-percent-width-with-margin-8 vehicle-km-row">
+
+						
+
+						<div class="form-group div-with-14-percent-width-with-margin-6">
 						<?php
 							echo form_label('Base KM','base_km'); 
 					    		echo form_input(array('name'=>'base_km','class'=>'form-control','id'=>'base_km','value'=>@$base_km));
 						?>
 						</div>
 
-						<div class="form-group div-with-20-percent-width-with-margin-10">
+						<div class="form-group div-with-14-percent-width-with-margin-6">
 						<?php
 							echo form_label('Base KM Amount','base_km_amount'); 
 					    		echo form_input(array('name'=>'base_km_amount','class'=>'form-control','id'=>'base_km_amount','value'=>@$base_km_amount));
 						?>
 						</div>
 
-						<div class="form-group div-with-20-percent-width-with-margin-10">
+						<div class="form-group div-with-14-percent-width-with-margin-6">
 						<?php
 							echo form_label('Adt KM','adt_km'); 
 					    		echo form_input(array('name'=>'adt_km','class'=>'form-control','id'=>'adt_km','value'=>@$adt_km));
 						?>
 						</div>
 
-						<div class="form-group div-with-20-percent-width-with-margin-10">
+						<div class="form-group div-with-14-percent-width-with-margin-6">
+						<?php
+							echo form_label('Adt KM Rate','adt_km_rate'); 
+					    		echo form_input(array('name'=>'adt_km_rate','class'=>'form-control','id'=>'adt_km_rate','value'=>@$adt_km_rate));
+						?>
+						</div>
+
+						<div class="form-group div-with-14-percent-width-with-margin-6">
 						<?php
 							echo form_label('Adt KM Amount','adt_km_amount'); 
 					    		echo form_input(array('name'=>'adt_km_amount','class'=>'form-control','id'=>'adt_km_amount','value'=>@$adt_km_amount));
 						?>
 						</div>
 
+						<div class="form-group div-with-14-percent-width-with-margin-6">
+						<?php
+							echo form_label('Total Amount','total_km_amount'); 
+					    		echo form_input(array('name'=>'total_km_amount','class'=>'form-control','id'=>'total_km_amount','value'=>@$total_km_amount));
+							
+						?>
+						</div>
 
-						<div class="form-group div-with-20-percent-width-with-margin-10">
+						<div class="div-with-3-percent-width-with-margin-10">
+							<div class=" form-group margin-top-23-px totamount-radio-container1">
+							<?php echo form_radio(array('name' => 'km_hr','id' => 'km_radio')); 
+							?>
+							</div>
+						</div>
+					</div>
+
+					<div class="row-source-100-percent-width-with-margin-8 vehicle-hr-row">
+
+						
+
+						<div class="form-group div-with-14-percent-width-with-margin-6">
 						<?php
 							echo form_label('Base HR','base_hr'); 
 					    		echo form_input(array('name'=>'base_hr','class'=>'form-control','id'=>'base_hr','value'=>@$base_hr));
 						?>
 						</div>
 
-						<div class="form-group div-with-20-percent-width-with-margin-10">
+						<div class="form-group div-with-14-percent-width-with-margin-6">
 						<?php
 							echo form_label('Base HR Amount','base_hr_amount'); 
 					    		echo form_input(array('name'=>'base_hr_amount','class'=>'form-control','id'=>'base_hr_amount','value'=>@$base_hr_amount));
 						?>
 						</div>
 
-						<div class="form-group div-with-20-percent-width-with-margin-10">
+						<div class="form-group div-with-14-percent-width-with-margin-6">
 						<?php
 							echo form_label('Adt HR','adt_hr'); 
 					    		echo form_input(array('name'=>'adt_hr','class'=>'form-control','id'=>'adt_hr','value'=>@$adt_hr));
 						?>
 						</div>
 
-						<div class="form-group div-with-20-percent-width-with-margin-10">
+						<div class="form-group div-with-14-percent-width-with-margin-6">
+						<?php
+							echo form_label('Adt HR Rate','adt_hr_rate'); 
+					    		echo form_input(array('name'=>'adt_hr_rate','class'=>'form-control','id'=>'adt_hr_rate','value'=>@$adt_hr_rate));
+						?>
+						</div>
+
+						<div class="form-group div-with-14-percent-width-with-margin-6">
 						<?php
 							echo form_label('Adt HR Amount','adt_hr_amount'); 
 					    		echo form_input(array('name'=>'adt_hr_amount','class'=>'form-control','id'=>'adt_hr_amount','value'=>@$adt_hr_amount));
 						?>
 						</div>
+
+						<div class="form-group div-with-14-percent-width-with-margin-6">
+						<?php
+							echo form_label('Total Amount','total_hr_amount'); 
+					    		echo form_input(array('name'=>'total_hr_amount','class'=>'form-control','id'=>'total_hr_amount','value'=>@$total_hr_amount));
+						?>
+						</div>
+
+						<div class="div-with-3-percent-width-with-margin-10">
+							<div class=" form-group margin-top-23-px totamount-radio-container1">
+							<?php echo form_radio(array('name' => 'km_hr','id' => 'hr_radio')); 
+							?>
+							</div>
+						</div>
+					</div>
+
+					<div class="row-source-100-percent-width-with-margin-8">
+
+						<div class="form-group div-with-14-percent-width-with-margin-6">
+						<?php
+							echo form_label('Driver Bata','driver_bata'); 
+					    		echo form_input(array('name'=>'driver_bata','class'=>'form-control','id'=>'driver_bata','value'=>@$driver_bata));
+						?>
+						</div>
+
+						<div class="form-group div-with-14-percent-width-with-margin-6">
+						<?php
+							echo form_label('Night Halt Charge','night_halt_charge'); 
+					    		echo form_input(array('name'=>'night_halt_charge','class'=>'form-control','id'=>'night_halt_charge','value'=>@$night_halt_charge));
+						?>
+						</div>
+
 
 						<?php
 						if($trip_expenses){
@@ -319,10 +437,14 @@
 							$id = "expense".$expense['value'];
 						?>
 				
-						<div class="form-group div-with-20-percent-width-with-margin-10">
+						<div class="form-group div-with-14-percent-width-with-margin-6">
 						<?php
-							echo form_label($expense['description'],$expense['value']); 
-					    		echo form_input(array('name'=>$name,'class'=>'form-control trip-expense-input','id'=>$id,'value'=>''));
+							$label = $expense['description'];
+							$title = $expense['description'];
+							if(strlen($label) > 14)
+								$label = substr($label,0,14)."..";
+							echo form_label($label); 
+					    		echo form_input(array('name'=>$name,'class'=>'form-control trip-expense-input','id'=>$id,'value'=>'','title'=>$title));
 						?>
 						</div>
 
@@ -332,31 +454,41 @@
 						?>
 
 
-						<div class="form-group div-with-20-percent-width-with-margin-10">
+						<div class="form-group div-with-14-percent-width-with-margin-6">
 						<?php
 							echo form_label('Unit Amount','vehicle_unit_amount'); 
 					    		echo form_input(array('name'=>'vehicle_unit_amount','class'=>'form-control','id'=>'vehicle_unit_amount','value'=>@$vehicle_unit_amount));
 						?>
 						</div>
 
-						<div class="form-group div-with-20-percent-width-with-margin-10">
+						<div class="form-group div-with-14-percent-width-with-margin-6">
 						<?php
 							echo form_label('Advance','vehicle_advance_amount'); 
 					    		echo form_input(array('name'=>'vehicle_advance_amount','class'=>'form-control','id'=>'vehicle_advance_amount','value'=>@$vehicle_advance_amount));
 						?>
 						</div>
 
-						<div class="form-group div-with-20-percent-width-with-margin-10">
+						<div class="form-group div-with-14-percent-width-with-margin-6">
 						<?php
-							echo form_label('Tax','vehicle_tax'); 
-					    		echo form_input(array('name'=>'vehicle_tax','class'=>'form-control','id'=>'vehicle_tax','value'=>@$vehicle_tax));
+							echo form_label('Tax','vehicle_tax_group_id'); 
+							$name = $id = 'vehicle_tax_group_id';
+							$class = 'form-control';
+							$msg = "Select";
+							echo $this->form_functions->populate_dropdown($name,@$taxes,@$vehicle_tax_group_id,$class,$id,$msg); 
+						?>
+						</div>
+
+						<div class="form-group div-with-14-percent-width-with-margin-6">
+						<?php
+							echo form_label('Tax Amount','vehicle_tax_amount'); 
+					    		echo form_input(array('name'=>'vehicle_tax_amount','class'=>'form-control','id'=>'vehicle_tax_amount','value'=>@$vehicle_tax_amount,'disabled'=>'disabled'));
 						?>
 						</div>
 		
-						<div class="form-group div-with-20-percent-width-with-margin-10">
+						<div class="form-group div-with-14-percent-width-with-margin-6">
 						<?php
 							echo form_label('Total Amount','vehicle_total_amount'); 
-					    		echo form_input(array('name'=>'vehicle_total_amount','class'=>'form-control','id'=>'vehicle_total_amount','value'=>@$vehicle_total_amount));
+					    		echo form_input(array('name'=>'vehicle_total_amount','class'=>'form-control','id'=>'vehicle_total_amount','value'=>@$vehicle_total_amount,'disabled'=>'disabled'));
 						?>
 						</div>
 					</div>

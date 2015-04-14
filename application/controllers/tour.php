@@ -14,6 +14,7 @@ class Tour extends CI_Controller {
 		$this->load->model('trip_booking_model');
 		$this->load->model('vehicle_model');
 		$this->load->model('package_model');
+		$this->load->model('account_model');
 
 		$this->load->library('tour_cart');
 		no_cache();
@@ -54,8 +55,6 @@ class Tour extends CI_Controller {
 				$this->getItinerary();
 			}elseif($param1 == 'save_cart'){
 				$this->save_cart($param2);
-			}elseif($param1 == 'voucher'){
-				$this->voucher($param2);
 			}else{
 				$this->notFound();
 			}
@@ -863,84 +862,7 @@ class Tour extends CI_Controller {
 	//-----------------------------------------------------------------------------------------
 
 
-	//--------------------------------voucher module functins start----------------------------
-	public function voucher($trip_id='')
-	{
-		if($this->session_check()==true) {
-
-			$trip = $this->tour_model->getTrip($trip_id);
-			if($trip){//valid trip
-
-				$data['header'] = $this->set_tour_header($trip_id);
-
-				$data['tour_arrays'] = $this->tour_model->getTourValues($trip_id);
-				
-
-				//print_r($data['header']);exit;
-				$data['tabs'] = $this->set_up_voucher_tabs('v_tab');
-				$data['trip_expenses'] = $this->getTripExpenses();
-				//print_r($data['trip_expenses']);exit;
-				$data['trip_id'] = gINVALID;
-				$data['title']="Tour Booking | ".PRODUCT_NAME;  
-				$page='user-pages/tour-voucher';
-				$this->load_templates($page,$data);
-			}else{
-				$this->notFound();
-			}
-
-			
-		}else{
-			$this->notAuthorized();
-		}
-	}
-
 	
-
-	public function getTripExpenses($ajax='NO')
-	{
-		if(isset($_REQUEST['ajax']))
-			$ajax=$_REQUEST['ajax'];
-
-		$expense = $this->tour_model->getTripExpenses();
-
-		if($expense==gINVALID){
-			if($ajax=='NO'){
-				return false;
-			}else{
-				echo 'false';
-			}
-		}else{
-			if($ajax=='NO'){
-				return $expense;
-			}else{
-				header('Content-Type: application/json');
-				echo json_encode($expense);
-			}
-		}
-	}
-
-
-	function set_up_voucher_tabs($tab_active='v_tab'){
-			
-		$tabs['v_tab'] = array('class'=>'','tab_id'=>'tab_1','text'=>'Vehicle',
-						'content_class'=>'tab-pane');
-		$tabs['a_tab'] = array('class'=>'','tab_id'=>'tab_2','text'=>'Accommodation',
-						'content_class'=>'tab-pane');
-		$tabs['s_tab'] = array('class'=>'','tab_id'=>'tab_3','text'=>'Services',
-						'content_class'=>'tab-pane');
-
-		if(array_key_exists($tab_active, $tabs)) {
-			$tabs[$tab_active]['class'] = 'active';
-			$tabs[$tab_active]['content_class'] = 'tab-pane active';
-		}else{
-			$tabs['t_tab']['class'] = 'active';
-			$tabs['t_tab']['content_class'] = 'tab-pane active';
-		}
-
-		return $tabs;
-	}
-
-	//-------------------------------voucher module functins end----------------------------------
 
 
 	//----------------------common functions---------------------------------------------------

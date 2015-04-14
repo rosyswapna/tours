@@ -58,6 +58,9 @@ $route['login/(:any)'] = 'login/$0';
 $route['front-desk/tour'] = 'tour/index';
 $route['front-desk/tour/(:any)'] = 'tour/index';
 
+$route['front-desk/voucher'] = 'voucher/index';
+$route['front-desk/voucher/(:any)'] = 'voucher/index';
+
 $route['front-desk/hotel'] = 'hotel/index';
 $route['front-desk/hotel/(:any)'] = 'hotel/index';
 

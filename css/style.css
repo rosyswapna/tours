@@ -217,6 +217,26 @@ width:22%;
 margin:10px;
 }
 
+.div-with-14-percent-width-with-margin-6{
+width: 14%;
+margin: 6px;
+float: left;
+}
+
+.div-with-17-percent-width-with-margin-10{
+width: 17%;
+margin: 10px;
+float: left;
+}
+
+.div-with-3-percent-width-with-margin-10{
+width: 3%;
+margin: 10px;
+float: left;
+}
+
+
+
 .div-with-46-percent-width-with-margin-10{
 float:left;
 width:46%;

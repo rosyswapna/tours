@@ -5,9 +5,14 @@ $(document).ready(function(){
 
 	//if edit tour voucher elements (tour voucher form)
 	var pathname = window.location.pathname.split("/");
-	if(pathname[2]=="tour" && pathname[3]=="voucher" && pathname[4] > 0){ 
+	if(pathname[2]=="voucher" && pathname[3]=="add" && pathname[4] > 0){ 
 	
-		build_voucher_table(data='');
+		$.post(base_url+'/tour/getFromVoucher',{},function(data){
+			if(data!=false){
+				data=jQuery.parseJSON(data);
+				build_voucher_table(data);
+			}
+		});
 	
 	}
 
@@ -28,7 +33,7 @@ $(document).ready(function(){
 		setTariffAttributes();
 	});
 
-	//calculate total km readming
+	//calculate total km reading
 	$('.voucher-tabs #start_km,.voucher-tabs #end_km').on('click keyup blur',function(e) {
 		setTotalKM();
 		$(".voucher-tabs #total_km").trigger( "blur" );
@@ -36,8 +41,8 @@ $(document).ready(function(){
 	});
 
 	$('.voucher-tabs #vehicle_start_time,.voucher-tabs #vehicle_end_time,.voucher-tabs #vehicle_from_date,.voucher-tabs #vehicle_to_date').on('click blur',function(e) {
+
 		setTotalHR();
-		$(".voucher-tabs #total_hr").trigger( "blur" );
 		
 	});
 
@@ -50,6 +55,16 @@ $(document).ready(function(){
 		setHR_tariff();
 	});
 
+	
+	$(document).on('keyup', ".trip-expense-input,#driver_bata,#night_halt_charge",function () {
+		checkTotAmount();
+	});
+
+	$(document).on('keyup', "#vehicle_unit_amount,#vehicle_advance_amount",function () {
+		setTotalAmount();
+	});
+
+
 
 	//calculating tax amount on changing tax group from voucher vehicle tab
 	$(".voucher-tabs #vehicle_tax_group_id").change(function(){
@@ -60,20 +75,29 @@ $(document).ready(function(){
 		function(data){
 
 			$('.voucher-tabs #vehicle_tax_amount').val(data);
+
+			setTotalAmount();
 		});
+
+		
 	});
+
+
+	
 
 	
 	//add vehicle itinerary for voucher======================================
 	$('#add-voucher-vehicle').on('click',function(){
 		
-		var from_date 		= $('.voucher-tabs #vehicle_from_date').val();
-		var to_date 		= $('.voucher-tabs #vehicle_to_date').val();
-		var start_time 		= $('.voucher-tabs #vehicle_start_time').val();
-		var end_time 		= $('.voucher-tabs #vehicle_end_time').val();
+		var from_date 			= $('.voucher-tabs #vehicle_from_date').val();
+		var to_date 			= $('.voucher-tabs #vehicle_to_date').val();
+		var start_time 			= $('.voucher-tabs #vehicle_start_time').val();
+		var end_time 			= $('.voucher-tabs #vehicle_end_time').val();
 		var vehicle_id 			= $('.voucher-tabs #vehicle_id').val();
 		var driver_id 			= $('.voucher-tabs #driver_id').val();
 		var vehicle_tariff_id		= $('.voucher-tabs #vehicle_tariff_id').val();
+
+		var no_of_days			= $('.voucher-tabs #no_of_days').val();
 	
 		var start_km 			= $('.voucher-tabs #start_km').val();
 		var end_km 			= $('.voucher-tabs #end_km').val();
@@ -81,19 +105,57 @@ $(document).ready(function(){
 		var base_km 			= $('.voucher-tabs #base_km').val();
 		var base_km_amount 		= $('.voucher-tabs #base_km_amount').val();
 		var adt_km 			= $('.voucher-tabs #adt_km').val();
+		var adt_km_rate 		= $('.voucher-tabs #adt_km_rate').val();
 		var adt_km_amount 		= $('.voucher-tabs #adt_km_amount').val();
+		var total_km_amount 		= $('.voucher-tabs #total_km_amount').val();
+		
 
 		var base_hr 			= $('.voucher-tabs #base_hr').val();
 		var base_hr_amount 		= $('.voucher-tabs #base_hr_amount').val();
 		var adt_hr 			= $('.voucher-tabs #adt_hr').val();
 		var adt_hr_amount 		= $('.voucher-tabs #adt_hr_amount').val();
+		var total_hr_amount 		= $('.voucher-tabs #total_hr_amount').val();
 
 		var unit_amount 		= $('.voucher-tabs #vehicle_unit_amount').val();
 		var advance_amount	 	= $('.voucher-tabs #vehicle_advance_amount').val();
 		var tax_group_id	 	= $('.voucher-tabs #vehicle_tax_group_id').val();
 		var tax_amount 			= $('.voucher-tabs #vehicle_tax_amount').val();
 		var total_amount	 	= $('.voucher-tabs #vehicle_total_amount').val();
+		var km_hr = 1;
 
+		var driver_bata			= $('.voucher-tabs #driver_bata').val();
+		var night_halt_charge		= $('.voucher-tabs #night_halt_charge').val();
+
+		var tariffAmtClass 		= $('.vehicletariffamount').attr('amount-class-to-be-selected');
+
+		vehicle_no = $('.voucher-tabs #vehicle_id option:selected').text();
+		vehicle_model = $('.voucher-tabs #vehicle_model_id option:selected').text();
+		var narration 			= 'Travel : '+vehicle_model+" ( "+vehicle_no+" ) ";
+		if(tariffAmtClass == 'totalkmamount'){
+			km_hr = 1;
+
+			narration += " Minimum "+base_km+"KM @ Rs. "+total_km_amount+" each day for "+no_of_days+" day(s)";
+			if(Number(adt_km) > 0){
+				narration += " + Additional "+adt_km+"KM @ Rs."+adt_km_rate+"/KM";
+			}
+			
+		}else{
+			km_hr = 0;
+
+			narration += " Minimum "+base_hr+"HR @ Rs. "+total_hr_amount+" each day for "+no_of_days+" day(s)";
+			if(Number(adt_hr) > 0){
+				narration += " + Additional "+adt_hr+"HR @ Rs."+adt_hr_rate+"/HR";
+			}
+		}
+
+		if(Number(driver_bata) > 0){
+			narration += " + Driver Bata Rs."+driver_bata+" each day for "+no_of_days+" day(s)";
+		}
+
+		if(Number(night_halt_charge) > 0){
+			narration += " + Night Halt Rs "+night_halt_charge+" each night ";
+		}
+		
 		//trip expense
 		var expense = {};
 		$(".voucher-tabs .trip-expense-input").each(function(){
@@ -101,6 +163,10 @@ $(document).ready(function(){
 			expense_code 	= $(this).attr("id");
 			expense[expense_code] = expense_amount;
 			expense_name = $("label[for='"+$(this).attr('id')+"']").text();
+			if(Number(expense_amount) > 0){
+				narration += " + "+expense_name+" Rs. "+expense_amount;
+			}
+			
 		});
 
 		var dataArr = {table:"trip_voucher_vehicles",
@@ -111,7 +177,11 @@ $(document).ready(function(){
 				base_hr:base_hr, base_hr_amount:base_hr_amount, adt_hr:adt_hr,
 				adt_hr_amount:adt_hr_amount, driver_bata:driver_bata,
 				night_halt_charge:night_halt_charge,trip_expense:expense,unit_amount:unit_amount,
-				advance_amount:advance_amount, tax_group_id:tax_group_id,tax_amount:tax_amount};
+				advance_amount:advance_amount, tax_group_id:tax_group_id,tax_amount:tax_amount,
+				narration:narration
+				};
+
+		
 		add_voucher_itinerary(dataArr);
 		
 	});
@@ -211,7 +281,8 @@ $(document).ready(function(){
 			var total = timeDifference(fromdate,start,todate,end);
 			total=total.split('-');
 			$('.voucher-tabs #total_hr').val(total[1]+':'+total[2]);
-			no_of_days = total[0];
+			$(".voucher-tabs #no_of_days").val(total[0]);
+			$(".voucher-tabs #total_hr").trigger( "blur" );
 		}
 	}
 
@@ -276,22 +347,80 @@ $(document).ready(function(){
 		setHR_tariff()	
 	}
 
-	function compareTotalAmounts(){//not working
+	function compareTotalAmounts(){
 		var total_km_amount=$('.voucher-tabs #total_km_amount').val();
 		var total_hr_amount=$('.voucher-tabs #total_hr_amount').val();
 
 		if(total_km_amount != '' && total_hr_amount != ''){
-			if(Number(total_km_amount) > Number(total_hr_amount)){
-				$('.voucher-tabs #km_radio').trigger('click');
+
+			if(Number(total_hr_amount)>Number(total_km_amount)){
+				setHRadio();
 			}else{
-				$('.voucher-tabs #hr_radio').trigger('click');
+				setKMRadio();
 			}
+			setUnitAmount();
+
 		}
+		
+	}
+
+	function setKMRadio()
+	{
+		$('.totamount-radio-container1 > .iradio_minimal > .iCheck-helper').trigger('click');
+		$('.vehicletariffamount').attr('amount-class-to-be-selected','totalkmamount');
+	}
+
+	function setHRadio()
+	{
+		$('.totamount-radio-container2 > .iradio_minimal > .iCheck-helper').trigger('click');
+		$('.vehicletariffamount').attr('amount-class-to-be-selected','totalhramount');
 	}
 
 
+	function setUnitAmount()
+	{
+		var tariffAmtClass = $('.vehicletariffamount').attr('amount-class-to-be-selected');
+		
+		var unitAmt = 0;
+		if(tariffAmtClass != '')
+		{
+			var tariff_amount = $('.'+tariffAmtClass).val();
+			var driver_bata = $('#driver_bata').val();
+			var night_halt_charge = $("#night_halt_charge").val();
+
+			unitAmt = Number(tariff_amount) + Number(driver_bata) + Number(night_halt_charge);
+
+			$(".voucher-tabs .trip-expense-input").each(function(){
+				expense_amount 	= $(this).val();
+				unitAmt += Number(expense_amount);
+			});
+
+			
+		}
+
+		$("#vehicle_unit_amount").val(unitAmt);
+		setTotalAmount();
+	}
+
+	function setTotalAmount(){
+		var unitAmt = Number($("#vehicle_unit_amount").val());
+		var advAmt = Number($("#vehicle_advance_amount").val());
+		var taxAmt = Number($("#vehicle_tax_amount").val());
+
+		totalAmt = unitAmt - advAmt + taxAmt;
+		$("#vehicle_total_amount").val(totalAmt);
+	}
+
+	function checkTotAmount(){
+		setUnitAmount();
+		setTotalAmount();
+	}
+	
+
+
 	function add_voucher_itinerary(dataArr){
-		$.post(base_url+'/voucher/addToVoucher',dataArr,function(data){
+		
+		$.post(base_url+"/voucher/addToVoucher",dataArr,function(data){
 			if(data!=false){
 
 				data=jQuery.parseJSON(data);
@@ -299,25 +428,46 @@ $(document).ready(function(){
 			}
 		});
 	}
+	
+	
 
 	//voucher itinerary table
 	function build_voucher_table(data){
 	
-		var table = '';
-
-		if(table != ''){
+		reset_voucher_table();
+		if(data != 'false' && data!=''){
+			var table = '<tr>';
+			for(i=0;i < data.th.length;i++){
+				table += '<th '+data.th[i].attr+'>'+data.th[i].label+'</th>';
+			}
+			table += '</tr>';
+	
+			$.each( data.tr, function( key, tr ) {
+				table += '<tr>';
+				$.each(tr, function( key, td ) {
+					table += '<td>'+td+'</td>';
+				});
+				table += '</tr>';
+			});
+			
+			$("#voucher-tbl").append(table);
 			$("#voucher-itinerary-div").removeClass("hide-me");
+			
+		
+	
 		}else{
 			$( "#voucher-itinerary-div" ).addClass("hide-me");
 		}
 
-		$("#voucher-itinerary-tbl").append(table);
+			
+
+		
 	}
 
 	function reset_voucher_table()
 	{
-		$("#voucher-itinerary-tbl").find("tr").remove();
-		$( "#voucher-itinerary-tbl" ).addClass("hide-me");
+		$("#voucher-tbl").find("tr").remove();
+		$( "#voucher-itinerary-div" ).addClass("hide-me");
 	}
 
 	function timeDifference(fromdate,fromtime,todate,totime){ 

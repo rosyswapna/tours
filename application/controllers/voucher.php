@@ -16,22 +16,26 @@ class Voucher extends CI_Controller {
 		$this->load->model('package_model');
 		$this->load->model('account_model');
 
-		//$this->load->library('voucher_cart');
+		$this->load->library('tour_voucher');
 		no_cache();
 	}
 
 	public function index(){
-		$param1=$this->uri->segment(2);
-		$param2=$this->uri->segment(3);
-		$param3=$this->uri->segment(4);
-		$param4=$this->uri->segment(5);
+		$param1=$this->uri->segment(3);
+		$param2=$this->uri->segment(4);
+		$param3=$this->uri->segment(5);
+		$param4=$this->uri->segment(6);
 		if($this->session_check()==true) {
 			if($param1==''){
 				$data['title']="Home | ".PRODUCT_NAME;    
 	       			$page='user-pages/user_home';
 				$this->load_templates($page,$data);
-			}elseif($param1=='voucher'){	
-				$this->voucher($param2);
+			}elseif($param1=='add'){	
+				$this->add($param2);
+			}elseif($param1 == 'addToVoucher'){
+				$this->addToVoucher();
+			}elseif($param1 == 'getFromVoucher'){
+				$this->getFromVoucher();
 			}else{
 				$this->notFound();
 			}
@@ -42,8 +46,9 @@ class Voucher extends CI_Controller {
 	}
 
 	//--------------------------------voucher module functins start----------------------------
-	public function voucher($trip_id='')
+	public function add($trip_id='')
 	{
+		$this->tour_voucher->destroy();
 		if($this->session_check()==true) {
 
 			$trip = $this->tour_model->getTrip($trip_id);
@@ -104,8 +109,20 @@ class Voucher extends CI_Controller {
 		}
 	}
 
+	function getFromVoucher(){
+		$voucher = $this->tour_voucher->contents();
+		$this->build_itinerary_data($voucher,$ajax = 'YES');
+	}
+
+
 	function addToVoucher()//from ajax call
-	{
+	{	//echo "<pre>";print_r($_REQUEST);echo "</pre>";exit;
+
+		//create cart
+		if($this->tour_voucher->total_itineraries() == 0){
+			$this->tour_voucher->create();
+		}
+
 		if(isset($_REQUEST['table'])){
 			$tble = $_REQUEST['table'];
 			$fields = $_REQUEST;
@@ -114,12 +131,15 @@ class Voucher extends CI_Controller {
 			unset($fields['table']);
 			$fields['id'] = gINVALID;
 			$data[$tble] = $fields;
-			$this->tour_voucher->insert($data);
+			
+			$this->tour_voucher->insert($data);		
 				
 		}
-		$cart = $this->tour_cart->contents();
-		$this->build_itinerary_data($cart,$ajax = 'YES');
+		$voucher = $this->tour_voucher->contents();
+		$this->build_itinerary_data($voucher,$ajax = 'YES');
 	}
+
+	
 
 	//----------------------
 
@@ -141,6 +161,54 @@ class Voucher extends CI_Controller {
 		
 	}
 
+
+	function build_itinerary_data($voucher,$ajax = 'NO'){
+
+		//echo "<pre>";print_r($voucher);echo "</pre>";exit;
+		if($voucher){			
+			$tableData['th'] = array(
+					array('label'=>'SlNo','attr'=>'width="5%"'),
+					array('label'=>'Date','attr'=>'width="10%"'),
+					array('label'=>'Particulars','attr'=>'width="55%"'),
+					array('label'=>'Unit Amt','attr'=>'width="10%"'),
+					array('label'=>'Tax','attr'=>'width="10%"'),
+					array('label'=>'Total','attr'=>'width="10%"'),
+					);
+			$tableData['tr'] = array();
+			$slno =1;
+			foreach($voucher as $table=>$rows){
+				
+				//echo "<pre>";print_r($rows);echo "</pre>";exit;
+				foreach($rows as $row){
+					$totAmt = $row['unit_amount'] + $row['tax_amount'] - $row['advance_amount'];
+					$tr = array($slno,
+						$row['from_date'],
+						$row['narration'],
+						number_format($row['unit_amount'],2),
+						number_format($row['tax_amount'],2),
+						number_format($totAmt,2)
+						);
+					array_push($tableData['tr'],$tr);
+					$slno++;
+				}	
+			} 
+
+			//echo "<pre>";print_r($tableData);echo "</pre>";exit;
+
+			if($ajax == 'YES'){
+				echo json_encode($tableData);
+			}else{
+				return $tableData;
+			}
+			
+		}else{
+			if($ajax == 'YES'){			
+				echo 'false';
+			}else{
+				return false;
+			}
+		}
+	}
 
 	function set_up_voucher_tabs($tab_active='v_tab'){
 			

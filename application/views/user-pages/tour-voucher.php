@@ -154,7 +154,7 @@
 
 	<!--itinerary table starts here ,table illed by jquery-->
 	<div class="box-body table-responsive no-padding hide-me" id="voucher-itinerary-div">
-		<table id="voucher-itinerary-tbl" class="table table-hover table-bordered table-with-20-percent-td">
+		<table id="voucher-tbl" class="table table-hover table-bordered">
 
 		</table>
 
@@ -288,6 +288,13 @@
 			
 						<div class="form-group div-with-14-percent-width-with-margin-6">
 						<?php
+							echo form_label('No Of Days','no_of_days'); 
+					    		echo form_input(array('name'=>'no_of_days','class'=>'form-control','id'=>'no_of_days','value'=>@$no_of_days,'readonly'=>'readonly'));
+						?>
+						</div>
+			
+						<div class="form-group div-with-14-percent-width-with-margin-6">
+						<?php
 							echo form_label('Total KM','total_km'); 
 					    		echo form_input(array('name'=>'total_km','class'=>'form-control','id'=>'total_km','value'=>@$total_km,'readonly'=>'readonly'));
 						?>
@@ -345,13 +352,13 @@
 						<div class="form-group div-with-14-percent-width-with-margin-6">
 						<?php
 							echo form_label('Total Amount','total_km_amount'); 
-					    		echo form_input(array('name'=>'total_km_amount','class'=>'form-control','id'=>'total_km_amount','value'=>@$total_km_amount));
+					    		echo form_input(array('name'=>'total_km_amount','class'=>'form-control totalkmamount','id'=>'total_km_amount','value'=>@$total_km_amount));
 							
 						?>
 						</div>
 
 						<div class="div-with-3-percent-width-with-margin-10">
-							<div class=" form-group margin-top-23-px totamount-radio-container1">
+							<div class="form-group margin-top-23-px totamount-radio-container1">
 							<?php echo form_radio(array('name' => 'km_hr','id' => 'km_radio')); 
 							?>
 							</div>
@@ -400,12 +407,12 @@
 						<div class="form-group div-with-14-percent-width-with-margin-6">
 						<?php
 							echo form_label('Total Amount','total_hr_amount'); 
-					    		echo form_input(array('name'=>'total_hr_amount','class'=>'form-control','id'=>'total_hr_amount','value'=>@$total_hr_amount));
+					    		echo form_input(array('name'=>'total_hr_amount','class'=>'form-control totalhramount','id'=>'total_hr_amount','value'=>@$total_hr_amount));
 						?>
 						</div>
 
 						<div class="div-with-3-percent-width-with-margin-10">
-							<div class=" form-group margin-top-23-px totamount-radio-container1">
+							<div class=" form-group margin-top-23-px totamount-radio-container2">
 							<?php echo form_radio(array('name' => 'km_hr','id' => 'hr_radio')); 
 							?>
 							</div>
@@ -457,7 +464,7 @@
 						<div class="form-group div-with-14-percent-width-with-margin-6">
 						<?php
 							echo form_label('Unit Amount','vehicle_unit_amount'); 
-					    		echo form_input(array('name'=>'vehicle_unit_amount','class'=>'form-control','id'=>'vehicle_unit_amount','value'=>@$vehicle_unit_amount));
+					    		echo form_input(array('name'=>'vehicle_unit_amount','class'=>'form-control vehicletariffamount','id'=>'vehicle_unit_amount','value'=>@$vehicle_unit_amount,'amount-class-to-be-selected'=>''));
 						?>
 						</div>
 
@@ -481,7 +488,7 @@
 						<div class="form-group div-with-14-percent-width-with-margin-6">
 						<?php
 							echo form_label('Tax Amount','vehicle_tax_amount'); 
-					    		echo form_input(array('name'=>'vehicle_tax_amount','class'=>'form-control','id'=>'vehicle_tax_amount','value'=>@$vehicle_tax_amount,'disabled'=>'disabled'));
+					    		echo form_input(array('name'=>'vehicle_tax_amount','class'=>'form-control','id'=>'vehicle_tax_amount','value'=>@$vehicle_tax_amount,'readonly'=>'readonly'));
 						?>
 						</div>
 		

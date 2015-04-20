@@ -368,8 +368,9 @@ ALTER TABLE `trips`  ADD `package_id` INT(11) NOT NULL AFTER `id`;
 
 
 -----------20 Apr 2015----------------------
-ALTER TABLE `trip_vouchers`  ADD `trip_id` INT(11) NOT NULL AFTER `voucher_number`,  ADD INDEX (`trip_id`) 
+ALTER TABLE `trip_vouchers`  ADD `trip_id` INT(11) NOT NULL AFTER `voucher_number`,  ADD INDEX (`trip_id`) ;
 
-
+ALTER TABLE `trip_voucher_services`  ADD `narration` TEXT NOT NULL AFTER `tax_amount`;
+ALTER TABLE `trip_voucher_accommodation`  ADD `narration` TEXT NOT NULL AFTER `tax_amount`;
 
 

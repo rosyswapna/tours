@@ -5,8 +5,9 @@ $(document).ready(function(){
 
 	//if edit tour voucher elements (tour voucher form)
 	var pathname = window.location.pathname.split("/");
+	var trip_id ='';
 	if(pathname[2]=="voucher" && pathname[3]=="add" && Number(pathname[4]) > 0){ 
-	
+		trip_id = Number(pathname[4]);
 		$.post(base_url+'/voucher/getFromVoucher',{},function(data){
 			if(data!=false){
 				data=jQuery.parseJSON(data);
@@ -179,6 +180,108 @@ $(document).ready(function(){
 				night_halt_charge:night_halt_charge,trip_expense:expense,unit_amount:unit_amount,
 				advance_amount:advance_amount, tax_group_id:tax_group_id,tax_amount:tax_amount,
 				narration:narration
+				};
+
+		
+		add_voucher_itinerary(dataArr);
+		
+	});
+
+
+
+
+	//================================accommodation tab=============================
+	//get hotel rooms on change hotel
+	$('#acmd_hotel_id').on('change',function(){
+		var hotel_id = $(this).val();
+		getHotelRooms(hotel_id);
+	});
+
+	$('#acmd_room_type_id').on('change',function(){
+		var room_type_id = $(this).val();
+		var hotel_id = $('#acmd_hotel_id').val();
+		var _date = $('#acmd_from_date').val();
+		getRoomTariff(hotel_id,room_type_id,_date);
+
+		//getRoomAttributesNMeals();
+		
+	});
+
+
+	$('.voucher-tabs #acmd_checkin,.voucher-tabs #acmd_checkout,.voucher-tabs #acmd_from_date,.voucher-tabs #acmd_to_date').on('click blur',function(e) {
+
+		setAccommodationDays();
+		
+	});
+
+	$(".voucher-tabs #acmd_days").on( "blur",function(){
+		setAccommodationTotals();
+	});
+
+
+
+	$('#add-voucher-accommodation').on('click',function(){
+		
+		var from_date 			= $('.voucher-tabs #acmd_from_date').val();
+		var to_date 			= $('.voucher-tabs #acmc_to_date').val();
+		var checkin 			= $('.voucher-tabs #acmd_checkin').val();
+		var checkout 			= $('.voucher-tabs #acmd_checkout').val();
+		var hotel_id 			= $('.voucher-tabs #acmd_hotel_id').val();
+		var room_type_id 		= $('.voucher-tabs #acmd_room_type_id').val();
+		var no_of_days			= $('.voucher-tabs #acmd_days').val();
+		var room_tariff_amount		= $('.voucher-tabs #room_tariff_amt').val();
+	
+		var unit_amount 		= $('.voucher-tabs #acmd_unit_amount').val();
+		var advance_amount	 	= $('.voucher-tabs #acmd_advance_amount').val();
+		var tax_amount 			= $('.voucher-tabs #acmd_tax_amount').val();
+		var total_amount	 	= $('.voucher-tabs #acmd_total_amount').val();
+
+		hotel_name = $('.voucher-tabs #acmd_hotel_id option:selected').text();
+		room_type_name = $('.voucher-tabs #acmd_room_type_id option:selected').text();
+		
+		var narration 	= 'Accommodation : '+hotel_name+" - "+room_type_name;	
+		narration += " @ Rs "+room_tariff_amount+" per day for "+no_of_days+" day(s)";
+		narration += "( checkin :"+checkin+" - checkout : "+checkout+")";
+		
+		var dataArr = {table:"trip_voucher_accommodation",from_date:from_date,to_date:to_date,
+				checkin:checkin,checkout:checkout,hotel_id:hotel_id,room_type_id:room_type_id,
+				no_of_days:no_of_days,unit_amount:unit_amount,advance_amount:advance_amount,
+				tax_amount:tax_amount,narration:narration
+				};
+
+		
+		add_voucher_itinerary(dataArr);
+		
+	});
+
+
+
+	$('#add-voucher-service').on('click',function(){
+		
+		var from_date 			= $('.voucher-tabs #service_from_date').val();
+		var to_date 			= $('.voucher-tabs #service_to_date').val();
+		var checkin 			= $('.voucher-tabs #service_checkin').val();
+		var checkout 			= $('.voucher-tabs #service_checkout').val();
+		var service_id 			= $('.voucher-tabs #service_id').val();
+		var rate 			= $('.voucher-tabs #service_rate').val();
+		var quantity			= $('.voucher-tabs #service_qty_days').val();
+		var uom_id			= $('.voucher-tabs #service_uom_id').val();
+	
+		var unit_amount 		= $('.voucher-tabs #service_unit_amount').val();
+		var advance_amount	 	= $('.voucher-tabs #service_advance_amount').val();
+		var tax_amount 			= $('.voucher-tabs #service_tax_amount').val();
+		var total_amount	 	= $('.voucher-tabs #service_total_amount').val();
+
+		service_name = $('.voucher-tabs #service_id option:selected').text();
+		
+		var narration 	= 'Service : '+service_name;	
+		narration += " @ Rs "+rate+" per day for "+quantity+" day(s)";
+		
+		
+		var dataArr = {table:"trip_voucher_services",from_date:from_date,to_date:to_date,
+				checkin:checkin,checkout:checkout,service_id:service_id,rate:rate,
+				quantity:quantity,unit_amount:unit_amount,advance_amount:advance_amount,
+				tax_amount:tax_amount,narration:narration
 				};
 
 		
@@ -402,6 +505,7 @@ $(document).ready(function(){
 		setTotalAmount();
 	}
 
+	//for vehicle tab
 	function setTotalAmount(){
 		var unitAmt = Number($("#vehicle_unit_amount").val());
 		var advAmt = Number($("#vehicle_advance_amount").val());
@@ -537,6 +641,91 @@ $(document).ready(function(){
 		}
 	
 		return Number(hr_amount)+Number(min_amount);
+	}
+
+
+	//get hotel rooms for selected hotel and set room types list
+	function getHotelRooms(hotel_id,room_type_id=''){
+		var id ='#acmd_room_type_id';
+		$(id+' option').remove();
+		$(id).append($("<option ></option>").attr("value",'-1').text('--Select--'));
+		$.post(base_url+"/hotel/getHotelRooms",{hotel_id:hotel_id},
+		function(data){
+			if(data!='false'){
+				data=jQuery.parseJSON(data);
+				var selected="";
+				for(var i=0;i< data.length;i++){
+					$(id).append($("<option "+selected+"></option>").attr("value",data[i].room_type_id).text(data[i].room_type_name));
+				}
+		
+			}
+		});
+		
+	}
+
+	//get room tariff amount and assign to tariff amount field
+	function getRoomTariff(hotel_id,room_type_id,_date){
+	
+		$.post(base_url+"/hotel/getRoomTariff",{hotel_id:hotel_id,room_type_id:room_type_id,_date:_date},
+		function(data){
+			if(data!='false'){
+				data=jQuery.parseJSON(data);
+				$("#room_tariff_amt").val(data.amount);
+			}else{
+				$("#room_tariff_amt").val('');
+				alert('Room Tariff amount not updated');
+			}
+		});
+	}
+
+	function getRoomAttributesNMeals(){//not completed
+
+		var hotel_id = $("#acmd_hotel_id").val();
+		var room_type_id =  $("#acmd_room_type_id").val();
+		$.post(base_url+"/tour/getRoomAttributesNMealsPackage",{trip_id:trip_id,hotel_id:hotel_id,room_type_id:room_type_id},
+		function(data){
+			if(data!='false'){
+				data=jQuery.parseJSON(data);
+				
+			}
+		});
+	}
+	
+	function getMealsPackage(){
+	
+	}
+
+	function setAccommodationDays()
+	{
+		var start = $('.voucher-tabs #acmd_checkin').val();
+		var end = $('.voucher-tabs #acmd_checkout').val();
+		var fromdate=$('.voucher-tabs #acmd_from_date').val(); 
+		var todate=$('.voucher-tabs #acmd_to_date').val();
+		if(fromdate!='' && todate!='' && end!='' && start!=''){
+			var total = timeDifference(fromdate,start,todate,end);
+			total=total.split('-');
+			
+			$(".voucher-tabs #acmd_days").val(total[0]);
+			$(".voucher-tabs #acmd_days").trigger( "blur" );
+		}
+	}
+
+	function setAccommodationTotals(){
+		var no_days = $(".voucher-tabs #acmd_days").val();
+		if(no_days == '')
+			no_days = 1;
+		var tariff_amount = $("#room_tariff_amt").val();
+
+		unit_amount = Number(no_days)*Number(tariff_amount);
+
+		$("#acmd_unit_amount").val(unit_amount);
+		var adv_amount = $("#acmd_advance_amount").val();
+		var tax_amount = $("#acmd_tax_amount").val();
+
+		total_amount = unit_amount + Number(tax_amount) - Number(adv_amount);
+
+		$("#acmd_total_amount").val(total_amount);
+		
 	}
 
 

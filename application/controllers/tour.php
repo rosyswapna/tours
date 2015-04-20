@@ -856,6 +856,11 @@ class Tour extends CI_Controller {
 
 	}
 
+	function getRoomAttributesNMealsPackage()
+	{
+		
+	}
+
 
 	
 

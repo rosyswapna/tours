@@ -523,8 +523,8 @@
 					<div class="row-source-100-percent-width-with-margin-8">
 						<div class="form-group div-with-20-percent-width-with-margin-10">
 						<?php
-							echo form_label('Start Date','acmd_start_date'); 
-					    		echo form_input(array('name'=>'acmd_start_date','class'=>'form-control initialize-date-picker  ','id'=>'acmd_start_date','value'=>@$acmd_start_date));
+							echo form_label('Start Date','acmd_from_date'); 
+					    		echo form_input(array('name'=>'acmd_from_date','class'=>'form-control initialize-date-picker  ','id'=>'acmd_from_date','value'=>@$acmd_from_date));
 						?>
 						</div>
 
@@ -600,8 +600,8 @@
 
 						<div class="form-group div-with-20-percent-width-with-margin-10">
 						<?php
-							echo form_label('Tax','acmd_tax'); 
-					    		echo form_input(array('name'=>'acmd_tax','class'=>'form-control','id'=>'acmd_tax','value'=>@$acmd_tax));
+							echo form_label('Tax','acmd_tax_amount'); 
+					    		echo form_input(array('name'=>'acmd_tax_amount','class'=>'form-control','id'=>'acmd_tax_amount','value'=>@$acmd_tax_amount));
 						?>
 						</div>
 		
@@ -641,8 +641,8 @@
 					<div class="row-source-100-percent-width-with-margin-8">
 						<div class="form-group div-with-20-percent-width-with-margin-10">
 						<?php
-							echo form_label('Start Date','service_start_date'); 
-					    		echo form_input(array('name'=>'service_start_date','class'=>'form-control initialize-date-picker  ','id'=>'service_start_date','value'=>@$service_start_date));
+							echo form_label('Start Date','service_from_date'); 
+					    		echo form_input(array('name'=>'service_from_date','class'=>'form-control initialize-date-picker  ','id'=>'service_from_date','value'=>@$service_from_date));
 						?>
 						</div>
 
@@ -717,8 +717,8 @@
 
 						<div class="form-group div-with-20-percent-width-with-margin-10">
 						<?php
-							echo form_label('Tax','service_tax'); 
-					    		echo form_input(array('name'=>'service_tax','class'=>'form-control','id'=>'service_tax','value'=>@$service_tax));
+							echo form_label('Tax','service_tax_amount'); 
+					    		echo form_input(array('name'=>'service_tax_amount','class'=>'form-control','id'=>'service_tax_amount','value'=>@$service_tax_amount));
 						?>
 						</div>
 		

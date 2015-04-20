@@ -431,6 +431,29 @@ class Hotel extends CI_Controller {
 			echo 0;
 		}
 	}
+
+	public function getRoomTariff()
+	{
+		$hotel_id	= $_REQUEST['hotel_id'];
+		$room_type_id	= $_REQUEST['room_type_id'];
+		$_date 		= $_REQUEST['_date'];
+		$season_ids = $this->tour_model->getSeasonIdssWithDate($_REQUEST['_date']);
+		if($season_ids){
+			$season_id = $season_ids[0];
+		}else{
+			$season_id = gINVALID;
+		}
+		$filter = array('hotel_id'=>$hotel_id,'room_type_id'=>$room_type_id,'season_id'=>$season_id);
+		$room_tariff= $this->hotel_model->getHotelRoomTariff($filter);
+		if($room_tariff){
+			echo json_encode($room_tariff);
+		}else{
+			echo 'false'	;
+		}
+
+	}
+
+	
 	//------------------------------------------------------------------------------------------
 
 

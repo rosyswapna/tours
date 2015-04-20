@@ -160,7 +160,7 @@
 
 		<div class="form-submit-reset-buttons-group">
 			<?php 
-				echo form_open(base_url()."front-desk/tour/save_voucher/".$trip_id);
+				echo form_open(base_url()."front-desk/voucher/save");
 				echo form_submit("save-voucher","Save","class='btn btn-success hide-me save-itry'");
 				echo form_close();
 			?>

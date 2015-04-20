@@ -367,3 +367,9 @@ CREATE TABLE IF NOT EXISTS `uom_master` (
 ALTER TABLE `trips`  ADD `package_id` INT(11) NOT NULL AFTER `id`;
 
 
+-----------20 Apr 2015----------------------
+ALTER TABLE `trip_vouchers`  ADD `trip_id` INT(11) NOT NULL AFTER `voucher_number`,  ADD INDEX (`trip_id`) 
+
+
+
+

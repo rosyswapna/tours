@@ -6,6 +6,7 @@ class Voucher extends CI_Controller {
     		parent::__construct();
 		$this->load->helper('my_helper');
 		$this->load->model('tour_model');
+		$this->load->model('voucher_model');
 		$this->load->model('driver_model');
 		$this->load->model('hotel_model');
 		$this->load->model('user_model');
@@ -36,6 +37,8 @@ class Voucher extends CI_Controller {
 				$this->addToVoucher();
 			}elseif($param1 == 'getFromVoucher'){
 				$this->getFromVoucher();
+			}elseif($param1=='save'){	
+				$this->save($param2);
 			}else{
 				$this->notFound();
 			}
@@ -46,13 +49,23 @@ class Voucher extends CI_Controller {
 	}
 
 	//--------------------------------voucher module functins start----------------------------
-	public function add($trip_id='')
+	public function add($trip_id = gINVALID)
 	{
 		$this->tour_voucher->destroy();
 		if($this->session_check()==true) {
 
 			$trip = $this->tour_model->getTrip($trip_id);
 			if($trip){//valid trip
+
+				$voucher = $this->voucher_model->getTripVoucher($trip_id);
+				$items = array();
+				if($voucher){//get voucher items
+					$trip_voucher_id = $voucher['id'];
+					$items = $this->voucher_model->getVoucherDataAll($trip_voucher_id);
+				}
+			
+				//create voucher cart
+				$this->tour_voucher->create($trip_id,$items);
 
 				$tblArray=array('drivers','vehicle_models','vehicle_ac_types','vehicles');
 			
@@ -70,7 +83,7 @@ class Voucher extends CI_Controller {
 				$data['tabs'] = $this->set_up_voucher_tabs('v_tab');
 				$data['trip_expenses'] = $this->getTripExpenses();
 				//print_r($data['trip_expenses']);exit;
-				$data['trip_id'] = gINVALID;
+				$data['trip_id'] = $trip_id;
 				$data['title']="Tour Booking | ".PRODUCT_NAME;  
 				$page='user-pages/tour-voucher';
 				$this->load_templates($page,$data);
@@ -118,11 +131,6 @@ class Voucher extends CI_Controller {
 	function addToVoucher()//from ajax call
 	{	//echo "<pre>";print_r($_REQUEST);echo "</pre>";exit;
 
-		//create cart
-		if($this->tour_voucher->total_itineraries() == 0){
-			$this->tour_voucher->create();
-		}
-
 		if(isset($_REQUEST['table'])){
 			$tble = $_REQUEST['table'];
 			$fields = $_REQUEST;
@@ -139,6 +147,23 @@ class Voucher extends CI_Controller {
 		$this->build_itinerary_data($voucher,$ajax = 'YES');
 	}
 
+
+	//save voucher action
+	function save()
+	{
+		$trip_id = $this->tour_voucher->tripId();
+		$saveVoucher = $this->voucher_model->saveVoucherCart($this->tour_voucher);
+		$this->tour_voucher->destroy();
+		if($saveVoucher){
+			$this->session->set_userdata(array('dbSuccess'=>'Voucher Added Succesfully..!')); 
+			$this->session->set_userdata(array('dbError'=>''));
+		}else{
+			$this->session->set_userdata(array('dbSuccess'=>'')); 
+			$this->session->set_userdata(array('dbError'=>'Invalid Trip Voucher..!'));
+		}
+
+		redirect(base_url().'front-desk/voucher/add/'.$trip_id);
+	}
 	
 
 	//----------------------
@@ -169,29 +194,44 @@ class Voucher extends CI_Controller {
 			$tableData['th'] = array(
 					array('label'=>'SlNo','attr'=>'width="5%"'),
 					array('label'=>'Date','attr'=>'width="10%"'),
-					array('label'=>'Particulars','attr'=>'width="55%"'),
+					array('label'=>'Particulars','attr'=>''),
 					array('label'=>'Unit Amt','attr'=>'width="10%"'),
 					array('label'=>'Tax','attr'=>'width="10%"'),
 					array('label'=>'Total','attr'=>'width="10%"'),
 					);
 			$tableData['tr'] = array();
-			$slno =1;
+			$slno =1;$edit = false;
 			foreach($voucher as $table=>$rows){
 				
 				//echo "<pre>";print_r($rows);echo "</pre>";exit;
 				foreach($rows as $row){
-					$totAmt = $row['unit_amount'] + $row['tax_amount'] - $row['advance_amount'];
+					$totAmt = (double)$row['unit_amount'] + (double)$row['tax_amount'] - (double)$row['advance_amount'];
 					$tr = array($slno,
 						$row['from_date'],
 						$row['narration'],
-						number_format($row['unit_amount'],2),
-						number_format($row['tax_amount'],2),
-						number_format($totAmt,2)
+						number_format((double)$row['unit_amount'],2),
+						number_format((double)$row['tax_amount'],2),
+						number_format((double)$totAmt,2)
 						);
+
+					//add edit link if need
+					if($row['id'] > 0){
+						$link = '<a class="edit-voucher-itr" itr-id ="'.$row['id'].'" itr-table="'.$table.'" href="#">Edit</a>';
+						array_push($tr,$link);
+						$edit = true;
+					}
 					array_push($tableData['tr'],$tr);
+
+					
+
+
 					$slno++;
 				}	
 			} 
+			
+			if($edit){
+				array_push($tableData['th'],array('label'=>'','attr'=>''));
+			}
 
 			//echo "<pre>";print_r($tableData);echo "</pre>";exit;
 

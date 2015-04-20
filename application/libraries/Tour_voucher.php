@@ -8,8 +8,6 @@ class CI_Tour_voucher {
 
 	// Private variables.  Do not change!
 	var $CI;
-	var $trip_id=gINVALID;
-	var $_itineraries = array();
 	var $_tour_voucher_contents = array();
 	
 
@@ -40,23 +38,27 @@ class CI_Tour_voucher {
 		else
 		{
 			// No voucher exists so we'll set some base values
-			$this->_tour_voucher_contents['tour_voucher_total'] = 0;
 			$this->_tour_voucher_contents['total_itineraries'] = 0;
+			$this->_tour_voucher_contents['totals'] = array();
+			$this->_tour_voucher_contents['trip_id'] = gINVALID;
 		}
 
 		log_message('debug', "Tour voucher Class Initialized");
 	}
 
-	function create($items = array()) {
-		if ( ! is_array($items) OR count($items) == 0)
+	function create($trip_id,$items= array()) {
+		if ( ! is_numeric($trip_id) OR $trip_id <= 0)
 		{
-			log_message('error', 'The create method must be passed an array containing data.');
+			log_message('error', 'The create method must be passed a valid trip id.');
 			return FALSE;
 		}
 
-		
-		//echo "<pre>";print_r($items);echo "</pre>";exit;
-		$this->_tour_voucher_contents = $items;
+		if (  is_array($items) OR count($items) > 0){
+			$this->_tour_voucher_contents = $items;
+		}
+
+		$this->_tour_voucher_contents['trip_id'] = $trip_id;
+
 		$this->save_voucher();
 	}
 
@@ -79,12 +81,15 @@ class CI_Tour_voucher {
 
 	function save_voucher()
 	{
+
+		$trip_id = $this->_tour_voucher_contents['trip_id'];
 		// Unset these so our total can be calculated correctly below
-		unset($this->_tour_voucher_contents['tour_voucher_total']);
 		unset($this->_tour_voucher_contents['total_itineraries']);
+		unset($this->_tour_voucher_contents['totals']);
+		unset($this->_tour_voucher_contents['trip_id']);
 
 		// Is our voucher empty?  If so we delete it from the session
-		if (count($this->_tour_voucher_contents) <= 0)
+		if ($trip_id <= 0)
 		{
 			$this->CI->session->unset_userdata('tour_voucher_contents');
 
@@ -92,11 +97,37 @@ class CI_Tour_voucher {
 			return FALSE;
 		}
 		$total_itinerary = 0;
-		foreach($this->_tour_voucher_contents as $voucher_itinerary){
+		$totals = array('total_accommodation_amount' => 0,
+				'total_travel_amount' => 0,
+				'total_service_amount' => 0,
+				'total_trip_amount' => 0,
+				'total_trip_km' =>0
+				);
+		foreach($this->_tour_voucher_contents as $table=>$voucher_itinerary){
 			$total_itinerary++;
-			
+
+			foreach($voucher_itinerary as $dataArray){
+				$totalAmt = (double)$dataArray['unit_amount']+(double)$dataArray['tax_amount']-(double)$dataArray['advance_amount'];
+				switch($table){
+					case 'trip_voucher_vehicles':
+						$totals['total_travel_amount'] += $totalAmt;
+						$vehicle_km = (double)$dataArray['end_km'] - (double)$dataArray['start_km'];
+						$totals['total_trip_km'] += $vehicle_km;
+						break;
+					case 'trip_voucher_accommodation':
+						$totals['total_accommodation_amount'] += $totalAmt;
+						break;
+					case 'trip_voucher_services':
+						$totals['total_service_amount'] += $totalAmt;
+						break;
+				}
+				$totals['total_trip_amount'] += $totalAmt;	
+			}
+	
 		}
 		$this->_tour_voucher_contents['total_itineraries'] = $total_itinerary;
+		$this->_tour_voucher_contents['totals'] = $totals;
+		$this->_tour_voucher_contents['trip_id'] = $trip_id;
 
 		$this->CI->session->set_userdata(array('tour_voucher_contents' => $this->_tour_voucher_contents));
 
@@ -117,6 +148,34 @@ class CI_Tour_voucher {
 		return $this->_tour_voucher_contents['total_itineraries'];
 	}
 
+
+	/**
+	 * Total amounts foreach itinerary and trip total kilometer from vehicle itinerary
+	 *
+	 * Returns the totals array for trip_voucher
+	 *
+	 * @access	public
+	 * @return	array
+	 */
+	function totals()
+	{
+		return $this->_tour_voucher_contents['totals'];
+	}
+
+
+	/**
+	 * voucher trip id
+	 *
+	 * Returns the trip id
+	 *
+	 * @access	public
+	 * @return	numeric
+	 */
+	function tripId()
+	{
+		return $this->_tour_voucher_contents['trip_id'];
+	}
+
 	// --------------------------------------------------------------------
 
 	/**
@@ -132,8 +191,9 @@ class CI_Tour_voucher {
 		$voucher = $this->_tour_voucher_contents;
 
 		// Remove these so they don't create a problem when showing the voucher table
-		unset($voucher['tour_voucher_total']);
+		unset($voucher['totals']);
 		unset($voucher['total_itineraries']);
+		unset($voucher['trip_id']);
 
 		return $voucher;
 	}
@@ -153,8 +213,9 @@ class CI_Tour_voucher {
 	{
 		unset($this->_tour_voucher_contents);
 
-		$this->_tour_voucher_contents['tour_voucher_total'] = 0;
+		$this->_tour_voucher_contents['totals'] = array();
 		$this->_tour_voucher_contents['total_itineraries'] = 0;
+		$this->_tour_voucher_contents['trip_id'] = gINVALID;
 
 		$this->CI->session->unset_userdata('tour_voucher_contents');
 	}

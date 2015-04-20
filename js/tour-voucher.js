@@ -5,9 +5,9 @@ $(document).ready(function(){
 
 	//if edit tour voucher elements (tour voucher form)
 	var pathname = window.location.pathname.split("/");
-	if(pathname[2]=="voucher" && pathname[3]=="add" && pathname[4] > 0){ 
+	if(pathname[2]=="voucher" && pathname[3]=="add" && Number(pathname[4]) > 0){ 
 	
-		$.post(base_url+'/tour/getFromVoucher',{},function(data){
+		$.post(base_url+'/voucher/getFromVoucher',{},function(data){
 			if(data!=false){
 				data=jQuery.parseJSON(data);
 				build_voucher_table(data);

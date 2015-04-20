@@ -595,20 +595,26 @@ class Tour_model extends CI_Model {
 	}
 
 
-	function getItineraryDataLink($table,$select,$idArray,$tab=''){
-
-		$this->db->select('id,'.$select);
-		$this->db->from($table);
-		$this->db->where_in('id', $idArray);
-		$query = $this->db->get();
-		if($query->num_rows() > 0){
-			foreach($query->result_array() as $row){
-				$ret[]='<a href="#" itr-id="'.$row['id'].'">'.$row[$select]."</a>";
+	function getItineraryDataLink($table,$select,$trip_sections,$tab='',$pckge=False){
+		foreach ($trip_sections as $section){
+			$trip_section_id=$section[0];
+			$id=$section[1]; 
+			$this->db->select($select);
+			$this->db->from($table);
+			$this->db->where(array('id'=>$id));
+			$query = $this->db->get();
+			if($query->num_rows() > 0){
+				$section_val=$query->row()->$select;
+				//$ret[]='<input type="text" value="'.$section_val.'" itr-id="'.$trip_section_id.'" tab="'.$tab.'" pckge="'.$pckge.'" id="edit-itr-data"/>';
+				$ret[]='<a href="#" itr_id="'.$trip_section_id.'" tab="'.$tab.'" pckge="'.$pckge.'" class="edit_data">'.$section_val."</a>";
+				return $ret;
 			}
-			return $ret;
-		}else{
+			else
+			{
 			return array();
-		}
+			}
+		}		
+		
 	}
 
 
@@ -715,7 +721,23 @@ class Tour_model extends CI_Model {
 		return $retArray;
 
 	}
-
+	
+	//fetch editable values for each trip sections using section id and table name
+	function get_trip_section_values($trip_section_id,$tbl){ 
+		$this->db->where('id',$trip_section_id);
+		$qry=$this->db->get($tbl);
+		
+		if($qry->num_rows() > 0){
+			$editable_values=$qry->row_array();
+			if($tbl=='trip_accommodation' || $tbl=='package_accommodation'){ 
+			$editable_values['room_attributes']=unserialize($editable_values['room_attributes']);//echo $editable_values['room_attributes'];exit;
+			$editable_values['meals_package']=unserialize($editable_values['meals_package']);
+			}
+			return $editable_values;
+		}else{
+			return array();
+		}
+	}
 		
 
 }

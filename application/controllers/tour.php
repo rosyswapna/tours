@@ -20,7 +20,7 @@ class Tour extends CI_Controller {
 		no_cache();
 	}
 
-	public function index(){
+	public function index(){ 
 		$param1=$this->uri->segment(3);
 		$param2=$this->uri->segment(4);
 		$param3=$this->uri->segment(5);
@@ -55,6 +55,8 @@ class Tour extends CI_Controller {
 				$this->getItinerary();
 			}elseif($param1 == 'save_cart'){
 				$this->save_cart($param2);
+			}elseif($param1 == 'getEditableTabValues'){
+				$this->getEditableTabValues();
 			}else{
 				$this->notFound();
 			}
@@ -737,6 +739,7 @@ class Tour extends CI_Controller {
 				$firstTH = "Date";
 			}else{
 				$firstTH = "Day";
+				$pckge=True;
 			}
 			$tableData['th'] = array(
 					array('label'=>$firstTH,'attr'=>'width="20%"'),
@@ -748,40 +751,47 @@ class Tour extends CI_Controller {
 					);
 			$tableData['tr'] = array();
 			foreach($cart as $itinerary=>$item){
-				//echo "<pre>";print_r($item);echo "</pre>";exit;
+				
 
 				$destinations = array();
 				if(isset($item['trip_destinations'])){
 					foreach($item['trip_destinations'] as $destination){
-						array_push($destinations,$destination['destination_id']);
+					$destinations[]=array($destination['id'],$destination['destination_id']);
+					
+						//array_push($destinations,$destination['destination_id']);
 					}
-
-					$destinations = $this->tour_model->getItineraryDataLink('destinations','name',$destinations);
+					$active_tab = 't_tab';
+					$destinations = $this->tour_model->getItineraryDataLink('destinations','name',$destinations,$active_tab,$pckge);
 				}
 
 				$hotels = array();
 				if(isset($item['trip_accommodation'])){
 					foreach($item['trip_accommodation'] as $accommodation){
-						array_push($hotels,$accommodation['hotel_id']);
+					$hotels[]=array($accommodation['id'],$accommodation['hotel_id']);
+						//array_push($hotels,$accommodation['hotel_id']);
 					}
-					$hotels = $this->tour_model->getItineraryDataLink('hotels','name',$hotels);
+					$active_tab = 'a_tab';
+					$hotels = $this->tour_model->getItineraryDataLink('hotels','name',$hotels,$active_tab,$pckge);
 				}
 
 				$services = array();
 				if(isset($item['trip_services'])){
 					foreach($item['trip_services'] as $service){
-					
-						array_push($services,$service['service_id']);
+					$services[]=array($service['id'],$service['service_id']);
+						//array_push($services,$service['service_id']);
 					}
-					$services = $this->tour_model->getItineraryDataLink('services','name',$services);
+					$active_tab = 's_tab';
+					$services = $this->tour_model->getItineraryDataLink('services','name',$services,$active_tab,$pckge);
 				}
 			
 				$vehicles = array();
 				if(isset($item['trip_vehicles'])){
 					foreach($item['trip_vehicles'] as $vehicle){
-						array_push($vehicles,$vehicle['vehicle_id']);
+					$vehicles[]=array($vehicle['id'],$vehicle['vehicle_type_id']);	
+						//array_push($vehicles,$vehicle['vehicle_id']);
 					}
-					$vehicles = $this->tour_model->getItineraryDataLink('vehicles','registration_number',$vehicles);
+					$active_tab = 'v_tab';
+					$vehicles = $this->tour_model->getItineraryDataLink('vehicles','registration_number',$vehicles,$active_tab,$pckge);
 					//echo "<pre>";print_r($vehicles);echo "</pre>";exit;
 				}
 
@@ -856,11 +866,35 @@ class Tour extends CI_Controller {
 
 	}
 
-	function getRoomAttributesNMealsPackage()
+
+	function getRoomAttributesNMealsPackage()//not completed
 	{
 		
 	}
 
+
+
+	public function getEditableTabValues(){
+		if((isset($_REQUEST['trip_section_id']))&& (isset($_REQUEST['tab'])) && (isset($_REQUEST['pckge']))){
+			if($_REQUEST['pckge']==True){
+				$tbl_prefix='package_';
+			}else{
+				$tbl_prefix='trip_';
+			}
+			switch($_REQUEST['tab']){ 
+			case 't_tab':$active_tab = 't_tab'; $tbl_postfix='destinations';break;
+			case 'a_tab':$active_tab = 'a_tab'; $tbl_postfix='accommodation';break;
+			case 's_tab':$active_tab = 's_tab'; $tbl_postfix='services';break;
+			case 'v_tab':$active_tab = 'v_tab'; $tbl_postfix='vehicles';break;
+			}
+			$tbl=$tbl_prefix.$tbl_postfix;
+			$editable_values=$this->tour_model->get_trip_section_values($_REQUEST['trip_section_id'],$tbl);
+			$editable_values['active_tab']=$active_tab;
+			echo json_encode($editable_values);
+		}else{
+			return false;
+		}
+	}
 
 	
 

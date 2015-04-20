@@ -175,7 +175,7 @@ echo $this->form_functions->populate_dropdown($name,@$languages,@$driver_languag
 
 <div class="box-body table-responsive no-padding hide-me" id="itinerary-div">
 	<table id="itinerary-tbl" class="table table-hover table-bordered table-with-20-percent-td">
-
+	
 	</table>
 
 	<div class="form-submit-reset-buttons-group">
@@ -209,7 +209,7 @@ echo $this->form_functions->populate_dropdown($name,@$languages,@$driver_languag
 	</ul>
 	<div class="tab-content">
 		<?php if (array_key_exists('t_tab', $tabs)) {?>
-		<div class="<?php echo $tabs['t_tab']['content_class'];?>" id="<?php echo $tabs['t_tab']['tab_id'];?>">
+		<div class="<?php echo $tabs['t_tab']['content_class'];?> tour-travel-tab" id="<?php echo $tabs['t_tab']['tab_id'];?>">
 
 			<div class="page-outer">
 	   		<fieldset class="body-border">
@@ -252,7 +252,7 @@ echo $this->form_functions->populate_dropdown($name,@$languages,@$driver_languag
 					</div>
 					<div  class="form-group div-with-20-percent-width-with-margin-10" >
 						<?php echo form_label(''); ?><br/>
-						<?php echo form_submit("via-add","ADD VIA","class='btn btn-primary' id='add-travel'");?>
+						<?php echo form_submit("via-add","ADD VIA","class='hide-me btn btn-primary' id='add-travel'");?>
 					</div>
 				</div>
 				<div class="row-source-100-percent-width-with-margin-8">
@@ -277,7 +277,7 @@ echo $this->form_functions->populate_dropdown($name,@$languages,@$driver_languag
 
 
 		<?php if (array_key_exists('a_tab', $tabs)) {?>
-		<div class="<?php echo $tabs['a_tab']['content_class'];?>" id="<?php echo $tabs['a_tab']['tab_id'];?>">
+		<div class="<?php echo $tabs['a_tab']['content_class'];?> tour-accomodation-tab" id="<?php echo $tabs['a_tab']['tab_id'];?>">
 
 			<div class="page-outer">
 	   		<fieldset class="body-border">
@@ -404,7 +404,7 @@ echo $this->form_functions->populate_dropdown($name,@$languages,@$driver_languag
 
 		<!--services tab contents-->
 		<?php if (array_key_exists('s_tab', $tabs)) {?>
-		<div class="<?php echo $tabs['s_tab']['content_class'];?>" id="<?php echo $tabs['s_tab']['tab_id'];?>">
+		<div class="<?php echo $tabs['s_tab']['content_class'];?> tour-service-tab" id="<?php echo $tabs['s_tab']['tab_id'];?>">
 
 			<div class="page-outer">
 	   		<fieldset class="body-border">

@@ -76,6 +76,11 @@ class CI_Tour_cart {
 
 		
 	}
+	function update($items,$itinerary){//new cart item
+		// to continue..
+
+		
+	}
 
 	function save_cart()
 	{

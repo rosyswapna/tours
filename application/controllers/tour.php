@@ -328,8 +328,9 @@ class Tour extends CI_Controller {
 			
 		foreach($tblArray as $table){
 			$data[$table]=$this->user_model->getArray($table);
+			
 		}
-		
+		//print_r($data);exit;
 		$data['days'] = array();
 		for($i=1;$i<=10;$i++){
 			$data['days'][$i] = $i;
@@ -667,17 +668,21 @@ class Tour extends CI_Controller {
 			array_shift($fields);//pop first element(url data from ajax call)
 			unset($fields['table']);
 			unset($fields['_date']);
-			$fields['id'] = gINVALID;
 			$data[$tble] = $fields;
 			//echo "<pre>";print_r($data);echo "</pre>";exit;
+			if($fields['id']){
+			$this->tour_cart->update($data,$itinerary);
+			}else{
 			$this->tour_cart->insert($data,$itinerary);
+			}
 		}
 
 		$cart = $this->tour_cart->contents();
-		
+		//echo "<pre>";print_r($cart);echo "</pre>";exit;
 		$this->build_itinerary_data($cart,$ajax = 'YES');
 		
 	}
+	
 
 
 	function save_cart($trip_id=gINVALID)
@@ -787,10 +792,10 @@ class Tour extends CI_Controller {
 				$vehicles = array();
 				if(isset($item['trip_vehicles'])){
 					foreach($item['trip_vehicles'] as $vehicle){
-					$vehicles[]=array($vehicle['id'],$vehicle['vehicle_type_id']);	
+					$vehicles[]=array($vehicle['id'],$vehicle['vehicle_id']);	
 						//array_push($vehicles,$vehicle['vehicle_id']);
 					}
-					$active_tab = 'v_tab';
+					$active_tab = 'v_tab';//print_r($vehicles);exit;
 					$vehicles = $this->tour_model->getItineraryDataLink('vehicles','registration_number',$vehicles,$active_tab,$pckge);
 					//echo "<pre>";print_r($vehicles);echo "</pre>";exit;
 				}

@@ -266,7 +266,12 @@ echo $this->form_functions->populate_dropdown($name,@$languages,@$driver_languag
 				</div>
 				<div class="row-source-100-percent-width-with-margin-8">
 					<div class="box-footer ">
-					<?php echo form_submit("add-travel","Add","class='btn btn-primary' id='add-travel'");?>
+					<?php 
+					echo form_input(array('name'=>'destination_section_id','class'=>'form-control ','id'=>'destination_section_id','value'=>gINVALID));
+					echo form_submit("add-travel","Add","class='btn btn-primary' id='add-travel'");
+					
+					?>
+					
 					</div>
 				</div>
 			
@@ -555,7 +560,7 @@ echo $this->form_functions->populate_dropdown($name,@$languages,@$driver_languag
 					$class="form-control";
 					$msg="Select Driver";
 					$name = $id = "driver_id";
-					echo $this->form_functions->populate_dropdown($name,$drivers,@$driver_id,$class,$id,$msg); 
+					echo $this->form_functions->populate_dropdown($name,$available_drivers,@$driver_id,$class,$id,$msg); 
 					echo $this->form_functions->form_error_session('driver_id', '<p class="text-red">', '</p>'); ?>			</div>
 					
 					<div class="form-group div-with-20-percent-width-with-margin-10">

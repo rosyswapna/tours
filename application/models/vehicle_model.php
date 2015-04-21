@@ -410,7 +410,7 @@ public function getVehicleDriver($vehicle_id = 0){
 		$this->db->from('vehicle_drivers');
 		$this->db->join('drivers','vehicle_drivers.driver_id=drivers.id','left');
 		$this->db->where('vehicle_id',$vehicle_id);
-		$qry = $this->db->get();
+		$qry = $this->db->get();//echo $this->db->last_query();exit;
 		
 		if($qry->num_rows() > 0){
 			return $qry->row_array();

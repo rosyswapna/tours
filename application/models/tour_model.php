@@ -596,24 +596,23 @@ class Tour_model extends CI_Model {
 
 
 	function getItineraryDataLink($table,$select,$trip_sections,$tab='',$pckge=False){
+	$ret=array();
 		foreach ($trip_sections as $section){
 			$trip_section_id=$section[0];
 			$id=$section[1]; 
 			$this->db->select($select);
 			$this->db->from($table);
 			$this->db->where(array('id'=>$id));
-			$query = $this->db->get();
+			$query = $this->db->get(); //echo $this->db->last_query();
 			if($query->num_rows() > 0){
 				$section_val=$query->row()->$select;
 				//$ret[]='<input type="text" value="'.$section_val.'" itr-id="'.$trip_section_id.'" tab="'.$tab.'" pckge="'.$pckge.'" id="edit-itr-data"/>';
 				$ret[]='<a href="#" itr_id="'.$trip_section_id.'" tab="'.$tab.'" pckge="'.$pckge.'" class="edit_data">'.$section_val."</a>";
-				return $ret;
+				
 			}
-			else
-			{
-			return array();
-			}
-		}		
+			
+		}
+		return $ret;
 		
 	}
 
@@ -730,6 +729,12 @@ class Tour_model extends CI_Model {
 		if($qry->num_rows() > 0){
 			$editable_values=$qry->row_array();
 			if($tbl=='trip_accommodation' || $tbl=='package_accommodation'){ 
+			$this->db->select('hotel_category_id,destination_id');
+			$this->db->where('id',$editable_values['hotel_id']);
+			$this->db->from('hotels');
+			$qry=$this->db->get()->row(); 
+			$editable_values['hotel_category_id']=$qry->hotel_category_id;
+			$editable_values['destination_id']=$qry->destination_id;
 			$editable_values['room_attributes']=unserialize($editable_values['room_attributes']);//echo $editable_values['room_attributes'];exit;
 			$editable_values['meals_package']=unserialize($editable_values['meals_package']);
 			}

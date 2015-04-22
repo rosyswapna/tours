@@ -456,7 +456,7 @@ class Tour_model extends CI_Model {
 
 	//save tour cart with tour cart class
 	function save_tour_cart($cart,$trip_id){
-		//echo "<pre>";print_r($cart);echo "</pre>";;exit;
+		echo "<pre>";print_r($cart);echo "</pre>";;exit;
 		//create insert and update array
 		foreach($cart as $_date=>$itry){
 			//get itinerary id or get from insert
@@ -595,10 +595,10 @@ class Tour_model extends CI_Model {
 	}
 
 
-	function getItineraryDataLink($table,$select,$trip_sections,$tab='',$pckge=False){
+	function getItineraryDataLink($table,$select,$trip_sections,$tab='',$itinerary){
 	$ret=array();
 		foreach ($trip_sections as $section){
-			$trip_section_id=$section[0];
+			$row_id=$section[0];
 			$id=$section[1]; 
 			$this->db->select($select);
 			$this->db->from($table);
@@ -606,8 +606,8 @@ class Tour_model extends CI_Model {
 			$query = $this->db->get(); //echo $this->db->last_query();
 			if($query->num_rows() > 0){
 				$section_val=$query->row()->$select;
-				//$ret[]='<input type="text" value="'.$section_val.'" itr-id="'.$trip_section_id.'" tab="'.$tab.'" pckge="'.$pckge.'" id="edit-itr-data"/>';
-				$ret[]='<a href="#" itr_id="'.$trip_section_id.'" tab="'.$tab.'" pckge="'.$pckge.'" class="edit_data">'.$section_val."</a>";
+				
+				$ret[]= $row_id.'<a href="#" row_id="'.$row_id.'" table="'.$table.'" tab="'.$tab.'" itinerary="'.$itinerary.'" class="edit_data">'.$section_val."</a>";
 				
 			}
 			

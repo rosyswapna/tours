@@ -267,8 +267,9 @@ echo $this->form_functions->populate_dropdown($name,@$languages,@$driver_languag
 				<div class="row-source-100-percent-width-with-margin-8">
 					<div class="box-footer ">
 					<?php 
-					echo form_input(array('name'=>'destination_section_id','class'=>'form-control ','id'=>'destination_section_id','value'=>gINVALID));
-					echo form_submit("add-travel","Add","class='btn btn-primary' id='add-travel'");
+					echo form_input(array('name'=>'destination_section_id','class'=>'form-control hide-me','id'=>'destination_section_id','value'=>gINVALID));
+					echo form_submit("add-travel","Add","class='btn btn-primary' id='add-travel'").nbs(5);
+					echo form_submit("delete-travel","Delete","class='btn btn-danger hide-me' id='delete-travel'");
 					
 					?>
 					
@@ -397,7 +398,10 @@ echo $this->form_functions->populate_dropdown($name,@$languages,@$driver_languag
 
 				<div class="row-source-100-percent-width-with-margin-8">
 					<div class="box-footer ">
-					<?php echo form_submit("add-accommodation","Add","class='btn btn-primary' id='add-accommodation'");?>
+					<?php 
+					echo form_input(array('name'=>'accommodation_section_id','class'=>'form-control hide-me','id'=>'accommodation_section_id','value'=>gINVALID));
+					echo form_submit("add-accommodation","Add","class='btn btn-primary' id='add-accommodation'").nbs(5);
+					echo form_submit("delete-accommodation","Delete","class='btn btn-danger hide-me' id='delete-accommodation'");?>
 					</div>
 				</div>
 
@@ -477,7 +481,10 @@ echo $this->form_functions->populate_dropdown($name,@$languages,@$driver_languag
 
 				<div class="row-source-100-percent-width-with-margin-8">
 					<div class="box-footer ">
-					<?php echo form_submit("add-service","Add","class='btn btn-primary' id='add-service'");?>
+					<?php 
+					echo form_input(array('name'=>'service_section_id','class'=>'form-control hide-me','id'=>'service_section_id','value'=>gINVALID));
+					echo form_submit("add-service","Add","class='btn btn-primary' id='add-service'").nbs(5);
+					echo form_submit("delete-service","Delete","class='btn btn-danger hide-me' id='delete-service'");?>
 					</div>
 				</div>
 				
@@ -581,7 +588,10 @@ echo $this->form_functions->populate_dropdown($name,@$languages,@$driver_languag
 
 				<div class="row-source-100-percent-width-with-margin-8">
 					<div class="box-footer ">
-					<?php echo form_submit("add-vehicle","Add","class='btn btn-primary' id='add-vehicle'");?>
+					<?php 
+					echo form_input(array('name'=>'vehicle_section_id','class'=>'form-control hide-me','id'=>'vehicle_section_id','value'=>gINVALID));
+					echo form_submit("add-vehicle","Add","class='btn btn-primary' id='add-vehicle'").nbs(5);
+					echo form_submit("delete-vehicle","Delete","class='btn btn-danger hide-me' id='delete-vehicle'");?>
 					</div>
 				</div>
 			</fieldset>

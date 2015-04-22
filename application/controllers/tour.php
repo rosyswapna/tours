@@ -43,8 +43,12 @@ class Tour extends CI_Controller {
 			}
 			elseif($param1 == 'addToCart'){
 				$this->addToCart();
-			}elseif($param1 == 'addToCartPackage'){
+			}elseif($param1 == 'addToCartPackage'){ 
 				$this->addToCartPackage();
+			}elseif($param1 == 'deleteFromCart'){
+				$this->deleteFromCart();
+			}elseif($param1 == 'deleteFromCartPackage'){ 
+				$this->deleteFromCartPackage();
 			}elseif($param1 == 'getFromCart'){
 				$this->getFromCart();
 			}elseif($param1 == 'createCartFromPackage'){
@@ -644,9 +648,14 @@ class Tour extends CI_Controller {
 			unset($fields['table']);
 			unset($fields['_date']);
 			unset($fields['trip_id']);
-			$fields['id'] = gINVALID;
+			
+			//echo "<pre>";print_r($fields);echo "</pre>";exit;
+			if(is_numeric($fields['id'])&& ($fields['id']>0)){
+			$this->tour_cart->update($tble,$fields,$itinerary);
+			}else{
 			$data[$tble] = $fields;
 			$this->tour_cart->insert($data,$itinerary);
+			}
 				
 		}
 		$cart = $this->tour_cart->contents();
@@ -668,11 +677,12 @@ class Tour extends CI_Controller {
 			array_shift($fields);//pop first element(url data from ajax call)
 			unset($fields['table']);
 			unset($fields['_date']);
-			$data[$tble] = $fields;
-			//echo "<pre>";print_r($data);echo "</pre>";exit;
-			if($fields['id']){
-			$this->tour_cart->update($data,$itinerary);
-			}else{
+			
+			//echo "<pre>";print_r($fields);echo "</pre>";exit;
+			if(is_numeric($fields['id'])&& ($fields['id']>0)){
+			$this->tour_cart->update($tble,$fields,$itinerary);
+			}else{ 
+			$data[$tble] = $fields; 
 			$this->tour_cart->insert($data,$itinerary);
 			}
 		}
@@ -683,7 +693,10 @@ class Tour extends CI_Controller {
 		
 	}
 	
-
+	//package delete
+	function deleteFromCartPackage(){
+	
+	}
 
 	function save_cart($trip_id=gINVALID)
 	{
@@ -744,7 +757,7 @@ class Tour extends CI_Controller {
 				$firstTH = "Date";
 			}else{
 				$firstTH = "Day";
-				$pckge=True;
+				
 			}
 			$tableData['th'] = array(
 					array('label'=>$firstTH,'attr'=>'width="20%"'),
@@ -760,43 +773,43 @@ class Tour extends CI_Controller {
 
 				$destinations = array();
 				if(isset($item['trip_destinations'])){
-					foreach($item['trip_destinations'] as $destination){
-					$destinations[]=array($destination['id'],$destination['destination_id']);
-					
+					foreach($item['trip_destinations'] as $dataArry_index=>$destination){
+					//$destinations[]=array($destination['id'],$destination['destination_id']);
+					$destinations[]=array($dataArry_index,$destination['destination_id']);
 						//array_push($destinations,$destination['destination_id']);
 					}
 					$active_tab = 't_tab';
-					$destinations = $this->tour_model->getItineraryDataLink('destinations','name',$destinations,$active_tab,$pckge);
+					$destinations = $this->tour_model->getItineraryDataLink('destinations','name',$destinations,$active_tab,$itinerary);
 				}
 
 				$hotels = array();
 				if(isset($item['trip_accommodation'])){
-					foreach($item['trip_accommodation'] as $accommodation){
-					$hotels[]=array($accommodation['id'],$accommodation['hotel_id']);
+					foreach($item['trip_accommodation'] as $dataArry_index=>$accommodation){
+					$hotels[]=array($dataArry_index,$accommodation['hotel_id']);
 						//array_push($hotels,$accommodation['hotel_id']);
 					}
 					$active_tab = 'a_tab';
-					$hotels = $this->tour_model->getItineraryDataLink('hotels','name',$hotels,$active_tab,$pckge);
+					$hotels = $this->tour_model->getItineraryDataLink('hotels','name',$hotels,$active_tab,$itinerary);
 				}
 
 				$services = array();
 				if(isset($item['trip_services'])){
-					foreach($item['trip_services'] as $service){
-					$services[]=array($service['id'],$service['service_id']);
+					foreach($item['trip_services'] as $dataArry_index=>$service){
+					$services[]=array($dataArry_index,$service['service_id']);
 						//array_push($services,$service['service_id']);
 					}
 					$active_tab = 's_tab';
-					$services = $this->tour_model->getItineraryDataLink('services','name',$services,$active_tab,$pckge);
+					$services = $this->tour_model->getItineraryDataLink('services','name',$services,$active_tab,$itinerary);
 				}
 			
 				$vehicles = array();
 				if(isset($item['trip_vehicles'])){
-					foreach($item['trip_vehicles'] as $vehicle){
-					$vehicles[]=array($vehicle['id'],$vehicle['vehicle_id']);	
+					foreach($item['trip_vehicles'] as $dataArry_index=>$vehicle){
+					$vehicles[]=array($dataArry_index,$vehicle['vehicle_id']);	
 						//array_push($vehicles,$vehicle['vehicle_id']);
 					}
 					$active_tab = 'v_tab';//print_r($vehicles);exit;
-					$vehicles = $this->tour_model->getItineraryDataLink('vehicles','registration_number',$vehicles,$active_tab,$pckge);
+					$vehicles = $this->tour_model->getItineraryDataLink('vehicles','registration_number',$vehicles,$active_tab,$itinerary);
 					//echo "<pre>";print_r($vehicles);echo "</pre>";exit;
 				}
 
@@ -880,21 +893,10 @@ class Tour extends CI_Controller {
 
 
 	public function getEditableTabValues(){
-		if((isset($_REQUEST['trip_section_id']))&& (isset($_REQUEST['tab'])) && (isset($_REQUEST['pckge']))){
-			if($_REQUEST['pckge']==True){
-				$tbl_prefix='package_';
-			}else{
-				$tbl_prefix='trip_';
-			}
-			switch($_REQUEST['tab']){ 
-			case 't_tab':$active_tab = 't_tab'; $tbl_postfix='destinations';break;
-			case 'a_tab':$active_tab = 'a_tab'; $tbl_postfix='accommodation';break;
-			case 's_tab':$active_tab = 's_tab'; $tbl_postfix='services';break;
-			case 'v_tab':$active_tab = 'v_tab'; $tbl_postfix='vehicles';break;
-			}
-			$tbl=$tbl_prefix.$tbl_postfix;
-			$editable_values=$this->tour_model->get_trip_section_values($_REQUEST['trip_section_id'],$tbl);
-			$editable_values['active_tab']=$active_tab;
+		if((isset($_REQUEST['row_id']))&& (isset($_REQUEST['table'])) && (isset($_REQUEST['itinerary']))){
+			
+			$editable_values=$this->tour_cart->select($_REQUEST['itinerary'],$_REQUEST['table'],$_REQUEST['row_id']);
+			
 			echo json_encode($editable_values);
 		}else{
 			return false;

@@ -76,12 +76,47 @@ class CI_Tour_cart {
 
 		
 	}
-	function update($items,$itinerary){//new cart item
-		// to continue..
-
+	function update($tble,$items,$itinerary){//update cart item
+		if ( ! is_array($items) OR count($items) == 0)
+		{
+			log_message('error', 'The insert method must be passed an array containing data.');
+			return FALSE;
+		}
 		
+		$cart=$this->contents();
+		if(isset($cart[$itinerary])){
+			$required_itnry=$cart[$itinerary];
+			if(isset($required_itnry[$tble])){
+				$table_data=$required_itnry[$tble];
+				foreach($table_data as $index=>$data_arry){
+					if($data_arry['id']==$items['id']){
+						$this->_tour_cart_contents[$itinerary][$tble][$index]=$items;
+						break;
+					}
+				
+				}
+			}
+		}
+		
+		$this->save_cart();
 	}
-
+	
+	function delete($itinerary,$tbl,$index,$id){
+	//continue**********
+	}
+	// select value by index
+	function select($itinerary,$tble,$index){
+		$cart=$this->contents();
+		
+		if(isset($cart[$itinerary][$tble][$index])){
+			return $cart[$itinerary][$tble][$index];
+		}
+		else{
+			return false;
+		}
+	
+	}
+	
 	function save_cart()
 	{
 		// Unset these so our total can be calculated correctly below

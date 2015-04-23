@@ -37,7 +37,7 @@ class Tour extends CI_Controller {
 			}elseif($param1=='destination'){	
 				$this->show_destination($param2);
 			}elseif($param1=='booking'){	
-				$this->tour_booking($param2);
+				$this->tour_booking($param2,$param3);
 			}elseif($param1=='list'){
 			        $this->show_tour_list();
 			}
@@ -63,6 +63,8 @@ class Tour extends CI_Controller {
 				$this->getEditableTabValues();
 			}elseif($param1 == 'packages'){
 				$this->showPackageList();
+			}elseif($param1 == 'getHotelAttributes'){echo "hi";exit;
+				$this->getHotelAttributes();
 			}else{
 				$this->notFound();
 			}
@@ -347,7 +349,6 @@ class Tour extends CI_Controller {
 		$data['available_vehicles']=$this->trip_booking_model->getVehiclesArray();
 		$active_tab = 't_tab';
 		$data['tabs'] = $this->set_up_trip_tabs($active_tab);
-		
 		$data['title']="Tour Booking | ".PRODUCT_NAME;  
 		$page='user-pages/tour-booking';
 		$this->load_templates($page,$data);
@@ -904,6 +905,15 @@ class Tour extends CI_Controller {
 		}else{
 			return false;
 		}
+	}
+	public function  getHotelAttributes(){ 
+		if($_REQUEST['hotel_id']!=''){ 
+			$hotel_attributes=$this->tour_model->getHotelAttributes($_REQUEST['hotel_id']);
+			echo json_encode($hotel_attributes);
+	}else{
+			return false;
+		}
+		
 	}
 
 	public function showPackageList(){

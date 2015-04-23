@@ -69,37 +69,67 @@ class Package_model extends CI_Model {
 						$this->db->from($table);
 						$this->db->where('package_itinerary_id',$pck_itinerary_id);
 						$query = $this->db->get();
+						if($query->num_rows() > 0){
+							$return_arry= $query->result_array();
+						}
+						else{
+							$return_arry=false;
+						}
 						break;
 			case 'package_accommodation':$this->db->select('id,package_itinerary_id as itinerary_id,hotel_id,room_type_id,room_quantity,room_attributes,meals_package,meals_quantity');
 						$this->db->from($table);
 						
 						$this->db->where('package_itinerary_id',$pck_itinerary_id);
 						$query = $this->db->get();
+						if($query->num_rows() > 0){
+							
+							foreach($query->result_array() as $value){
+							
+							$value['room_attributes']=($value['room_attributes']!='')?unserialize($value['room_attributes']):'';
+							$value['meals_package']=($value['room_attributes']!='')?unserialize($value['meals_package']):'';
+							$return_arry[]=$value;
+							
+							}
+						}else{
+							$return_arry=false;
+						}
 						break;
 			case 'package_services':$this->db->select('id,package_itinerary_id as itinerary_id, service_id, description, location, quantity ,amount');
 						$this->db->from($table);
 						
 						$this->db->where('package_itinerary_id',$pck_itinerary_id);
 						$query = $this->db->get();
+						if($query->num_rows() > 0){
+							$return_arry= $query->result_array();
+						}else{
+							$return_arry=false;
+						}
 						break;
 			case 'package_vehicles':$this->db->select('id,package_itinerary_id as itinerary_id,vehicle_type_id,vehicle_ac_type_id, vehicle_model_id, vehicle_id, driver_id, tariff_id');
 						$this->db->from($table);
 						
 						$this->db->where('package_itinerary_id',$pck_itinerary_id);
 						$query = $this->db->get();
+						if($query->num_rows() > 0){
+							$return_arry= $query->result_array();
+						}else{
+							$return_arry=false;
+						}
 						break;
 			default:$this->db->select($table.'.*');
 				$this->db->from($table);
 				$this->db->where('package_itinerary_id',$pck_itinerary_id);
 				$query = $this->db->get();
-						
+				if($query->num_rows() > 0){
+					$return_arry= $query->result_array();
+				}else{
+					$return_arry=false;
+						}		
 		}
 		
-		if($query->num_rows() > 0){
-			return $query->result_array();
-		}else{
-			return false;
-		}
+		
+			return $return_arry;
+		
 	}
 
 	//get full package details
@@ -152,7 +182,7 @@ class Package_model extends CI_Model {
 	
 	// get all packages
 	function getAllPackages(){
-		$this->db->select('p.id,p.name,st.name');
+		$this->db->select('p.id,p.name as package,p.status_id,st.name');
 		$this->db->from('packages p');
 		$this->db->join('statuses st','p.status_id = st.id','left');
 		$qry=$this->db->get();

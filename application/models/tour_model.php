@@ -721,6 +721,7 @@ class Tour_model extends CI_Model {
 
 	}
 	
+	//check and to be deleted function
 	//fetch editable values for each trip sections using section id and table name
 	function get_trip_section_values($trip_section_id,$tbl){ 
 		$this->db->where('id',$trip_section_id);
@@ -735,7 +736,7 @@ class Tour_model extends CI_Model {
 			$qry=$this->db->get()->row(); 
 			$editable_values['hotel_category_id']=$qry->hotel_category_id;
 			$editable_values['destination_id']=$qry->destination_id;
-			$editable_values['room_attributes']=unserialize($editable_values['room_attributes']);//echo $editable_values['room_attributes'];exit;
+			$editable_values['room_attributes']=unserialize($editable_values['room_attributes']);
 			$editable_values['meals_package']=unserialize($editable_values['meals_package']);
 			}
 			return $editable_values;
@@ -743,7 +744,23 @@ class Tour_model extends CI_Model {
 			return array();
 		}
 	}
+	
+	function  getHotelAttributes($hotel_id){
+		$this->db->select('hotel_category_id,destination_id');
+		$this->db->where('id',$hotel_id);
+		$this->db->from('hotels');
+		$qry=$this->db->get(); 
+		if($qry->num_rows() > 0){
+			$result=$qry->row();
+			$hotel_array['hotel_category_id']=$result->hotel_category_id;
+			$hotel_array['destination_id']=$result->destination_id;
+			return $hotel_array;
+		}else{
+			return false;
+		}
 		
+	
+	}	
 
 }
 ?>

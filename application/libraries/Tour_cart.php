@@ -42,6 +42,7 @@ class CI_Tour_cart {
 			// No cart exists so we'll set some base values
 			$this->_tour_cart_contents['tour_cart_total'] = 0;
 			$this->_tour_cart_contents['total_itineraries'] = 0;
+			$this->_tour_cart_contents['delete_itineraries'] = array();
 		}
 
 		log_message('debug', "Tour Cart Class Initialized");
@@ -101,9 +102,24 @@ class CI_Tour_cart {
 		$this->save_cart();
 	}
 	
-	function delete($itinerary,$tbl,$index,$id){
-	//continue**********
+	//delete from cart
+	function delete($itinerary,$tbl,$index,$delete_id){
+		
+		$cart=$this->contents();
+		if(isset($cart[$itinerary][$tbl][$index])){
+
+			$delete_items = $this->delete_itineraries();
+			if(is_numeric($delete_id) && $delete_id > 0){
+				$delete_items[$tbl][] = $delete_id;
+			}
+			unset($this->_tour_cart_contents[$itinerary][$tbl][$index]);
+			
+		}
+		$this->save_cart();
+
 	}
+
+
 	// select value by index
 	function select($itinerary,$tble,$index){
 		$cart=$this->contents();
@@ -122,6 +138,7 @@ class CI_Tour_cart {
 		// Unset these so our total can be calculated correctly below
 		unset($this->_tour_cart_contents['tour_cart_total']);
 		unset($this->_tour_cart_contents['total_itineraries']);
+		unset($this->_tour_cart_contents['delete_itineraries']);
 
 		// Is our cart empty?  If so we delete it from the session
 		if (count($this->_tour_cart_contents) <= 0)
@@ -157,6 +174,19 @@ class CI_Tour_cart {
 		return $this->_tour_cart_contents['total_itineraries'];
 	}
 
+	/**
+	 * Total Items
+	 *
+	 * Returns the delete items rows by table index(Eg: [table]=array(id1,id2))
+	 *
+	 * @access	public
+	 * @return	integer
+	 */
+	function delete_itineraries()
+	{
+		return $this->_tour_cart_contents['delete_itineraries'];
+	}
+
 	// --------------------------------------------------------------------
 
 	/**
@@ -174,6 +204,7 @@ class CI_Tour_cart {
 		// Remove these so they don't create a problem when showing the cart table
 		unset($cart['tour_cart_total']);
 		unset($cart['total_itineraries']);
+		unset($cart['delete_itineraries']);
 
 		return $cart;
 	}
@@ -195,7 +226,7 @@ class CI_Tour_cart {
 
 		$this->_tour_cart_contents['tour_cart_total'] = 0;
 		$this->_tour_cart_contents['total_itineraries'] = 0;
-
+		$this->_tour_cart_contents['delete_itineraries'] = array();
 		$this->CI->session->unset_userdata('tour_cart_contents');
 	}
 

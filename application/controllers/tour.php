@@ -699,8 +699,8 @@ class Tour extends CI_Controller {
 	}
 
 	function save_cart($trip_id=gINVALID)
-	{
-		$cart = $this->tour_cart->contents();
+	{ 
+		
 		if(isset($_REQUEST['save-itry'])){
 			
 			if(is_numeric($trip_id) && $trip_id > 0){
@@ -734,7 +734,7 @@ class Tour extends CI_Controller {
 			//echo "<pre>";print_r($package);echo "</pre>";exit;
 			if($package){
 				$this->tour_cart->create($package);
-				$cart = $this->tour_cart->contents();
+				$cart = $this->tour_cart->contents();//echo "<pre>";print_r($cart);echo "</pre>";exit;
 				$this->build_itinerary_data($cart,$ajax = 'YES');
 			}
 		}else{
@@ -896,7 +896,7 @@ class Tour extends CI_Controller {
 		if((isset($_REQUEST['row_id']))&& (isset($_REQUEST['table'])) && (isset($_REQUEST['itinerary']))){
 			
 			$editable_values=$this->tour_cart->select($_REQUEST['itinerary'],$_REQUEST['table'],$_REQUEST['row_id']);
-			
+			//echo "<pre>";print_r($editable_values);echo "</pre>";exit;
 			echo json_encode($editable_values);
 		}else{
 			return false;

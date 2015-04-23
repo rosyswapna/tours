@@ -107,7 +107,7 @@ class CI_Tour_cart {
 	// select value by index
 	function select($itinerary,$tble,$index){
 		$cart=$this->contents();
-		
+		//print_r($this->CI->session->userdata('tour_cart_contents'));exit;
 		if(isset($cart[$itinerary][$tble][$index])){
 			return $cart[$itinerary][$tble][$index];
 		}
@@ -131,15 +131,15 @@ class CI_Tour_cart {
 			// Nothing more to do... coffee time!
 			return FALSE;
 		}
-		$total_itinerary = 0;
+		$total_itinerary = 0; 
 		foreach($this->_tour_cart_contents as $cart_itinerary){
 			$total_itinerary++;
 			
 		}
 		$this->_tour_cart_contents['total_itineraries'] = $total_itinerary;
-
+		
 		$this->CI->session->set_userdata(array('tour_cart_contents' => $this->_tour_cart_contents));
-
+		
 		// Woot!
 		return TRUE;
 	}

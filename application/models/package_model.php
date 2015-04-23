@@ -76,13 +76,13 @@ class Package_model extends CI_Model {
 						$this->db->where('package_itinerary_id',$pck_itinerary_id);
 						$query = $this->db->get();
 						break;
-			case 'package_services':$this->db->select('id,package_itinerary_id as itinerary_id, service_id, description, location, quantity');
+			case 'package_services':$this->db->select('id,package_itinerary_id as itinerary_id, service_id, description, location, quantity ,amount');
 						$this->db->from($table);
 						
 						$this->db->where('package_itinerary_id',$pck_itinerary_id);
 						$query = $this->db->get();
 						break;
-			case 'package_vehicles':$this->db->select('id,package_itinerary_id as itinerary_id,vehicle_type_id,vehicle_ac_type_id, vehicle_model_id, vehicle_id, driver_id');
+			case 'package_vehicles':$this->db->select('id,package_itinerary_id as itinerary_id,vehicle_type_id,vehicle_ac_type_id, vehicle_model_id, vehicle_id, driver_id, tariff_id');
 						$this->db->from($table);
 						
 						$this->db->where('package_itinerary_id',$pck_itinerary_id);

@@ -2467,7 +2467,7 @@ $('.vehicle-list').on('keydown',function(){
 		var row_id=$(this).attr('row_id');
 		var tab=$(this).attr('tab');
 		var itinerary=$(this).attr('itinerary');
-		var table=getCartTableWithTab(tab);
+		var table=getCartTableWithTab(tab); 
 	$.post(base_url+"/tour/getEditableTabValues",
 		 { row_id:row_id,
 		   tab:tab,

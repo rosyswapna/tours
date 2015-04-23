@@ -149,6 +149,19 @@ class Package_model extends CI_Model {
 		}
 		return $trip_table;
 	}
+	
+	// get all packages
+	function getAllPackages(){
+		$this->db->select('p.id,p.name,st.name');
+		$this->db->from('packages p');
+		$this->db->join('statuses st','p.status_id = st.id','left');
+		$qry=$this->db->get();
+			if($qry->num_rows() > 0){
+				return $qry->result_array();
+			}else{
+				return false;
+			}
+	}
 
 	//save package
 	function save_package($cart,$package){

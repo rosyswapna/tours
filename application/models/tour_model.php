@@ -607,7 +607,7 @@ class Tour_model extends CI_Model {
 			if($query->num_rows() > 0){
 				$section_val=$query->row()->$select;
 				
-				$ret[]= $row_id.'<a href="#" row_id="'.$row_id.'" table="'.$table.'" tab="'.$tab.'" itinerary="'.$itinerary.'" class="edit_data">'.$section_val."</a>";
+				$ret[]= '<a href="#" row_id="'.$row_id.'" table="'.$table.'" tab="'.$tab.'" itinerary="'.$itinerary.'" class="edit_data">'.$section_val."</a>";
 				
 			}
 			

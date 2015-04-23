@@ -61,6 +61,8 @@ class Tour extends CI_Controller {
 				$this->save_cart($param2);
 			}elseif($param1 == 'getEditableTabValues'){
 				$this->getEditableTabValues();
+			}elseif($param1 == 'packages'){
+				$this->showPackageList();
 			}else{
 				$this->notFound();
 			}
@@ -886,7 +888,8 @@ class Tour extends CI_Controller {
 
 
 	function getRoomAttributesNMealsPackage()//not completed
-	{
+	{	
+		
 		
 	}
 
@@ -903,7 +906,17 @@ class Tour extends CI_Controller {
 		}
 	}
 
+	public function showPackageList(){
+		if($this->session_check()==true) { 
+			$data['package_lists']=$this->package_model->getAllPackages();
+			$data['title']="Package List| ".PRODUCT_NAME;  
+			$page='user-pages/packageList';
+			$this->load_templates($page,$data);
+		}else{
+			$this->notAuthorized();
+		}
 	
+	}
 
 	//-----------------------------------------------------------------------------------------
 

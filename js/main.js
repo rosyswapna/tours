@@ -2457,13 +2457,15 @@ $('.vehicle-list').on('keydown',function(){
   //ajax calls for delete itinerary
 	$('.itinerary #delete-travel').click(function(){
 	var trip_id = $('input[name="trip_id"]').val();
+	var row_id= $('input[name="destination_row_id"]').val();
+	var itinerary_id= $('input[name="destination_itinerary_id"]').val();
 	var _date = $('#travel_date').val();
 	var destination_section_id=$('#destination_section_id').val();
 	if(trip_id == ''){
-		var dataArr = {table:"trip_vehicles", _date:_date, id:destination_section_id};
+		var dataArr = {table:"trip_vehicles", _date:_date, row_id:row_id,id:destination_section_id};
 		delete_itinerary_for_package(dataArr);
 	}else{
-		var dataArr = {table:"trip_vehicles",  trip_id:trip_id, _date:_date, id:destination_section_id};
+		var dataArr = {table:"trip_vehicles",  trip_id:trip_id, _date:_date,row_id:row_id, id:destination_section_id};
 		delete_itinerary_for_tour(dataArr);
 	}
 	

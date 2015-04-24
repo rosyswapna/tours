@@ -700,6 +700,25 @@ class Tour extends CI_Controller {
 	
 	//package delete
 	function deleteFromCartPackage(){
+		if(isset($_REQUEST['table'])&& isset($_REQUEST['_date'])){
+			$tble = $_REQUEST['table'];
+			$fields = $_REQUEST;
+			$itinerary = $fields['_date'];
+			$index = $fields['row_id'];
+			array_shift($fields);//pop first element(url data from ajax call)
+			unset($fields['table']);
+			unset($fields['_date']);
+			unset($fields['row_id']);
+			
+			//echo "<pre>";print_r($fields);echo "</pre>";exit;
+			if(is_numeric($fields['id'])&& ($fields['id']>0)){
+			$this->tour_cart->delete($tble,$fields['id'],$itinerary,$index);
+			}
+		}
+
+		$cart = $this->tour_cart->contents();
+		//echo "<pre>";print_r($cart);echo "</pre>";exit;
+		$this->build_itinerary_data($cart,$ajax = 'YES');
 	
 	}
 

@@ -197,7 +197,7 @@ class Package_model extends CI_Model {
 	function save_package($cartClass,$package){
 		
 		$cart=$cartClass->contents();
-		$deleteData=$cartClass->delete_itineraries();echo "<pre>";print_r($deleteData);echo "</pre>";exit;
+		$deleteData=$cartClass->delete_itineraries();
 		if(is_numeric($package) && $package > 0){//edit package
 			$package_id = $package;
 		}else{//new package
@@ -275,8 +275,14 @@ class Package_model extends CI_Model {
 			}
 				
 		}
-		if($deleteData){ echo '<pre>';print_r($deleteData);echo '</pre>';exit;
-			foreach($deleteData as $tbl=>$dataArray){
+		if($deleteData){
+			foreach($deleteData as $tbl=>$dataBatch){
+					
+					$tbl=$this->getPackageTable($tbl);
+					
+					$this->db->where_in('id', $dataBatch);
+					
+					$this->db->delete($tbl); 
 				
 				
 			}

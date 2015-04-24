@@ -58,6 +58,9 @@ class CI_Tour_cart {
 		
 		//echo "<pre>";print_r($items);echo "</pre>";exit;
 		$this->_tour_cart_contents = $items;
+		$this->_tour_cart_contents['delete_itineraries'] = array();
+		$this->_tour_cart_contents['tour_cart_total'] = 0;
+		$this->_tour_cart_contents['total_itineraries'] = 0;
 		$this->save_cart();
 	}
 

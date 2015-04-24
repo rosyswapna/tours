@@ -84,8 +84,9 @@ class CI_Tour_cart {
 			return FALSE;
 		}
 		
-		$cart=$this->contents();
+		$cart=$this->contents(); 
 		if(isset($cart[$itinerary][$tble][$index])){
+		
 			$this->_tour_cart_contents[$itinerary][$tble][$index]=$items;
 		}
 		$this->save_cart();
@@ -189,7 +190,7 @@ class CI_Tour_cart {
 	function contents()
 	{
 		$cart = $this->_tour_cart_contents;
-
+		
 		// Remove these so they don't create a problem when showing the cart table
 		unset($cart['tour_cart_total']);
 		unset($cart['total_itineraries']);

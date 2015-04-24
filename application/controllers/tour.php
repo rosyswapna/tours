@@ -677,13 +677,15 @@ class Tour extends CI_Controller {
 			$tble = $_REQUEST['table'];
 			$fields = $_REQUEST;
 			$itinerary = $fields['_date'];
+			$index = $fields['row_id'];
 			array_shift($fields);//pop first element(url data from ajax call)
 			unset($fields['table']);
 			unset($fields['_date']);
+			unset($fields['row_id']);
 			
 			//echo "<pre>";print_r($fields);echo "</pre>";exit;
 			if(is_numeric($fields['id'])&& ($fields['id']>0)){
-			$this->tour_cart->update($tble,$fields,$itinerary);
+			$this->tour_cart->update($tble,$fields,$itinerary,$index);
 			}else{ 
 			$data[$tble] = $fields; 
 			$this->tour_cart->insert($data,$itinerary);
@@ -703,7 +705,7 @@ class Tour extends CI_Controller {
 
 	function save_cart($trip_id=gINVALID)
 	{ 
-		
+		$cart =$this->tour_cart->contents();
 		if(isset($_REQUEST['save-itry'])){
 			
 			if(is_numeric($trip_id) && $trip_id > 0){

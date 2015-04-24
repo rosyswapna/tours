@@ -99,12 +99,13 @@ class CI_Tour_cart {
 		
 		$cart=$this->contents();
 		if(isset($cart[$itinerary][$tbl][$index])){
+			unset($this->_tour_cart_contents[$itinerary][$tbl][$index]);
 
 			$delete_items = $this->delete_itineraries();
 			if(is_numeric($delete_id) && $delete_id > 0){
 				$delete_items[$tbl][] = $delete_id;
 			}
-			unset($this->_tour_cart_contents[$itinerary][$tbl][$index]);
+			$this->_tour_cart_contents['delete_itineraries'] = $delete_items;
 			
 		}
 		$this->save_cart();

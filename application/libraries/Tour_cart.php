@@ -128,6 +128,7 @@ class CI_Tour_cart {
 		// Unset these so our total can be calculated correctly below
 		unset($this->_tour_cart_contents['tour_cart_total']);
 		unset($this->_tour_cart_contents['total_itineraries']);
+		$delete_itineraries = $this->_tour_cart_contents['delete_itineraries'];
 		unset($this->_tour_cart_contents['delete_itineraries']);
 
 		// Is our cart empty?  If so we delete it from the session
@@ -144,6 +145,7 @@ class CI_Tour_cart {
 			
 		}
 		$this->_tour_cart_contents['total_itineraries'] = $total_itinerary;
+		$this->_tour_cart_contents['delete_itineraries'] = $delete_itineraries;
 		
 		$this->CI->session->set_userdata(array('tour_cart_contents' => $this->_tour_cart_contents));
 		

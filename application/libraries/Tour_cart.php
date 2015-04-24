@@ -77,7 +77,7 @@ class CI_Tour_cart {
 
 		
 	}
-	function update($tble,$items,$itinerary){//update cart item
+	function update($tble,$items,$itinerary,$index){//update cart item
 		if ( ! is_array($items) OR count($items) == 0)
 		{
 			log_message('error', 'The insert method must be passed an array containing data.');
@@ -85,20 +85,9 @@ class CI_Tour_cart {
 		}
 		
 		$cart=$this->contents();
-		if(isset($cart[$itinerary])){
-			$required_itnry=$cart[$itinerary];
-			if(isset($required_itnry[$tble])){
-				$table_data=$required_itnry[$tble];
-				foreach($table_data as $index=>$data_arry){
-					if($data_arry['id']==$items['id']){
-						$this->_tour_cart_contents[$itinerary][$tble][$index]=$items;
-						break;
-					}
-				
-				}
-			}
+		if(isset($cart[$itinerary][$tble][$index])){
+			$this->_tour_cart_contents[$itinerary][$tble][$index]=$items;
 		}
-		
 		$this->save_cart();
 	}
 	

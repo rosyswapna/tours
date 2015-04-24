@@ -2491,16 +2491,15 @@ $('.vehicle-list').on('keydown',function(){
 				}else if(tab=="a_tab"){
 				//accomodation-tab values
 					var href = $('a[href="#tab_2"]');
-					$(href).trigger('click'); alert(data.room_attributes);
+					$(href).trigger('click');
 					var hotel_id=data.hotel_id;
 					getHotelAttributes(hotel_id);
 					$(".tour-accomodation-tab #accommodation_section_id").val(data.id);
 					$(".tour-accomodation-tab #accommodation_date option[value='"+itinerary+"']").attr('selected', true);
-					$(".tour-accomodation-tab #hotel_destination_id option[value='"+data.destination_id+"']").attr('selected', true);
-					$(".tour-accomodation-tab #hotel_category_id option[value='"+data.hotel_category_id+"']").attr('selected', true);
+					
 					
 					$(".tour-accomodation-tab #room_type_id option[value='"+data.room_type_id+"']").attr('selected', true);
-					var room_attributes=data.room_attributes;
+					var room_attributes=data.room_attributes; 
 					$.each(room_attributes, function(i,e){
 					    $(".tour-accomodation-tab #room_attributes option[value='']").removeAttr("selected");
 					    $(".tour-accomodation-tab #room_attributes option[value='" + e + "']").attr("selected", true);
@@ -2511,13 +2510,8 @@ $('.vehicle-list').on('keydown',function(){
 					$("#meals_package"+val).attr('checked',true);
 					//$("#meals_package"+val+" < .icheckbox_minimal").addClass( "checked" );
 					});
-					if(($('#hotel_destination_id').val()!=-1)&&($('#hotel_category_id').val()!=-1)){
-						var destination_id=$('#hotel_destination_id').val();
-						var hotel_category_id=$('#hotel_category_id').val();
-						getHotels(destination_id,hotel_category_id,hotel_id);
-					}
 					if(hotel_id>0)
-						getHotelRooms(hotel_id,data.room_type_id);
+					getHotelRooms(hotel_id,data.room_type_id);
 					$(".tour-accomodation-tab #room_quantity").val(data.room_quantity);
 					$(".tour-accomodation-tab #meals_quantity").val(data.meals_quantity);
 					$(".tour-accomodation-tab #add-accommodation").val('Update');
@@ -2569,13 +2563,17 @@ $('.vehicle-list').on('keydown',function(){
 	$.post(base_url+"/tour/getHotelAttributes",{hotel_id:hotel_id},function(data){
 		 if(data!=false){
 		 data=jQuery.parseJSON(data);
-			var hotel_attributes=[data.hotel_category_id,data.destination_id]; 
-			return hotel_attributes;
+			
+			$(".tour-accomodation-tab #hotel_destination_id option[value='"+data.destination_id+"']").attr('selected', true);
+			$(".tour-accomodation-tab #hotel_category_id option[value='"+data.hotel_category_id+"']").attr('selected', true);
+			if(($('#hotel_destination_id').val()!=-1)&&($('#hotel_category_id').val()!=-1)){
+				var destination_id=$('#hotel_destination_id').val();
+				var hotel_category_id=$('#hotel_category_id').val();
+				getHotels(destination_id,hotel_category_id,hotel_id);
 			}
-			else
-			{
-			return false;
+			
 			}
+			
 		});
 		}		 
 	

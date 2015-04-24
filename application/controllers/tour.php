@@ -711,9 +711,9 @@ class Tour extends CI_Controller {
 			unset($fields['row_id']);
 			
 			//echo "<pre>";print_r($fields);echo "</pre>";exit;
-			if(is_numeric($fields['id'])&& ($fields['id']>0)){
+			
 				$this->tour_cart->delete($itinerary,$tble,$index,$fields['id']);
-			}
+			
 		}
 
 		$cart = $this->tour_cart->contents();

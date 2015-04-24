@@ -97,9 +97,9 @@ class CI_Tour_cart {
 	
 	//delete from cart
 	function delete($itinerary,$tbl,$index,$delete_id){
-		
+		//echo "day ".$itinerary."tbl ".$tbl."indeex ".$index."delete id ".$delete_id;exit;
 		$cart=$this->contents();
-		if(isset($cart[$itinerary][$tbl][$index])){
+		if(isset($cart[$itinerary][$tbl][$index])){//echo "<pre>";print_r($cart[$itinerary][$tbl][$index]);echo "</pre>";exit;
 
 			$delete_items = $this->delete_itineraries();
 			if(is_numeric($delete_id) && $delete_id > 0){

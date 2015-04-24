@@ -2462,10 +2462,58 @@ $('.vehicle-list').on('keydown',function(){
 	var _date = $('#travel_date').val();
 	var destination_section_id=$('#destination_section_id').val();
 	if(trip_id == ''){
-		var dataArr = {table:"trip_vehicles", _date:_date, row_id:row_id,id:destination_section_id};
+		var dataArr = {table:"trip_destinations", _date:_date, row_id:row_id,id:destination_section_id};
 		delete_itinerary_for_package(dataArr);
 	}else{
-		var dataArr = {table:"trip_vehicles",  trip_id:trip_id, _date:_date,row_id:row_id, id:destination_section_id};
+		var dataArr = {table:"trip_destinations",  trip_id:trip_id, _date:_date,row_id:row_id, id:destination_section_id};
+		delete_itinerary_for_tour(dataArr);
+	}
+	
+	});
+	
+	$('.itinerary #delete-accommodation').click(function(){
+	var trip_id = $('input[name="trip_id"]').val();
+	var row_id= $('input[name="accommodation_row_id"]').val();
+	var itinerary_id= $('input[name="accommodation_itinerary_id"]').val();
+	var _date = $('#accommodation_date').val();
+	var accommodation_section_id=$('#accommodation_section_id').val();
+	if(trip_id == ''){
+		var dataArr = {table:"trip_accommodation", _date:_date, row_id:row_id,id:accommodation_section_id};
+		delete_itinerary_for_package(dataArr);
+	}else{
+		var dataArr = {table:"trip_accommodation",  trip_id:trip_id, _date:_date,row_id:row_id, id:accommodation_section_id};
+		delete_itinerary_for_tour(dataArr);
+	}
+	
+	});
+	
+	$('.itinerary #delete-service').click(function(){
+	var trip_id = $('input[name="trip_id"]').val();
+	var row_id= $('input[name="service_row_id"]').val();
+	var itinerary_id= $('input[name="service_itinerary_id"]').val();
+	var _date = $('#service_date').val();
+	var service_section_id=$('#service_section_id').val();
+	if(trip_id == ''){
+		var dataArr = {table:"trip_services", _date:_date, row_id:row_id,id:service_section_id};
+		delete_itinerary_for_package(dataArr);
+	}else{
+		var dataArr = {table:"trip_services",  trip_id:trip_id, _date:_date,row_id:row_id, id:service_section_id};
+		delete_itinerary_for_tour(dataArr);
+	}
+	
+	});
+	
+	$('.itinerary #delete-vehicle').click(function(){
+	var trip_id = $('input[name="trip_id"]').val();
+	var row_id= $('input[name="vehicle_row_id"]').val();
+	var itinerary_id= $('input[name="vehicle_itinerary_id"]').val();
+	var _date = $('#vehicle_date').val();
+	var vehicle_section_id=$('#vehicle_section_id').val();
+	if(trip_id == ''){
+		var dataArr = {table:"trip_vehicles", _date:_date, row_id:row_id,id:vehicle_section_id};
+		delete_itinerary_for_package(dataArr);
+	}else{
+		var dataArr = {table:"trip_vehicles",  trip_id:trip_id, _date:_date,row_id:row_id, id:vehicle_section_id};
 		delete_itinerary_for_tour(dataArr);
 	}
 	

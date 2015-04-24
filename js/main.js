@@ -2357,21 +2357,29 @@ $('.vehicle-list').on('keydown',function(){
 		var destination_priority = $('input[name="destination_priority"]').val();
 		var description = $('#travel_description').val();
 		var destination_section_id=$('#destination_section_id').val();
-		
+		var combo_data={};
+			combo_data['travel_date']=$('#travel_date').val();
+			combo_data['destination_id']=$('#destination_id').val();
+			error_combo=isVarNullCombo(combo_data);
+		if(error_combo=='false'){
+			resetComboErrorFields(combo_data);
+			if(trip_id == ''){
+				var dataArr = {table:"trip_destinations", _date:_date, row_id:row_id, id:destination_section_id, itinerary_id:itinerary_id, destination_id:destination_id, destination_priority:destination_priority, description:description};
+				add_itinerary_for_package(dataArr);
 
-		if(trip_id == ''){
-			var dataArr = {table:"trip_destinations", _date:_date, row_id:row_id, id:destination_section_id, itinerary_id:itinerary_id, destination_id:destination_id, destination_priority:destination_priority, description:description};
-			add_itinerary_for_package(dataArr);
-
+			
+			}else{
+				var dataArr = {table:"trip_destinations", trip_id:trip_id, _date:_date, row_id:row_id,id:destination_section_id,itinerary_id:itinerary_id,destination_id:destination_id, destination_priority:destination_priority, description:description};
+				add_itinerary_for_tour(dataArr);
+			}
 		
-		}else{
-			var dataArr = {table:"trip_destinations", trip_id:trip_id, _date:_date, row_id:row_id,id:destination_section_id,itinerary_id:itinerary_id,destination_id:destination_id, destination_priority:destination_priority, description:description};
-			add_itinerary_for_tour(dataArr);
+			reset_destination_tab_values();
 		}
 		
-		reset_destination_tab_values();
 	
 	});
+	
+	
 
 	$('.itinerary #add-accommodation').click(function(){
 		var trip_id 	= $('input[name="trip_id"]').val();
@@ -2393,17 +2401,27 @@ $('.vehicle-list').on('keydown',function(){
 				meals_package.push($(this).val());
 		}); 
 		var meals_quantity = $('#meals_quantity').val();
-
-		if(trip_id == ''){
-			var dataArr = {table:"trip_accommodation", _date:_date, row_id:row_id,hotel_id:hotel_id,itinerary_id:itinerary_id, room_type_id:room_type_id, room_quantity:room_quantity,room_attributes:room_attributes,meals_package:meals_package, meals_quantity:meals_quantity, id:accommodation_section_id};
-			add_itinerary_for_package(dataArr);
-		}else{
-			var dataArr = {table:"trip_accommodation", trip_id:trip_id, _date:_date, row_id:row_id,hotel_id:hotel_id, itinerary_id:itinerary_id,room_type_id:room_type_id, room_quantity:room_quantity,room_attributes:room_attributes,meals_package:meals_package, meals_quantity:meals_quantity, id:accommodation_section_id};
 		
-			add_itinerary_for_tour(dataArr);
+		var combo_data={};
+			combo_data['accommodation_date']=$('#accommodation_date').val();
+			combo_data['hotel_destination_id']=$('#hotel_destination_id').val();
+			combo_data['hotel_category_id']=$('#hotel_category_id').val();
+			combo_data['hotel_id']=$('#hotel_id').val();
+			combo_data['room_type_id']=$('#room_type_id').val();
+			error_combo=isVarNullCombo(combo_data);
+		if(error_combo=='false'){
+			resetComboErrorFields(combo_data);	
+			if(trip_id == ''){
+				var dataArr = {table:"trip_accommodation", _date:_date, row_id:row_id,hotel_id:hotel_id,itinerary_id:itinerary_id, room_type_id:room_type_id, room_quantity:room_quantity,room_attributes:room_attributes,meals_package:meals_package, meals_quantity:meals_quantity, id:accommodation_section_id};
+				add_itinerary_for_package(dataArr);
+			}else{
+				var dataArr = {table:"trip_accommodation", trip_id:trip_id, _date:_date, row_id:row_id,hotel_id:hotel_id, itinerary_id:itinerary_id,room_type_id:room_type_id, room_quantity:room_quantity,room_attributes:room_attributes,meals_package:meals_package, meals_quantity:meals_quantity, id:accommodation_section_id};
+			
+				add_itinerary_for_tour(dataArr);
+			}
+		
+			reset_accomodation_tab_values();
 		}
-	
-		reset_accomodation_tab_values();
 	});
 
 	$('.itinerary #add-service').click(function(){
@@ -2417,16 +2435,23 @@ $('.vehicle-list').on('keydown',function(){
 		var quantity 	= $('#service_quantity').val();
 		var amount 	= $('#service_rate').val();
 		var service_section_id=$('#service_section_id').val();
-		if(trip_id == ''){
-			var dataArr = {table:"trip_services", _date:_date,row_id:row_id, service_id:service_id,itinerary_id:itinerary_id, description:description, location:location,quantity:quantity,amount:amount,id:service_section_id};
-			add_itinerary_for_package(dataArr);
-		}else{
-			var dataArr = {table:"trip_services", trip_id:trip_id, _date:_date, row_id:row_id,service_id:service_id, itinerary_id:itinerary_id,description:description, location:location,quantity:quantity,amount:amount,id:service_section_id};
-		
-			add_itinerary_for_tour(dataArr);
+		var combo_data={};
+			combo_data['service_date']=$('#service_date').val();
+			combo_data['service_id']=$('#service_id').val();
+			error_combo=isVarNullCombo(combo_data);
+		if(error_combo=='false'){
+			resetComboErrorFields(combo_data);
+			if(trip_id == ''){
+				var dataArr = {table:"trip_services", _date:_date,row_id:row_id, service_id:service_id,itinerary_id:itinerary_id, description:description, location:location,quantity:quantity,amount:amount,id:service_section_id};
+				add_itinerary_for_package(dataArr);
+			}else{
+				var dataArr = {table:"trip_services", trip_id:trip_id, _date:_date, row_id:row_id,service_id:service_id, itinerary_id:itinerary_id,description:description, location:location,quantity:quantity,amount:amount,id:service_section_id};
+			
+				add_itinerary_for_tour(dataArr);
+			}
+			
+			reset_service_tab_values();
 		}
-		
-		reset_service_tab_values();
 	});
 
 	$('.itinerary #add-vehicle').click(function(){
@@ -2442,16 +2467,25 @@ $('.vehicle-list').on('keydown',function(){
 		var tariff_id	 	= $('.tour-vehicle-tab #vehicle_tariff_id').val();
 		var driver_id	 	= $('.tour-vehicle-tab #driver_id').val();
 		var vehicle_section_id=$('#vehicle_section_id').val();
-		if(trip_id == ''){
-			var dataArr = {table:"trip_vehicles", _date:_date, row_id:row_id,vehicle_id:vehicle_id, itinerary_id:itinerary_id, vehicle_type_id: vehicle_type_id, vehicle_ac_type_id:vehicle_ac_type_id,vehicle_model_id:vehicle_model_id,tariff_id:tariff_id,driver_id:driver_id,id:vehicle_section_id};
-			add_itinerary_for_package(dataArr);
-		}else{
-			var dataArr = {table:"trip_vehicles", trip_id:trip_id, _date:_date, row_id:row_id,vehicle_id:vehicle_id, itinerary_id:itinerary_id, vehicle_type_id: vehicle_type_id, vehicle_ac_type_id:vehicle_ac_type_id,vehicle_model_id:vehicle_model_id,tariff_id:tariff_id,driver_id:driver_id,id:vehicle_section_id};
-		
-			add_itinerary_for_tour(dataArr);
-		}
+		var combo_data={};
+			combo_data['vehicle_date']=$('.tour-vehicle-tab #vehicle_date').val();
+			combo_data['vehicle_type_id']=$('#vehicle_type_id').val();
+			combo_data['vehicle_ac_type_id']=$('.tour-vehicle-tab #vehicle_ac_type_id').val();
+			combo_data['vehicle_model_id']=$('.tour-vehicle-tab #vehicle_model_id').val(); 
+			error_combo=isVarNullCombo(combo_data);
+		if(error_combo=='false'){
+			resetComboErrorFields(combo_data);
+			if(trip_id == ''){
+				var dataArr = {table:"trip_vehicles", _date:_date, row_id:row_id,vehicle_id:vehicle_id, itinerary_id:itinerary_id, vehicle_type_id: vehicle_type_id, vehicle_ac_type_id:vehicle_ac_type_id,vehicle_model_id:vehicle_model_id,tariff_id:tariff_id,driver_id:driver_id,id:vehicle_section_id};
+				add_itinerary_for_package(dataArr);
+			}else{
+				var dataArr = {table:"trip_vehicles", trip_id:trip_id, _date:_date, row_id:row_id,vehicle_id:vehicle_id, itinerary_id:itinerary_id, vehicle_type_id: vehicle_type_id, vehicle_ac_type_id:vehicle_ac_type_id,vehicle_model_id:vehicle_model_id,tariff_id:tariff_id,driver_id:driver_id,id:vehicle_section_id};
+			
+				add_itinerary_for_tour(dataArr);
+			}
 
 		reset_vehicle_tab_values();
+		}
 	});
 	
   //ajax calls for delete itinerary
@@ -2623,6 +2657,30 @@ $('.vehicle-list').on('keydown',function(){
 
 
 	//------------------------functions----------------------------
+	
+	// reset validated field values
+	function resetComboErrorFields(data){
+
+	$.each(data, function(key, value) {
+	      
+			$('#'+key).css('border','1px solid #CCC');
+		  
+	});
+
+	}
+	
+	// validation for tabs
+	function isVarNullCombo(data){
+		var error='false'; 
+		$.each(data, function(key, value) {
+		      if(value== -1){ 
+				error='true';
+				$('#'+key).css('border','1px solid red');
+			  }
+		});
+		return error;
+		}
+	
 	
 	// get hotel related attributes with hotel id
 	function getHotelAttributes(hotel_id){

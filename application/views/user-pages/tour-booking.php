@@ -61,7 +61,7 @@ echo  $this->form_functions->form_error_session('customer','<p class="text-red">
 <td><?php $class="form-control";
 	  $msg="Select";
 	  $name="vehicle_ac_type_id";
-	  echo $this->form_functions->populate_dropdown($name,$vehicle_ac_types,@$vehicle_ac_type_id,$class,$id='vehicle_ac_type_id',$msg);?>
+	  echo $this->form_functions->populate_dropdown($name,$vehicle_ac_types,@$vehicle_ac_type_id,$class,$id='vehicle_ac_type',$msg);?>
 	  <span class="text-red"><?php
 		if($this->mysession->get('Err_V_Ac') != ''){
 			echo $this->mysession->get('Err_V_Ac');
@@ -83,7 +83,7 @@ echo  $this->form_functions->form_error_session('customer','<p class="text-red">
 <td><?php $class="form-control";
 	  $msg="Select";
 	  $name="vehicle_model_id";
-	  echo $this->form_functions->populate_dropdown($name,$vehicle_models,@$vehicle_model_id,$class,$id='vehicle_model_id',$msg);?>
+	  echo $this->form_functions->populate_dropdown($name,$vehicle_models,@$vehicle_model_id,$class,$id='vehicle_model',$msg);?>
 	  <span class="text-red"><?php
 		if($this->mysession->get('Err_Vmodel') != ''){
 			echo $this->mysession->get('Err_Vmodel');

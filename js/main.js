@@ -2468,7 +2468,7 @@ $('.vehicle-list').on('keydown',function(){
 		var dataArr = {table:"trip_destinations",  trip_id:trip_id, _date:_date,row_id:row_id, id:destination_section_id};
 		delete_itinerary_for_tour(dataArr);
 	}
-	
+		reset_destination_tab_values();
 	});
 	
 	$('.itinerary #delete-accommodation').click(function(){
@@ -2484,7 +2484,7 @@ $('.vehicle-list').on('keydown',function(){
 		var dataArr = {table:"trip_accommodation",  trip_id:trip_id, _date:_date,row_id:row_id, id:accommodation_section_id};
 		delete_itinerary_for_tour(dataArr);
 	}
-	
+		reset_accomodation_tab_values();
 	});
 	
 	$('.itinerary #delete-service').click(function(){
@@ -2500,7 +2500,7 @@ $('.vehicle-list').on('keydown',function(){
 		var dataArr = {table:"trip_services",  trip_id:trip_id, _date:_date,row_id:row_id, id:service_section_id};
 		delete_itinerary_for_tour(dataArr);
 	}
-	
+		reset_service_tab_values();
 	});
 	
 	$('.itinerary #delete-vehicle').click(function(){
@@ -2516,7 +2516,7 @@ $('.vehicle-list').on('keydown',function(){
 		var dataArr = {table:"trip_vehicles",  trip_id:trip_id, _date:_date,row_id:row_id, id:vehicle_section_id};
 		delete_itinerary_for_tour(dataArr);
 	}
-	
+		reset_vehicle_tab_values();
 	});
 	
 	

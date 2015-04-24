@@ -268,7 +268,7 @@ echo $this->form_functions->populate_dropdown($name,@$languages,@$driver_languag
 					<div class="box-footer ">
 					<?php 
 					echo form_input(array('name'=>'destination_section_id','class'=>'form-control hide-me','id'=>'destination_section_id','value'=>gINVALID));
-					echo form_input(array('name'=>'destination_row_id','class'=>'form-control ','id'=>'destination_row_id'));
+					echo form_input(array('name'=>'destination_row_id','class'=>'form-control hide-me','id'=>'destination_row_id'));
 					echo form_input(array('name'=>'destination_itinerary_id','class'=>'form-control hide-me','id'=>'destination_itinerary_id'));
 					echo form_submit("add-travel","Add","class='btn btn-primary' id='add-travel'").nbs(5);
 					echo form_submit("delete-travel","Delete","class='btn btn-danger hide-me' id='delete-travel'");

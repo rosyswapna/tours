@@ -455,8 +455,9 @@ class Tour_model extends CI_Model {
 
 
 	//save tour cart with tour cart class
-	function save_tour_cart($cart,$trip_id){
-		
+	function save_tour_cart($cartClass,$trip_id){
+		$cart=$cartClass->contents();
+		$deleteData=$cartClass->delete_itineraries();
 		//create insert and update array
 		foreach($cart as $_date=>$itry){
 			//get itinerary id or get from insert

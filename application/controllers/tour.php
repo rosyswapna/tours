@@ -724,7 +724,7 @@ class Tour extends CI_Controller {
 
 	function save_cart($trip_id=gINVALID)
 	{ 
-		$cart =$this->tour_cart->contents();
+		$cart =$this->tour_cart;
 		if(isset($_REQUEST['save-itry'])){
 			
 			if(is_numeric($trip_id) && $trip_id > 0){

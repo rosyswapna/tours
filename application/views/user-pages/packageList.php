@@ -1,6 +1,11 @@
 <div class="trips">
      <fieldset class="body-border">
      <legend class="body-head">Packages</legend>
+     <div class="package-add-view"><?php echo form_open( base_url().'front-desk/tour/booking');
+		  echo form_submit("add","Manage","class='btn btn-primary'").br(2);
+		  echo form_close(); 
+								  
+						?></div>
 <div class="box-body table-responsive no-padding trips-table">
 	<table class="table table-hover table-bordered" style="width:88%">
 	<tbody>
@@ -17,9 +22,22 @@
 	foreach ($package_lists as $list){ 
 	?>
 	<tr class="row_click common" limited="true">
-	<td><?php echo anchor(base_url().'front-desk/tour/booking/'.$list['id'],$list['package']).br();?></td>
-	<td><?php echo '';?></td>
-	<td><?php echo '';?></td>
+	<td><?php  echo $list['package'];?></td>
+	<td><?php if(!empty($list['destination_arry'])){
+	
+		$numItems = count($list['destination_arry']);
+		$i = 0;
+		foreach ($list['destination_arry'] as $destination){
+			if(++$i === $numItems) {
+				echo nbs(1).$destination['name']. nbs(1);
+			}else{
+				echo nbs(1).$destination['name']. nbs(1).'-'. nbs(1);
+			}	
+		}
+	}
+	
+	?></td>
+	<td><?php echo $list['days'];?></td>
 	<td><?php echo ' ';?></td>
 	<td><?php if( $list['status_id']== STATUS_ACTIVE)
 			echo '<span class="label label-success">'.$list['name'].'</span>';

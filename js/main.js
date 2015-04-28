@@ -2348,7 +2348,7 @@ $('.vehicle-list').on('keydown',function(){
 
 
 	//ajax calls for add itinerary
-	$('.itinerary #add-travel').click(function(){
+	$('.itinerary #add-travel').click(function(){ 
 		var trip_id = $('input[name="trip_id"]').val();
 		var row_id= $('input[name="destination_row_id"]').val();
 		var itinerary_id= $('input[name="destination_itinerary_id"]').val();
@@ -2363,12 +2363,13 @@ $('.vehicle-list').on('keydown',function(){
 			error_combo=isVarNullCombo(combo_data);
 		if(error_combo=='false'){
 			resetComboErrorFields(combo_data);
-			if(trip_id == ''){
+			if(trip_id == ''){ 
 				var dataArr = {table:"trip_destinations", _date:_date, row_id:row_id, id:destination_section_id, itinerary_id:itinerary_id, destination_id:destination_id, destination_priority:destination_priority, description:description};
+				
 				add_itinerary_for_package(dataArr);
 
 			
-			}else{
+			}else{ 
 				var dataArr = {table:"trip_destinations", trip_id:trip_id, _date:_date, row_id:row_id,id:destination_section_id,itinerary_id:itinerary_id,destination_id:destination_id, destination_priority:destination_priority, description:description};
 				add_itinerary_for_tour(dataArr);
 			}
@@ -2650,6 +2651,9 @@ $('.vehicle-list').on('keydown',function(){
 			}
 		 });
 	});
+	
+	
+	
 	//-----------------------------------Tour events ends-----------------------------------------------
 
 
@@ -2657,6 +2661,9 @@ $('.vehicle-list').on('keydown',function(){
 
 
 	//------------------------functions----------------------------
+	
+	
+	
 	
 	// reset validated field values
 	function resetComboErrorFields(data){
@@ -2776,7 +2783,7 @@ $('.vehicle-list').on('keydown',function(){
 			}
 		});
 	}
-	function add_itinerary_for_package(dataArr){
+	function add_itinerary_for_package(dataArr){ 
 		$.post(base_url+'/tour/addToCartPackage',dataArr,function(data){
 			if(data!=false){
 				data=jQuery.parseJSON(data);
@@ -2997,7 +3004,7 @@ $('.vehicle-list').on('keydown',function(){
 
 	function set_trip_date(){
 	
-		var date = $("#tour-pickupdatepicker").val();
+		var date = $("#tour-pickupdatepicker").val(); 
 		if(date != ''){
 			$.post(base_url+"/tour/getItineraryCount",{},function(data){
 				days = Number(data)-1;

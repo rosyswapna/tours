@@ -186,8 +186,28 @@ class Package_model extends CI_Model {
 		$this->db->from('packages p');
 		$this->db->join('statuses st','p.status_id = st.id','left');
 		$qry=$this->db->get();
-			if($qry->num_rows() > 0){
-				return $qry->result_array();
+		
+			if($qry->num_rows() > 0){ //print_r($qry->result_array());exit;
+				
+				$res_arry=$qry->result_array();
+				foreach($res_arry as $index=>$val){
+					$package_id=$val['id'];
+					$this->db->select('COUNT(package_id) as days');
+					$this->db->from('package_itinerary pi');
+					$this->db->where('package_id',$package_id);
+					$no_of_days=$this->db->get()->row();
+					$res_arry[$index]['days']=$no_of_days->days;
+					
+					$this->db->select('d.name');
+					$this->db->distinct();
+					$this->db->from('destinations d');
+					$this->db->join('package_destinations pd','d.id=pd.destination_id','inner');
+					$this->db->join('package_itinerary pi','pd.package_itinerary_id = pi.id','inner');
+					$this->db->join('packages p','pi.package_id = p.id','inner');
+					$this->db->where('package_id',$package_id);
+					$res_arry[$index]['destination_arry']=$this->db->get()->result_array();
+				} //echo '<pre>';print_r($res_arry);echo '</pre>';exit;
+				return $res_arry;
 			}else{
 				return false;
 			}

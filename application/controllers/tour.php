@@ -63,7 +63,7 @@ class Tour extends CI_Controller {
 				$this->getEditableTabValues();
 			}elseif($param1 == 'packages'){
 				$this->showPackageList();
-			}elseif($param1 == 'getHotelAttributes'){echo "hi";exit;
+			}elseif($param1 == 'getHotelAttributes'){
 				$this->getHotelAttributes();
 			}else{
 				$this->notFound();
@@ -307,7 +307,8 @@ class Tour extends CI_Controller {
 	
 
 	public function tour_booking($param2='')
-	{
+	{	
+	
 		
 		if($param2!='' && is_numeric($param2) && $param2 > 0){//valid trip id
 			$tour_itms = $this->tour_model->getItineraryDataAll($param2);
@@ -353,7 +354,9 @@ class Tour extends CI_Controller {
 		$page='user-pages/tour-booking';
 		$this->load_templates($page,$data);
 	}
-
+	
+	
+	
 	public function manage_tour_booking()
 	{
 		if(isset($_REQUEST['trip-add'])){
@@ -602,6 +605,9 @@ class Tour extends CI_Controller {
 				$this->notAuthorized();
 		}
 	}
+	
+	
+	
 	//-----------------------------------------------------------------------------------------
 
 	function set_tour_header($trip_id=''){
@@ -666,7 +672,7 @@ class Tour extends CI_Controller {
 	}
 
 	//package save
-	function addToCartPackage(){
+	function addToCartPackage(){ 
 
 		//create cart
 		if($this->tour_cart->total_itineraries() == 0){
@@ -743,7 +749,9 @@ class Tour extends CI_Controller {
 		$this->session->set_userdata(array('dbSuccess'=>$Msg)); 
 		$this->session->set_userdata(array('dbError'=>''));
 		redirect(base_url().'front-desk/tour/booking/'.$trip_id);
+		
 	}
+	
 
 	function getFromCart(){
 		$cart = $this->tour_cart->contents();

@@ -194,7 +194,8 @@ $(document).ready(function(){
 	//get hotel rooms on change hotel
 	$('#acmd_hotel_id').on('change',function(){
 		var hotel_id = $(this).val();
-		getHotelRooms(hotel_id);
+		var _date = $('#acmd_from_date').val();
+		getTripHotelRooms(hotel_id,_date);
 	});
 
 	$('#acmd_room_type_id').on('change',function(){
@@ -656,6 +657,25 @@ $(document).ready(function(){
 				var selected="";
 				for(var i=0;i< data.length;i++){
 					$(id).append($("<option "+selected+"></option>").attr("value",data[i].room_type_id).text(data[i].room_type_name));
+				}
+		
+			}
+		});
+		
+	}
+
+	//get hotel rooms for selected hotel and set room types list
+	function getTripHotelRooms(hotel_id,_date,room_type_id=''){
+		var id ='#acmd_room_type_id';
+		$(id+' option').remove();
+		$(id).append($("<option ></option>").attr("value",'-1').text('--Select--'));
+		$.post(base_url+"/voucher/getTripHotelRoom",{hotel_id:hotel_id,trip_id:trip_id,_date:_date},
+		function(data){
+			if(data!='false'){
+				data=jQuery.parseJSON(data);
+				var selected="";
+				for(var i=0;i< data.length;i++){
+					$(id).append($("<option "+selected+"></option>").attr("value",data.room_type_id).text(data.room_type_name));
 				}
 		
 			}

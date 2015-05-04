@@ -1091,7 +1091,8 @@ class User extends CI_Controller {
 			//$data['trip_tab']='active';
 			$active_tab = 't_tab';//trip tab
 			}
-			$data['trips']=$this->trip_booking_model->getCustomerVouchers($param2,$fdate,$todate);
+	// *************query change needs here********************************************************************
+			//$data['trips']=$this->trip_booking_model->getCustomerVouchers($param2,$fdate,$todate);
 			}
 			$data['tabs'] = $this->set_up_customer_tabs($active_tab,$param2);
 			$data['tariffs'] = $this->customers_model->getCustomerTariffs($param2);//print_r($data['tariffs']);exit;
@@ -1371,7 +1372,8 @@ public function profile() {
 
 			//trip details
 			if($param2!=''){
-				$data['trips']=$this->trip_booking_model->getDriverVouchers($param2);
+// *************query change needs here********************************************************************
+				//$data['trips']=$this->trip_booking_model->getDriverVouchers($param2);
 			}
 			
 			
@@ -1597,13 +1599,12 @@ public function profile() {
 					$data['trip_tab']='active';
 					$active_tab = 't_tab';//trip tab
 				} 
-				$trips = $this->trip_booking_model->getDriverVouchers($param2,$fdate,$todate);
+	// *************query change needs here********************************************************************
+				//$trips = $this->trip_booking_model->getDriverVouchers($param2,$fdate,$todate);
+				//list($data['TripTableData'], $data['TotalTable']) = $this->DriverTripsTable($trips,$DriverSalary);
+	//********************************************************************************
 				
-				//echo "<pre>";print_r($trips);echo "</pre>";exit;
-				list($data['TripTableData'], $data['TotalTable']) = $this->DriverTripsTable($trips,$DriverSalary);
-
 				
-				//echo "<pre>";print_r($data['TotalTable']['tdata']);echo "</pre>";exit;
 				
 			
 				//$this->mysession->set('trips',$data['trips']);
@@ -1979,11 +1980,12 @@ public function profile() {
 					$data['trip_tab']='active';
 				}
 				$data['ve_id']=$vid; 
-				//$data['trips']=$this->trip_booking_model->getVehicleVouchers($vid,$fdate,$todate); 
-				$trips=$this->trip_booking_model->getVehicleVouchers($vid,$fdate,$todate); 
-				//array values for Vehicle Trip tab
-				list($data['TripTableData'], $data['TotalTable']) = $this->VehicleTripsTable($trips);
 				
+		// *************query change needs here********************************************************************		
+				//$trips=$this->trip_booking_model->getVehicleVouchers($vid,$fdate,$todate); 
+				//array values for Vehicle Trip tab**
+				//list($data['TripTableData'], $data['TotalTable']) = $this->VehicleTripsTable($trips);
+		//***********************************************************		
 				//----------------------
 				$data['record_values']=$this->user_model->getRecordsById($tbl,$vid); 
 				$data['driver']=$data['record_values']['driver'];

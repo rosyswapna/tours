@@ -1508,16 +1508,17 @@ public function profile() {
 			$driver_statuses='';
 			for($i=0;$i<count($data['values']);$i++){
 				$id=$data['values'][$i]['id'];
-				$availability=$this->driver_model->getCurrentStatuses($id);
+	//******** query change needs here***********************************************	
+				/*$availability=$this->driver_model->getCurrentStatuses($id);
 				if($availability==false){
 				$driver_statuses[$id]='Available';
 				$driver_trips[$id]=gINVALID;
 				}else{
 				$driver_statuses[$id]='OnTrip';
 				$driver_trips[$id]=$availability[0]['id'];
-				}
+				}*/
 			}
-			$data['driver_statuses']=$driver_statuses;
+			//$data['driver_statuses']=$driver_statuses;
 			$data['driver_trips']=$driver_trips;
 			if(empty($data['values'])){
 						$data['result']="No Results Found !";
@@ -1548,8 +1549,8 @@ public function profile() {
 			}else{
 			$data['vehicles']='';
 			}
-
-			$data['trip_info']=$this->user_model->getTotTripInfo();
+	//******** query change needs here***********************************************	
+			//$data['trip_info']=$this->user_model->getTotTripInfo();
 
 			$data['page_links']=$p_res['page_links']; 
 			$data['title']='List Driver| '.PRODUCT_NAME;
@@ -2305,16 +2306,17 @@ FROM vehicles V where V.organisation_id = '.$this->session->userdata('organisati
 	$vehicle_statuses='';
 	for($i=0;$i<count($data['values']);$i++){
 		$id=$data['values'][$i]['id'];
-		$availability=$this->vehicle_model->getCurrentStatuses($id);
+//******** query change needs here***********************************************
+		/*$availability=$this->vehicle_model->getCurrentStatuses($id);
 		if($availability==false){
 		$vehicle_statuses[$id]='Available';
 		$vehicle_trips[$id]=gINVALID;
 		}else{
 		$vehicle_statuses[$id]='OnTrip';
 		$vehicle_trips[$id]=$availability[0]['id'];
-		}
-	}//print_r($vehicle_statuses);print_r($vehicle_trips);exit;
-	$data['vehicle_statuses']=$vehicle_statuses;
+		}*/
+	}
+	//$data['vehicle_statuses']=$vehicle_statuses;
 	$data['vehicle_trips']=$vehicle_trips;
 	if(empty($data['values'])){
 	$data['result']="No Results Found !";

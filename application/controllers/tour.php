@@ -679,11 +679,13 @@ class Tour extends CI_Controller {
 			$this->tour_cart->create();
 		}
 		//print_r($_REQUEST);exit;
-		if(isset($_REQUEST['table'])&& isset($_REQUEST['_date'])){
-			$tble = $_REQUEST['table'];
-			$fields = $_REQUEST;
-			$itinerary = $fields['_date'];
-			$index = $fields['row_id'];
+		//if(isset($_REQUEST['table'])&& isset($_REQUEST['_date'])){
+		if(isset($_REQUEST['post'])){
+			$dataArray=$_REQUEST['post'];
+			$tble = $dataArray['table'];
+			$fields = $dataArray;
+			$itinerary = $dataArray['_date'];
+			$index = $dataArray['row_id'];
 			array_shift($fields);//pop first element(url data from ajax call)
 			unset($fields['table']);
 			unset($fields['_date']);

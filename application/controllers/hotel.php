@@ -306,27 +306,27 @@ class Hotel extends CI_Controller {
 
 		}
 		$err=false;
-			if($data['room_type_id']==gINVALID){
+			if(isset($data['room_type_id']) && $data['room_type_id']==gINVALID){
 			$err=true;
 			$this->mysession->set('Err_room_type_tariff','Choose Room Type!');
 			}
-			if($data['season_id1']==gINVALID){
+			if(isset($data['season_id1']) && $data['season_id1']==gINVALID){
 			$err=true;
 			$this->mysession->set('Err_season_id1','Choose Season!');
 			}
-			if($data['room_attr_id']==gINVALID){
+			if(isset($data['room_attr_id']) && $data['room_attr_id']==gINVALID){
 			$err=true;
 			$this->mysession->set('Err_room_attr','Choose Attribute!');
 			}
-			if($data['season_id2']==gINVALID){
+			if(isset($data['season_id2']) && $data['season_id2']==gINVALID){
 			$err=true;
 			$this->mysession->set('Err_season_id2','Choose Season!');
 			}
-			if($data['meals_package_id']==gINVALID){
+			if(isset($data['meals_package_id']) && $data['meals_package_id']==gINVALID){
 			$err=true;
 			$this->mysession->set('Err_meals','Choose Meals Package!');
 			}
-			if($data['season_id3']==gINVALID){
+			if(isset($data['season_id3']) && $data['season_id3']==gINVALID){
 			$err=true;
 			$this->mysession->set('Err_season_id3','Choose Season!');
 			}

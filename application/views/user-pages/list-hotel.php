@@ -26,7 +26,7 @@
 	<tr>
 	<td><?php  echo anchor(base_url().'front-desk/hotel/profile/'.$values['id'],$values['name']).br();?> </td>
 	<td><?php echo $values['address'];?></td>
-	<td><?php echo $values['mobile'].','.$values['mobile'];?></td>
+	<td><?php echo $values['mobile'].','.$values['land_line_number'];?></td>
 	</tr>
 	<?php endforeach; }?>
 	</tbody>

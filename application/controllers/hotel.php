@@ -299,7 +299,7 @@ class Hotel extends CI_Controller {
 			$this->form_validation->set_rules('season_id3','Business Season','trim|required|xss_clean');
 			$this->form_validation->set_rules('amount3','Amount','trim|required|numeric|xss_clean');
 			
-			$data['	meals_id'] = $this->input->post('meals_package_id');
+			$data['meals_id'] = $this->input->post('meals_package_id');
 			$data['season_id'] = $this->input->post('season_id3');
 			$data['amount'] = $this->input->post('amount3');
 			$table = 'room_attribute_tariffs';

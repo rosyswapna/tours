@@ -251,7 +251,7 @@ class Hotel_model extends CI_Model {
 
 	//insert if no record else update hotel tariffs with table and data array
 	function updateHotelTariffs($data,$table)
-	{
+	{	
 		if($table == 'room_tariffs'){
 			$condition = array('season_id'=>$data['season_id'],'hotel_id'=>$data['hotel_id'],'room_type_id'=>$data['room_type_id']);
 
@@ -259,11 +259,10 @@ class Hotel_model extends CI_Model {
 			$q = $this->db->get('room_tariffs');
 		}else{
 			$condition = array('season_id'=>$data['season_id'],'hotel_id'=>$data['hotel_id']);
-			if(isset($data['room_attr_id'])){
-				$condition['attribute_id'] = $data['room_attr_id'];
-			}elseif(isset($data['meals_package_id'])){
-				$condition['meals_id'] = $data['meals_package_id'];
-			}
+			if(isset($data['room_attr_id']))
+				$condition['attribute_id'] = $data['attribute_id'];
+			elseif(isset($data['meals_id']))
+				$condition['meals_id'] = $data['meals_id'];
 			$this->db->where($condition);
 			$q = $this->db->get('room_attribute_tariffs');
 		}

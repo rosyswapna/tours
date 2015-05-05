@@ -259,10 +259,11 @@ class Hotel_model extends CI_Model {
 			$q = $this->db->get('room_tariffs');
 		}else{
 			$condition = array('season_id'=>$data['season_id'],'hotel_id'=>$data['hotel_id']);
-			if(isset($data['room_attr_id']))
+			if(isset($data['room_attr_id'])){
 				$condition['attribute_id'] = $data['room_attr_id'];
-			else
+			}elseif(isset($data['meals_package_id'])){
 				$condition['meals_id'] = $data['meals_package_id'];
+			}
 			$this->db->where($condition);
 			$q = $this->db->get('room_attribute_tariffs');
 		}

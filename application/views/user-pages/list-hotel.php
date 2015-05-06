@@ -14,24 +14,24 @@
 <fieldset class="body-border">
 <legend class="body-head">List Hotels</legend>
 <div class="box-body table-responsive no-padding">
-<table class="table table-hover table-bordered table-with-20-percent-td" style="width:70%">
+<table class="table table-hover table-bordered table-with-20-percent-td" >
 	<tbody>
 	<tr>
 	<th>Name</th>
-	<th>City</th>
-	<th>Contact Details</th>
+	<th>Address</th>
 	<th>Ratings</th>
 	<th>Categories</th>
+	<th>Contact Details</th>
 	
 	</tr>
 <?php if(!empty($hotels)){  
 	foreach($hotels as $values):?>
 	<tr>
-	<td><?php  echo anchor(base_url().'front-desk/hotel/profile/'.$values['id'],$values['name']).br();?> </td>
-	<td><?php echo $values['city'];?></td>
-	<td><?php echo $values['mobile'].','.$values['land_line_number'];?></td>
+	<td><?php  echo anchor(base_url().'front-desk/hotel/profile/'.$values['id'],$values['name']).br();?><?php echo $values['city'];?> </td>
+	<td><?php echo $values['address'];?></td>
 	<td><?php echo $values['rating'];?></td>
 	<td><?php echo $values['category'];?></td>
+	<td><?php echo $values['contact_person'].br().$values['mobile'].br().$values['land_line_number'];?></td>
 	</tr>
 	<?php endforeach; }?>
 	</tbody>

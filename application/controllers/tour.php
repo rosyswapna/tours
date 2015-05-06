@@ -794,20 +794,21 @@ class Tour extends CI_Controller {
 				
 			}
 			$tableData['th'] = array(
-					array('label'=>$firstTH,'attr'=>'width="20%"'),
-					array('label'=>'Particulars','attr'=>'width="20%"'),
-					array('label'=>'Accommodation','attr'=>'width="20%"'),
-					array('label'=>'Service','attr'=>'width="20%"'),
-					array('label'=>'Vehicle','attr'=>'width="20%"'),
-					array('label'=>'Others','attr'=>'width="20%"'),
+					array('label'=>$firstTH,'attr'=>'width="5%"'),
+					array('label'=>'Particulars','attr'=>'width="40%"'),
+					array('label'=>'Accommodation','attr'=>'width="15%"'),
+					array('label'=>'Service','attr'=>'width="15%"'),
+					array('label'=>'Vehicle','attr'=>'width="15%"'),
+					array('label'=>'Remarks','attr'=>'width="10%"'),
 					);
 			$tableData['tr'] = array();
 			foreach($cart as $itinerary=>$item){
 				
+				
 
 				$destinations = array();
 				if(isset($item['trip_destinations'])){
-					foreach($item['trip_destinations'] as $dataArry_index=>$destination){
+					foreach($item['trip_destinations'] as $dataArry_index=>$destination){  
 					//$destinations[]=array($destination['id'],$destination['destination_id']);
 					$destinations[]=array($dataArry_index,$destination['destination_id']);
 						//array_push($destinations,$destination['destination_id']);
@@ -851,7 +852,7 @@ class Tour extends CI_Controller {
 				}
 
 				$tr = array($itinerary,
-					implode(',',$destinations),
+					implode('-',$destinations),
 					implode(',',$hotels),
 					implode(',',$services),
 					implode(',',$vehicles),

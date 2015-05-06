@@ -806,7 +806,10 @@ margin-left:400px;
 	font-weight: normal !important;
 	background:#EEE;
 }
-
-.package-add-view{
-margin-left:90%;
+.td-15{
+	width:15%;
+	padding-right:20px;
+}
+.td-10{
+	width:10%;
 }

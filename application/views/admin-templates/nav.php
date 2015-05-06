@@ -162,7 +162,7 @@
                                 <i class="fa fa-angle-left pull-right"></i>
                             </a>
                             <ul class="treeview-menu">
-                                <li><a href="<?php echo base_url().'organization/front-desk/trip-booking';?>"><i class="fa fa-angle-double-right"></i>New Trip</a></li>
+                                <li><a href="<?php echo base_url().'front-desk/tour/booking';?>"><i class="fa fa-angle-double-right"></i>New Trip</a></li>
 						<li><a href="<?php echo base_url().'organization/front-desk/trips';?>"><i class="fa fa-angle-double-right"></i>Trip Bookings</a></li>
                           <li><a href="<?php echo base_url().'organization/front-desk/tripvouchers';?>"><i class="fa fa-angle-double-right"></i>Trip Vouchers</a></li>      
                                 

@@ -967,10 +967,11 @@ class User extends CI_Controller {
 			}
 
 			//get sql for trips and make paginated data
-			$tripsQRY = $this->trip_model->get_sql_for_trips($condition);
-			$paginations=$this->mypage->paging($tbl='',$per_page,$param2,$baseurl,$uriseg,$custom='yes',$tripsQRY);
+	//**************************temporarily commented for code change *******************-->
+			//$tripsQRY = $this->trip_model->get_sql_for_trips($condition);
+			//$paginations=$this->mypage->paging($tbl='',$per_page,$param2,$baseurl,$uriseg,$custom='yes',$tripsQRY);
 			
-			
+	//**********************************************************		
 			$tbl_arry=array('trip_statuses','customer_groups','payment_type','driver_payment_percentages','vehicle_payment_percentages');
 			for ($i=0;$i<count($tbl_arry);$i++){
 				$result=$this->user_model->getArray($tbl_arry[$i]);
@@ -990,9 +991,11 @@ class User extends CI_Controller {
 			$data['vehicles']=$this->trip_booking_model->getVehiclesArray();
 			$data['drivers']=$this->driver_model->getDriversArray();  
 			
+	//**************************temporarily commented for code change *******************-->		
+			//$data['page_links']=$paginations['page_links'];
+			//$data['trips']=$paginations['values'];
+	//********************************************************************
 			
-			$data['page_links']=$paginations['page_links'];
-			$data['trips']=$paginations['values'];
 			if(empty($data['trips'])){
 				$data['result']="No Results Found !";
 					}

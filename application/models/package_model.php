@@ -310,6 +310,19 @@ class Package_model extends CI_Model {
 		}
 	}
 	
+	function getService($service_id){
+
+	$this->db->select('name');
+	$this->db->from('services');
+	$this->db->where('id',$service_id);
+	$qry=$this->db->get(); 
+	if($qry->num_rows()>0){
+		return $qry->row()->name;
+	}else{
+		return false;
+	}
+		
+	}
 	
 
 }

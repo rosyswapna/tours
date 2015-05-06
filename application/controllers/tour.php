@@ -63,6 +63,8 @@ class Tour extends CI_Controller {
 				$this->getEditableTabValues();
 			}elseif($param1 == 'packages'){
 				$this->showPackageList();
+			}elseif($param1 == 'getRoughEstimate'){
+				$this->getRoughEstimate();
 			}elseif($param1 == 'getHotelAttributes'){
 				$this->getHotelAttributes();
 			}else{
@@ -961,6 +963,34 @@ class Tour extends CI_Controller {
 			$this->notAuthorized();
 		}
 	
+	}
+	
+	public function getRoughEstimate(){
+		$cart = $this->tour_cart->contents();
+		//echo "<pre>";print_r($cart);echo "</pre>";exit;
+		$str=array();$tr=array();
+		foreach($cart as $itr=>$item){
+			if(isset($item['trip_services'])){
+				
+				foreach($item['trip_services'] as $service){
+					$service_name=$this->package_model->getService($service['service_id']);
+					$particulars="Service:".$service_name.",".$service['location']."- Rs ".$service['amount']." per day for 1 day(s)";
+					$tax=0;
+					if(isset($str[$service['id']])){
+						
+						$str[$service['id']][3]+=$service['amount'];
+						$str[$service['id']][4]=$tax+$str[$service['id']][3];
+					}else{
+						 $total=$tax+$service['amount'];
+						$str[$service['id']]=array($service_name,$particulars,$service['amount'],$tax,$total);
+					}
+				}
+			}
+		}
+		$tr=array_merge($str); //print_r($tr);exit;
+		echo json_encode($tr);
+		
+		
 	}
 
 	//-----------------------------------------------------------------------------------------

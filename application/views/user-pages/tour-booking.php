@@ -610,6 +610,22 @@ echo $this->form_functions->populate_dropdown($name,@$languages,@$driver_languag
 	</div>
 </div>
 
+<div class="rough-estimate">
+<fieldset class="body-border">
+<legend class="body-head">Rough Estimate</legend>
+	<table class="table table-hover table-bordered table-with-20-percent-td" id="estimate-tbl"> 
+	<tr>
+	<th style="width:25%">Items</th>
+	<th style="width:40%">Particulars</th>
+	<th style="width:15%">Unit Amount</th>
+	<th style="width:10%">Tax</th>
+	<th style="width:10%">Total</th>
+	</tr>
+	
+	
+	</table>
+</fieldset>
+</div>
 
 <!--itinerary tabs ends here-->
 

@@ -2659,6 +2659,29 @@ $('.vehicle-list').on('keydown',function(){
 	});
 	
 	
+	// rough estimate table
+
+	$('.tour-estimate').on('click',function(){
+		$(".rough-estimate").css('display','block');
+		$.post(base_url+"/tour/getRoughEstimate",function(data){
+		if(data!=false){
+		
+		data=jQuery.parseJSON(data);
+		var table='';
+			$.each( data, function( key, tr ) { //alert(tr.length);return false;
+				table += '<tr>';
+				
+				$.each(tr, function(key,td) { 
+					table += '<td>'+td+'</td>';
+				});
+				table += '</tr>';
+			});
+			$('#estimate-tbl').append(table);
+		}
+		});
+	
+	});
+	
 	
 	//-----------------------------------Tour events ends-----------------------------------------------
 

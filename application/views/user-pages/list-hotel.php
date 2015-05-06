@@ -18,15 +18,20 @@
 	<tbody>
 	<tr>
 	<th>Name</th>
-	<th>Address</th>
+	<th>City</th>
 	<th>Contact Details</th>
+	<th>Ratings</th>
+	<th>Categories</th>
+	
 	</tr>
 <?php if(!empty($hotels)){  
 	foreach($hotels as $values):?>
 	<tr>
 	<td><?php  echo anchor(base_url().'front-desk/hotel/profile/'.$values['id'],$values['name']).br();?> </td>
-	<td><?php echo $values['address'];?></td>
+	<td><?php echo $values['city'];?></td>
 	<td><?php echo $values['mobile'].','.$values['land_line_number'];?></td>
+	<td><?php echo $values['rating'];?></td>
+	<td><?php echo $values['category'];?></td>
 	</tr>
 	<?php endforeach; }?>
 	</tbody>

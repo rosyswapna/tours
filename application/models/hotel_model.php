@@ -34,9 +34,11 @@ class Hotel_model extends CI_Model {
 	//get hotel list with owners joined
 	function getHotelList($condition=array())
 	{
-		$this->db->select('hotel.*, owner.name as owner_name,owner.mobile as owner_mobile');
+		$this->db->select('hotel.*, owner.name as owner_name,owner.mobile as owner_mobile,category.name as category,rating.name as rating');
 		$this->db->from('hotels as hotel');
 		$this->db->join('hotel_owners as owner', 'owner.id = hotel.hotel_owner_id','left');
+		$this->db->join('hotel_categories as category', 'category.id = hotel.hotel_category_id','left');
+		$this->db->join('hotel_ratings as rating', 'rating.id = hotel.hotel_rating_id','left');
 		if($condition){
 			$condition['hotel.organisation_id'] = $this->session->userdata('organisation_id');
 			$this->db->where($condition);

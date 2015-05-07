@@ -968,31 +968,79 @@ class Tour extends CI_Controller {
 	public function getRoughEstimate(){
 		$cart = $this->tour_cart->contents();
 		//echo "<pre>";print_r($cart);echo "</pre>";exit;
-		$str=array();$tr=array();
+		$str=array();$tr=array();$acc_tr=array();
 		foreach($cart as $itr=>$item){
 			if(isset($item['trip_services'])){
 				
 				foreach($item['trip_services'] as $service){
-					$service_name=$this->package_model->getService($service['service_id']);
-					$particulars="Service:".$service_name.",".$service['location']."- Rs ".$service['amount']." per day for 1 day(s)";
-					$tax=0;
-					if(isset($str[$service['id']])){
-						
-						$str[$service['id']][3]+=$service['amount'];
-						$str[$service['id']][4]=$tax+$str[$service['id']][3];
-					}else{
+					$service_name=$this->package_model->getValuebyId($service['service_id'],'services');
+					
+					$tax=0; //STATIC $sno_of_days=1;
+					/*if(isset($str[$service['service_id']])){
+						$sno_of_days=$sno_of_days+1;
+						$str[$service['service_id']][2]+=$service['amount'];
+						$str[$service['service_id']][4]=$tax+$str[$service['service_id']][2];
+					} */
 						 $total=$tax+$service['amount'];
-						$str[$service['id']]=array($service_name,$particulars,$service['amount'],$tax,$total);
-					}
-				}
+						 $s_particulars="Service: ".$service_name.",".$service['location']."- Rs ".$service['amount']." per day ";
+						
+						$str[]=array($service_name,$s_particulars,$service['amount'],$tax,$total);
+					
+				} 
 			}
-		}
-		$tr=array_merge($str); //print_r($tr);exit;
+			if(isset($item['trip_accommodation'])){ 
+				foreach($item['trip_accommodation'] as $accommodation){ $tax=0; //STATIC $ano_of_days=1;
+					$hotel_attr=$this->hotel_model->getHotelProfile($accommodation['hotel_id']);
+					$acc_charge=$this->getAccomodationCharge($accommodation['hotel_id'],$accommodation['room_type_id'],$accommodation['room_attributes'],$accommodation['room_quantity'],$accommodation['meals_package'],$accommodation['meals_quantity']);
+					$destination=$this->package_model->getValuebyId($hotel_attr['destination_id'],'destinations');
+					$room_type=$this->package_model->getValuebyId($accommodation['room_type_id'],'room_types');
+						/*if(isset($acc_tr[$accommodation['hotel_id']])){
+							$ano_of_days=$ano_of_days+1;
+							$acc_tr[$accommodation['hotel_id']][2]+=$acc_charge;
+							$acc_tr[$accommodation['hotel_id']][4]=$tax+$acc_tr[$accommodation['hotel_id']][2];
+						}*/
+						$total=$tax+$acc_charge;						
+						$a_particulars="Accomodation: ".$hotel_attr['name'].",".$destination."-".$room_type." Room @ RS. ".$acc_charge." per day ";
+					
+					$acc_tr[]=array($hotel_attr['name'],$a_particulars,$acc_charge,$tax,$total);
+				}
+			
+			}
+		} 
+		$tr=array_merge($str,$acc_tr); 
 		echo json_encode($tr);
 		
 		
 	}
-
+	//generate accomodation charge for a hotel for a
+		public function getAccomodationCharge($hotel_id,$room_type_id,$room_attributes,$room_quantity,$meals_package,$meals_quantity){
+			$_date 		= date("Y-m-d");
+			$season_ids = $this->tour_model->getSeasonIdssWithDate($_date);
+			if($season_ids){
+				$season_id = $season_ids[0];
+			}else{
+				$season_id = gINVALID;
+			}
+			$filter = array('hotel_id'=>$hotel_id,'room_type_id'=>$room_type_id,'season_id'=>$season_id);
+			$room_tariff= $this->hotel_model->getHotelRoomTariff($filter); 
+			$room_charge=($room_tariff->amount)*$room_quantity;
+			foreach($room_attributes as $key=>$attribute_id){
+				$condition=array('hotel_id'=>$hotel_id,'season_id'=>$season_id,'attribute_id'=>$attribute_id);
+				static $attribute_charge=0;
+				$attributeValues[]=$this->hotel_model->getAttributeTariff($condition);
+				$attribute_charge+=$attributeValues[$key]->amount;
+			}
+			foreach($meals_package as $key=>$meals_id){
+				$condition=array('hotel_id'=>$hotel_id,'season_id'=>$season_id,'meals_id'=>$meals_id);
+				static $meals_percharge=0;
+				$mealsValues[]=$this->hotel_model->getAttributeTariff($condition);
+				$meals_percharge+=$mealsValues[$key]->amount;
+			}
+			$meals_charge=$meals_percharge*$meals_quantity;
+			$accomodaion_charge=$room_charge+$attribute_charge+$meals_charge; 
+			return $accomodaion_charge;
+			
+		}
 	//-----------------------------------------------------------------------------------------
 
 

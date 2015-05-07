@@ -612,7 +612,7 @@ echo $this->form_functions->populate_dropdown($name,@$languages,@$driver_languag
 
 <div class="rough-estimate">
 <fieldset class="body-border">
-<legend class="body-head">Rough Estimate</legend>
+<legend class="body-head">Estimate</legend>
 	<table class="table table-hover table-bordered table-with-20-percent-td" id="estimate-tbl"> 
 	<tr>
 	<th style="width:25%">Items</th>

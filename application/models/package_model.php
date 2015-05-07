@@ -310,11 +310,11 @@ class Package_model extends CI_Model {
 		}
 	}
 	
-	function getService($service_id){
+	function getValuebyId($item_id,$tbl){
 
 	$this->db->select('name');
-	$this->db->from('services');
-	$this->db->where('id',$service_id);
+	$this->db->from($tbl);
+	$this->db->where('id',$item_id);
 	$qry=$this->db->get(); 
 	if($qry->num_rows()>0){
 		return $qry->row()->name;

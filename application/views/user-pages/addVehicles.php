@@ -1004,8 +1004,8 @@ if($this->mysession->get('owner_post_all')!=null ){
 				echo form_close();?></td>
 	</table><br/>			
 
-	
-	<?php if($TripTableData){?>
+<!--**************************temporarily commented for code change *******************-->	
+	<!--<?php if($TripTableData){?>
 		
 			
 	<?php  echo form_open(base_url()."account/driver_trip_save"); ?>
@@ -1073,10 +1073,11 @@ if($this->mysession->get('owner_post_all')!=null ){
 	</table>
 	<?php }?>
 
-	<?php }else{?><!--Trip table condition-->
+	<?php }else{?>
 	<div class="msg"> No Data
 	</div>
-	<?php }?>
+	<?php }?>-->
+<!--*************************************************************************************-->
 	
 	
 			

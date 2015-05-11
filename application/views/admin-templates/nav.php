@@ -128,6 +128,21 @@
                                 
                             </ul>
                         </li>
+				
+			
+			<li class="treeview">
+                            <a href="#">
+                                <i class="fa fa-users"></i>
+                                <span>Hotels</span>
+                                <i class="fa fa-angle-left pull-right"></i>
+                            </a>
+                            <ul class="treeview-menu">
+                            <li><a href="<?php echo base_url().'front-desk/hotel/profile';?>"><i class="fa fa-angle-double-right"></i>New Hotel</a></li> 
+			     <li><a href="<?php echo base_url().'front-desk/hotel/list';?>"><i class="fa fa-angle-double-right"></i>Manage Hotels</a></li> 
+                                
+                            </ul>
+                        </li>
+			
 								<li class="treeview">
                             <a href="#">
                                 <i class="fa fa-users"></i>
@@ -147,7 +162,7 @@
                                 <i class="fa fa-angle-left pull-right"></i>
                             </a>
                             <ul class="treeview-menu">
-                                <li><a href="<?php echo base_url().'organization/front-desk/trip-booking';?>"><i class="fa fa-angle-double-right"></i>New Trip</a></li>
+                                <li><a href="<?php echo base_url().'front-desk/tour/booking';?>"><i class="fa fa-angle-double-right"></i>New Trip</a></li>
 						<li><a href="<?php echo base_url().'organization/front-desk/trips';?>"><i class="fa fa-angle-double-right"></i>Trip Bookings</a></li>
                           <li><a href="<?php echo base_url().'organization/front-desk/tripvouchers';?>"><i class="fa fa-angle-double-right"></i>Trip Vouchers</a></li>      
                                 
@@ -230,6 +245,30 @@
 		                        
 		                    </ul>
                         	</li>
+				
+				<li class="treeview">
+                            <a href="#">
+                                <i class="fa fa-angle-double-right"></i>
+                                <span>Business Season</span>
+                                <i class="fa fa-angle-left pull-right"></i>
+                            </a>
+                            <ul class="treeview-menu">
+                            <li><a href="<?php echo base_url().'front-desk/tour/business-season';?>"><i class="fa fa-angle-double-right"></i>Manage Business Season</a></li> 
+                                
+                            </ul>
+                        </li>
+			
+				<li class="treeview">
+                            <a href="#">
+                                <i class="fa fa-angle-double-right"></i>
+                                <span>Destinations</span>
+                                <i class="fa fa-angle-left pull-right"></i>
+                            </a>
+                            <ul class="treeview-menu">
+                            <li><a href="<?php echo base_url().'front-desk/tour/destination';?>"><i class="fa fa-angle-double-right"></i>Manage Destinations</a></li> 
+                                
+                            </ul>
+                        </li>
                                 
                             </ul>
                         </li>

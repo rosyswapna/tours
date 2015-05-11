@@ -357,7 +357,7 @@ return true;
   public function insert_service($data){
 	$org_id=$this->session->userdata('organisation_id');
 	$data['organisation_id']=$org_id;
-	$result=$this->db->insert('service',$data);
+	$result=$this->db->insert('vehicle_services',$data);
 	if(count($result)>0){
 	return true;
 	}
@@ -369,7 +369,7 @@ return true;
 	$array=array('organisation_id'=>$this->session->userdata('organisation_id'),'vehicle_id'=>$vid);
 	
 	$query=$this->db->where($array);
-	$query=$this->db->get('service');
+	$query=$this->db->get('vehicle_services');
 	if(count($query)>0){
 	return $query->result_array();
 	}
@@ -382,7 +382,7 @@ return true;
 	$array=array('organisation_id'=>$this->session->userdata('organisation_id'),'id'=>$sid);
 	
 	$query=$this->db->where($array);
-	$query=$this->db->get('service');
+	$query=$this->db->get('vehicle_services');
 	if(count($query)>0){
 	return $query->result_array();
 	}
@@ -396,7 +396,7 @@ return true;
 	$org_id=$this->session->userdata('organisation_id');
 	$array=array('organisation_id'=>$org_id,'id'=>$id);
 	$query=$this->db->where($array);
-	$query=$this->db->update('service',$data);
+	$query=$this->db->update('vehicle_services',$data);
 	if(count($query)>0){
 	return true;
 	}

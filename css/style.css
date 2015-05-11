@@ -717,7 +717,7 @@ width:20%;
 }
 
 .table-with-20-percent-td > tbody > tr > td{
-width:20%;
+width:10%;
 }
 .table-with-7-percent-td > tbody > tr > td{
 width:7.6%;
@@ -806,7 +806,10 @@ margin-left:400px;
 	font-weight: normal !important;
 	background:#EEE;
 }
-
-.package-add-view{
-margin-left:90%;
+.td-15{
+	width:15%;
+	padding-right:20px;
+}
+.td-10{
+	width:10%;
 }

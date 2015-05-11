@@ -34,9 +34,11 @@ class Hotel_model extends CI_Model {
 	//get hotel list with owners joined
 	function getHotelList($condition=array())
 	{
-		$this->db->select('hotel.*, owner.name as owner_name,owner.mobile as owner_mobile');
+		$this->db->select('hotel.*, owner.name as owner_name,owner.mobile as owner_mobile,category.name as category,rating.name as rating');
 		$this->db->from('hotels as hotel');
 		$this->db->join('hotel_owners as owner', 'owner.id = hotel.hotel_owner_id','left');
+		$this->db->join('hotel_categories as category', 'category.id = hotel.hotel_category_id','left');
+		$this->db->join('hotel_ratings as rating', 'rating.id = hotel.hotel_rating_id','left');
 		if($condition){
 			$condition['hotel.organisation_id'] = $this->session->userdata('organisation_id');
 			$this->db->where($condition);
@@ -251,7 +253,7 @@ class Hotel_model extends CI_Model {
 
 	//insert if no record else update hotel tariffs with table and data array
 	function updateHotelTariffs($data,$table)
-	{
+	{	
 		if($table == 'room_tariffs'){
 			$condition = array('season_id'=>$data['season_id'],'hotel_id'=>$data['hotel_id'],'room_type_id'=>$data['room_type_id']);
 
@@ -260,9 +262,9 @@ class Hotel_model extends CI_Model {
 		}else{
 			$condition = array('season_id'=>$data['season_id'],'hotel_id'=>$data['hotel_id']);
 			if(isset($data['room_attr_id']))
-				$condition['attribute_id'] = $data['room_attr_id'];
-			else
-				$condition['meals_id'] = $data['meals_package_id'];
+				$condition['attribute_id'] = $data['attribute_id'];
+			elseif(isset($data['meals_id']))
+				$condition['meals_id'] = $data['meals_id'];
 			$this->db->where($condition);
 			$q = $this->db->get('room_attribute_tariffs');
 		}

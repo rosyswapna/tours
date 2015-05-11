@@ -679,11 +679,13 @@ class Tour extends CI_Controller {
 			$this->tour_cart->create();
 		}
 		//print_r($_REQUEST);exit;
-		if(isset($_REQUEST['table'])&& isset($_REQUEST['_date'])){
-			$tble = $_REQUEST['table'];
-			$fields = $_REQUEST;
-			$itinerary = $fields['_date'];
-			$index = $fields['row_id'];
+		//if(isset($_REQUEST['table'])&& isset($_REQUEST['_date'])){
+		if(isset($_REQUEST['post'])){
+			$dataArray=$_REQUEST['post'];
+			$tble = $dataArray['table'];
+			$fields = $dataArray;
+			$itinerary = $dataArray['_date'];
+			$index = $dataArray['row_id'];
 			array_shift($fields);//pop first element(url data from ajax call)
 			unset($fields['table']);
 			unset($fields['_date']);
@@ -792,20 +794,21 @@ class Tour extends CI_Controller {
 				
 			}
 			$tableData['th'] = array(
-					array('label'=>$firstTH,'attr'=>'width="20%"'),
-					array('label'=>'Particulars','attr'=>'width="20%"'),
-					array('label'=>'Accommodation','attr'=>'width="20%"'),
-					array('label'=>'Service','attr'=>'width="20%"'),
-					array('label'=>'Vehicle','attr'=>'width="20%"'),
-					array('label'=>'Others','attr'=>'width="20%"'),
+					array('label'=>$firstTH,'attr'=>'width="5%"'),
+					array('label'=>'Particulars','attr'=>'width="40%"'),
+					array('label'=>'Accommodation','attr'=>'width="15%"'),
+					array('label'=>'Service','attr'=>'width="15%"'),
+					array('label'=>'Vehicle','attr'=>'width="15%"'),
+					array('label'=>'Remarks','attr'=>'width="10%"'),
 					);
 			$tableData['tr'] = array();
 			foreach($cart as $itinerary=>$item){
 				
+				
 
 				$destinations = array();
 				if(isset($item['trip_destinations'])){
-					foreach($item['trip_destinations'] as $dataArry_index=>$destination){
+					foreach($item['trip_destinations'] as $dataArry_index=>$destination){  
 					//$destinations[]=array($destination['id'],$destination['destination_id']);
 					$destinations[]=array($dataArry_index,$destination['destination_id']);
 						//array_push($destinations,$destination['destination_id']);
@@ -849,7 +852,7 @@ class Tour extends CI_Controller {
 				}
 
 				$tr = array($itinerary,
-					implode(',',$destinations),
+					implode('-',$destinations),
 					implode(',',$hotels),
 					implode(',',$services),
 					implode(',',$vehicles),

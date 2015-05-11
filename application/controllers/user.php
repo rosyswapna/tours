@@ -967,10 +967,11 @@ class User extends CI_Controller {
 			}
 
 			//get sql for trips and make paginated data
-			$tripsQRY = $this->trip_model->get_sql_for_trips($condition);
-			$paginations=$this->mypage->paging($tbl='',$per_page,$param2,$baseurl,$uriseg,$custom='yes',$tripsQRY);
+	//**************************temporarily commented for code change *******************-->
+			//$tripsQRY = $this->trip_model->get_sql_for_trips($condition);
+			//$paginations=$this->mypage->paging($tbl='',$per_page,$param2,$baseurl,$uriseg,$custom='yes',$tripsQRY);
 			
-			
+	//**********************************************************		
 			$tbl_arry=array('trip_statuses','customer_groups','payment_type','driver_payment_percentages','vehicle_payment_percentages');
 			for ($i=0;$i<count($tbl_arry);$i++){
 				$result=$this->user_model->getArray($tbl_arry[$i]);
@@ -990,9 +991,11 @@ class User extends CI_Controller {
 			$data['vehicles']=$this->trip_booking_model->getVehiclesArray();
 			$data['drivers']=$this->driver_model->getDriversArray();  
 			
+	//**************************temporarily commented for code change *******************-->		
+			//$data['page_links']=$paginations['page_links'];
+			//$data['trips']=$paginations['values'];
+	//********************************************************************
 			
-			$data['page_links']=$paginations['page_links'];
-			$data['trips']=$paginations['values'];
 			if(empty($data['trips'])){
 				$data['result']="No Results Found !";
 					}
@@ -1091,7 +1094,8 @@ class User extends CI_Controller {
 			//$data['trip_tab']='active';
 			$active_tab = 't_tab';//trip tab
 			}
-			$data['trips']=$this->trip_booking_model->getCustomerVouchers($param2,$fdate,$todate);
+	// *************query change needs here********************************************************************
+			//$data['trips']=$this->trip_booking_model->getCustomerVouchers($param2,$fdate,$todate);
 			}
 			$data['tabs'] = $this->set_up_customer_tabs($active_tab,$param2);
 			$data['tariffs'] = $this->customers_model->getCustomerTariffs($param2);//print_r($data['tariffs']);exit;
@@ -1371,7 +1375,8 @@ public function profile() {
 
 			//trip details
 			if($param2!=''){
-				$data['trips']=$this->trip_booking_model->getDriverVouchers($param2);
+// *************query change needs here********************************************************************
+				//$data['trips']=$this->trip_booking_model->getDriverVouchers($param2);
 			}
 			
 			
@@ -1508,16 +1513,17 @@ public function profile() {
 			$driver_statuses='';
 			for($i=0;$i<count($data['values']);$i++){
 				$id=$data['values'][$i]['id'];
-				$availability=$this->driver_model->getCurrentStatuses($id);
+	//******** query change needs here***********************************************	
+				/*$availability=$this->driver_model->getCurrentStatuses($id);
 				if($availability==false){
 				$driver_statuses[$id]='Available';
 				$driver_trips[$id]=gINVALID;
 				}else{
 				$driver_statuses[$id]='OnTrip';
 				$driver_trips[$id]=$availability[0]['id'];
-				}
+				}*/
 			}
-			$data['driver_statuses']=$driver_statuses;
+			//$data['driver_statuses']=$driver_statuses;
 			$data['driver_trips']=$driver_trips;
 			if(empty($data['values'])){
 						$data['result']="No Results Found !";
@@ -1548,8 +1554,8 @@ public function profile() {
 			}else{
 			$data['vehicles']='';
 			}
-
-			$data['trip_info']=$this->user_model->getTotTripInfo();
+	//******** query change needs here***********************************************	
+			//$data['trip_info']=$this->user_model->getTotTripInfo();
 
 			$data['page_links']=$p_res['page_links']; 
 			$data['title']='List Driver| '.PRODUCT_NAME;
@@ -1596,13 +1602,12 @@ public function profile() {
 					$data['trip_tab']='active';
 					$active_tab = 't_tab';//trip tab
 				} 
-				$trips = $this->trip_booking_model->getDriverVouchers($param2,$fdate,$todate);
+	// *************query change needs here********************************************************************
+				//$trips = $this->trip_booking_model->getDriverVouchers($param2,$fdate,$todate);
+				//list($data['TripTableData'], $data['TotalTable']) = $this->DriverTripsTable($trips,$DriverSalary);
+	//********************************************************************************
 				
-				//echo "<pre>";print_r($trips);echo "</pre>";exit;
-				list($data['TripTableData'], $data['TotalTable']) = $this->DriverTripsTable($trips,$DriverSalary);
-
 				
-				//echo "<pre>";print_r($data['TotalTable']['tdata']);echo "</pre>";exit;
 				
 			
 				//$this->mysession->set('trips',$data['trips']);
@@ -1978,11 +1983,12 @@ public function profile() {
 					$data['trip_tab']='active';
 				}
 				$data['ve_id']=$vid; 
-				//$data['trips']=$this->trip_booking_model->getVehicleVouchers($vid,$fdate,$todate); 
-				$trips=$this->trip_booking_model->getVehicleVouchers($vid,$fdate,$todate); 
-				//array values for Vehicle Trip tab
-				list($data['TripTableData'], $data['TotalTable']) = $this->VehicleTripsTable($trips);
 				
+		// *************query change needs here********************************************************************		
+				//$trips=$this->trip_booking_model->getVehicleVouchers($vid,$fdate,$todate); 
+				//array values for Vehicle Trip tab**
+				//list($data['TripTableData'], $data['TotalTable']) = $this->VehicleTripsTable($trips);
+		//***********************************************************		
 				//----------------------
 				$data['record_values']=$this->user_model->getRecordsById($tbl,$vid); 
 				$data['driver']=$data['record_values']['driver'];
@@ -2305,16 +2311,17 @@ FROM vehicles V where V.organisation_id = '.$this->session->userdata('organisati
 	$vehicle_statuses='';
 	for($i=0;$i<count($data['values']);$i++){
 		$id=$data['values'][$i]['id'];
-		$availability=$this->vehicle_model->getCurrentStatuses($id);
+//******** query change needs here***********************************************
+		/*$availability=$this->vehicle_model->getCurrentStatuses($id);
 		if($availability==false){
 		$vehicle_statuses[$id]='Available';
 		$vehicle_trips[$id]=gINVALID;
 		}else{
 		$vehicle_statuses[$id]='OnTrip';
 		$vehicle_trips[$id]=$availability[0]['id'];
-		}
-	}//print_r($vehicle_statuses);print_r($vehicle_trips);exit;
-	$data['vehicle_statuses']=$vehicle_statuses;
+		}*/
+	}
+	//$data['vehicle_statuses']=$vehicle_statuses;
 	$data['vehicle_trips']=$vehicle_trips;
 	if(empty($data['values'])){
 	$data['result']="No Results Found !";

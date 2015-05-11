@@ -410,14 +410,14 @@
 	<?php if (array_key_exists('p_tab', $tabs)) {?>
          	<div class="<?php echo $tabs['p_tab']['content_class'];?>" id="<?php echo $tabs['p_tab']['tab_id'];?>">
        <!-- <div class="tab-pane" id="tab_5">-->
-           hi,Its me P
+          
         </div>
 	<?php } ?>
 
 	<?php if (array_key_exists('a_tab', $tabs)) {?>
          	<div class="<?php echo $tabs['a_tab']['content_class'];?>" id="<?php echo $tabs['a_tab']['tab_id'];?>">
        <!-- <div class="tab-pane" id="tab_6">-->
-           hi,Its me A
+           
         </div>
 	<?php } ?>
     </div>

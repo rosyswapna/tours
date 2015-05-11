@@ -299,34 +299,34 @@ class Hotel extends CI_Controller {
 			$this->form_validation->set_rules('season_id3','Business Season','trim|required|xss_clean');
 			$this->form_validation->set_rules('amount3','Amount','trim|required|numeric|xss_clean');
 			
-			$data['	meals_id'] = $this->input->post('meals_package_id');
+			$data['meals_id'] = $this->input->post('meals_package_id');
 			$data['season_id'] = $this->input->post('season_id3');
 			$data['amount'] = $this->input->post('amount3');
 			$table = 'room_attribute_tariffs';
 
 		}
 		$err=false;
-			if($data['room_type_id']==gINVALID){
+			if(isset($data['room_type_id']) && $data['room_type_id']==gINVALID){
 			$err=true;
 			$this->mysession->set('Err_room_type_tariff','Choose Room Type!');
 			}
-			if($data['season_id1']==gINVALID){
+			if(isset($data['season_id1']) && $data['season_id1']==gINVALID){
 			$err=true;
 			$this->mysession->set('Err_season_id1','Choose Season!');
 			}
-			if($data['room_attr_id']==gINVALID){
+			if(isset($data['room_attr_id']) && $data['room_attr_id']==gINVALID){
 			$err=true;
 			$this->mysession->set('Err_room_attr','Choose Attribute!');
 			}
-			if($data['season_id2']==gINVALID){
+			if(isset($data['season_id2']) && $data['season_id2']==gINVALID){
 			$err=true;
 			$this->mysession->set('Err_season_id2','Choose Season!');
 			}
-			if($data['meals_package_id']==gINVALID){
+			if(isset($data['meals_package_id']) && $data['meals_package_id']==gINVALID){
 			$err=true;
 			$this->mysession->set('Err_meals','Choose Meals Package!');
 			}
-			if($data['season_id3']==gINVALID){
+			if(isset($data['season_id3']) && $data['season_id3']==gINVALID){
 			$err=true;
 			$this->mysession->set('Err_season_id3','Choose Season!');
 			}

@@ -273,7 +273,7 @@ class Package_model extends CI_Model {
 		//echo "<pre>";print_r($insertData);echo "</pre>";exit;
 
 		//insert batch
-		if($insertData){
+		if(isset($insertData)){
 			foreach($insertData as $tbl=>$dataArray){
 				
 				$this->db->insert_batch($tbl,$dataArray);
@@ -281,7 +281,7 @@ class Package_model extends CI_Model {
 		}
 
 		//update batch
-		if($updateData){
+		if(isset($updateData)){
 
 			foreach($updateData as $tbl=>$dataBatch){
 

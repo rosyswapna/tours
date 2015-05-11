@@ -1,21 +1,22 @@
-<div class="trips">
+<div class="page-outer">
      <fieldset class="body-border">
      <legend class="body-head">Packages</legend>
-     <div class="package-add-view"><?php echo form_open( base_url().'front-desk/tour/booking');
+     <div class="box-body table-responsive no-padding trips-table"><?php echo form_open( base_url().'front-desk/tour/booking');
 		  echo form_submit("add","Manage","class='btn btn-primary'").br(2);
 		  echo form_close(); 
 								  
 						?></div>
+						
 <div class="box-body table-responsive no-padding trips-table">
-	<table class="table table-hover table-bordered" style="width:88%">
+	<table class="table table-hover table-bordered" >
 	<tbody>
 	<tr>
 		
-		<th style="width:9%">Package Name</th>
-		<th style="width:17%">Package Description</th>
-		<th style="width:4%">No:of Days</th>
-		<th  style="width:6%">Amount</th>
-		<th  style="width:6%">Status</th>
+		<th style="width:30%">Package Name</th>
+		<th style="width:40%">Package Description</th>
+		<th style="width:10%">No:of Days</th>
+		<th  style="width:10%">Amount</th>
+		<th  style="width:10%">Status</th>
         <tr>
 	
 	<?php if(isset($package_lists)){ 

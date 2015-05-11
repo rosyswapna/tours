@@ -585,7 +585,7 @@
 	<?php echo form_open(base_url()."trip/services");?>
 	<?php echo form_label('Trip Service');?></td>
 <td><?php  
-	$class="form-control";
+	$class="form-control trip-service-status";
 	$tbl="services";
 	echo $this->form_functions->populate_editable_dropdown('select',$services,$class,$tbl)?>
 	<?php echo form_input(array('name'=>'select_text','id'=>'editbox','class'=>'form-control','style'=>'display:none','trigger'=>'true'));?>

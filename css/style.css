@@ -816,3 +816,19 @@ margin-left:400px;
 .rough-estimate{
 display:none;
 }
+
+
+/*edit link from form button*/
+.btn-edit{
+     background:none!important;
+     border:none; 
+     padding:0!important;
+     font: inherit;
+     /*border is optional*/
+     text-decoration:none;
+     cursor: pointer;
+     font-weight: normal;
+     color: #428bca;
+
+
+}

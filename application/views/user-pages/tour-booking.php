@@ -32,7 +32,7 @@ echo form_hidden('trip_id',$trip_id);
 <td class="td-10"><?php echo form_label('Details','details');?></td>
 <td class="td-15"><?php echo form_input(array('name'=>'source_details','class'=>'form-control','id'=>'source_details','value'=>@$source_details));?></td>
 
-<?php if(!is_numeric($trip_id)){?>
+<?php if(!is_numeric($trip_id) || $package_id > 0){?>
 <td class="td-10"><?php echo form_label('Package','package');?></td>
 <td class="td-15"><?php $class="form-control";
 	  $msg="Package";
@@ -174,7 +174,24 @@ echo $this->form_functions->populate_dropdown($name,@$languages,@$driver_languag
 
 <div class="box-body table-responsive no-padding hide-me" id="itinerary-div">
 	<table id="itinerary-tbl" class="table table-hover table-bordered table-with-20-percent-td">
-	
+		<?php 
+			/*if($itrTable){
+				echo "<tr>";
+				foreach($itrTable['th'] as $td){
+					echo "<td ".$td['attr'].">".$td['label']."</td>";
+				}
+				echo "</tr>";
+
+				foreach($itrTable['tr'] as $tr){
+					echo "<tr>";
+
+					foreach($tr as $data){
+						echo "<td>".$data."</td>";
+					}
+					echo "</tr>";
+				}
+			}*/
+		?>
 	</table>
 
 	<div class="form-submit-reset-buttons-group">

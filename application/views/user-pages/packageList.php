@@ -23,7 +23,22 @@
 	foreach ($package_lists as $list){ 
 	?>
 	<tr class="row_click common" limited="true">
-	<td><?php  echo $list['package'];?></td>
+	<td>
+	<?php
+		$data = array(
+			    'name' => 'button',
+			    'id' => 'package-edit',
+			    'value' => 'true',
+			    'class' => 'btn-edit packages-edit',
+			    'content' => $list['package'],
+			    'edit-id'=> $list['id']
+			);
+
+		echo form_button($data);
+  
+		//echo $list['package'];
+	?>
+	</td>
 	<td><?php if(!empty($list['destination_arry'])){
 	
 		$numItems = count($list['destination_arry']);

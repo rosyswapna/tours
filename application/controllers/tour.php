@@ -308,9 +308,10 @@ class Tour extends CI_Controller {
 
 	
 
-	public function tour_booking($param2='')
+	public function tour_booking($param2='',$param3='')
 	{	
-	
+		$data['package_id'] = gINVALID;
+		$data['itrTable'] = false;
 		
 		if($param2!='' && is_numeric($param2) && $param2 > 0){//valid trip id
 			$tour_itms = $this->tour_model->getItineraryDataAll($param2);
@@ -321,6 +322,12 @@ class Tour extends CI_Controller {
 			$data['header'] = $this->set_tour_header($param2);
 
 			$this->tour_cart->trip_id = $param2;
+		}elseif($param2 == 0 && is_numeric($param3) && $param3 > 0){
+			$data['package_id'] = $param3;
+			$param2 = '';
+			$data['itrTable'] = $this->createCartFromPackage($ajax = 'NO',$param3);
+
+			//echo "<pre>";print_r($data['itrTable']);echo "</pre>";exit;
 		}else{
 			$this->tour_cart->trip_id = gINVALID;
 			$cart = false;
@@ -762,21 +769,29 @@ class Tour extends CI_Controller {
 		$this->build_itinerary_data($cart,$ajax = 'YES');
 	}
 
-	function createCartFromPackage(){
+	function createCartFromPackage($ajax = 'YES',$package_id=gINVALID){
 		$this->tour_cart->destroy();
-		if(isset($_REQUEST['package_id']) && is_numeric($_REQUEST['package_id']) && $_REQUEST['package_id'] > 0)
+		if(isset($_REQUEST['package_id']))
+			$package_id = $_REQUEST['package_id'];
+		if(is_numeric($package_id) && $package_id > 0)
 		{
-			$package = $this->package_model->getPackage($_REQUEST['package_id']);
+			$package = $this->package_model->getPackage($package_id);
 			//echo "<pre>";print_r($package);echo "</pre>";exit;
 			if($package){
 				$this->tour_cart->create($package);
-				$cart = $this->tour_cart->contents();//echo "<pre>";print_r($cart);echo "</pre>";exit;
-				$this->build_itinerary_data($cart,$ajax = 'YES');
+				$cart = $this->tour_cart->contents();
+				//echo "<pre>";print_r($cart);echo "</pre>";exit;
+				$tableData = $this->build_itinerary_data($cart,$ajax);
+				if($ajax == 'NO'){
+					return $tableData;
+				}
 			}
 		}else{
 			echo 'false';
 		}
 	}
+
+	
 	
 	function getItineraryCount()
 	{

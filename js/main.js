@@ -305,7 +305,8 @@ window.open(url, '_blank');
 });
 
 //masters
-$('.trip-service-status').change(function(){ 
+//$('.trip-service-status').change(function(){ 
+$('select, .trip-service-status').change(function(){ 
 	var edit=$('.edit').attr('for_edit');
 	if(edit=='false'){
 		$id=$(this).val();

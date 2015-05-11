@@ -966,6 +966,7 @@ class Tour extends CI_Controller {
 	}
 	
 	public function getRoughEstimate(){
+	if(isset($_REQUEST['package_id'])){
 		$cart = $this->tour_cart->contents();
 		//echo "<pre>";print_r($cart);echo "</pre>";exit;
 		$str=array();$tr=array();$acc_tr=array();
@@ -1006,10 +1007,21 @@ class Tour extends CI_Controller {
 				}
 			
 			}
+			
+			if(isset($item['trip_vehicles'])){ 
+				foreach($item['trip_vehicles'] as $vehicles){ $tax=0;
+				
+					$vehicles=$this->tour_model->getDistinctVehicles($_REQUEST['package_id']);
+					
+					
+					$travel_tr[]=array('','','','','');
+				}
+			
+			}
 		} 
-		$tr=array_merge($str,$acc_tr); 
-		echo json_encode($tr);
-		
+			$tr=array_merge($str,$acc_tr); 
+			echo json_encode($tr);
+		}
 		
 	}
 	//generate accomodation charge for a hotel for a

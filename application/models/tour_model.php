@@ -779,6 +779,27 @@ class Tour_model extends CI_Model {
 		
 	
 	}	
-
+	//check the relevance of this function in tour controller and  remove it
+	function  getDistinctVehicles($package_id){ 
+	$this->db->select('v.registration_number,v.id as vehicle_id');
+	$this->db->distinct();
+	$this->db->where('p.id',$package_id);
+	$this->db->from('packages p');
+	$this->db->join('package_itinerary pi','pi.package_id = p.id','left');
+	$this->db->join('package_vehicles pv','pv.package_itinerary_id = pi.id','left');
+	$this->db->join('vehicles v','pv.vehicle_id = v.id','left');
+	$qry=$this->db->get(); 
+		if($qry->num_rows() > 0){
+			
+			$v_array= $qry->result_array();
+			foreach ($v_array as $key=>$vehicle){
+				echo $vehicle['vehicle_id'];
+				
+			}
+			
+		}else{
+			return false;
+		}
+	}
 }
 ?>

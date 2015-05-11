@@ -19,7 +19,7 @@
 		<th  style="width:10%">Status</th>
         <tr>
 	
-	<?php if(isset($package_lists)){ 
+	<?php if(!empty($package_lists)){ 
 	foreach ($package_lists as $list){ 
 	?>
 	<tr class="row_click common" limited="true">

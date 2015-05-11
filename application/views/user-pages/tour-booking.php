@@ -1,4 +1,3 @@
-
 <div class="tour-booking-outer">
 <?php if($this->session->userdata('dbSuccess') != '') { ?>
 	<div class="success-message">

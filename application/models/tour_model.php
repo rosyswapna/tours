@@ -84,11 +84,10 @@ class Tour_model extends CI_Model {
 	//function returns season ids as array (date format 'yyyy-mm-dd')
 	function getSeasonIdssWithDate($_date = '')//not completed
 	{
-		$_date = ($_date != '')?$_date:date('Y-m-d');
+		
 		$this->db->select("id,DAYOFYEAR(starting_date) st, DAYOFYEAR(ending_date) ed ,DAYOFYEAR('".$_date."') cr");
 		$this->db->from('business_seasons');
 	
-		$this->db->where('DAYOFYEAR('.$this->db->escape($_date).') BETWEEN DAYOFYEAR(starting_date) AND DAYOFYEAR(ending_date)');
 		$query = $this->db->get();//echo $this->db->last_query();exit;
 		if($query->num_rows() > 0){
 			$result = $query->result();
@@ -778,6 +777,34 @@ class Tour_model extends CI_Model {
 		}
 		
 	
+	}
+
+	//get selected room for a trip with hotel id
+	function getTourRoomWithHotel($trip_id,$hotel_id,$season)
+	{
+
+		$qry = "SELECT TA.room_type_id,RRT.name AS room_type_name,TA.room_attributes,TA.room_quantity,TA.meals_package,TA.meals_quantity,RT.amount
+			FROM trip_accommodation TA
+			LEFT JOIN room_types RRT ON RRT.id = TA.room_type_id
+			LEFT JOIN room_tariffs RT ON TA.hotel_id = RT.hotel_id AND TA.room_type_id = RT.room_type_id AND season_id = ".$this->db->escape($season)."
+			WHERE TA.itinerary_id IN(SELECT id FROM itinerary WHERE trip_id = ".$this->db->escape($trip_id).")  AND TA.hotel_id = ".$this->db->escape($hotel_id)." AND RT.organisation_id = ".$this->session->userdata('organisation_id');
+
+		$result = $this->db->query($qry);
+		if($result->num_rows() > 0){
+			$row = $result->row_array();
+			if($row['room_attributes'] != '')
+				$row['room_attributes'] = unserialize($row['room_attributes']);
+
+			if($row['meals_package'] != '')
+				$row['meals_package'] = unserialize($row['meals_package']);
+
+			//get room attibutes and meals package tariff amount (pending)
+
+			return $row;
+		}else{
+			return false;
+		}
+		
 	}	
 	//check the relevance of this function in tour controller and  remove it
 	function  getDistinctVehicles($package_id){ 

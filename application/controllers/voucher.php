@@ -99,6 +99,25 @@ class Voucher extends CI_Controller {
 
 	
 	//----voucher ajax calls---------------
+	//return hotel room,room attributes and meals package for trip with hotel id and trip id
+	public function getTripHotelRoom(){
+		if(isset($_REQUEST['hotel_id']) && isset($_REQUEST['trip_id']) && isset($_REQUEST['_date'])){
+
+			$seasons = $this->tour_model->getSeasonIdssWithDate($_REQUEST['_date']);
+			if($seasons)
+				$season = $seasons[0];
+			else
+				$season = gINVALID;
+			$retArr = $this->tour_model->getTourRoomWithHotel($_REQUEST['trip_id'],$_REQUEST['hotel_id'],$season);
+			
+			header('Content-Type: application/json');
+				echo json_encode($retArr);
+		}else{
+			echo 'false';
+		}
+	}
+
+
 	public function getTripExpenses($ajax='NO')
 	{
 		if(isset($_REQUEST['ajax']))

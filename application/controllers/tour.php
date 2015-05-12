@@ -1025,7 +1025,8 @@ class Tour extends CI_Controller {
 						}
 						$model_id=$vehicles['vehicle_model_id'];
 						$vehicle_id=$vehicles['vehicle_id'];
-						$destinations=$this->package_model->getDestinationsByOrder($package_id,$model_id);
+						//$destinations=$this->package_model->getDestinationsByOrder($package_id,$model_id);
+						$destinations=$this->package_model->getDestinationsByOrder($cart,$model_id,$vehicle_id);
 						//print_r($destinations);exit;
 						$count= count($destinations);
 						$API_KEY='AIzaSyD3Fog2G5asD5NI4iJJZDsfJHjW-gPhevA';

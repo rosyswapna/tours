@@ -50,6 +50,7 @@ class Package_model extends CI_Model {
 	{
 		$this->db->from('package_itinerary');
 		$this->db->where('package_id',$package_id);
+		$this->db->order_by('id');
 		$query = $this->db->get();
 		if($query->num_rows() > 0)
 			return $query->result_array();
@@ -68,6 +69,7 @@ class Package_model extends CI_Model {
 			case 'package_destinations':$this->db->select('id,package_itinerary_id as itinerary_id,destination_id,destination_priority,description');
 						$this->db->from($table);
 						$this->db->where('package_itinerary_id',$pck_itinerary_id);
+						$this->db->order_by('destination_priority');
 						$query = $this->db->get();
 						if($query->num_rows() > 0){
 							$return_arry= $query->result_array();
@@ -312,7 +314,7 @@ class Package_model extends CI_Model {
 	
 	
 	
-	function getDestinationsByOrder($package_id,$model_id){
+	/*function getDestinationsByOrder($package_id,$model_id){
 	//$sql=SELECT vm.name,pd.destination_id, pd.destination_priority,pd.package_itinerary_id, d.name FROM packages p INNER JOIN package_itinerary pi ON p.id = pi.package_id INNER JOIN package_vehicles pv ON pi.id = pv.package_itinerary_id INNER JOIN package_destinations pd ON pv.package_itinerary_id = pd.package_itinerary_id INNER JOIN destinations d ON pd.destination_id = d.id INNER JOIN vehicle_models vm ON pv.vehicle_id = vm.id WHERE pv.vehicle_model_id='10' AND p.id='1' Order By pd.package_itinerary_id,pd.destination_priority 
 	
 		$condition=array('pv.vehicle_model_id'=>$model_id,'p.id'=>$package_id);
@@ -326,7 +328,7 @@ class Package_model extends CI_Model {
 		$this->db->join('destinations d','pd.destination_id = d.id','inner');
 		$this->db->order_by("pd.package_itinerary_id", "asc");
 		$this->db->order_by("pd.destination_priority", "asc"); 
-		$qry=$this->db->get();
+		$qry=$this->db->get();echo $this->db->last_query();exit;
 			if($qry->num_rows()>0){
 				$result=$qry->result_array();
 				foreach($result as $key=>$destination){
@@ -339,6 +341,34 @@ class Package_model extends CI_Model {
 				return false;
 	
 	
+	}*/
+	
+	function getDestinationsByOrder($cart,$model_id,$vehicle_id){
+	//echo "<pre>";print_r($cart);echo "</pre>";exit;
+	$destination_arry=array();
+		foreach ($cart as $index=>$item){
+			if(isset($item['trip_vehicles'])){
+			 foreach($item['trip_vehicles'] as $key=>$vehicle){
+			 if($vehicle['vehicle_model_id']==$model_id && $vehicle['vehicle_id']==$vehicle_id){
+				if(isset($item['trip_destinations'])){
+					foreach($item['trip_destinations'] as $key=>$destination){ //echo $key;
+						$this->db->select('name');
+						$this->db->from('destinations');
+						$this->db->where('id',$destination['destination_id']);
+						$result=$this->db->get()->row_array();
+						$destination_arry[]=$result['name'];
+						
+					}
+				}
+			 }
+			// print_r($vehicle);exit;
+				
+			 }
+			}
+		
+		}
+		return $destination_arry;
+		
 	}
 	
 

@@ -246,6 +246,31 @@ window.open(url, '_blank');
 
 });
 
+$('.print-hotel').on('click',function(){
+
+	var hotel_name=$('#name').val();
+	var hotel_rating_id=$('#hotel_rating_id').val();
+	var hotel_category_id=$('#hotel_category_id').val();
+	
+	var url=base_url+'/organization/front-desk/download_xl/hotels?';
+
+	if(hotel_name!=''){
+		url=url+'hotel_namee='+hotel_name;
+	}
+	if(hotel_rating_id!='-1'){
+		url=url+'&hotel_rating_id='+hotel_rating_id;
+	}
+	if(hotel_category_id!='-1'){
+		url=url+'&hotel_category_id='+hotel_category_id;
+	}
+	
+	window.open(url, '_blank');
+	//window.location.replace(url);
+
+
+});
+
+
 $('.print-customer').on('click',function(){
 
 var cust_name=$('#name').val();

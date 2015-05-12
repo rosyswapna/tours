@@ -354,11 +354,68 @@ class Hotel extends CI_Controller {
 	}
 	//------------------------------------------------------------------------------------------
 	
-	public function list_hotel($id){
+	public function list_hotel($param2){
 
 		if($this->session_check()==true) {
 
-			$data['hotels'] = $this->hotel_model->getHotelList();
+			if($this->mysession->get('condition')!=null){
+				$condition=$this->mysession->get('condition');
+				if(!isset($condition['like']['name']) && !isset($condition['where']['hotel_rating_id']) || isset($condition['where']['hotel_category_id'])){
+					$this->mysession->delete('condition');
+				}
+			}
+
+			$tbl_arry=array('hotel_ratings','hotel_categories');
+	
+			for ($i=0;$i<count($tbl_arry);$i++){
+				$data[$tbl_arry[$i]] = $this->user_model->getArray($tbl_arry[$i]);
+			}
+
+			$where_arry['organisation_id'] = $this->session->userdata('organisation_id');
+			$like_arry = array();
+			if(isset($_REQUEST['hotel_search'])){
+
+				if($param2==''){
+					$param2='0';
+				}
+				if($_REQUEST['hotel_name']!=null){
+					$like_arry['name']=$_REQUEST['hotel_name'];
+				}
+
+				if(is_numeric($_REQUEST['hotel_rating_id']) && $_REQUEST['hotel_rating_id'] > 0){
+					$where_arry['hotel_rating_id'] = $_REQUEST['hotel_rating_id'];
+				}
+				
+				if(is_numeric($_REQUEST['hotel_category_id']) && $_REQUEST['hotel_category_id'] > 0){
+					$where_arry['hotel_category_id'] = $_REQUEST['hotel_category_id'];
+				}
+
+				$this->mysession->set('condition',array("where"=>$where_arry,"like"=>$like_arry));
+				
+			}
+			if(is_null($this->mysession->get('condition'))){
+				$this->mysession->set('condition',array("where"=>$where_arry,"like"=>$like_arry));
+
+				$data['hotel_name'] 		= @$like_arry['name'];
+				$data['hotel_rating_id']	= @$where_arry['hotel_rating_id'];
+				$data['hotel_category_id']	= @$where_arry['hotel_category_id'];
+			}
+			$tbl="hotels";
+			$baseurl=base_url().'front-desk/hotel/list';
+			$per_page=10;
+			$uriseg ='4';
+			$paginations=$this->mypage->paging($tbl,$per_page,$param2,$baseurl,$uriseg,$model='');
+			if($param2==''){
+				$this->mysession->delete('condition');
+			}
+
+			$data['page_links']=$paginations['page_links'];
+			$hotels = $paginations['values'];
+			foreach($hotels as $hotel){
+				$data['hotels'][] = $this->hotel_model->getHotel($hotel['id']);
+			}
+
+			//$data['hotels'] = $this->hotel_model->getHotelList();
 			//echo "<pre>";print_r($data);echo "</pre>";exit;
 			$data['title']="Hotel | ".PRODUCT_NAME;  
 			$page='user-pages/list-hotel';

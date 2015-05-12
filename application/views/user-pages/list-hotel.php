@@ -13,6 +13,51 @@
 		<?php  } ?>   
 <fieldset class="body-border">
 <legend class="body-head">List Hotels</legend>
+
+<div class="box-body table-responsive no-padding">		
+<?php echo form_open(base_url()."front-desk/hotel/list"); ?>
+	<table class="table list-trip-table no-border">
+	<tbody>
+		<tr>
+			
+		    	<td>
+			<?php echo form_input(array('name'=>'hotel_name','id'=>'hotel_name','class'=>'form-control' ,'placeholder'=>'Hotel Name','value'=>@$hotel_name)); ?>
+			</td>
+		
+			<td>
+			<?php $class="form-control";
+				  	$id='c_type';
+					echo $this->form_functions->populate_dropdown('hotel_rating_id',$hotel_ratings,@$hotel_rating_id,$class,$id,$msg="Hotel Rating");?>
+			</td>
+
+			 <td><?php $class="form-control";
+				  $id='c_group';
+				 
+				echo $this->form_functions->populate_dropdown('hotel_category_id',$hotel_categories,@$hotel_category_id,$class,$id,$msg="Hotel Category");?> 
+			</td>
+
+		    	<td>
+			<?php echo form_submit("hotel_search","Search","class='btn btn-primary'");
+echo form_close();?>	</td>
+
+			<td>
+			<?php echo form_open(  base_url().'front-desk/hotel/profile');
+				echo form_submit("add","Add","class='btn btn-primary'");
+				echo form_close(); 
+			?>
+			</td>
+			
+			<td>
+			<?php echo form_button('print-hotel','Print',"class='btn btn-primary print-hotel'"); ?>
+			</td>
+			
+		</tr>
+	</tbody>
+</table>
+</div>
+	
+
+
 <div class="box-body table-responsive no-padding">
 <table class="table table-hover table-bordered table-with-20-percent-td" >
 	<tbody>
@@ -36,6 +81,7 @@
 	<?php endforeach; }?>
 	</tbody>
 </table>
+<?php echo $page_links;?>
 </div>
 </fieldset>
 </div>

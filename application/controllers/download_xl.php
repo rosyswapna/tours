@@ -47,6 +47,9 @@ class Download_xl extends CI_Controller {
 				
 				$this->tariffsXL();
 
+			}else if($param1=='hotels'){
+				
+				$this->hotelsXL();
 			}
 			else{
 
@@ -382,6 +385,11 @@ FROM vehicles V where V.organisation_id = '.$this->session->userdata('organisati
 		    $this->load_templates($page,$data);
 	
 
+	}
+
+	public function hotelsXL(){
+		
+		$this->notFound();
 	}
     
 	public function notAuthorized(){

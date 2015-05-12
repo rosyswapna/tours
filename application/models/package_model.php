@@ -324,6 +324,29 @@ class Package_model extends CI_Model {
 		
 	}
 	
+	function getDestinationsByOrder($package_id,$model_id){
+	//$sql=SELECT vm.name,pd.destination_id, pd.destination_priority,pd.package_itinerary_id, d.name FROM packages p INNER JOIN package_itinerary pi ON p.id = pi.package_id INNER JOIN package_vehicles pv ON pi.id = pv.package_itinerary_id INNER JOIN package_destinations pd ON pv.package_itinerary_id = pd.package_itinerary_id INNER JOIN destinations d ON pd.destination_id = d.id INNER JOIN vehicle_models vm ON pv.vehicle_id = vm.id WHERE pv.vehicle_model_id='10' AND p.id='1' Order By pd.package_itinerary_id,pd.destination_priority 
+	
+		$condition=array('pv.vehicle_model_id'=>$model_id,'p.id'=>$package_id);
+		$this->db->select('d.name');
+		//$this->db->select('pd.destination_id,pd.package_itinerary_id,d.name,pd.destination_priority');
+		$this->db->from('packages p');
+		$this->db->where($condition);
+		$this->db->join('package_itinerary pi','p.id = pi.package_id','inner');
+		$this->db->join('package_vehicles pv','pi.id = pv.package_itinerary_id','inner');
+		$this->db->join('package_destinations pd','pv.package_itinerary_id = pd.package_itinerary_id','inner');
+		$this->db->join('destinations d','pd.destination_id = d.id','inner');
+		$this->db->order_by("pd.package_itinerary_id", "asc");
+		$this->db->order_by("pd.destination_priority", "asc"); 
+		$qry=$this->db->get();
+			if($qry->num_rows()>0)
+				return $qry->result_array();
+			else
+				return false;
+	
+	
+	}
+	
 
 }
 ?>

@@ -1023,10 +1023,24 @@ class Tour extends CI_Controller {
 			
 			}
 			
-			if(isset($item['trip_vehicles'])){ 
+		if(isset($item['trip_vehicles'])){ 
 				foreach($item['trip_vehicles'] as $vehicles){ $tax=0;
-				
-					$vehicles=$this->tour_model->getDistinctVehicles($_REQUEST['package_id']);
+					$package_id=$_REQUEST['package_id'];
+					$model_id=$vehicles['vehicle_model_id'];
+					$tariff_id=$vehicles['tariff_id'];
+					$destinations=$this->package_model->getDestinationsByOrder($package_id,$model_id);
+					//print_r($destinations);exit;
+					$count= count($destinations);
+					$API_KEY='AIzaSyD3Fog2G5asD5NI4iJJZDsfJHjW-gPhevA';
+					foreach ($destinations as $index=>$destn){
+						if(($index+1)!=$count){
+							$origin=$destinations[$index]['name'];
+							$destination=$destinations[$index+1]['name'];
+							}
+					echo $origin.",".$destination.br();
+					}
+					exit;
+					$url='https://maps.googleapis.com/maps/api/distancematrix/json?origins='.$origin.'&destinations='.$destination.'&mode=driving&language=en&key='.$API_KEY;
 					
 					
 					$travel_tr[]=array('','','','','');

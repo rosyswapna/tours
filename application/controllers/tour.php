@@ -15,6 +15,7 @@ class Tour extends CI_Controller {
 		$this->load->model('vehicle_model');
 		$this->load->model('package_model');
 		$this->load->model('account_model');
+		$this->load->model('tarrif_model');
 
 		$this->load->library('tour_cart');
 		no_cache();
@@ -984,7 +985,7 @@ class Tour extends CI_Controller {
 		if(isset($_REQUEST['package_id'])){
 			$cart = $this->tour_cart->contents();
 			//echo "<pre>";print_r($cart);echo "</pre>";exit;
-			$str=array();$tr=array();$acc_tr=array();
+			$str=array();$tr=array();$acc_tr=array();$model_id=gINVALID;$vehicle_id=gINVALID;
 			foreach($cart as $itr=>$item){
 				if(isset($item['trip_services'])){
 				
@@ -1016,8 +1017,12 @@ class Tour extends CI_Controller {
 				//--------------------------------------
 			
 				if(isset($item['trip_vehicles'])){ 
-					foreach($item['trip_vehicles'] as $vehicles){ $tax=0;
-						$package_id=$_REQUEST['package_id'];
+				$totalAmount = 0;
+					foreach($item['trip_vehicles'] as $vehicles){ 
+						$package_id=$_REQUEST['package_id']; //echo $vehicles['vehicle_model_id']."-m".$model_id.",".$vehicles['vehicle_id']."-v".$vehicle_id.br();
+						if($vehicles['vehicle_model_id']==$model_id && $vehicles['vehicle_id']==$vehicle_id){
+							continue;
+						}
 						$model_id=$vehicles['vehicle_model_id'];
 						$vehicle_id=$vehicles['vehicle_id'];
 						$destinations=$this->package_model->getDestinationsByOrder($package_id,$model_id);
@@ -1047,15 +1052,42 @@ class Tour extends CI_Controller {
 							$reg_num=$this->settings_model->getValuebyId($vehicle_id,'vehicles','registration_number');	
 						else
 							$reg_num='NA';
+						//echo $model_id." ".$vehicles['vehicle_ac_type_id'];exit;
+						$tariffdata['vehicle_ac_type']=$vehicles['vehicle_ac_type_id'];
+						$tariffdata['vehicle_model']=$model_id;
+						$tariffdata['organisation_id']=$this->session->userdata('organisation_id');
+
+						$tarrif_data=$this->tarrif_model->selectAvailableTariff($tariffdata);//print_r($tarrif_data);exit;
+						$tarrif_data=$tarrif_data[0]; 
+						
+						
 						$t_particulars="Travel: From ".implode(",",$destinations)." - ".$vehicle_model." (".$reg_num.")";
-						echo $t_particulars;exit;
-					
-						$travel_tr[]=array('','','','','');
+						if(!empty($tarrif_data)){
+						$t_particulars.= "+ Minimum ".$tarrif_data['minimum_kilometers']."KM @ Rs.".$tarrif_data['rate']." each day";
+						$totalAmount += $tarrif_data['rate'];
+						}
+						if($total_distance>$tarrif_data['minimum_kilometers']){
+						$additional_km=$total_distance-$tarrif_data['minimum_kilometers'];
+						$t_particulars.=" + Additional ".$additional_km." KM @ RS".$tarrif_data['additional_kilometer_rate']."/KM ";
+						$totalAmount +=$tarrif_data['additional_kilometer_rate']*$additional_km;
+						}
+						if($tarrif_data['driver_bata']){
+						$t_particulars.="+ Driver Bata @ Rs ".$tarrif_data['driver_bata']." each day";
+						$totalAmount +=$tarrif_data['driver_bata'];
+						}
+						if($tarrif_data['night_halt']){
+						$t_particulars.="+ Night Halt @ Rs ".$tarrif_data['night_halt']." each night";
+						$totalAmount +=$tarrif_data['night_halt'];
+						}
+						$tax = 0;
+						$grandTotal = $totalAmount + $tax;
+			
+						$travel_tr[]=array('Travel',$t_particulars,number_format($totalAmount,2),number_format($tax,2),number_format($grandTotal,2));
 					}
 			
 				}
 			} 
-			$tr=array_merge($str,$acc_tr); 
+			$tr=array_merge($str,$acc_tr,$travel_tr); 
 			echo json_encode($tr);
 		}
 		

@@ -76,6 +76,9 @@ class user_model extends CI_Model {
 				$qry=$this->db->where(array('organisation_id'=>$org_id,'status_id'=>STATUS_ACTIVE));
 				$qry=$this->db->order_by("name", "Asc"); 
 				$qry=$this->db->get('services');
+		}elseif($tbl == 'statuses'){ 
+			$qry=$this->db->order_by("name", "Asc"); 
+			$qry=$this->db->get($tbl);
 		}else{ 
 			$qry=$this->db->where('organisation_id',$org_id);
 			$qry=$this->db->order_by("name", "Asc"); 

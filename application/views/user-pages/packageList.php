@@ -1,11 +1,41 @@
 <div class="page-outer">
      <fieldset class="body-border">
      <legend class="body-head">Packages</legend>
-     <div class="box-body table-responsive no-padding trips-table"><?php echo form_open( base_url().'front-desk/tour/booking');
-		  echo form_submit("add","Manage","class='btn btn-primary'").br(2);
-		  echo form_close(); 
-								  
-						?></div>
+     <div class="box-body table-responsive no-padding">		
+	<?php echo form_open(base_url()."front-desk/tour/packages"); ?>
+	<table class="table list-trip-table no-border">
+	<tbody>
+		<tr>
+			
+		    	<td>
+			<?php echo form_input(array('name'=>'package_name','id'=>'package_name','class'=>'form-control' ,'placeholder'=>'Package Name','value'=>@$package_name)); ?>
+			</td>
+		
+			<td>
+			<?php $class="form-control";
+				  	$id='c_type';
+					echo $this->form_functions->populate_dropdown('status_id',$statuses,@$status_id,$class,$id,$msg="Status");?>
+			</td>
+
+		    	<td>
+			<?php echo form_submit("package_search","Search","class='btn btn-primary'");
+echo form_close();?>	</td>
+
+			<td>
+			<?php echo form_open(  base_url().'front-desk/tour/booking');
+				echo form_submit("add","Add","class='btn btn-primary'");
+				echo form_close(); 
+			?>
+			</td>
+			
+			<td>
+			<?php echo form_button('print-packages','Print',"class='btn btn-primary print-packages'"); ?>
+			</td>
+			
+		</tr>
+	</tbody>
+</table>
+</div>
 						
 <div class="box-body table-responsive no-padding trips-table">
 	<table class="table table-hover table-bordered" >

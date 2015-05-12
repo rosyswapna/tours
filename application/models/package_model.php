@@ -157,6 +157,24 @@ class Package_model extends CI_Model {
 		
 	}
 
+	// get package
+	function getPackageDetail($id){
+		$this->db->select('p.id,p.name as package,p.status_id,st.name,count(pi.id) as days');
+		$this->db->from('packages p');
+		$this->db->join('statuses st','p.status_id = st.id','left');
+		$this->db->join('package_itinerary pi','pi.package_id = p.id','left');
+		$this->db->where('p.id',$id);
+		$qry=$this->db->get();
+		
+		if($qry->num_rows() > 0){ //print_r($qry->result_array());exit;
+			
+			$res_arry=$qry->row_array();
+			return $res_arry;
+		}else{
+			return false;
+		}
+	}
+
 
 	//get package table with respect to trip table
 	function getPackageTable($trip_table){

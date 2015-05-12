@@ -63,7 +63,7 @@ class Tour extends CI_Controller {
 			}elseif($param1 == 'getEditableTabValues'){
 				$this->getEditableTabValues();
 			}elseif($param1 == 'packages'){
-				$this->showPackageList();
+				$this->showPackageList($param2);
 			}elseif($param1 == 'getRoughEstimate'){
 				$this->getRoughEstimate();
 			}elseif($param1 == 'getHotelAttributes'){
@@ -969,9 +969,62 @@ class Tour extends CI_Controller {
 		
 	}
 
-	public function showPackageList(){
+	public function showPackageList($param2){
 		if($this->session_check()==true) { 
-			$data['package_lists']=$this->package_model->getAllPackages();
+			if($this->mysession->get('condition')!=null){
+				$condition=$this->mysession->get('condition');
+				if(!isset($condition['like']['name']) && !isset($condition['where']['status_id'])){
+					$this->mysession->delete('condition');
+				}
+			}
+			$tbl_arry=array('statuses');
+			for ($i=0;$i<count($tbl_arry);$i++){
+				$data[$tbl_arry[$i]] = $this->user_model->getArray($tbl_arry[$i]);
+			}
+
+			$where_arry['organisation_id'] = $this->session->userdata('organisation_id');
+			$like_arry = array();
+			if(isset($_REQUEST['package_search'])){
+
+				if($param2==''){
+					$param2='0';
+				}
+				if($_REQUEST['package_name']!=null){
+					$like_arry['name']=$_REQUEST['package_name'];
+				}
+
+				if(is_numeric($_REQUEST['status_id']) && $_REQUEST['status_id'] > 0){
+					$where_arry['status_id'] = $_REQUEST['status_id'];
+				}
+
+				$this->mysession->set('condition',array("where"=>$where_arry,"like"=>$like_arry));
+				
+			}
+			if(is_null($this->mysession->get('condition'))){
+				$this->mysession->set('condition',array("where"=>$where_arry,"like"=>$like_arry));
+
+				$data['package_name'] 	= @$like_arry['name'];
+				$data['status_id']	= @$where_arry['status_id'];
+				
+			}
+
+			$tbl="packages";
+			$baseurl=base_url().'front-desk/tour/packages';
+			$per_page=10;
+			$uriseg ='4';
+			$paginations=$this->mypage->paging($tbl,$per_page,$param2,$baseurl,$uriseg,$model='');
+			if($param2==''){
+				$this->mysession->delete('condition');
+			}
+
+			$data['page_links']=$paginations['page_links'];
+			$package_lists = $paginations['values'];
+			foreach($package_lists as $package){
+				$data['package_lists'][]= $this->package_model->getPackageDetail($package['id']);
+			}
+			
+			//echo "<pre>";print_r($data['package_lists']);echo "</pre>";exit;
+			//$data['package_lists']=$this->package_model->getAllPackages();
 			$data['title']="Package List| ".PRODUCT_NAME;  
 			$page='user-pages/packageList';
 			$this->load_templates($page,$data);

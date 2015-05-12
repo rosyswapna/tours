@@ -1054,7 +1054,7 @@ class Tour extends CI_Controller {
 							 $total=$tax+$service['amount'];
 							 $s_particulars="Service: ".$service_name.",".$service['location']."- Rs ".$service['amount']." per day ";
 						
-							$str[]=array($service_name,$s_particulars,$service['amount'],$tax,$total);
+							$str[]=array($service_name,$s_particulars,number_format($service['amount'],2),number_format($tax,2),number_format($total,2));
 					
 					} 
 				}

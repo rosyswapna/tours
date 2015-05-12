@@ -48,6 +48,19 @@ class Settings_model extends CI_Model {
 	$this->db->delete($tbl);
 	return true;
 	}
+	function getValuebyId($item_id,$tbl,$field){
+
+	$this->db->select($field);
+	$this->db->from($tbl);
+	$this->db->where('id',$item_id);
+	$qry=$this->db->get(); 
+	if($qry->num_rows()>0){
+		return $qry->row()->$field;
+	}else{
+		return false;
+	}
+		
+	}
 	
 	
 }

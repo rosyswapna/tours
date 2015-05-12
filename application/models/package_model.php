@@ -310,19 +310,7 @@ class Package_model extends CI_Model {
 		}
 	}
 	
-	function getValuebyId($item_id,$tbl){
-
-	$this->db->select('name');
-	$this->db->from($tbl);
-	$this->db->where('id',$item_id);
-	$qry=$this->db->get(); 
-	if($qry->num_rows()>0){
-		return $qry->row()->name;
-	}else{
-		return false;
-	}
-		
-	}
+	
 	
 	function getDestinationsByOrder($package_id,$model_id){
 	//$sql=SELECT vm.name,pd.destination_id, pd.destination_priority,pd.package_itinerary_id, d.name FROM packages p INNER JOIN package_itinerary pi ON p.id = pi.package_id INNER JOIN package_vehicles pv ON pi.id = pv.package_itinerary_id INNER JOIN package_destinations pd ON pv.package_itinerary_id = pd.package_itinerary_id INNER JOIN destinations d ON pd.destination_id = d.id INNER JOIN vehicle_models vm ON pv.vehicle_id = vm.id WHERE pv.vehicle_model_id='10' AND p.id='1' Order By pd.package_itinerary_id,pd.destination_priority 
@@ -339,8 +327,14 @@ class Package_model extends CI_Model {
 		$this->db->order_by("pd.package_itinerary_id", "asc");
 		$this->db->order_by("pd.destination_priority", "asc"); 
 		$qry=$this->db->get();
-			if($qry->num_rows()>0)
-				return $qry->result_array();
+			if($qry->num_rows()>0){
+				$result=$qry->result_array();
+				foreach($result as $key=>$destination){
+					$result[$key]=$result[$key]['name'];
+				}
+				
+				return $result;
+				}
 			else
 				return false;
 	

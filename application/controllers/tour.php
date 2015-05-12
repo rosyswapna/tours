@@ -989,7 +989,7 @@ class Tour extends CI_Controller {
 			if(isset($item['trip_services'])){
 				
 				foreach($item['trip_services'] as $service){
-					$service_name=$this->package_model->getValuebyId($service['service_id'],'services');
+					$service_name=$this->settings_model->getValuebyId($service['service_id'],'services','name');
 					
 					$tax=0; //STATIC $sno_of_days=1;
 					/*if(isset($str[$service['service_id']])){
@@ -1008,8 +1008,8 @@ class Tour extends CI_Controller {
 				foreach($item['trip_accommodation'] as $accommodation){ $tax=0; //STATIC $ano_of_days=1;
 					$hotel_attr=$this->hotel_model->getHotelProfile($accommodation['hotel_id']);
 					$acc_charge=$this->getAccomodationCharge($accommodation['hotel_id'],$accommodation['room_type_id'],$accommodation['room_attributes'],$accommodation['room_quantity'],$accommodation['meals_package'],$accommodation['meals_quantity']);
-					$destination=$this->package_model->getValuebyId($hotel_attr['destination_id'],'destinations');
-					$room_type=$this->package_model->getValuebyId($accommodation['room_type_id'],'room_types');
+					$destination=$this->settings_model->getValuebyId($hotel_attr['destination_id'],'destinations','name');
+					$room_type=$this->settings_model->getValuebyId($accommodation['room_type_id'],'room_types','name');
 						/*if(isset($acc_tr[$accommodation['hotel_id']])){
 							$ano_of_days=$ano_of_days+1;
 							$acc_tr[$accommodation['hotel_id']][2]+=$acc_charge;
@@ -1027,21 +1027,36 @@ class Tour extends CI_Controller {
 				foreach($item['trip_vehicles'] as $vehicles){ $tax=0;
 					$package_id=$_REQUEST['package_id'];
 					$model_id=$vehicles['vehicle_model_id'];
-					$tariff_id=$vehicles['tariff_id'];
+					$vehicle_id=$vehicles['vehicle_id'];
 					$destinations=$this->package_model->getDestinationsByOrder($package_id,$model_id);
 					//print_r($destinations);exit;
 					$count= count($destinations);
 					$API_KEY='AIzaSyD3Fog2G5asD5NI4iJJZDsfJHjW-gPhevA';
-					foreach ($destinations as $index=>$destn){
-						if(($index+1)!=$count){
-							$origin=$destinations[$index]['name'];
-							$destination=$destinations[$index+1]['name'];
-							}
-					echo $origin.",".$destination.br();
-					}
-					exit;
-					$url='https://maps.googleapis.com/maps/api/distancematrix/json?origins='.$origin.'&destinations='.$destination.'&mode=driving&language=en&key='.$API_KEY;
 					
+					$distance=0;
+					for($i=0;$i<($count-1);$i++){
+						
+						$origin=$destinations[$i];
+						$destination=$destinations[$i+1];
+						$url='https://maps.googleapis.com/maps/api/distancematrix/json?origins='.$origin.'&destinations='.$destination.'&mode=driving&language=en&key='.$API_KEY;
+						$data=file_get_contents($url);
+						$decode = json_decode($data);
+							if(isset($decode->rows[0]->elements[0]->status) && $decode->rows[0]->elements[0]->status!='NOT_FOUND') {
+								$distance+=substr($decode->rows[0]->elements[0]->distance->text,0,-3);
+								
+								
+							}
+						
+					}
+					$total_distance=$distance;
+					$tariff_id=$vehicles['tariff_id'];
+					$vehicle_model=$this->settings_model->getValuebyId($model_id,'vehicle_models','name'); 
+					if($vehicle_id>gINVALID)
+						$reg_num=$this->settings_model->getValuebyId($vehicle_id,'vehicles','registration_number');	
+					else
+						$reg_num='NA';
+					$t_particulars="Travel: From ".implode(",",$destinations)." - ".$vehicle_model." (".$reg_num.")";
+					echo $t_particulars;exit;
 					
 					$travel_tr[]=array('','','','','');
 				}

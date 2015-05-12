@@ -214,9 +214,12 @@ class Hotel_model extends CI_Model {
 	//get room attribute row with condition as supplied
 	function getAttributeTariff($condition= array())
 	{
-		$this->db->from('room_attribute_tariffs');
+		$this->db->select('RAT.*,RA.name as attr_name,M.name as meals_name');
+		$this->db->from('room_attribute_tariffs RAT');
+		$this->db->join('room_attributes RA','RAT.attribute_id = RA.id','left');
+		$this->db->join('meals_options M','RAT.meals_id = M.id','left');
 		$this->db->where($condition);
-		$query = $this->db->get();
+		$query = $this->db->get();//echo $this->db->last_query();exit;
 		if($query->num_rows() == 1){
 			return $query->row();
 		}else{

@@ -1032,7 +1032,7 @@ class Tour extends CI_Controller {
 		if(isset($_REQUEST['package_id'])){
 			$cart = $this->tour_cart->contents();
 			//echo "<pre>";print_r($cart);echo "</pre>";exit;
-			$str=array();$tr=array();$acc_tr=array();$model_id=gINVALID;$vehicle_id=gINVALID;
+			$str=array();$tr=array();$acc_tr=array();$model_id=gINVALID;$vehicle_id=gINVALID;$travel_tr=array();
 			foreach($cart as $itr=>$item){
 				if(isset($item['trip_services'])){
 				

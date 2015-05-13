@@ -658,7 +658,7 @@ class Tour extends CI_Controller {
 
 	function addToCart()//from ajax call
 	{
-		if(isset($_REQUEST['table'])&& isset($_REQUEST['_date']) && isset($_REQUEST['trip_id'])){
+		/*if(isset($_REQUEST['table'])&& isset($_REQUEST['_date']) && isset($_REQUEST['trip_id'])){
 			$tble = $_REQUEST['table'];
 			$fields = $_REQUEST;
 			$itinerary = $fields['_date'];
@@ -676,6 +676,27 @@ class Tour extends CI_Controller {
 			$this->tour_cart->insert($data,$itinerary);
 			}
 				
+		}*/
+		if(isset($_REQUEST['post'])){
+			$dataArray=$_REQUEST['post'];
+			$tble = $dataArray['table'];
+			$fields = $dataArray;
+			$itinerary = $dataArray['_date'];
+			$index = $dataArray['row_id'];
+			$trip_id=$dataArray['trip_id'];
+			array_shift($fields);//pop first element(url data from ajax call)
+			unset($fields['table']);
+			unset($fields['_date']);
+			unset($fields['trip_id']);
+			unset($fields['row_id']);
+			
+			//echo "<pre>";print_r($fields);echo "</pre>";exit;
+			if(is_numeric($fields['id'])&& ($fields['id']>0)){
+				$this->tour_cart->update($tble,$fields,$itinerary,$index);
+			}else{ 
+				$data[$tble] = $fields; 
+				$this->tour_cart->insert($data,$itinerary);
+			}
 		}
 		$cart = $this->tour_cart->contents();
 		$this->build_itinerary_data($cart,$ajax = 'YES');
@@ -688,7 +709,7 @@ class Tour extends CI_Controller {
 		if($this->tour_cart->total_itineraries() == 0){
 			$this->tour_cart->create();
 		}
-		//print_r($_REQUEST);exit;
+		print_r($_REQUEST);exit;
 		//if(isset($_REQUEST['table'])&& isset($_REQUEST['_date'])){
 		if(isset($_REQUEST['post'])){
 			$dataArray=$_REQUEST['post'];
@@ -703,10 +724,10 @@ class Tour extends CI_Controller {
 			
 			//echo "<pre>";print_r($fields);echo "</pre>";exit;
 			if(is_numeric($fields['id'])&& ($fields['id']>0)){
-			$this->tour_cart->update($tble,$fields,$itinerary,$index);
+				$this->tour_cart->update($tble,$fields,$itinerary,$index);
 			}else{ 
-			$data[$tble] = $fields; 
-			$this->tour_cart->insert($data,$itinerary);
+				$data[$tble] = $fields; 
+				$this->tour_cart->insert($data,$itinerary);
 			}
 		}
 
@@ -1095,38 +1116,41 @@ class Tour extends CI_Controller {
 						
 						}
 						$total_distance=$distance;
-						$tariff_id=$vehicles['tariff_id'];
+						$tariff_id=$vehicles['tariff_id']; 
 						$vehicle_model=$this->settings_model->getValuebyId($model_id,'vehicle_models','name'); 
-						if($vehicle_id>gINVALID)
-							$reg_num=$this->settings_model->getValuebyId($vehicle_id,'vehicles','registration_number');	
-						else
-							$reg_num='NA';
+						
 						//echo $model_id." ".$vehicles['vehicle_ac_type_id'];exit;
 						$tariffdata['vehicle_ac_type']=$vehicles['vehicle_ac_type_id'];
 						$tariffdata['vehicle_model']=$model_id;
 						$tariffdata['organisation_id']=$this->session->userdata('organisation_id');
 
 						$tarrif_data=$this->tarrif_model->selectAvailableTariff($tariffdata);//print_r($tarrif_data);exit;
-						$tarrif_data=$tarrif_data[0]; 
+						 
 						
 						
-						$t_particulars="Travel: From ".implode(",",$destinations)." - ".$vehicle_model." (".$reg_num.")";
+						$t_particulars="Travel: From ".implode(",",$destinations)." - ".$vehicle_model;
+						if($vehicle_id>gINVALID){
+							$reg_num=$this->settings_model->getValuebyId($vehicle_id,'vehicles','registration_number');
+							$t_particulars+=" (".$reg_num.")";
+							}
 						if(!empty($tarrif_data)){
-						$t_particulars.= "+ Minimum ".$tarrif_data['minimum_kilometers']."KM @ Rs.".$tarrif_data['rate']." each day";
-						$totalAmount += $tarrif_data['rate'];
-						}
-						if($total_distance>$tarrif_data['minimum_kilometers']){
-						$additional_km=$total_distance-$tarrif_data['minimum_kilometers'];
-						$t_particulars.=" + Additional ".$additional_km." KM @ RS".$tarrif_data['additional_kilometer_rate']."/KM ";
-						$totalAmount +=$tarrif_data['additional_kilometer_rate']*$additional_km;
-						}
-						if($tarrif_data['driver_bata']){
-						$t_particulars.="+ Driver Bata @ Rs ".$tarrif_data['driver_bata']." each day";
-						$totalAmount +=$tarrif_data['driver_bata'];
-						}
-						if($tarrif_data['night_halt']){
-						$t_particulars.="+ Night Halt @ Rs ".$tarrif_data['night_halt']." each night";
-						$totalAmount +=$tarrif_data['night_halt'];
+							$tarrif_data=$tarrif_data[0];
+							$t_particulars.= "+ Minimum ".$tarrif_data['minimum_kilometers']."KM @ Rs.".$tarrif_data['rate']." each day";
+							$totalAmount += $tarrif_data['rate'];
+						
+							if($total_distance>$tarrif_data['minimum_kilometers']){
+								$additional_km=$total_distance-$tarrif_data['minimum_kilometers'];
+								$t_particulars.=" + Additional ".$additional_km." KM @ RS".$tarrif_data['additional_kilometer_rate']."/KM ";
+								$totalAmount +=$tarrif_data['additional_kilometer_rate']*$additional_km;
+							}
+							if($tarrif_data['driver_bata']){
+								$t_particulars.="+ Driver Bata @ Rs ".$tarrif_data['driver_bata']." each day";
+								$totalAmount +=$tarrif_data['driver_bata'];
+							}
+							if($tarrif_data['night_halt']){
+								$t_particulars.="+ Night Halt @ Rs ".$tarrif_data['night_halt']." each night";
+								$totalAmount +=$tarrif_data['night_halt'];
+							}
 						}
 						$tax = 0;
 						$grandTotal = $totalAmount + $tax;

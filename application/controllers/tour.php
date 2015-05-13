@@ -1056,6 +1056,7 @@ class Tour extends CI_Controller {
 				//set accommodation rows----------------
 				if(isset($item['trip_accommodation'])){ 
 					foreach($item['trip_accommodation'] as $accommodation){ 
+						
 
 						$acc_tr[] = $this->getAccomodationCharge($accommodation['hotel_id'],$accommodation['room_type_id'],$accommodation['room_attributes'],$accommodation['room_quantity'],$accommodation['meals_package'],$accommodation['meals_quantity']);
 					}
@@ -1179,16 +1180,18 @@ class Tour extends CI_Controller {
 		
 		//room attributes------------
 		$attr_particulars = array();
-		foreach($room_attributes as $attribute_id){
-			$condition=array('hotel_id'=>$hotel_id,'season_id'=>$season_id,
-					'attribute_id'=>$attribute_id);
-			$attr = $this->hotel_model->getAttributeTariff($condition);
-			if($attr){
-				$attr_particulars[$attribute_id] = $attr->attr_name;
-				if($attr->amount > 0){
-					$attr_particulars[$attribute_id].= " @Rs.".number_format($attr->amount,2);
+		if(is_array($room_attributes)){
+			foreach($room_attributes as $attribute_id){
+				$condition=array('hotel_id'=>$hotel_id,'season_id'=>$season_id,
+						'attribute_id'=>$attribute_id);
+				$attr = $this->hotel_model->getAttributeTariff($condition);
+				if($attr){
+					$attr_particulars[$attribute_id] = $attr->attr_name;
+					if($attr->amount > 0){
+						$attr_particulars[$attribute_id].= " @Rs.".number_format($attr->amount,2);
+					}
+					$totalAmount += $attr->amount;
 				}
-				$totalAmount += $attr->amount;
 			}
 		}
 		if($attr_particulars){
@@ -1197,18 +1200,19 @@ class Tour extends CI_Controller {
 		//---------------------------------------
 		
 		$meals_particulars = array();
-		foreach($meals_package as $meals_id){
-			$condition=array('hotel_id'=>$hotel_id,'season_id'=>$season_id,'meals_id'=>$meals_id);
-			$meals = $this->hotel_model->getAttributeTariff($condition);
-			if($meals){
-				$meals_particulars[$meals_id] = $meals->meals_name;
-				if($meals->amount > 0){
-					$meals_particulars[$meals_id].= " @Rs.".number_format($meals->amount,2);
+		if(is_array($meals_package)){
+			foreach($meals_package as $meals_id){
+				$condition=array('hotel_id'=>$hotel_id,'season_id'=>$season_id,'meals_id'=>$meals_id);
+				$meals = $this->hotel_model->getAttributeTariff($condition);
+				if($meals){
+					$meals_particulars[$meals_id] = $meals->meals_name;
+					if($meals->amount > 0){
+						$meals_particulars[$meals_id].= " @Rs.".number_format($meals->amount,2);
+					}
+					$totalAmount += $meals->amount;
 				}
-				$totalAmount += $meals->amount;
 			}
 		}
-
 		if($meals_particulars){
 			$a_particulars.= " ( Meals Package : ".implode(',',$meals_particulars)." )";
 		}

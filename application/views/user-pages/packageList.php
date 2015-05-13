@@ -49,52 +49,45 @@ echo form_close();?>	</td>
 		<th  style="width:10%">Status</th>
         <tr>
 	
-	<?php if(!empty($package_lists)){ 
-	foreach ($package_lists as $list){ 
+	<?php if(!empty($packages)){ 
+	foreach ($packages as $package){ 
 	?>
 	<tr class="row_click common" limited="true">
-	<td>
-	<?php
-		$data = array(
-			    'name' => 'button',
-			    'id' => 'package-edit',
-			    'value' => 'true',
-			    'class' => 'btn-edit packages-edit',
-			    'content' => $list['package'],
-			    'edit-id'=> $list['id']
-			);
 
-		echo form_button($data);
-  
-		//echo $list['package'];
-	?>
-	</td>
-	<td><?php if(!empty($list['destination_arry'])){
-	
-		$numItems = count($list['destination_arry']);
-		$i = 0;
-		foreach ($list['destination_arry'] as $destination){
-			if(++$i === $numItems) {
-				echo nbs(1).$destination['name']. nbs(1);
-			}else{
-				echo nbs(1).$destination['name']. nbs(1).'-'. nbs(1);
-			}	
-		}
-	}
-	
-	?></td>
-	<td><?php echo $list['days'];?></td>
-	<td><?php echo ' ';?></td>
-	<td><?php if( $list['status_id']== STATUS_ACTIVE)
-			echo '<span class="label label-success">'.$list['name'].'</span>';
-		  else
-			echo '<span class="label label-danger">'.$list['name'].'</span>';
-	?></td>
+		<td>
+		<?php
+			$data = array(
+				    'name' => 'button',
+				    'id' => 'package-edit',
+				    'value' => 'true',
+				    'class' => 'btn-edit packages-edit',
+				    'content' => $package['package'],
+				    'edit-id'=> $package['id']
+				);
+
+			echo form_button($data);
+		?>
+		</td>
+
+		<td><?php echo $package['description'];?></td>
+
+		<td><?php echo $package['days'];?></td>
+
+		<td><?php echo ' ';?></td>
+
+		<td>
+			<?php if( $package['status_id']== STATUS_ACTIVE)
+				echo '<span class="label label-success">'.$package['name'].'</span>';
+			  else
+				echo '<span class="label label-danger">'.$package['name'].'</span>';
+			?>
+		</td>
+
 	</tr>
 	<?php
 	}
 	}else{
-	echo "<span style='color:red;'>No Results Found</span>";
+		echo "<span style='color:red;'>No Results Found</span>";
 	} ?>
 	
 	

@@ -159,13 +159,14 @@ class Package_model extends CI_Model {
 
 	// get package
 	function getPackageDetail($id){
-		$this->db->select('p.id,p.name as package,p.status_id,st.name,count(pi.id) as days');
-		$this->db->from('packages p');
+		$this->db->select("p.id,p.name as package,p.status_id,st.name,count(pi.id) as days,GROUP_CONCAT(d.name SEPARATOR ',')");
+		$this->db->from('packages p,package_destinations pd');
 		$this->db->join('statuses st','p.status_id = st.id','left');
 		$this->db->join('package_itinerary pi','pi.package_id = p.id','left');
-		$this->db->where('p.id',$id);
+		$this->db->join('destinations d','d.id = pd.destination_id','left');
+		$this->db->where(array('p.id'=>$id,'p.id'=>'pd.package_itinerary_id'));
 		$qry=$this->db->get();
-		
+		//echo $this->db->last_query();exit;
 		if($qry->num_rows() > 0){ //print_r($qry->result_array());exit;
 			
 			$res_arry=$qry->row_array();
@@ -387,6 +388,21 @@ class Package_model extends CI_Model {
 		}
 		return $destination_arry;
 		
+	}
+
+	function get_sql_for_packages()
+	{
+		$qry = "SELECT p.id, p.name as package, p.status_id, 
+				st.name, count(pi.id) as days,GROUP_CONCAT(d.name SEPARATOR ', ') as description
+			FROM packages p
+			LEFT JOIN statuses st ON p.status_id = st.id 
+			LEFT JOIN package_itinerary pi ON pi.package_id = p.id 
+			LEFT JOIN  package_destinations pd ON pi.id = pd.package_itinerary_id
+			LEFT JOIN destinations d ON d.id = pd.destination_id
+			WHERE p.organisation_id = ".$this->session->userdata('organisation_id')."
+			GROUP BY pi.package_id";
+
+		return $qry;
 	}
 	
 

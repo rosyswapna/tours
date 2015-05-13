@@ -1008,23 +1008,17 @@ class Tour extends CI_Controller {
 				
 			}
 
-			$tbl="packages";
 			$baseurl=base_url().'front-desk/tour/packages';
 			$per_page=10;
 			$uriseg ='4';
-			$paginations=$this->mypage->paging($tbl,$per_page,$param2,$baseurl,$uriseg,$model='');
+			$qry = $this->package_model->get_sql_for_packages();
+			$paginations=$this->mypage->paging('',$per_page,$param2,$baseurl,$uriseg,'yes',$qry);
+			$data['page_links']=$paginations['page_links'];
+			$data['packages'] = $paginations['values'];
 			if($param2==''){
 				$this->mysession->delete('condition');
 			}
 
-			$data['page_links']=$paginations['page_links'];
-			$package_lists = $paginations['values'];
-			foreach($package_lists as $package){
-				$data['package_lists'][]= $this->package_model->getPackageDetail($package['id']);
-			}
-			
-			//echo "<pre>";print_r($data['package_lists']);echo "</pre>";exit;
-			//$data['package_lists']=$this->package_model->getAllPackages();
 			$data['title']="Package List| ".PRODUCT_NAME;  
 			$page='user-pages/packageList';
 			$this->load_templates($page,$data);

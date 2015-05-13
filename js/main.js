@@ -2740,7 +2740,9 @@ $('.vehicle-list').on('keydown',function(){
 
 	function reset_estimate_table()
 	{
-		$("#estimate-tbl").find('tr:not(:has(th)))').remove();
+		//$("#estimate-tbl").find('tr:not(:has(th)))').remove();
+		
+		 $("#estimate-tbl").find("tr:gt(0)").remove();
 	}
 	
 	

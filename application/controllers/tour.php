@@ -1053,7 +1053,7 @@ class Tour extends CI_Controller {
 		if(isset($_REQUEST['package_id'])){
 			$cart = $this->tour_cart->contents();
 			//echo "<pre>";print_r($cart);echo "</pre>";exit;
-			$str=array();$tr=array();$acc_tr=array();$model_id=gINVALID;$vehicle_id=gINVALID;$travel_tr=array();
+			$str=array();$tr=array();$acc_tr=array();$estimate_tr=array();$travel_tr=array();$model_id=gINVALID;$vehicle_id=gINVALID; $estimate_amt=0;
 			foreach($cart as $itr=>$item){
 				if(isset($item['trip_services'])){
 				
@@ -1070,7 +1070,7 @@ class Tour extends CI_Controller {
 							 $s_particulars="Service: ".$service_name.",".$service['location']."- Rs ".$service['amount']." per day ";
 						
 							$str[]=array($service_name,$s_particulars,number_format($service['amount'],2),number_format($tax,2),number_format($total,2));
-					
+							$estimate_amt+=$total;
 					} 
 				}
 
@@ -1079,10 +1079,13 @@ class Tour extends CI_Controller {
 					foreach($item['trip_accommodation'] as $accommodation){ 
 						
 
-						$acc_tr[] = $this->getAccomodationCharge($accommodation['hotel_id'],$accommodation['room_type_id'],$accommodation['room_attributes'],$accommodation['room_quantity'],$accommodation['meals_package'],$accommodation['meals_quantity']);
+						list($name,$a_particulars,$unit_amt,$tax,$total)= $this->getAccomodationCharge($accommodation['hotel_id'],$accommodation['room_type_id'],$accommodation['room_attributes'],$accommodation['room_quantity'],$accommodation['meals_package'],$accommodation['meals_quantity']);
+						
+						$acc_tr[]=array($name,$a_particulars,number_format($unit_amt,2),number_format($tax,2),number_format($total,2));
+						$estimate_amt+=$total;
 					}
-			
-				}
+					
+				} 
 				//--------------------------------------
 			
 				if(isset($item['trip_vehicles'])){ 
@@ -1154,13 +1157,15 @@ class Tour extends CI_Controller {
 						}
 						$tax = 0;
 						$grandTotal = $totalAmount + $tax;
-			
+						$estimate_amt+=$grandTotal;
 						$travel_tr[]=array('Travel',$t_particulars,number_format($totalAmount,2),number_format($tax,2),number_format($grandTotal,2));
 					}
 			
 				}
 			} 
-			$tr=array_merge($str,$acc_tr,$travel_tr); 
+			//echo $estimate_amt;exit;
+			$estimate_tr[]=array('','','','Grand Total',number_format($estimate_amt,2));
+			$tr=array_merge($str,$acc_tr,$travel_tr,$estimate_tr); 
 			echo json_encode($tr);
 		}
 		
@@ -1242,13 +1247,14 @@ class Tour extends CI_Controller {
 		}
 
 		$tax = 0;
-		$grandTotal = $totalAmount + $tax;			
+		$grandTotal = $totalAmount + $tax;
+		
 		return array(
 				$hotel_attr['name'],
 				$a_particulars,
-				number_format($totalAmount,2),
-				number_format($tax,2),
-				number_format($grandTotal,2)
+				$totalAmount,
+				$tax,
+				$grandTotal
 			);
 			
 	}

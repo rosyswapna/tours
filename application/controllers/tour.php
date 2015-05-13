@@ -858,14 +858,14 @@ class Tour extends CI_Controller {
 				$vehicles = array();
 				if(isset($item['trip_vehicles'])){
 					foreach($item['trip_vehicles'] as $dataArry_index=>$vehicle){
-					$vehicles[]=array($dataArry_index,$vehicle['vehicle_id'],$vehicle['vehicle_type_id']); 
+					$vehicles[]=array($dataArry_index,$vehicle['vehicle_type_id']); 
 					//$vehicle_type=$this->package_model->getVehicleType($vehicle['vehicle_type_id']);
 					
 						//array_push($vehicles,$vehicle['vehicle_id']);
 					}
 					
 					$active_tab = 'v_tab';//print_r($vehicles);exit;
-					$vehicles = $this->tour_model->getItineraryDataLink('vehicles','registration_number',$vehicles,$active_tab,$itinerary);
+					$vehicles = $this->tour_model->getItineraryDataLink('vehicle_types','name',$vehicles,$active_tab,$itinerary);
 					//echo "<pre>";print_r($vehicles);echo "</pre>";exit;
 				}
 

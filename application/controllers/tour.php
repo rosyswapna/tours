@@ -709,7 +709,7 @@ class Tour extends CI_Controller {
 		if($this->tour_cart->total_itineraries() == 0){
 			$this->tour_cart->create();
 		}
-		print_r($_REQUEST);exit;
+		//print_r($_REQUEST);exit;
 		//if(isset($_REQUEST['table'])&& isset($_REQUEST['_date'])){
 		if(isset($_REQUEST['post'])){
 			$dataArray=$_REQUEST['post'];
@@ -1096,7 +1096,7 @@ class Tour extends CI_Controller {
 						$vehicle_id=$vehicles['vehicle_id'];
 						//$destinations=$this->package_model->getDestinationsByOrder($package_id,$model_id);
 						$destinations=$this->package_model->getDestinationsByOrder($cart,$model_id,$vehicle_id);
-						//print_r($destinations);exit;
+						
 						$count= count($destinations);
 						$API_KEY='AIzaSyD3Fog2G5asD5NI4iJJZDsfJHjW-gPhevA';
 					
@@ -1125,13 +1125,13 @@ class Tour extends CI_Controller {
 						$tariffdata['organisation_id']=$this->session->userdata('organisation_id');
 
 						$tarrif_data=$this->tarrif_model->selectAvailableTariff($tariffdata);//print_r($tarrif_data);exit;
-						 
 						
 						
+						//print_r($destinations);exit;
 						$t_particulars="Travel: From ".implode(",",$destinations)." - ".$vehicle_model;
-						if($vehicle_id>gINVALID){
+						if($vehicle_id>gINVALID){ 
 							$reg_num=$this->settings_model->getValuebyId($vehicle_id,'vehicles','registration_number');
-							$t_particulars+=" (".$reg_num.")";
+							$t_particulars.=" (".$reg_num.")";
 							}
 						if(!empty($tarrif_data)){
 							$tarrif_data=$tarrif_data[0];

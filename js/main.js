@@ -2439,12 +2439,17 @@ $('.vehicle-list').on('keydown',function(){
 			room_attributes.push($(this).val());
 		});
 	
-		var meals_package = [];
+		var meals_options = [];
 		$('.meals_package').each(function(){
 			if(this.checked)
-				meals_package.push($(this).val());
+				meals_options.push($(this).val());
 		}); 
 		var meals_quantity = $('#meals_quantity').val();
+		if(meals_options.length===0){
+			meals_package='';
+		}else{
+			meals_package=meals_options;
+		}
 		
 		var combo_data={};
 			combo_data['accommodation_date']=$('#accommodation_date').val();

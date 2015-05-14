@@ -184,6 +184,7 @@ $(document).ready(function(){
 
 		
 		add_voucher_itinerary(dataArr);
+		reset_vehicle_tab();
 		
 	});
 
@@ -532,6 +533,51 @@ $(document).ready(function(){
 				build_voucher_table(data);
 			}
 		});
+	}
+
+	function reset_vehicle_tab(){
+		
+		$(".voucher-tabs #vehicle_model_id").val(-1);
+		$(".voucher-tabs #vehicle_ac_type_id").val(-1);
+		$(".voucher-tabs #vehicle_id").val(-1);
+		$(".voucher-tabs #driver_id").val(-1);
+		$(".voucher-tabs #vehicle_tariff_id").val(-1);
+		$(".voucher-tabs #vehicle_from_date").val("");
+		$(".voucher-tabs #vehicle_to_date").val("");
+		$(".voucher-tabs #vehicle_start_time").val("");
+		$(".voucher-tabs #vehicle_end_time").val("");
+		$(".voucher-tabs #start_km").val("");
+		$(".voucher-tabs #end_km").val("");
+		$(".voucher-tabs #no_of_days").val("");
+		$(".voucher-tabs #total_km").val("");
+		$(".voucher-tabs #total_hr").val("");
+		$(".voucher-tabs #base_km").val("");
+		$(".voucher-tabs #base_km_amount").val("");
+		$(".voucher-tabs #adt_km").val("");
+		$(".voucher-tabs #adt_km_rate").val("");
+		$(".voucher-tabs #adt_km_amount").val("");
+		$(".voucher-tabs #total_km_amount").val("");
+
+		$(".voucher-tabs #base_hr").val("");
+		$(".voucher-tabs #base_hr_amount").val("");
+		$(".voucher-tabs #adt_hr").val("");
+		$(".voucher-tabs #adt_hr_rate").val("");
+		$(".voucher-tabs #adt_hr_amount").val("");
+		$(".voucher-tabs #total_hr_amount").val("");
+
+		$(".voucher-tabs #driver_bata").val("");
+		$(".voucher-tabs #night_halt_charge").val("");
+
+		$(".voucher-tabs #vehicle_unit_amount").val("");
+		$(".voucher-tabs #vehicle_advance_amount").val("");
+		$(".voucher-tabs #vehicle_tax_group_id").val(-1);
+		$(".voucher-tabs #vehicle_tax_amount").val("");
+		$(".voucher-tabs #vehicle_total_amount").val("");
+
+		$('.iradio_minimal').removeClass('checked');
+		$('.iradio_minimal').attr('aria-checked',false);
+		
+		
 	}
 	
 	

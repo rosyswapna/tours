@@ -723,7 +723,7 @@ class Tour extends CI_Controller {
 			unset($fields['row_id']);
 			
 			//echo "<pre>";print_r($fields);echo "</pre>";exit;
-			if(is_numeric($fields['id'])&& ($fields['id']>0)){
+			if($index>=0){
 				$this->tour_cart->update($tble,$fields,$itinerary,$index);
 			}else{ 
 				$data[$tble] = $fields; 
@@ -834,7 +834,7 @@ class Tour extends CI_Controller {
 			}
 			$tableData['th'] = array(
 					array('label'=>$firstTH,'attr'=>'width="5%"'),
-					array('label'=>'Particulars','attr'=>'width="40%"'),
+					array('label'=>'Travel','attr'=>'width="40%"'),
 					array('label'=>'Accommodation','attr'=>'width="15%"'),
 					array('label'=>'Service','attr'=>'width="15%"'),
 					array('label'=>'Vehicle','attr'=>'width="15%"'),

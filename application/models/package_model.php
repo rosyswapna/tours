@@ -85,10 +85,10 @@ class Package_model extends CI_Model {
 						$query = $this->db->get();
 						if($query->num_rows() > 0){
 							
-							foreach($query->result_array() as $value){
-							
+							foreach($query->result_array() as $value){ 
+							//print_r(unserialize($value['room_attributes'])).br();
 							$value['room_attributes']=($value['room_attributes']!='')?unserialize($value['room_attributes']):'';
-							$value['meals_package']=($value['room_attributes']!='')?unserialize($value['meals_package']):'';
+							$value['meals_package']=($value['meals_package']!='')?unserialize($value['meals_package']):'';
 							$return_arry[]=$value;
 							
 							}
@@ -266,11 +266,12 @@ class Package_model extends CI_Model {
 								$id = $data['id'];
 								unset($data['id']);
 								unset($data['itinerary_id']);
-												
+											
 								//if found array values serialize them
 								foreach($data as $colName=>$colVal){
 									if(is_array($colVal)){
-										$data[$colName] = serialize($colVal);}
+										$data[$colName] = serialize($colVal);
+										}
 								}
 	
 								if($id == gINVALID) {

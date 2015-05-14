@@ -12,11 +12,12 @@
 	</div>
 <?php  } ?>
 
-<?php if(!is_numeric($package_id) || $package_id <= 0){
+<?php 
 
  
 	echo form_open(base_url()."tour/manage_tour_booking");
 	echo form_hidden('trip_id',$trip_id);
+	if(!is_numeric($package_id) || $package_id <= 0){
 ?>
 
 
@@ -172,9 +173,8 @@
 	</table>
 
 	</fieldset>
-	<?php echo form_close(); ?>
+	<?php }else{ ?>
 
-<?php }else{//package edit from list ?>
 	<fieldset class="body-border">
 	<legend class="body-head">Package</legend>
 		<table>
@@ -184,7 +184,9 @@
 			</tr>
 		</table>
 	</fieldset>
-<?php } ?>
+<?php } 
+	echo form_close();
+?>
 
 <!--itinerary table starts here ,table illed by jquery-->
 

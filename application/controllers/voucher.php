@@ -39,6 +39,8 @@ class Voucher extends CI_Controller {
 				$this->getFromVoucher();
 			}elseif($param1=='save'){	
 				$this->save($param2);
+			}elseif($param1=='getVoucherTabValues'){
+				$this->getVoucherTabValues();
 			}else{
 				$this->notFound();
 			}
@@ -223,7 +225,7 @@ class Voucher extends CI_Controller {
 			foreach($voucher as $table=>$rows){
 				
 				//echo "<pre>";print_r($rows);echo "</pre>";exit;
-				foreach($rows as $row){
+				foreach($rows as $index=>$row){ 
 					$totAmt = (double)$row['unit_amount'] + (double)$row['tax_amount'] - (double)$row['advance_amount'];
 					$tr = array($slno,
 						$row['from_date'],
@@ -235,7 +237,7 @@ class Voucher extends CI_Controller {
 
 					//add edit link if need
 					if($row['id'] > 0){
-						$link = '<a class="edit-voucher-itr" itr-id ="'.$row['id'].'" itr-table="'.$table.'" href="#">Edit</a>';
+						$link = '<a class="edit-voucher-itr" row-id="'.$index.'" itr-id ="'.$row['id'].'" itr-table="'.$table.'" href="#">Edit</a>';
 						array_push($tr,$link);
 						$edit = true;
 					}
@@ -268,7 +270,18 @@ class Voucher extends CI_Controller {
 			}
 		}
 	}
-
+	
+	function getVoucherTabValues(){
+		if((isset($_REQUEST['row_id']))&& (isset($_REQUEST['table']))){
+			
+			$editable_values=$this->tour_voucher->select($_REQUEST['table'],$_REQUEST['row_id']);
+			echo "<pre>";print_r($editable_values);echo "</pre>";exit;
+			//echo json_encode($editable_values);
+		}else{
+			return false;
+		}
+	}
+	
 	function set_up_voucher_tabs($tab_active='v_tab'){
 			
 		$tabs['v_tab'] = array('class'=>'','tab_id'=>'tab_1','text'=>'Vehicle',

@@ -187,7 +187,7 @@
 
 			<!--vehicle tab content start here-->
 			<?php if (array_key_exists('v_tab', $tabs)) {?>
-			<div class="<?php echo $tabs['v_tab']['content_class'];?>" id="<?php echo $tabs['v_tab']['tab_id'];?>">
+			<div class="<?php echo $tabs['v_tab']['content_class'];?> voucher-vehicle-tab" id="<?php echo $tabs['v_tab']['tab_id'];?>">
 
 				<div class="page-outer">
 		   		<fieldset class="body-border">
@@ -515,7 +515,7 @@
 
 			<!--accommodation tab content start here-->
 			<?php if (array_key_exists('a_tab', $tabs)) {?>
-			<div class="<?php echo $tabs['a_tab']['content_class'];?>" id="<?php echo $tabs['a_tab']['tab_id'];?>">
+			<div class="<?php echo $tabs['a_tab']['content_class'];?> voucher-accomodation-tab" id="<?php echo $tabs['a_tab']['tab_id'];?>">
 
 				<div class="page-outer">
 		   		<fieldset class="body-border">
@@ -633,7 +633,7 @@
 
 			<!--services tab contents start here-->
 			<?php if (array_key_exists('s_tab', $tabs)) {?>
-			<div class="<?php echo $tabs['s_tab']['content_class'];?>" id="<?php echo $tabs['s_tab']['tab_id'];?>">
+			<div class="<?php echo $tabs['s_tab']['content_class'];?> voucher-service-tab" id="<?php echo $tabs['s_tab']['tab_id'];?>">
 
 				<div class="page-outer">
 		   		<fieldset class="body-border">

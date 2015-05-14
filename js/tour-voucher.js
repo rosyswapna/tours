@@ -292,6 +292,39 @@ $(document).ready(function(){
 		reset_service_tab();
 		
 	});
+	
+	//edit voucher
+	$(document.body).on('click', '.edit-voucher-itr' ,function(){
+		var table=$(this).attr('itr-table');
+		var row_id=$(this).attr('row-id');
+			if(table=='trip_voucher_vehicles'){
+				
+				var href = $('a[href="#tab_1"]');
+				$(href).trigger('click');
+			}else if(table=='trip_voucher_accommodation'){
+				
+				var href = $('a[href="#tab_2"]');
+				$(href).trigger('click');
+			}else if(table=='trip_voucher_services'){
+				
+				var href = $('a[href="#tab_3"]');
+				$(href).trigger('click');
+			}
+		$.post(base_url+"/voucher/getVoucherTabValues",
+		 { 
+			row_id:row_id,
+			table:table
+		 },function(data){
+			if(data!=false){
+				data=jQuery.parseJSON(data);
+				$(".voucher-vehicle-tab #vehicle_row_id").val(row_id);
+				//create hidden input in voucher view for vehicle tab
+				
+				}
+		 
+		 });
+		
+	});
 	//============================================================================
 
 

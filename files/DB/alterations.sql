@@ -373,5 +373,11 @@ ALTER TABLE `trip_vouchers`  ADD `trip_id` INT(11) NOT NULL AFTER `voucher_numbe
 ALTER TABLE `trip_voucher_services`  ADD `narration` TEXT NOT NULL AFTER `tax_amount`;
 ALTER TABLE `trip_voucher_accommodation`  ADD `narration` TEXT NOT NULL AFTER `tax_amount`;
 
-__________________queries to be updated__________________________________________________________________________
+//--------------- updated in server--------------------------------------
 
+*****************Queries to be updated******************************************
+May 14 ,2015
+
+ALTER TABLE `trip_vouchers` CHANGE `toatal_travel_amount` `total_travel_amount` DOUBLE NOT NULL;
+
+ALTER TABLE `trip_voucher_vehicles` ADD `narration` TEXT NOT NULL AFTER `tax_amount` 

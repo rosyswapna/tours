@@ -834,7 +834,7 @@ class Tour extends CI_Controller {
 			}
 			$tableData['th'] = array(
 					array('label'=>$firstTH,'attr'=>'width="5%"'),
-					array('label'=>'Particulars','attr'=>'width="40%"'),
+					array('label'=>'Travel','attr'=>'width="40%"'),
 					array('label'=>'Accommodation','attr'=>'width="15%"'),
 					array('label'=>'Service','attr'=>'width="15%"'),
 					array('label'=>'Vehicle','attr'=>'width="15%"'),

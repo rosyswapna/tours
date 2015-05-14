@@ -304,10 +304,10 @@ function get_sql_for_trip_invoices()
 {
 	$date_after = date2sql($_POST['TransAfterDate']);
     $date_to = date2sql($_POST['TransToDate']);
-
+	//IF(cg.name IS NULL,'CASH', debtor.name) AS company
   	$sql = "SELECT 
 		trans.trans_no, 
-		IF(cg.name IS NULL,'CASH', debtor.name) AS company,
+		debtor.name customer,
 		trip.id,
 		voucher.id,
 		trip.pick_up_date,
@@ -339,7 +339,9 @@ function get_sql_for_trip_invoices()
 			AND trans.tran_date >= '$date_after'
 			AND trans.tran_date <= '$date_to'
 			AND trans.branch_code = branch.branch_code";
-
+	if ($_POST['invoice_id'] >0)
+   		$sql .= " AND trans.trans_no = ".db_escape($_POST['invoice_id']);
+	
    	if ($_POST['customer_id'] != ALL_TEXT)
    		$sql .= " AND trans.debtor_no = ".db_escape($_POST['customer_id']);
 
@@ -463,7 +465,7 @@ function get_sql_for_customer_inquiry()
    	return $sql;
 }
 
-function get_sql_for_sales_deliveries_view($selected_customer, $selected_stock_item=null)
+function get_sql_for_sales_deliveries_view($selected_customer, $selected_stock_item=null,$OutstandingOnly=false)
 {
 	/*$sql = "SELECT trans.trans_no,
 			debtor.name,
@@ -532,8 +534,9 @@ function get_sql_for_sales_deliveries_view($selected_customer, $selected_stock_i
 	*/
 	$sql = "SELECT trans.trans_no,
 			branch.branch_code,
-			IF(cg.name IS NULL,'CASH', cg.name) AS company,
+			IF(cg.name IS NULL,' ', cg.name) AS company,
 			IF(trip.customer_group_id > 0 ,cnc_customer.name,debtor.name) as customer,
+			cnc_guest.name as guest,
 			voucher.trip_id,
 			voucher.voucher_no,
 			trip.pick_up_date,
@@ -542,7 +545,17 @@ function get_sql_for_sales_deliveries_view($selected_customer, $selected_stock_i
 			debtor.curr_code,
 			Sum(line.quantity-line.qty_done) AS Outstanding,
 			Sum(line.qty_done) AS Done,
-			trans.tax_group_id			
+			trans.tax_group_id,
+			line.stock_id,
+			line.unit_price,
+			line.quantity,
+			line.qty_done,
+			line.discount_percent,
+			line.standard_cost,
+			line.src_id,
+			line.description As StockDescription,
+			line.trip_voucher,
+			line.id
 		FROM "
 		 .TB_PREF."sales_orders as sorder, "
 		 .TB_PREF."debtor_trans as trans, "
@@ -552,6 +565,7 @@ function get_sql_for_sales_deliveries_view($selected_customer, $selected_stock_i
 		 .TB_PREF."cust_branch as branch,trip_vouchers voucher,trips trip
 		LEFT JOIN customer_groups cg  ON  cg.id = trip.customer_group_id
 		LEFT JOIN customers cnc_customer  ON  trip.customer_id = cnc_customer.id
+		LEFT JOIN customers cnc_guest  ON  trip.guest_id = cnc_guest.id
 			WHERE
 			sorder.order_no = trans.order_ AND
 			trans.debtor_no = debtor.debtor_no
@@ -564,7 +578,7 @@ function get_sql_for_sales_deliveries_view($selected_customer, $selected_stock_i
 				
 				AND trans.debtor_no = branch.debtor_no ";
 
-	if ($_POST['OutstandingOnly'] == true) {
+	if ($_POST['OutstandingOnly'] == true || $OutstandingOnly == true) {
 		 $sql .= " AND line.qty_done < line.quantity ";
 	}
 
@@ -582,8 +596,12 @@ function get_sql_for_sales_deliveries_view($selected_customer, $selected_stock_i
 	}
 	else
 	{
-		$sql .= " AND trans.tran_date >= '".date2sql($_POST['DeliveryAfterDate'])."'";
-		$sql .= " AND trans.tran_date <= '".date2sql($_POST['DeliveryToDate'])."'";
+		if (isset($_POST['DeliveryAfterDate']) && isset($_POST['DeliveryToDate'])){
+			$sql .= " AND trans.tran_date >= '".date2sql($_POST['DeliveryAfterDate'])."'";
+			$sql .= " AND trans.tran_date <= '".date2sql($_POST['DeliveryToDate'])."'";
+		}
+		
+		
 
 		if ($selected_customer != -1)
 			$sql .= " AND trans.debtor_no=".db_escape($selected_customer)." ";
@@ -594,13 +612,32 @@ function get_sql_for_sales_deliveries_view($selected_customer, $selected_stock_i
 		if (isset($_POST['StockLocation']) && $_POST['StockLocation'] != ALL_TEXT)
 			$sql .= " AND sorder.from_stk_loc = ".db_escape($_POST['StockLocation'])." ";
 		if (isset($_POST['CustomerGroup']) && $_POST['CustomerGroup'] != ALL_TEXT)
-			$sql .= " AND trans.debtor_no = ".db_escape($_POST['CustomerGroup'])." ";
+			$sql .= " AND trip.customer_group_id = ".db_escape($_POST['CustomerGroup'])." ";
+		if (isset($_POST['Customer']) && $_POST['Customer'] != ALL_TEXT)
+			$sql .= " AND trip.customer_id = ".db_escape($_POST['Customer'])." ";
+
+
+		if($_POST['PickupDate'] != null){
+			$sql.=' AND (trip.pick_up_date="'.date2sql($_POST['PickupDate']).'" OR "'.date2sql($_POST['PickupDate']).'" BETWEEN trip.pick_up_date and trip.drop_date)';
+		}else if($_POST['DropDate']!= null){
+			$sql.=' AND (trip.drop_date ="'.$_POST['DropDate'].'")';	
+		}
+
 
 		$sql .= " GROUP BY trans.trans_no ";
 
 	} //end no delivery number selected
 	$sql .= " ORDER BY voucher.id DESC ";
+	//echo $sql;exit;
 	return $sql;
+}
+
+
+function get_deliveries_for_invoice($selected_customer){
+	$sql = get_sql_for_sales_deliveries_view($selected_customer,null,true);
+
+	//echo $sql;exit;
+	return db_query($sql, "could not get sales deliveries");
 }
 
 

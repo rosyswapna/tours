@@ -80,7 +80,7 @@ class cart
 	var $tax_group_from_cnc;
 	
 
-
+	var $add_docs = array();//add trans lines
 
 	
 	
@@ -635,6 +635,7 @@ class line_details
 	var $qty_dispatched;
 	var $qty_old = 0;
 	var $trip_voucher = 0;
+	var $voucher_inv_remove=0;
 	var $unit_taxable_amount;
 
 
@@ -650,6 +651,8 @@ class line_details
 	var $trip_expense = array();
 	var $driver_bata;
 	var $night_halt;
+	var $advance_amount;
+	var $payment_no;
 	
 
 
@@ -664,7 +667,7 @@ class line_details
 			$this->voucher_no	= $cnc_voucher['voucher_str'];
 			$this->vehicle_model	= $cnc_voucher['vehicle_model'];
 			$this->vehicle_no	= $cnc_voucher['vehicle_no'];
-			$this->username		= $cnc_voucher['customer_name'];
+			$this->username		= $cnc_voucher['username'];
 			$this->particulars      = $cnc_voucher['trip_narration'];
 			$this->pickup_date	= $cnc_voucher['pick_up_date'];
 			$this->cnc_line_amount 	= $cnc_voucher['amount'];
@@ -672,7 +675,8 @@ class line_details
 			$this->trip_expense 	= unserialize($cnc_voucher['trip_expense']);
 			$this->driver_bata	= $cnc_voucher['driver_bata'];
 			$this->night_halt	= $cnc_voucher['night_halt'];
-
+			$this->advance_amount	= $cnc_voucher['advance_amount'];
+			$this->payment_no	= $cnc_voucher['payment_no'];
 		}
 
 		$this->id = $id;

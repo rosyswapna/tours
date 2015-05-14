@@ -49,6 +49,7 @@ if (isset($_SESSION['cnc_customer'])){
 
 if (!@$_GET['popup'])
 	start_form();
+	
 
 if (!isset($_POST['customer_id']))
 	$_POST['customer_id'] = get_global_customer();
@@ -56,6 +57,8 @@ if (!isset($_POST['customer_id']))
 start_table_left(TABLESTYLE_NOBORDER);
 start_row();
 
+echo text_cells_ex('Invoice ID', 'invoice_id','5');
+    
 if (!@$_GET['popup']){
 	if(isset($_GET['CustomerPaymentInquiry']))
 		hidden('customer_id');
@@ -78,6 +81,11 @@ else
 
 
 submit_cells('RefreshInquiry', _("Search"),'',_('Refresh Inquiry'), 'default');
+
+
+$button_label='<button type="button" class="inputsubmit">List</button>';
+	hyperlink_params_td("$path_to_root/gl/inquiry/journal_inquiry.php", $button_label,"inquiry_type=customer");
+
 end_row();
 end_table_left();
 
@@ -139,7 +147,9 @@ function trip_ids($row){
 		while($voucher = db_fetch_assoc($result)){
 			$trip_ids[] = $voucher['trip_id'];
 		}
-		return implode(",",$trip_ids);
+
+		$trip_ids = wordwrap(implode(" ,",$trip_ids),50,"<br>\n");
+		return $trip_ids;
 	}else{
 		return "";
 	}
@@ -153,7 +163,9 @@ function vouchers($row){
 		while($voucher = db_fetch_assoc($result)){
 			$voucher_ids[] = $voucher['trip_voucher'];
 		}
-		return implode(",",$voucher_ids);
+
+		$voucher_ids = wordwrap(implode(" ,",$voucher_ids),50,"<br>\n");
+		return $voucher_ids;
 	}else{
 		return "";
 	}
@@ -284,7 +296,7 @@ if($_POST['filterType'] == 1){
 	$sql = get_sql_for_trip_invoices();//echo $sql;exit;
 	$cols = array(
 	_("Invoice ID"),
-	_("Company"),
+	_("Customer"),//_("Company"),
 	_("Trip(s)") => array('fun'=>'trip_ids', 'ord'=>''),
 	_("Voucher(s)") => array('fun'=>'vouchers', 'ord'=>''), 
 	_("Trip Date") => array('fun'=>'trip_date','ord'=>''),

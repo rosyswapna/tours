@@ -85,6 +85,7 @@ function get_cnc_voucher($id = 0)
 	$sql = "SELECT 
 		cust.id AS cnc_cust_id,
 		cust.name AS customer_name,
+		IFNULL(guest.name,trip.guest_name) AS username,
 		custg.name AS group_name,
 		custg.id AS group_id,
 		vehicle.registration_number AS vehicle_no,
@@ -93,6 +94,8 @@ function get_cnc_voucher($id = 0)
 		trip.pick_up_city AS from_city,
 		trip.drop_city AS to_city,
 		trip.pick_up_date,
+		trip.advance_amount,
+		trip.payment_no,
 		voucher.trip_expense,
 		voucher.driver_bata,
 		voucher.night_halt_charges as night_halt,
@@ -103,16 +106,18 @@ function get_cnc_voucher($id = 0)
 		voucher.no_of_days,
 		voucher.trip_narration,
 		voucher.payment_type_id,
+		voucher.tax_group_id,
 		vmodels.name as vehicle_model
 		";
 	$sql .="  FROM trip_vouchers voucher ";
 	$sql .= " LEFT JOIN trips trip ON voucher.trip_id = trip.id";
 	$sql .= " LEFT JOIN trip_models tripmd ON tripmd.id = trip.trip_model_id";
 	$sql .= " LEFT JOIN vehicles vehicle ON vehicle.id = trip.vehicle_id";
-	$sql .= " LEFT JOIN vehicle_models vmodels ON vmodels.id = trip.vehicle_model_id";
+	$sql .= " LEFT JOIN vehicle_models vmodels ON vmodels.id = voucher.vehicle_model_id";
 	$sql .= " LEFT JOIN tariffs ON tariffs.id = trip.tariff_id";
 	$sql .= " LEFT JOIN tariff_masters ON tariff_masters.id = tariffs.tariff_master_id";
 	$sql .= " LEFT JOIN customers cust ON cust.id = trip.customer_id";
+	$sql .= " LEFT JOIN customers guest ON guest.id = trip.guest_id";
 	$sql .= " LEFT JOIN customer_groups custg ON custg.id = trip.customer_group_id";
 	$sql .= " WHERE voucher.id = ".db_escape($id);
 	$result = db_query($sql, "could not get voucher");
@@ -204,7 +209,7 @@ function get_driver_vouchers_with_invoice($inv_no){
 		LEFT JOIN trips tr ON tr.id = voucher.trip_id
 		LEFT JOIN vehicles vh ON vh.id = tr.vehicle_id
 		LEFT JOIN drivers driver ON driver.id = voucher.driver_id
-		WHERE voucher.id IN(SELECT trip_voucher FROM ".TB_PREF."debtor_trans_details WHERE debtor_trans_no =".db_escape($inv_no)." AND debtor_trans_type = ".ST_SALESINVOICE.")";
+		WHERE voucher.id IN(SELECT trip_voucher FROM ".TB_PREF."debtor_trans_details WHERE debtor_trans_no =".db_escape($inv_no)." AND debtor_trans_type = ".ST_SALESINVOICE.") AND voucher.driver_payment_amount > 0";
 	
 	
 	$result = db_query($sql, "could not get vouchers");
@@ -225,7 +230,7 @@ function get_vehicle_vouchers_with_invoice($inv_no){
 		LEFT JOIN vehicles vh ON vh.id = tr.vehicle_id
 		LEFT JOIN vehicle_owners owner ON owner.id = vh.vehicle_owner_id
 		LEFT JOIN supplier_groups sg ON sg.id = vh.supplier_group_id
-		WHERE voucher.id IN(SELECT trip_voucher FROM ".TB_PREF."debtor_trans_details WHERE debtor_trans_no =".db_escape($inv_no)." AND debtor_trans_type = ".ST_SALESINVOICE.")";
+		WHERE voucher.id IN(SELECT trip_voucher FROM ".TB_PREF."debtor_trans_details WHERE debtor_trans_no =".db_escape($inv_no)." AND debtor_trans_type = ".ST_SALESINVOICE.") AND voucher.vehicle_payment_amount > 0";
 
 
 
@@ -243,6 +248,27 @@ function get_vehicle_vouchers_with_invoice($inv_no){
 	
 
 	return $data;
+}
+
+function tripAdvanceParams($trip_id){
+	$sql = "SELECT trip.id,trip.customer_id,trip.customer_group_id,trip.advance_amount,trip.payment_no,
+		debtor.debtor_no,debtor.name,
+		debtorGrp.debtor_no AS debtor_group_no,debtorGrp.name AS group_name
+		FROM ".TB_PREF."debtors_master debtor,trips trip
+		LEFT JOIN ".TB_PREF."debtors_master debtorGrp ON debtorGrp.debtor_ref = CONCAT('CG',trip.customer_group_id)
+		WHERE trip.id = ".db_escape($trip_id)." AND CONCAT('C',trip.customer_id) = debtor.debtor_ref";
+	$result = db_query($sql, "could not get Trip Params");
+	$row = db_fetch_assoc($result);
+
+	return $row;
+}
+
+
+function updateTripPaymentNo($payment_no=0,$trip_id){
+	
+	$sql ="UPDATE trips SET payment_no = ".db_escape($payment_no)." WHERE id = ".db_escape($trip_id);
+	db_query($sql,"The customer could not be updated");
+	
 }
 
 

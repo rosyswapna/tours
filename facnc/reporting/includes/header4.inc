@@ -232,7 +232,7 @@
 
 		//footer right content
 		$this->row =  $ftr_line1 - 12;
-		$this->TextWrap($sign_column, $this->row, $right-$sign_column,"For ".$this->company['coy_name']." Tours & Travels Pvt. Ltd.", 'center');
+		$this->TextWrap($sign_column, $this->row, $right-$sign_column,"For ".$this->company['coy_name'], 'center');
 		$this->NewLine(2);
 		$this->TextWrap($sign_column, $this->row, $right-$sign_column,"Authorised Signatory", 'center');
 		//$this->Text($sign_column + 2, _("Registered Office"));

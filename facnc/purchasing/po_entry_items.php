@@ -79,7 +79,7 @@ if (isset($_GET['ModifyOrderNumber']) && is_numeric($_GET['ModifyOrderNumber']))
 	$_POST['INV'] = $_GET['INV'];
 
 	//echo $_POST['supplier_id'];exit;	
-	$item = get_item(102);//get trip details in fa as item record
+	$item = get_item(102);//get driver commission in fa as item record
 	//echo "<pre>";print_r($vouchers);echo "</pre>";exit;
 	$trip_ids = array();
 	foreach($vouchers as $voucher){
@@ -111,7 +111,7 @@ if (isset($_GET['ModifyOrderNumber']) && is_numeric($_GET['ModifyOrderNumber']))
 	$_POST['invoice_via'] = 'VW';
 	$_POST['INV'] = $_GET['INV'];
 
-	$item = get_item(101);//get trip details in fa as item record
+	$item = get_item(103);//get driver commission in fa as item record
 	
 	//$_SESSION['PO']->voucher = $voucher;
 	

@@ -98,19 +98,65 @@ if (isset($_GET['AddedID'])) {
 	
 
 } elseif (isset($_GET['RemoveDN'])) {
-
+	$comments = '';
 	for($line_no = 0; $line_no < count($_SESSION['Items']->line_items); $line_no++) {
+		
 		$line = &$_SESSION['Items']->line_items[$line_no];
 		if ($line->src_no == $_GET['RemoveDN']) {
+			$line->voucher_inv_remove = $line->trip_voucher;
 			$line->quantity = $line->qty_done;
-			$line->qty_dispatched=0;
+			$line->qty_dispatched = 0;
+			$line->trip_voucher = 0;
+		}else{
+			$comments .= " ".$line->particulars;
 		}
 	}
+	$_POST['Comments'] = $comments;
 	unset($line);
+
+	
+	if($key=array_search($_GET['RemoveDN'],$_SESSION['Items']->add_docs))
+		unset($_SESSION['Items']->add_docs[$key]);
+		
 
     // Remove also src_doc delivery note
     $sources = &$_SESSION['Items']->src_docs;
     unset($sources[$_GET['RemoveDN']]);
+
+	$Ajax->activate('Items');
+} elseif (isset($_GET['AddDN'])) {
+	
+	$comments = '';
+	//echo "<pre>";print_r($_SESSION['Items'][$_GET['AddDN']]);echo "</pre>";exit;
+	$REQdn =  $_SESSION['otherDNs'][$_GET['AddDN']];
+	$line_no = count($_SESSION['Items']->line_items);
+	$stock_id = $REQdn['stock_id'];
+	$price = $REQdn['price'];
+	$disc = $REQdn['discount_percent'];
+	$qty = $REQdn['qty_dispatched'];
+	$trip_voucher = $REQdn['voucher_id'];
+
+	//echo "<pre>";print_r($REQdn);echo "</pre>";exit;
+
+	if(!in_array($_GET['AddDN'],$_SESSION['Items']->add_docs)){
+
+		$_SESSION['Items']->line_items[$line_no] = new line_details(
+					$REQdn["stock_id"],$REQdn["quantity"],
+					$REQdn["unit_price"], $REQdn["discount_percent"],
+					$REQdn["qty_done"], $REQdn["standard_cost"],
+					$REQdn["StockDescription"],0, $REQdn["trans_no"],
+					@$REQdn["id"],$REQdn["trip_voucher"],@$REQdn['particulars']);
+
+		
+		$_SESSION['Items']->add_docs[] = $_SESSION['otherDNs'][$_GET['AddDN']]['trans_no'];
+
+		for($line_no = 0; $line_no < count($_SESSION['Items']->line_items); $line_no++) {
+			$line = $_SESSION['Items']->line_items[$line_no];
+			$comments .= " ".$line->particulars;
+		}
+		$_POST['Comments'] = $comments;
+	
+	}
 }
 
 //-----------------------------------------------------------------------------
@@ -331,6 +377,8 @@ function check_data()
 
 //-----------------------------------------------------------------------------
 if (isset($_POST['process_invoice']) && check_data()) {
+
+	//echo "<pre>";print_r($_SESSION['Items']->line_items);echo "</pre>";exit;
 	$newinvoice=  $_SESSION['Items']->trans_no == 0;
 	copy_to_cart();
 	if ($newinvoice) 
@@ -386,6 +434,8 @@ for ($line_no = 0; $line_no < count($_SESSION['Items']->line_items); $line_no++)
 $dspans[] = $spanlen;
 
 //-----------------------------------------------------------------------------
+
+
 //echo "<pre>";
 //print_r($_SESSION['Items']);
 //echo "</pre>";
@@ -525,7 +575,6 @@ $has_marked = false;
 $show_qoh = true;
 
 $dn_line_cnt = 0;
-	
 
 $slno = 1;
 foreach ($_SESSION['Items']->line_items as $line=>$ln_itm) {
@@ -581,11 +630,81 @@ foreach ($_SESSION['Items']->line_items as $line=>$ln_itm) {
 				$ln_itm->src_no."'>" . _("Remove") . "</a>", "rowspan=$dn_line_cnt class=oddrow");
 		}
 		$dn_line_cnt--;
+	}else{
+		if ($dn_line_cnt == 0) {
+			$dn_line_cnt = $dspans[0];
+			label_cell('', "rowspan=$dn_line_cnt class=oddrow");
+		}
+		$dn_line_cnt--;
 	}
 	end_row();
 
 	$slno++;
 }
+
+
+//if (isset($_GET['ModifyInvoice']) ) {
+
+	//get other deliveries
+$other_dn_result = get_deliveries_for_invoice($_SESSION['Items']->customer_id);
+if($other_dn_result){
+	unset($_SESSION['otherDNs']);
+	while($row = db_fetch($other_dn_result)){
+		$row['particulars'] = get_comments_string(ST_CUSTDELIVERY, $row['trans_no']);
+		
+		$_SESSION['otherDNs'][$row['trans_no']] = $row;
+	}
+
+
+	if(isset($_SESSION['otherDNs'])){
+		$otherDNs = $_SESSION['otherDNs'];
+		foreach($otherDNs as $dnNo=>$dn){
+
+
+			if(in_array($dnNo,$_SESSION['Items']->add_docs)) continue;
+
+			$voucher = get_cnc_voucher($dn['trip_voucher']);
+			//echo "<pre>";print_r($dn);echo "</pre>";exit;
+
+			
+
+			alt_table_row_color($k);
+			label_cell($slno,'width="5%"');
+			label_cell($dn['voucher_no'],'width="10%"');
+			label_cell($dn['pick_up_date'],'width="10%"');
+			echo "<td width='10%'>";
+				echo $voucher['vehicle_model'];
+				br();
+				echo $voucher['vehicle_no'];
+			echo "</td>";
+			label_cell($voucher['username'],'width="15%"');
+			label_cell($dn['particulars'],'width="40%"');
+	
+			$dec = get_qty_dec($dn['stock_id']);
+	
+			hidden('Line' . $line, $dn['quantity']);
+	
+			$display_discount_percent = percent_format($dn['discount_percent']*100) . " %";
+
+			$line_total = ($dn['quantity'] * $dn['unit_price'] * (1 - $dn['discount_percent']));
+
+			amount_cell($line_total);
+
+			if ($dn_line_cnt == 0) {
+				$dn_line_cnt = $dspans[0];
+				label_cell("<a href='" . $_SERVER['PHP_SELF'] . "?AddDN=".
+					$dn['trans_no']."'>" . _("Add") . "</a>", "rowspan=$dn_line_cnt class=oddrow");
+			}
+			$dn_line_cnt--;
+	
+			end_row();
+
+			$slno++;
+		}
+	}
+}
+
+
 
 /*Don't re-calculate freight if some of the order has already been delivered -
 depending on the business logic required this condition may not be required.
@@ -649,10 +768,10 @@ end_table(1);
 
 submit_center_first('Update', _("Update"),
   _('Refresh document page'), true);
-submit_center_last('process_invoice', _("Process Invoice"),
-  _('Check entered data and save document'), 'default');
 //submit_center_last('process_invoice', _("Process Invoice"),
- // _('Check entered data and save document'));
+  //_('Check entered data and save document'), 'default');
+submit_center_last('process_invoice', _("Process Invoice"),
+  _('Check entered data and save document'));
 
 end_form();
 

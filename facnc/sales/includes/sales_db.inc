@@ -429,12 +429,33 @@ function update_cnc_voucher_with_transno($voucher, $trans_type, $trans_no){
 	foreach($voucher as $voucher_no){
 
 		switch($trans_type){
-			case ST_CUSTDELIVERY :$sql = "UPDATE trip_vouchers SET delivery_no = ".db_escape($trans_no)." WHERE id = ".db_escape($voucher_no);break;
-			case ST_SALESINVOICE :$sql = "UPDATE trip_vouchers SET invoice_no = ".db_escape($trans_no)." WHERE id = ".db_escape($voucher_no);break;
+			case ST_CUSTDELIVERY :$sql = "UPDATE trip_vouchers SET delivery_no = ".db_escape($trans_no)." WHERE id = ".db_escape($voucher_no);
+				db_query($sql,"Trip voucher invoice updation failed");
+				break;
+
+			case ST_SALESINVOICE :$sql = "UPDATE trip_vouchers SET invoice_no = ".db_escape($trans_no)." WHERE id = ".db_escape($voucher_no);
+				db_query($sql,"Trip voucher updation failed");
+				$sql1 = "UPDATE trips SET trip_status_id = ".TRIP_STATUS_TRIP_INVOICED." WHERE id IN(SELECT trip_id from trip_vouchers where id=".db_escape($voucher_no).")";
+				db_query($sql1,"Trip status updation failed");
+				break;
+
 		}
 
-		db_query($sql,"Trip voucher updation failed");
+		
 	}
+	return true;
+
+}
+
+
+function reset_invoiced_trip_as_delivered($voucher){
+	
+	$sql_voucher = "UPDATE trip_vouchers SET invoice_no = 0 WHERE id = ".db_escape($voucher);
+	db_query($sql_voucher,"Trip voucher updation failed");
+
+	$sql_trip = "UPDATE trips SET trip_status_id = ".TRIP_STATUS_TRIP_DELIVERED." WHERE id IN(SELECT trip_id from trip_vouchers where id=".db_escape($voucher).")";
+	db_query($sql_trip,"Trip status updation failed");
+	
 	return true;
 
 }

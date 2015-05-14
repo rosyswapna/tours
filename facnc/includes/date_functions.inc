@@ -18,6 +18,7 @@ this can be a string either "d/m/Y" for UK/Australia/New Zealand dates or
 "m/d/Y" for US/Canada format dates depending on setting in preferences.
 
 */
+date_default_timezone_set('Asia/Kolkata');
 
 function __date($year, $month, $day)
 {

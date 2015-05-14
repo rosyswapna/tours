@@ -253,6 +253,7 @@ $(document).ready(function(){
 
 		
 		add_voucher_itinerary(dataArr);
+		reset_accomodation_tab();
 		
 	});
 
@@ -288,6 +289,7 @@ $(document).ready(function(){
 
 		
 		add_voucher_itinerary(dataArr);
+		reset_service_tab();
 		
 	});
 	//============================================================================
@@ -578,6 +580,37 @@ $(document).ready(function(){
 		$('.iradio_minimal').attr('aria-checked',false);
 		
 		
+	}
+	
+	function reset_accomodation_tab(){
+		$('.voucher-tabs #acmd_from_date').val("");
+		$('.voucher-tabs #acmd_to_date').val("");
+		$('.voucher-tabs #acmd_checkin').val("");
+		$('.voucher-tabs #acmd_checkout').val("");
+		$('.voucher-tabs #acmd_hotel_id').val(-1);
+		$('.voucher-tabs #acmd_room_type_id').val(-1);
+		$('.voucher-tabs #acmd_days').val("");
+		$('.voucher-tabs #room_tariff_amt').val("");
+		$('.voucher-tabs #acmd_unit_amount').val("");
+		$('.voucher-tabs #acmd_advance_amount').val("");
+		$('.voucher-tabs #acmd_tax_amount').val("");
+		$('.voucher-tabs #acmd_total_amount').val("");
+	}
+	
+	function reset_service_tab(){
+		$('.voucher-tabs #service_from_date').val("");
+		$('.voucher-tabs #service_to_date').val("");
+		$('.voucher-tabs #service_checkin').val("");
+		$('.voucher-tabs #service_checkout').val("");
+		$('.voucher-tabs #service_id').val(-1);
+		$('.voucher-tabs #service_rate').val("");
+		$('.voucher-tabs #service_qty').val("");
+		$('.voucher-tabs #service_uom_id').val(-1);
+		$('.voucher-tabs #service_unit_amount').val("");
+		$('.voucher-tabs #service_advance_amount').val("");
+		$('.voucher-tabs #service_tax_amount').val("");
+		$('.voucher-tabs #service_total_amount').val("");
+	
 	}
 	
 	

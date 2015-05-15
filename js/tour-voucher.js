@@ -249,7 +249,7 @@ $(document).ready(function(){
 		var room_attributes = {};
 		var room_attributes_amount = 0;
 		var i=0;
-		var attr_narration = {};
+		var attr_narration = [];
 		$(".voucher-tabs .acmd_attr").each(function(index){
 			attr_id 	= $(this).val();
 			attr_amt 	= $('input[name="acmd_attr_amt[]"]:eq('+index+')').val();
@@ -257,12 +257,13 @@ $(document).ready(function(){
 			attr_qty 	= $('input[name="acmd_attr_qty[]"]:eq('+index+')').val();
 			room_attributes_amount += Number(attr_amt);
 			room_attributes[i] = attr_id;
-			attr_narration[i] = attr_name +" @"+attr_amt;
+			attr_narration.push(attr_name +" @"+attr_amt);
 			i++;
 			
 		});
-		if(attr_attributes.length > 0){
-			narration += " - ".attr_narration.join();
+		attr_str = attr_narration.join(' + ');
+		if(attr_str != ''){
+			narration += " + "+attr_str;
 		}
 		//------------------------------------------------------
 
@@ -270,7 +271,7 @@ $(document).ready(function(){
 		var meals_package = {};
 		var meals_package_amount = 0;
 		var i=0;
-		var meals_narration = {};
+		var meals_narration = [];
 		$(".voucher-tabs .acmd_meals").each(function(index){
 			meals_id 	= $(this).val();
 			meals_amt 	= $('input[name="acmd_meals_amt[]"]:eq('+index+')').val();
@@ -278,12 +279,14 @@ $(document).ready(function(){
 			meals_qty 	= $('input[name="acmd_meals_qty[]"]:eq('+index+')').val();
 			meals_package_amount += Number(attr_amt);
 			room_attributes[i] = meals_id;
-			meals_narration[i] = meals_name +"("+meals_qty+") @"+meals_amt+"/person";
+			meals_narration.push(meals_name +"("+meals_qty+") @"+meals_amt+"/person");
 			i++;
 			
 		});
-		if(meals_package.length > 0){
-			narration += " - ".meals_narration.join();
+		
+		meals_str = meals_narration.join(' + ');
+		if(meals_str != ''){
+			narration += " + "+meals_str;
 		}
 		//------------------------------------------------------
 		
@@ -913,9 +916,9 @@ $(document).ready(function(){
 
 			meals_rows +='<div class="form-group div-with-20-percent-width-with-margin-10"><label for="acmd_meals">Meals Package</label><input id="acmd_meals_name'+id+'" class="form-control" type="text" value="'+val.name+'" name="acmd_meals_name[]"></input></div>';
 
-			meals_rows +='<div class="form-group div-with-20-percent-width-with-margin-10"><label for="meals_attr">Quantity</label><input id="acmd_meals_qty'+id+'" class="form-control" type="text" value="'+val.quantity+'" name="meals_attr_qty[]"></input></div>';
+			meals_rows +='<div class="form-group div-with-20-percent-width-with-margin-10"><label for="acmd_meals">Quantity</label><input id="acmd_meals_qty'+id+'" class="form-control" type="text" value="'+val.quantity+'" name="acmd_meals_qty[]"></input></div>';
 
-			meals_rows +='<div class="form-group div-with-20-percent-width-with-margin-10"><label for="meals_attr">Tariff</label><input id="acmd_meals_tariff'+id+'" class="form-control" type="text" value="'+val.amount+'" name="acmd_meals_tariff[]"></input></div>';
+			meals_rows +='<div class="form-group div-with-20-percent-width-with-margin-10"><label for="acmd_meals">Tariff</label><input id="acmd_meals_tariff'+id+'" class="form-control" type="text" value="'+val.amount+'" name="acmd_meals_tariff[]"></input></div>';
 		
 			meals_rows +='<div class="form-group div-with-20-percent-width-with-margin-10"><label for="acmd_meals">Amount</label><input id="acmd_meals_amt'+id+'" class="form-control" type="text" value="'+Number(val.quantity)*Number(val.amount)+'" name="acmd_meals_amt[]"></input></div>';
 

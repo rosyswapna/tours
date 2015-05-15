@@ -486,7 +486,7 @@
 					<div class="row-source-100-percent-width-with-margin-8">
 						<div class="box-footer "><center>
 						<?php 
-
+						echo form_input(array('name'=>'voucher_vehicle_id','class'=>'form-control hide-me ','id'=>'voucher_vehicle_id','value'=>gINVALID));
 						echo form_input(array('name'=>'voucher_vehicle_row_id','class'=>'form-control hide-me ','id'=>'voucher_vehicle_row_id','value'=>gINVALID));
 						echo form_submit("add-voucher-vehicle","Add","class='btn btn-primary' id='add-voucher-vehicle'");?></center>
 						</div>
@@ -609,6 +609,7 @@
 					<div class="row-source-100-percent-width-with-margin-8">
 						<div class="box-footer "><center>
 						<?php 
+						echo form_input(array('name'=>'voucher_accommodation_id','class'=>'form-control hide-me ','id'=>'voucher_accommodation_id','value'=>gINVALID));
 						echo form_input(array('name'=>'voucher_accommodation_row_id','class'=>'form-control hide-me ','id'=>'voucher_accommodation_row_id','value'=>gINVALID));
 						echo form_submit("add-voucher-accommodation","Add","class='btn btn-primary' id='add-voucher-accommodation'");?></center>
 						</div>
@@ -726,6 +727,7 @@
 					<div class="row-source-100-percent-width-with-margin-8">
 						<div class="box-footer "><center>
 						<?php 
+						echo form_input(array('name'=>'voucher_service_id','class'=>'form-control hide-me ','id'=>'voucher_service_id','value'=>gINVALID));
 						echo form_input(array('name'=>'voucher_service_row_id','class'=>'form-control hide-me ','id'=>'voucher_service_row_id','value'=>gINVALID));
 						echo form_submit("add-voucher-service","Add","class='btn btn-primary' id='add-voucher-service'");?></center>
 						</div>

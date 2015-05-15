@@ -244,6 +244,51 @@ $(document).ready(function(){
 		var narration 	= 'Accommodation : '+hotel_name+" - "+room_type_name;	
 		narration += " @ Rs "+room_tariff_amount+" per day for "+no_of_days+" day(s)";
 		narration += "( checkin :"+checkin+" - checkout : "+checkout+")";
+
+		//room attributes-------------------------------
+		var room_attributes = {};
+		var room_attributes_amount = 0;
+		var i=0;
+		var attr_narration = {};
+		$(".voucher-tabs .acmd_attr").each(function(index){
+			attr_id 	= $(this).val();
+			attr_amt 	= $('input[name="acmd_attr_amt[]"]:eq('+index+')').val();
+			attr_name 	= $('input[name="acmd_attr_name[]"]:eq('+index+')').val();
+			attr_qty 	= $('input[name="acmd_attr_qty[]"]:eq('+index+')').val();
+			room_attributes_amount += Number(attr_amt);
+			room_attributes[i] = attr_id;
+			attr_narration[i] = attr_name +" @"+attr_amt;
+			i++;
+			
+		});
+		if(attr_attributes.length > 0){
+			narration += " - ".attr_narration.join();
+		}
+		//------------------------------------------------------
+
+		//meals package-------------------------------
+		var meals_package = {};
+		var meals_package_amount = 0;
+		var i=0;
+		var meals_narration = {};
+		$(".voucher-tabs .acmd_meals").each(function(index){
+			meals_id 	= $(this).val();
+			meals_amt 	= $('input[name="acmd_meals_amt[]"]:eq('+index+')').val();
+			meals_name 	= $('input[name="acmd_meals_name[]"]:eq('+index+')').val();
+			meals_qty 	= $('input[name="acmd_meals_qty[]"]:eq('+index+')').val();
+			meals_package_amount += Number(attr_amt);
+			room_attributes[i] = meals_id;
+			meals_narration[i] = meals_name +"("+meals_qty+") @"+meals_amt+"/person";
+			i++;
+			
+		});
+		if(meals_package.length > 0){
+			narration += " - ".meals_narration.join();
+		}
+		//------------------------------------------------------
+		
+
+		
 		
 		var dataArr = {table:"trip_voucher_accommodation",from_date:from_date,to_date:to_date,
 				checkin:checkin,checkout:checkout,hotel_id:hotel_id,room_type_id:room_type_id,
@@ -628,6 +673,8 @@ $(document).ready(function(){
 		$('.voucher-tabs #acmd_advance_amount').val("");
 		$('.voucher-tabs #acmd_tax_amount').val("");
 		$('.voucher-tabs #acmd_total_amount').val("");
+
+		reset_attr_meals_rows();
 	}
 	
 	function reset_service_tab(){
@@ -847,6 +894,8 @@ $(document).ready(function(){
 	{
 		var attr_rows = ''; 
 		$.each(attributes, function( id, val ) {
+
+			attr_rows += '<input id="acmd_attr'+id+'" class="form-control acmd_attr hide-me" type="text" value="'+id+'" name="acmd_attr_id[]"></input>';
 			attr_rows +='<div class="form-group div-with-20-percent-width-with-margin-10"><label for="acmd_attr">Attribute Name</label><input id="acmd_attr_name'+id+'" class="form-control" type="text" value="'+val.name+'" name="acmd_attr_name[]"></input></div>';
 
 			attr_rows +='<div class="form-group div-with-20-percent-width-with-margin-10"><label for="acmd_attr">Quantity</label><input id="acmd_attr_qty'+id+'" class="form-control" type="text" value="'+val.quantity+'" name="acmd_attr_qty[]"></input></div>';
@@ -859,6 +908,9 @@ $(document).ready(function(){
 
 		var meals_rows = '';
 		$.each(meals_package, function( id, val ) {
+
+			meals_rows += '<input id="acmd_meals'+id+'" class="form-control acmd_meals hide-me" type="text" value="'+id+'" name="acmd_meals_id[]"></input>';
+
 			meals_rows +='<div class="form-group div-with-20-percent-width-with-margin-10"><label for="acmd_meals">Meals Package</label><input id="acmd_meals_name'+id+'" class="form-control" type="text" value="'+val.name+'" name="acmd_meals_name[]"></input></div>';
 
 			meals_rows +='<div class="form-group div-with-20-percent-width-with-margin-10"><label for="meals_attr">Quantity</label><input id="acmd_meals_qty'+id+'" class="form-control" type="text" value="'+val.quantity+'" name="meals_attr_qty[]"></input></div>';
@@ -880,10 +932,10 @@ $(document).ready(function(){
 	}
 
 	function reset_acmd_tariffs(){
-			$("#acmd_days").val('');
-			$("#room_tariff_amt").val('');
-			reset_attr_meals_rows();
-		}
+		$("#acmd_days").val('');
+		$("#room_tariff_amt").val('');
+		reset_attr_meals_rows();
+	}
 		
 
 	function setAccommodationDays()

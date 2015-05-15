@@ -152,24 +152,7 @@
 	</fieldset>
 
 
-	<!--itinerary table starts here ,table illed by jquery-->
-	<div class="box-body table-responsive no-padding hide-me" id="voucher-itinerary-div">
-		<table id="voucher-tbl" class="table table-hover table-bordered">
-
-		</table>
-
-		<div class="form-submit-reset-buttons-group">
-			<?php 
-				echo form_open(base_url()."front-desk/voucher/save");
-				echo form_submit("save-voucher","Save","class='btn btn-success hide-me save-itry'");
-				echo form_close();
-			?>
-			<center><button class="btn btn-success save-itry-btn" type="button">Save</button></center>
-		</div>
-	</div>
-
-	<br/>
-	<!--itinerary table ends here-->
+	
 
 
 	<!--itinerary tabs starts-->
@@ -502,7 +485,10 @@
 
 					<div class="row-source-100-percent-width-with-margin-8">
 						<div class="box-footer "><center>
-						<?php echo form_submit("add-voucher-vehicle","Add","class='btn btn-primary' id='add-voucher-vehicle'");?></center>
+						<?php 
+
+						echo form_input(array('name'=>'voucher_vehicle_row_id','class'=>'form-control hide-me ','id'=>'voucher_vehicle_row_id','value'=>gINVALID));
+						echo form_submit("add-voucher-vehicle","Add","class='btn btn-primary' id='add-voucher-vehicle'");?></center>
 						</div>
 					</div>
 			
@@ -618,7 +604,9 @@
 
 					<div class="row-source-100-percent-width-with-margin-8">
 						<div class="box-footer "><center>
-						<?php echo form_submit("add-voucher-accommodation","Add","class='btn btn-primary' id='add-voucher-accommodation'");?></center>
+						<?php 
+						echo form_input(array('name'=>'voucher_accommodation_row_id','class'=>'form-control hide-me ','id'=>'voucher_accommodation_row_id','value'=>gINVALID));
+						echo form_submit("add-voucher-accommodation","Add","class='btn btn-primary' id='add-voucher-accommodation'");?></center>
 						</div>
 					</div>
 
@@ -733,7 +721,9 @@
 
 					<div class="row-source-100-percent-width-with-margin-8">
 						<div class="box-footer "><center>
-						<?php echo form_submit("add-voucher-service","Add","class='btn btn-primary' id='add-voucher-service'");?></center>
+						<?php 
+						echo form_input(array('name'=>'voucher_service_row_id','class'=>'form-control hide-me ','id'=>'voucher_service_row_id','value'=>gINVALID));
+						echo form_submit("add-voucher-service","Add","class='btn btn-primary' id='add-voucher-service'");?></center>
 						</div>
 					</div>
 				
@@ -750,5 +740,25 @@
 	</div>
 
 	<!--itinerary tabs ends-->
+
+
+	<!--itinerary table starts here ,table illed by jquery-->
+	<div class="box-body table-responsive no-padding hide-me" id="voucher-itinerary-div">
+		<table id="voucher-tbl" class="table table-hover table-bordered">
+
+		</table>
+
+		<div class="form-submit-reset-buttons-group">
+			<?php 
+				echo form_open(base_url()."front-desk/voucher/save");
+				echo form_submit("save-voucher","Save","class='btn btn-success hide-me save-itry'");
+				echo form_close();
+			?>
+			<center><button class="btn btn-success save-itry-btn" type="button">Save</button></center>
+		</div>
+	</div>
+
+	<br/>
+	<!--itinerary table ends here-->
 </div>
 

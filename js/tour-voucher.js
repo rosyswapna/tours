@@ -90,6 +90,10 @@ $(document).ready(function(){
 	//add vehicle itinerary for voucher======================================
 	$('#add-voucher-vehicle').on('click',function(){
 		
+		var vehicle_data_id 		= $('.voucher-tabs #voucher_vehicle_id').val();
+		var vehicle_row_id 		= $('.voucher-tabs #voucher_vehicle_row_id').val();
+		var vehicle_model_id 		= $('.voucher-tabs #vehicle_model_id').val();
+		var vehicle_ac_type_id		= $('.voucher-tabs #vehicle_ac_type_id').val();
 		var from_date 			= $('.voucher-tabs #vehicle_from_date').val();
 		var to_date 			= $('.voucher-tabs #vehicle_to_date').val();
 		var start_time 			= $('.voucher-tabs #vehicle_start_time').val();
@@ -170,8 +174,9 @@ $(document).ready(function(){
 			
 		});
 
-		var dataArr = {table:"trip_voucher_vehicles",
-				vehicle_id:vehicle_id, driver_id:driver_id, tariff_id:vehicle_tariff_id,
+	if(vehicle_data_id==-1){
+			var dataArr = {
+				vehicle_id:vehicle_id, vehicle_model_id:vehicle_model_id, vehicle_ac_type_id:vehicle_ac_type_id, driver_id:driver_id, tariff_id:vehicle_tariff_id,
 				from_date:from_date, to_date:to_date, start_time:start_time, end_time:end_time,
 				start_km:start_km, end_km:end_km, km_hr:km_hr, base_km:base_km,
 				base_km_amount:base_km_amount, adt_km:adt_km, adt_km_amount:adt_km_amount,
@@ -181,9 +186,23 @@ $(document).ready(function(){
 				advance_amount:advance_amount, tax_group_id:tax_group_id,tax_amount:tax_amount,
 				narration:narration
 				};
-
-		
-		add_voucher_itinerary(dataArr);
+			var dataArray={post:dataArr,table:"trip_voucher_vehicles",row_id:vehicle_row_id};
+			add_voucher_itinerary(dataArr);
+		}else{
+			var dataArr = {
+				vehicle_id:vehicle_id, vehicle_model_id:vehicle_model_id, vehicle_ac_type_id:vehicle_ac_type_id, driver_id:driver_id, tariff_id:vehicle_tariff_id,
+				from_date:from_date, to_date:to_date, start_time:start_time, end_time:end_time,
+				start_km:start_km, end_km:end_km, km_hr:km_hr, base_km:base_km,
+				base_km_amount:base_km_amount, adt_km:adt_km, adt_km_amount:adt_km_amount,
+				base_hr:base_hr, base_hr_amount:base_hr_amount, adt_hr:adt_hr,
+				adt_hr_amount:adt_hr_amount, driver_bata:driver_bata,
+				night_halt_charge:night_halt_charge,trip_expense:expense,unit_amount:unit_amount,
+				advance_amount:advance_amount, tax_group_id:tax_group_id,tax_amount:tax_amount,
+				narration:narration
+				};
+			var dataArray={post:dataArr,table:"trip_voucher_vehicles",id:vehicle_data_id,row_id:vehicle_row_id};
+			update_voucher_itinerary(dataArr);
+		}
 		reset_vehicle_tab();
 		
 	});
@@ -343,6 +362,7 @@ $(document).ready(function(){
 	
 	//edit voucher
 	$(document.body).on('click', '.edit-voucher-itr' ,function(){
+		
 		var table=$(this).attr('itr-table');
 		var row_id=$(this).attr('row-id');
 			if(table=='trip_voucher_vehicles'){
@@ -363,12 +383,33 @@ $(document).ready(function(){
 			row_id:row_id,
 			table:table
 		 },function(data){
-			if(data!=false){
+			if(data!=false){ 
 				data=jQuery.parseJSON(data);
-				$(".voucher-vehicle-tab #vehicle_row_id").val(row_id);
-				//create hidden input in voucher view for vehicle tab
-				
-				}
+				$(".voucher-vehicle-tab #voucher_vehicle_row_id").val(row_id);
+				$(".voucher-vehicle-tab #voucher_vehicle_id").val(data.id);
+				$(".voucher-vehicle-tab #vehicle_model_id option[value='"+data.vehicle_model_id+"']").attr('selected', true);
+				$(".voucher-vehicle-tab #vehicle_ac_type_id option[value='"+data.vehicle_ac_type_id+"']").attr('selected', true);
+				$(".voucher-vehicle-tab #vehicle_id option[value='"+data.id+"']").attr('selected', true);
+				$(".voucher-vehicle-tab #driver_id option[value='"+data.driver_id+"']").attr('selected', true);
+	
+				$(".voucher-vehicle-tab #vehicle_from_date").val(data.from_date);
+				$(".voucher-vehicle-tab #vehicle_to_date").val(data.to_date);
+				$(".voucher-vehicle-tab #vehicle_start_time").val(data.start_time);
+				$(".voucher-vehicle-tab #vehicle_end_time").val(data.end_time);
+				$(".voucher-vehicle-tab #start_km").val(data.start_km);
+				$(".voucher-vehicle-tab #end_km").val(data.end_km);
+				if(data.vehicle_model_id>0 && data.vehicle_ac_type_id>0)
+					generateTariffs(data.vehicle_model_id,data.vehicle_ac_type_id,data.tariff_id,'.voucher-tabs #vehicle_tariff_id');
+					setTimeout(function(){ setTariffAttributes(); }, 1000);
+					setTotalKM();
+					setTotalHR();
+					setTimeout(function(){ setKM_tariff(); }, 1000);
+					setTimeout(function(){ setHR_tariff(); }, 1000);
+
+				$(".voucher-vehicle-tab #vehicle_tax_group_id option[value='"+data.tax_group_id+"']").attr('selected', true);
+				setTimeout(function(){ $('.voucher-vehicle-tab #vehicle_tax_group_id').trigger('change'); }, 1000);
+				$(".voucher-vehicle-tab #add-voucher-vehicle").val('Update');
+			}
 		 
 		 });
 		

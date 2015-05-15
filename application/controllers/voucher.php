@@ -273,8 +273,8 @@ class Voucher extends CI_Controller {
 		if((isset($_REQUEST['row_id']))&& (isset($_REQUEST['table']))){
 			
 			$editable_values=$this->tour_voucher->select($_REQUEST['table'],$_REQUEST['row_id']);
-			echo "<pre>";print_r($editable_values);echo "</pre>";exit;
-			//echo json_encode($editable_values);
+			//echo "<pre>";print_r($editable_values);echo "</pre>";exit;
+			echo json_encode($editable_values);
 		}else{
 			return false;
 		}

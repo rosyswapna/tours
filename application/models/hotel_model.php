@@ -188,6 +188,79 @@ class Hotel_model extends CI_Model {
 			return false;
 		}
 	}
+
+	//get hote room attibute and meals tariff 
+	function getTourHotelAttrTariffs($hotel_id,$room_type_id,$trip_id,$season_id)
+	{
+
+		$attrTariff = $mealsTariff = array();//retun result arrays
+
+		$sql = "SELECT TA.*
+			FROM trip_accommodation TA
+			WHERE TA.hotel_id = ".$this->db->escape($hotel_id)." AND TA.room_type_id = ".$this->db->escape($room_type_id)." 
+			AND TA.itinerary_id IN (SELECT id FROM itinerary ITR WHERE trip_id = ".$this->db->escape($trip_id).") ";
+
+		$result = $this->db->query($sql);
+		$days = $result->num_rows();
+		if($days > 0){
+			$filter = array('hotel_id'=>$hotel_id,'season_id'=>$season_id);
+			foreach($result->result_array() as $trip_accommodation){
+
+				$attrArr= ($trip_accommodation['room_attributes'] != '')?unserialize($trip_accommodation['room_attributes']):false;
+				$mealsArr= ($trip_accommodation['meals_package'] != '')?unserialize($trip_accommodation['meals_package']):false;
+				if($attrArr){
+					$this->db->select('RAT.attribute_id,RAT.amount,RA.name');
+					$this->db->from('room_attribute_tariffs RAT');
+					$this->db->join('room_attributes RA','RA.id = RAT.attribute_id','left');
+					$this->db->where($filter);
+					$this->db->where_in('attribute_id',$attrArr);
+					$result = $this->db->get();
+
+					if($result->num_rows() > 0){
+						foreach($result->result_array() as $row){
+							if(!isset($attrTariff[$row['attribute_id']])){
+								$attrTariff[$row['attribute_id']] = array(
+									'amount'=>$row['amount'],
+									'name'=>$row['name'],
+									'quantity'=>$days
+								);
+							}
+						}
+						
+					}
+					
+					
+				}
+
+				if($mealsArr){
+					$this->db->select('RAT.meals_id,RAT.amount,M.name');
+					$this->db->from('room_attribute_tariffs RAT');
+					$this->db->join('meals_options M','M.id = RAT.meals_id','left');
+					$this->db->where($filter);
+					$this->db->where_in('meals_id',$mealsArr);
+					$result = $this->db->get();
+
+					if($result->num_rows() > 0){
+						foreach($result->result_array() as $row){
+							if(!isset($mealsTariff[$row['meals_id']])){
+								$mealsTariff[$row['meals_id']] = array(
+								'amount'=>$row['amount'],
+								'name'=>$row['name'],
+								'quantity' => $trip_accommodation['meals_quantity']
+								);
+							}
+						}
+						
+					}
+					
+					
+				}
+				//print_r($mealsTariff);exit;
+			}
+		}
+		
+		return array($attrTariff,$mealsTariff,$days);
+	}
 	//----------------------------------------------------------------------
 	
 	//get all room tariffs for a hotel with season id

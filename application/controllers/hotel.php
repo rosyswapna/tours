@@ -494,6 +494,7 @@ class Hotel extends CI_Controller {
 		$hotel_id	= $_REQUEST['hotel_id'];
 		$room_type_id	= $_REQUEST['room_type_id'];
 		$_date 		= $_REQUEST['_date'];
+		$trip_id	= $_REQUEST['trip_id'];
 		$season_ids = $this->tour_model->getSeasonIdssWithDate($_REQUEST['_date']);
 		if($season_ids){
 			$season_id = $season_ids[0];
@@ -503,7 +504,15 @@ class Hotel extends CI_Controller {
 		$filter = array('hotel_id'=>$hotel_id,'room_type_id'=>$room_type_id,'season_id'=>$season_id);
 		$room_tariff= $this->hotel_model->getHotelRoomTariff($filter);
 		if($room_tariff){
-			echo json_encode($room_tariff);
+			list($attr,$meals,$days)  = $this->hotel_model->getTourHotelAttrTariffs($hotel_id,$room_type_id,$trip_id,$season_id);
+			if($days > 0){
+				echo json_encode(array('room_charge'=>$room_tariff->amount,
+						'attributes'=>$attr,
+						'meals_package'=>$meals,
+						'days'=>$days));
+			}else{
+				echo 'false';
+			}			
 		}else{
 			echo 'false'	;
 		}

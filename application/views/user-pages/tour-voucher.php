@@ -570,6 +570,10 @@
 						?>
 						</div>
 
+						<div id="attributes-rows"></div>
+						<div id="meals-rows"></div>
+
+
 						<div class="form-group div-with-20-percent-width-with-margin-10">
 						<?php
 							echo form_label('Unit Amount','acmd_unit_amount'); 

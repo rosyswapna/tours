@@ -778,37 +778,57 @@ $(document).ready(function(){
 
 	//get hotel rooms for selected hotel and set room types list
 	function getTripHotelRooms(hotel_id,_date,room_type_id=''){
+
 		var id ='#acmd_room_type_id';
 		$(id+' option').remove();
 		$(id).append($("<option ></option>").attr("value",'-1').text('--Select--'));
+
 		$.post(base_url+"/voucher/getTripHotelRoom",{hotel_id:hotel_id,trip_id:trip_id,_date:_date},
 		function(data){
 			if(data!='false'){
 				data=jQuery.parseJSON(data);
 				var selected="";
-				for(var i=0;i< data.length;i++){
-					$(id).append($("<option "+selected+"></option>").attr("value",data.room_type_id).text(data.room_type_name));
-				}
-		
+			
+				$(id).append($("<option "+selected+"></option>").attr("value",data.room_type_id).text(data.room_type_name));
+			
+	
 			}
 		});
+		reset_acmd_tariffs();
+
 		
 	}
 
 	//get room tariff amount and assign to tariff amount field
 	function getRoomTariff(hotel_id,room_type_id,_date){
+
+		if(Number(hotel_id) > 0 && Number(room_type_id) > 0){
 	
-		$.post(base_url+"/hotel/getRoomTariff",{hotel_id:hotel_id,room_type_id:room_type_id,_date:_date},
-		function(data){
-			if(data!='false'){
-				data=jQuery.parseJSON(data);
-				$("#room_tariff_amt").val(data.amount);
-			}else{
-				$("#room_tariff_amt").val('');
-				alert('Room Tariff amount not updated');
-			}
-		});
+			$.post(base_url+"/hotel/getRoomTariff",{hotel_id:hotel_id,room_type_id:room_type_id,_date:_date,trip_id:trip_id},
+			function(data){
+				if(data!='false'){
+					data=jQuery.parseJSON(data);
+
+					room_charge = Number(data.room_charge) * Number(data.days);
+					$("#acmd_days").val(data.days);
+					$("#room_tariff_amt").val(data.room_charge);
+				
+					set_attr_meals_rows(data.attributes,data.meals_package);
+
+				}else{
+					$("#room_tariff_amt").val('');
+					reset_attr_meals_rows();
+					alert('Room Tariff amount not updated');
+				}
+			});
+		}else{
+			$("#room_tariff_amt").val('');
+			reset_attr_meals_rows();
+		}
 	}
+
+
+	
 
 	function getRoomAttributesNMeals(){//not completed
 
@@ -823,9 +843,48 @@ $(document).ready(function(){
 		});
 	}
 	
-	function getMealsPackage(){
-	
+	function set_attr_meals_rows(attributes,meals_package)
+	{
+		var attr_rows = ''; 
+		$.each(attributes, function( id, val ) {
+			attr_rows +='<div class="form-group div-with-20-percent-width-with-margin-10"><label for="acmd_attr">Attribute Name</label><input id="acmd_attr_name'+id+'" class="form-control" type="text" value="'+val.name+'" name="acmd_attr_name[]"></input></div>';
+
+			attr_rows +='<div class="form-group div-with-20-percent-width-with-margin-10"><label for="acmd_attr">Quantity</label><input id="acmd_attr_qty'+id+'" class="form-control" type="text" value="'+val.quantity+'" name="acmd_attr_qty[]"></input></div>';
+
+			attr_rows +='<div class="form-group div-with-20-percent-width-with-margin-10"><label for="acmd_attr">Tariff</label><input id="acmd_attr_tariff'+id+'" class="form-control" type="text" value="'+val.amount+'" name="acmd_attr_tariff[]"></input></div>';
+		
+			attr_rows +='<div class="form-group div-with-20-percent-width-with-margin-10"><label for="acmd_attr">Amount</label><input id="acmd_attr_amt'+id+'" class="form-control" type="text" value="'+Number(val.quantity)*Number(val.amount)+'" name="acmd_attr_amt[]"></input></div>';
+
+		});
+
+		var meals_rows = '';
+		$.each(meals_package, function( id, val ) {
+			meals_rows +='<div class="form-group div-with-20-percent-width-with-margin-10"><label for="acmd_meals">Meals Package</label><input id="acmd_meals_name'+id+'" class="form-control" type="text" value="'+val.name+'" name="acmd_meals_name[]"></input></div>';
+
+			meals_rows +='<div class="form-group div-with-20-percent-width-with-margin-10"><label for="meals_attr">Quantity</label><input id="acmd_meals_qty'+id+'" class="form-control" type="text" value="'+val.quantity+'" name="meals_attr_qty[]"></input></div>';
+
+			meals_rows +='<div class="form-group div-with-20-percent-width-with-margin-10"><label for="meals_attr">Tariff</label><input id="acmd_meals_tariff'+id+'" class="form-control" type="text" value="'+val.amount+'" name="acmd_meals_tariff[]"></input></div>';
+		
+			meals_rows +='<div class="form-group div-with-20-percent-width-with-margin-10"><label for="acmd_meals">Amount</label><input id="acmd_meals_amt'+id+'" class="form-control" type="text" value="'+Number(val.quantity)*Number(val.amount)+'" name="acmd_meals_amt[]"></input></div>';
+
+		});
+
+
+		$("#attributes-rows").append(attr_rows);
+		$("#meals-rows").append(meals_rows);
 	}
+	function reset_attr_meals_rows()
+	{
+		$("#attributes-rows").empty();
+		$("#meals-rows").empty();
+	}
+
+	function reset_acmd_tariffs(){
+			$("#acmd_days").val('');
+			$("#room_tariff_amt").val('');
+			reset_attr_meals_rows();
+		}
+		
 
 	function setAccommodationDays()
 	{

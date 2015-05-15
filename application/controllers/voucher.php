@@ -111,9 +111,7 @@ class Voucher extends CI_Controller {
 			else
 				$season = gINVALID;
 			$retArr = $this->tour_model->getTourRoomWithHotel($_REQUEST['trip_id'],$_REQUEST['hotel_id'],$season);
-			
-			header('Content-Type: application/json');
-				echo json_encode($retArr);
+			echo json_encode($retArr);
 		}else{
 			echo 'false';
 		}

@@ -174,21 +174,7 @@ $(document).ready(function(){
 			
 		});
 
-	if(vehicle_data_id==-1){
-			var dataArr = {
-				vehicle_id:vehicle_id, vehicle_model_id:vehicle_model_id, vehicle_ac_type_id:vehicle_ac_type_id, driver_id:driver_id, tariff_id:vehicle_tariff_id,
-				from_date:from_date, to_date:to_date, start_time:start_time, end_time:end_time,
-				start_km:start_km, end_km:end_km, km_hr:km_hr, base_km:base_km,
-				base_km_amount:base_km_amount, adt_km:adt_km, adt_km_amount:adt_km_amount,
-				base_hr:base_hr, base_hr_amount:base_hr_amount, adt_hr:adt_hr,
-				adt_hr_amount:adt_hr_amount, driver_bata:driver_bata,
-				night_halt_charge:night_halt_charge,trip_expense:expense,unit_amount:unit_amount,
-				advance_amount:advance_amount, tax_group_id:tax_group_id,tax_amount:tax_amount,
-				narration:narration
-				};
-			var dataArray={post:dataArr,table:"trip_voucher_vehicles",row_id:vehicle_row_id};
-			add_voucher_itinerary(dataArray);
-		}else{
+	
 			var dataArr = {
 				vehicle_id:vehicle_id, vehicle_model_id:vehicle_model_id, vehicle_ac_type_id:vehicle_ac_type_id, driver_id:driver_id, tariff_id:vehicle_tariff_id,
 				from_date:from_date, to_date:to_date, start_time:start_time, end_time:end_time,
@@ -202,7 +188,7 @@ $(document).ready(function(){
 				};
 			var dataArray={post:dataArr,table:"trip_voucher_vehicles",id:vehicle_data_id,row_id:vehicle_row_id};
 			add_voucher_itinerary(dataArray);
-		}
+		
 		reset_vehicle_tab();
 		
 	});

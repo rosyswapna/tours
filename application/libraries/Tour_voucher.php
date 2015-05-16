@@ -70,7 +70,7 @@ class CI_Tour_voucher {
 			return FALSE;
 		}
 		
-		foreach($items as $tbl=>$dataArr){
+		foreach($items as $tbl=>$dataArr){//echo "<pre>";print_r($dataArr);echo "</pre>";exit;
 			$this->_tour_voucher_contents[$tbl][] = $dataArr;
 		}
 		
@@ -89,6 +89,20 @@ class CI_Tour_voucher {
 			return false;
 		}
 	
+	}
+	function update($tble,$items,$index){//update cart item
+		if ( ! is_array($items) OR count($items) == 0)
+		{
+			log_message('error', 'The insert method must be passed an array containing data.');
+			return FALSE;
+		}
+		
+		$cart=$this->contents(); 
+		if(isset($cart[$tble][$index])){
+		
+			$this->_tour_voucher_contents[$tble][$index]=$items;
+		}
+		$this->save_voucher();
 	}
 
 	function save_voucher()

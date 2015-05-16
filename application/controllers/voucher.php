@@ -142,24 +142,27 @@ class Voucher extends CI_Controller {
 	}
 
 	function getFromVoucher(){
-		$voucher = $this->tour_voucher->contents();
+		$voucher = $this->tour_voucher->contents();//echo "<pre>";print_r($voucher);echo "</pre>";exit;
 		$this->build_itinerary_data($voucher,$ajax = 'YES');
 	}
 
 
 	function addToVoucher()//from ajax call
-	{	//echo "<pre>";print_r($_REQUEST);echo "</pre>";exit;
+	{	
 
-		if(isset($_REQUEST['table'])){
+		if((isset($_REQUEST['post'])&&isset($_REQUEST['table'])&&isset($_REQUEST['row_id']))||isset($_REQUEST['id'])){
+			$dataArray=$_REQUEST['post'];
 			$tble = $_REQUEST['table'];
-			$fields = $_REQUEST;
-
+			$fields = $dataArray;
+			$index = $_REQUEST['row_id'];
 			array_shift($fields);//pop first element(url data from ajax call)
-			unset($fields['table']);
-			$fields['id'] = gINVALID;
-			$data[$tble] = $fields;
+			if($index>=0){
+				$this->tour_voucher->update($tble,$fields,$index);
+			}else{//echo "<pre>";print_r($fields);echo "</pre>";exit;
 			
-			$this->tour_voucher->insert($data);		
+				$data[$tble] = $fields;
+				$this->tour_voucher->insert($data);	
+			}			
 				
 		}
 		$voucher = $this->tour_voucher->contents();
@@ -234,11 +237,11 @@ class Voucher extends CI_Controller {
 						);
 
 					//add edit link if need
-					if($row['id'] > 0){
-						$link = '<a class="edit-voucher-itr" row-id="'.$index.'" itr-id ="'.$row['id'].'" itr-table="'.$table.'" href="#">Edit</a>';
+					
+						$link = '<a class="edit-voucher-itr" row-id="'.$index.'" itr-table="'.$table.'" href="#">Edit</a>';
 						array_push($tr,$link);
 						$edit = true;
-					}
+					
 					array_push($tableData['tr'],$tr);
 
 					

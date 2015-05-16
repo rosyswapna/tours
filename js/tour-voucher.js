@@ -187,7 +187,7 @@ $(document).ready(function(){
 				narration:narration
 				};
 			var dataArray={post:dataArr,table:"trip_voucher_vehicles",row_id:vehicle_row_id};
-			add_voucher_itinerary(dataArr);
+			add_voucher_itinerary(dataArray);
 		}else{
 			var dataArr = {
 				vehicle_id:vehicle_id, vehicle_model_id:vehicle_model_id, vehicle_ac_type_id:vehicle_ac_type_id, driver_id:driver_id, tariff_id:vehicle_tariff_id,
@@ -201,7 +201,7 @@ $(document).ready(function(){
 				narration:narration
 				};
 			var dataArray={post:dataArr,table:"trip_voucher_vehicles",id:vehicle_data_id,row_id:vehicle_row_id};
-			update_voucher_itinerary(dataArr);
+			add_voucher_itinerary(dataArray);
 		}
 		reset_vehicle_tab();
 		
@@ -390,7 +390,7 @@ $(document).ready(function(){
 				$(".voucher-vehicle-tab #voucher_vehicle_id").val(data.id);
 				$(".voucher-vehicle-tab #vehicle_model_id option[value='"+data.vehicle_model_id+"']").attr('selected', true);
 				$(".voucher-vehicle-tab #vehicle_ac_type_id option[value='"+data.vehicle_ac_type_id+"']").attr('selected', true);
-				$(".voucher-vehicle-tab #vehicle_id option[value='"+data.id+"']").attr('selected', true);
+				$(".voucher-vehicle-tab #vehicle_id option[value='"+data.vehicle_id+"']").attr('selected', true);
 				$(".voucher-vehicle-tab #driver_id option[value='"+data.driver_id+"']").attr('selected', true);
 	
 				$(".voucher-vehicle-tab #vehicle_from_date").val(data.from_date);

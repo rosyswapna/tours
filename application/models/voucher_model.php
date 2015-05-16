@@ -107,7 +107,7 @@ class Voucher_model extends CI_Model {
 		if(is_array($dataArray)){
 			$this->db->set('updated', 'NOW()', FALSE);
 			$this->db->update('trip_vouchers', $dataArray);
-			$this->db->where('id',$id)
+			$this->db->where('id',$id);
 			return true;
 		}else{
 			return false;
@@ -200,11 +200,13 @@ class Voucher_model extends CI_Model {
 
 			$voucher['trip_id'] = $trip_id;
 			$totals = $voucherCart->totals();
+
+			//echo "<pre>";print_r($totals);echo "</pre>";exit;
 			foreach($totals as $colName=>$colVal){
 				$voucher[$colName] = $colVal;
 			}
 			
-			if($tourVoucher = checkVoucherExists($trip_id)){//edit
+			if($tourVoucher = $this->checkVoucherExists($trip_id)){//edit
 				if($this->updateVoucher($voucher,$tourVoucher->id))
 					$trip_voucher_id = $tourVoucher->id;
 				else
@@ -224,21 +226,6 @@ class Voucher_model extends CI_Model {
 			return false;
 		}
 		
-				
-				
-
-				//echo "<pre>";print_r($voucher);echo "</pre>";exit;
-				
-			
-				
-
-			}else{
-				return false;
-			}
-			
-		}else{//update voucher
-		
-		}
 	}
 
 	

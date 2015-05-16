@@ -127,12 +127,12 @@ class Voucher_model extends CI_Model {
 
 	//insert voucher data from cart with trip voucher id
 	function insertVoucherData($voucherData=false,$trip_voucher_id=gINVALID)
-	{	
+	{	//echo "<pre>";print_r($voucherData);echo "</pre>";exit;
 		if($voucherData!= false && $trip_voucher_id > 0){
 			//============set insert and update array======
 			foreach($voucherData as $tble => $ItrArray){
-				$insertArray = array();
-				$updateArray = array();
+				static $insertArray = array();
+				static $updateArray = array();
 				foreach($ItrArray as $dataArray){
 					//if found array values serialize them
 					foreach($dataArray as $colName=>$colVal){
@@ -157,7 +157,7 @@ class Voucher_model extends CI_Model {
 				}	
 			}
 			//=========================================
-
+//echo "<pre>";print_r($insertArray);echo "</pre>";exit;
 			//insert batch
 			if($insertArray){
 				foreach($insertArray as $tbl=>$dataArray){

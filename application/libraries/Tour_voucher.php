@@ -123,7 +123,7 @@ class CI_Tour_voucher {
 			return FALSE;
 		}
 		$total_itinerary = 0;
-		$totals = array('total_accomodation_amount' => 0,
+		$totals = array('total_accommodation_amount' => 0,
 				'total_travel_amount' => 0,
 				'total_service_amount' => 0,
 				'total_trip_amount' => 0,
@@ -141,7 +141,7 @@ class CI_Tour_voucher {
 						$totals['total_trip_km'] += $vehicle_km;
 						break;
 					case 'trip_voucher_accommodation':
-						$totals['total_accomodation_amount'] += $totalAmt;
+						$totals['total_accommodation_amount'] += $totalAmt;
 						break;
 					case 'trip_voucher_services':
 						$totals['total_service_amount'] += $totalAmt;

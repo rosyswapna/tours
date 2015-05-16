@@ -155,7 +155,6 @@ class Voucher extends CI_Controller {
 			$tble = $_REQUEST['table'];
 			$fields = $dataArray;
 			$index = $_REQUEST['row_id'];
-			array_shift($fields);//pop first element(url data from ajax call)
 			if($index>=0){
 				$this->tour_voucher->update($tble,$fields,$index);
 			}else{//echo "<pre>";print_r($fields);echo "</pre>";exit;

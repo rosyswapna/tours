@@ -238,6 +238,8 @@ $(document).ready(function(){
 
 	$('#add-voucher-accommodation').on('click',function(){
 		
+		var accommodation_data_id 	= $('.voucher-tabs #voucher_accommodation_id').val();
+		var accommodation_row_id	= $('.voucher-tabs #voucher_accommodation_row_id').val();
 		var from_date 			= $('.voucher-tabs #acmd_from_date').val();
 		var to_date 			= $('.voucher-tabs #acmc_to_date').val();
 		var checkin 			= $('.voucher-tabs #acmd_checkin').val();
@@ -308,15 +310,16 @@ $(document).ready(function(){
 
 		
 		
-		var dataArr = {table:"trip_voucher_accommodation",from_date:from_date,to_date:to_date,
+		var dataArr = {id:accommodation_data_id,from_date:from_date,to_date:to_date,
 				checkin:checkin,checkout:checkout,hotel_id:hotel_id,room_type_id:room_type_id,
 				no_of_days:no_of_days,unit_amount:unit_amount,advance_amount:advance_amount,
 				tax_amount:tax_amount,narration:narration,room_attributes:room_attributes,
 				meals_package:meals_package
 				};
-
+			var dataArray={post:dataArr,table:"trip_voucher_accommodation",row_id:accommodation_row_id};
+			add_voucher_itinerary(dataArray);
 		
-		add_voucher_itinerary(dataArr);
+		
 		reset_accomodation_tab();
 		
 	});

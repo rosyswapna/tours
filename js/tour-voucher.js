@@ -58,11 +58,11 @@ $(document).ready(function(){
 
 	
 	$(document).on('keyup', ".trip-expense-input,#driver_bata,#night_halt_charge",function () {
-		checkTotAmount();
+		checkVehicleTotAmount();
 	});
 
 	$(document).on('keyup', "#vehicle_unit_amount,#vehicle_advance_amount",function () {
-		setTotalAmount();
+		setVehicleTotalAmount();
 	});
 
 
@@ -77,7 +77,7 @@ $(document).ready(function(){
 
 			$('.voucher-tabs #vehicle_tax_amount').val(data);
 
-			setTotalAmount();
+			setVehicleTotalAmount();
 		});
 
 		
@@ -224,8 +224,6 @@ $(document).ready(function(){
 		var _date = $('#acmd_from_date').val();
 		getRoomTariff(hotel_id,room_type_id,_date);
 
-		//getRoomAttributesNMeals();
-		
 	});
 
 
@@ -236,8 +234,11 @@ $(document).ready(function(){
 	});
 
 	$(".voucher-tabs #acmd_days").on( "blur",function(){
-		setAccommodationTotals();
+		setAcmdUnitAmount();
+		
 	});
+
+
 
 
 
@@ -587,7 +588,7 @@ $(document).ready(function(){
 			}else{
 				setKMRadio();
 			}
-			setUnitAmount();
+			setVehicleUnitAmount();
 
 		}
 		
@@ -606,7 +607,7 @@ $(document).ready(function(){
 	}
 
 
-	function setUnitAmount()
+	function setVehicleUnitAmount()
 	{
 		var tariffAmtClass = $('.vehicletariffamount').attr('amount-class-to-be-selected');
 		
@@ -628,11 +629,11 @@ $(document).ready(function(){
 		}
 
 		$("#vehicle_unit_amount").val(unitAmt);
-		setTotalAmount();
+		setVehicleTotalAmount();
 	}
 
 	//for vehicle tab
-	function setTotalAmount(){
+	function setVehicleTotalAmount(){
 		var unitAmt = Number($("#vehicle_unit_amount").val());
 		var advAmt = Number($("#vehicle_advance_amount").val());
 		var taxAmt = Number($("#vehicle_tax_amount").val());
@@ -641,9 +642,9 @@ $(document).ready(function(){
 		$("#vehicle_total_amount").val(totalAmt);
 	}
 
-	function checkTotAmount(){
-		setUnitAmount();
-		setTotalAmount();
+	function checkVehicleTotAmount(){
+		setVehicleUnitAmount();
+		setVehicleTotalAmount();
 	}
 	
 
@@ -703,6 +704,9 @@ $(document).ready(function(){
 		
 		
 	}
+
+
+	
 	
 	function reset_accomodation_tab(){
 		$('.voucher-tabs #acmd_from_date').val("");
@@ -905,6 +909,7 @@ $(document).ready(function(){
 					$("#room_tariff_amt").val(data.room_charge);
 				
 					set_attr_meals_rows(data.attributes,data.meals_package);
+					setAcmdUnitAmount();
 
 				}else{
 					$("#room_tariff_amt").val('');
@@ -916,6 +921,8 @@ $(document).ready(function(){
 			$("#room_tariff_amt").val('');
 			reset_attr_meals_rows();
 		}
+
+		
 	}
 
 
@@ -997,7 +1004,7 @@ $(document).ready(function(){
 		}
 	}
 
-	function setAccommodationTotals(){
+	/*function setAccommodationTotals(){
 		var no_days = $(".voucher-tabs #acmd_days").val();
 		if(no_days == '')
 			no_days = 1;
@@ -1013,6 +1020,42 @@ $(document).ready(function(){
 
 		$("#acmd_total_amount").val(total_amount);
 		
+	}*/
+
+	//for acc tab
+	function setAcmdUnitAmount()
+	{
+		var room_charge = $('#room_tariff_amt').val();
+		var days = $('#acmd_days').val();
+		
+		var unitAmt = Number(room_charge)*Number(days);
+
+		
+			
+		$(".voucher-tabs .acmd_attr").each(function(index){
+			attr_amt  = $('input[name="acmd_attr_amt[]"]:eq('+index+')').val();
+			unitAmt += Number(attr_amt);
+			
+		});
+		$(".voucher-tabs .acmd_meals").each(function(index){
+			meals_amt  = $('input[name="acmd_meals_amt[]"]:eq('+index+')').val();
+			unitAmt += Number(meals_amt);
+			
+		});
+
+
+		$("#acmd_unit_amount").val(unitAmt);
+		setAcmdTotalAmount();
+	}
+
+
+	function setAcmdTotalAmount(){
+		var unitAmt = Number($("#acmd_unit_amount").val());
+		var advAmt = Number($("#acmd_advance_amount").val());
+		var taxAmt = Number($("#acmd_tax_amount").val());
+
+		totalAmt = unitAmt - advAmt + taxAmt;
+		$("#acmd_total_amount").val(totalAmt);
 	}
 
 

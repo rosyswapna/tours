@@ -176,7 +176,7 @@ $(document).ready(function(){
 
 	
 			var dataArr = {
-				vehicle_id:vehicle_id, vehicle_model_id:vehicle_model_id, vehicle_ac_type_id:vehicle_ac_type_id, driver_id:driver_id, tariff_id:vehicle_tariff_id,
+				id:vehicle_data_id,vehicle_id:vehicle_id, vehicle_model_id:vehicle_model_id, vehicle_ac_type_id:vehicle_ac_type_id, driver_id:driver_id, tariff_id:vehicle_tariff_id,
 				from_date:from_date, to_date:to_date, start_time:start_time, end_time:end_time,
 				start_km:start_km, end_km:end_km, km_hr:km_hr, base_km:base_km,
 				base_km_amount:base_km_amount, adt_km:adt_km, adt_km_amount:adt_km_amount,
@@ -186,7 +186,7 @@ $(document).ready(function(){
 				advance_amount:advance_amount, tax_group_id:tax_group_id,tax_amount:tax_amount,
 				narration:narration
 				};
-			var dataArray={post:dataArr,table:"trip_voucher_vehicles",id:vehicle_data_id,row_id:vehicle_row_id};
+			var dataArray={post:dataArr,table:"trip_voucher_vehicles",row_id:vehicle_row_id};
 			add_voucher_itinerary(dataArray);
 		
 		reset_vehicle_tab();
@@ -400,6 +400,10 @@ $(document).ready(function(){
 					setTotalHR();
 					setTimeout(function(){ setKM_tariff(); }, 1000);
 					setTimeout(function(){ setHR_tariff(); }, 1000);
+				var trip_expense=data.trip_expense; 
+					$.each(trip_expense, function(i,e){
+					    $(".voucher-vehicle-tab #"+i).val(e);
+					});
 
 				$(".voucher-vehicle-tab #vehicle_tax_group_id option[value='"+data.tax_group_id+"']").attr('selected', true);
 				setTimeout(function(){ $('.voucher-vehicle-tab #vehicle_tax_group_id').trigger('change'); }, 1000);

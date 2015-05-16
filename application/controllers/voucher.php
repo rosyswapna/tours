@@ -149,7 +149,7 @@ class Voucher extends CI_Controller {
 
 	function addToVoucher()//from ajax call
 	{	
-
+echo "<pre>";print_r($_REQUEST['post']);echo "</pre>";exit;
 		if((isset($_REQUEST['post'])&&isset($_REQUEST['table'])&&isset($_REQUEST['row_id']))||isset($_REQUEST['id'])){
 			$dataArray=$_REQUEST['post'];
 			$tble = $_REQUEST['table'];

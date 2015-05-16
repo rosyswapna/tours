@@ -233,6 +233,14 @@ $(document).ready(function(){
 		
 	});
 
+	$(document).on('keyup', ".acmd-total",function () {
+		setAcmdTotalAmount();
+	});
+
+	$('.acmd-total').live('keyup',function(){
+		setAcmdUnitAmount();
+	});
+
 	$(".voucher-tabs #acmd_days").on( "blur",function(){
 		setAcmdUnitAmount();
 		
@@ -947,13 +955,13 @@ $(document).ready(function(){
 		$.each(attributes, function( id, val ) {
 
 			attr_rows += '<input id="acmd_attr'+id+'" class="form-control acmd_attr hide-me" type="text" value="'+id+'" name="acmd_attr_id[]"></input>';
-			attr_rows +='<div class="form-group div-with-20-percent-width-with-margin-10"><label for="acmd_attr">Attribute Name</label><input id="acmd_attr_name'+id+'" class="form-control" type="text" value="'+val.name+'" name="acmd_attr_name[]"></input></div>';
+			attr_rows +='<div class="form-group div-with-20-percent-width-with-margin-10"><label for="acmd_attr">Attribute Name</label><input id="acmd_attr_name'+id+'" class="form-control" type="text" value="'+val.name+'" name="acmd_attr_name[]" readonly="readonly"></input></div>';
 
-			attr_rows +='<div class="form-group div-with-20-percent-width-with-margin-10"><label for="acmd_attr">Quantity</label><input id="acmd_attr_qty'+id+'" class="form-control" type="text" value="'+val.quantity+'" name="acmd_attr_qty[]"></input></div>';
+			attr_rows +='<div class="form-group div-with-20-percent-width-with-margin-10"><label for="acmd_attr">Quantity</label><input id="acmd_attr_qty'+id+'" class="form-control acmd-total" type="text" value="'+val.quantity+'" name="acmd_attr_qty[]" readonly="readonly"></input></div>';
 
-			attr_rows +='<div class="form-group div-with-20-percent-width-with-margin-10"><label for="acmd_attr">Tariff</label><input id="acmd_attr_tariff'+id+'" class="form-control" type="text" value="'+val.amount+'" name="acmd_attr_tariff[]"></input></div>';
+			attr_rows +='<div class="form-group div-with-20-percent-width-with-margin-10"><label for="acmd_attr">Tariff</label><input id="acmd_attr_tariff'+id+'" class="form-control acmd-total" type="text" value="'+val.amount+'" name="acmd_attr_tariff[]" readonly="readonly"></input></div>';
 		
-			attr_rows +='<div class="form-group div-with-20-percent-width-with-margin-10"><label for="acmd_attr">Amount</label><input id="acmd_attr_amt'+id+'" class="form-control" type="text" value="'+Number(val.quantity)*Number(val.amount)+'" name="acmd_attr_amt[]"></input></div>';
+			attr_rows +='<div class="form-group div-with-20-percent-width-with-margin-10"><label for="acmd_attr">Amount</label><input id="acmd_attr_amt'+id+'" class="form-control acmd-total" type="text" value="'+Number(val.quantity)*Number(val.amount)+'" name="acmd_attr_amt[]"></input></div>';
 
 		});
 
@@ -962,13 +970,13 @@ $(document).ready(function(){
 
 			meals_rows += '<input id="acmd_meals'+id+'" class="form-control acmd_meals hide-me" type="text" value="'+id+'" name="acmd_meals_id[]"></input>';
 
-			meals_rows +='<div class="form-group div-with-20-percent-width-with-margin-10"><label for="acmd_meals">Meals Package</label><input id="acmd_meals_name'+id+'" class="form-control" type="text" value="'+val.name+'" name="acmd_meals_name[]"></input></div>';
+			meals_rows +='<div class="form-group div-with-20-percent-width-with-margin-10"><label for="acmd_meals">Meals Package</label><input id="acmd_meals_name'+id+'" class="form-control" type="text" value="'+val.name+'" name="acmd_meals_name[]" readonly="readonly"></input></div>';
 
-			meals_rows +='<div class="form-group div-with-20-percent-width-with-margin-10"><label for="acmd_meals">Quantity</label><input id="acmd_meals_qty'+id+'" class="form-control" type="text" value="'+val.quantity+'" name="acmd_meals_qty[]"></input></div>';
+			meals_rows +='<div class="form-group div-with-20-percent-width-with-margin-10"><label for="acmd_meals">Quantity</label><input id="acmd_meals_qty'+id+'" class="form-control acmd-total" type="text" value="'+val.quantity+'" name="acmd_meals_qty[]" readonly="readonly"></input></div>';
 
-			meals_rows +='<div class="form-group div-with-20-percent-width-with-margin-10"><label for="acmd_meals">Tariff</label><input id="acmd_meals_tariff'+id+'" class="form-control" type="text" value="'+val.amount+'" name="acmd_meals_tariff[]"></input></div>';
+			meals_rows +='<div class="form-group div-with-20-percent-width-with-margin-10"><label for="acmd_meals">Tariff</label><input id="acmd_meals_tariff'+id+'" class="form-control acmd-total" type="text" value="'+val.amount+'" name="acmd_meals_tariff[]" readonly="readonly"></input></div>';
 		
-			meals_rows +='<div class="form-group div-with-20-percent-width-with-margin-10"><label for="acmd_meals">Amount</label><input id="acmd_meals_amt'+id+'" class="form-control" type="text" value="'+Number(val.quantity)*Number(val.amount)+'" name="acmd_meals_amt[]"></input></div>';
+			meals_rows +='<div class="form-group div-with-20-percent-width-with-margin-10"><label for="acmd_meals">Amount</label><input id="acmd_meals_amt'+id+'" class="form-control acmd-total" type="text" value="'+Number(val.quantity)*Number(val.amount)+'" name="acmd_meals_amt[]"></input></div>';
 
 		});
 

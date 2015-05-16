@@ -577,21 +577,21 @@
 						<div class="form-group div-with-20-percent-width-with-margin-10">
 						<?php
 							echo form_label('Unit Amount','acmd_unit_amount'); 
-					    		echo form_input(array('name'=>'acmd_unit_amount','class'=>'form-control','id'=>'acmd_unit_amount','value'=>@$acmd_unit_amount));
+					    		echo form_input(array('name'=>'acmd_unit_amount','class'=>'form-control acmd-total','id'=>'acmd_unit_amount','value'=>@$acmd_unit_amount));
 						?>
 						</div>
 
 						<div class="form-group div-with-20-percent-width-with-margin-10">
 						<?php
 							echo form_label('Advance','acmd_advance_amount'); 
-					    		echo form_input(array('name'=>'acmd_advance_amount','class'=>'form-control','id'=>'acmd_advance_amount','value'=>@$acmd_advance_amount));
+					    		echo form_input(array('name'=>'acmd_advance_amount','class'=>'form-control acmd-total','id'=>'acmd_advance_amount','value'=>@$acmd_advance_amount));
 						?>
 						</div>
 
 						<div class="form-group div-with-20-percent-width-with-margin-10">
 						<?php
 							echo form_label('Tax','acmd_tax_amount'); 
-					    		echo form_input(array('name'=>'acmd_tax_amount','class'=>'form-control','id'=>'acmd_tax_amount','value'=>@$acmd_tax_amount));
+					    		echo form_input(array('name'=>'acmd_tax_amount','class'=>'form-control acmd-total','id'=>'acmd_tax_amount','value'=>@$acmd_tax_amount));
 						?>
 						</div>
 		

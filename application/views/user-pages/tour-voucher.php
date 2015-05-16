@@ -433,7 +433,7 @@
 							$title = $expense['description'];
 							if(strlen($label) > 14)
 								$label = substr($label,0,14)."..";
-							echo form_label($label); 
+							echo form_label($label,$id); 
 					    		echo form_input(array('name'=>$name,'class'=>'form-control trip-expense-input','id'=>$id,'value'=>'','title'=>$title));
 						?>
 						</div>

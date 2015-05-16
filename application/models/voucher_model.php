@@ -54,6 +54,16 @@ class Voucher_model extends CI_Model {
 			$rows = $query->result_array();
 			$retArray = array();
 			foreach($rows as $row){
+
+				if(isset($row['trip_expense'])){
+					$row['trip_expense'] = ($row['trip_expense'] != '')?unserialize($row['trip_expense']):'';
+				}
+				if(isset($row['room_attributes'])){
+					$row['room_attributes'] = ($row['room_attributes'] != '')?unserialize($row['room_attributes']):'';
+				}
+				if(isset($row['meals_package'])){
+					$row['meals_package'] = ($row['meals_package'] != '')?unserialize($row['meals_package']):'';
+				}
 				unset($row['user_id']);
 				unset($row['organisation_id']);
 				unset($row['created']);

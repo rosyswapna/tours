@@ -233,9 +233,6 @@ $(document).ready(function(){
 	});
 
 
-
-
-
 	$('#add-voucher-accommodation').on('click',function(){
 		
 		var accommodation_data_id 	= $('.voucher-tabs #voucher_accommodation_id').val();
@@ -322,6 +319,15 @@ $(document).ready(function(){
 		
 		reset_accomodation_tab();
 		
+	});
+
+
+
+	//================================accommodation tab=============================
+	$('.voucher-tabs #service_id').on('change',function(){
+		var service_id = $(this).val();
+		
+		setServiceTariff(service_id);
 	});
 
 
@@ -1064,5 +1070,66 @@ $(document).ready(function(){
 
 	
 	//============================================
+
+
+
+	//====================service tab functions===============
+	function setServiceTariff(servie_id){
+		
+		if(Number(servie_id) > 0){
+
+			$.post(base_url+"/voucher/getService",{trip_id:trip_id,service_id:service_id},
+				function(data){alert(data);
+				if(data!='false'){
+					data=jQuery.parseJSON(data);
+
+					$('.voucher-tabs #service_rate').val(data.rate);
+					$('.voucher-tabs #service_qty').val(data.quantity);
+					$('.voucher-tabs #uom_id').val(data.uom_id);
+
+					set_service_totals();
+				
+				}else{
+					reset_service_row();
+				}
+			});
+		}else{
+			reset_service_row();
+		}
+
+		
+	}
+	
+	function reset_service_row()
+	{
+		$('.voucher-tabs #service_id').val(-1);
+		$('.voucher-tabs #uom_id').val(-1);
+		$('.voucher-tabs #service_unit_amount').val("");
+		$('.voucher-tabs #service_tax_amount').val("");
+		$('.voucher-tabs #service_total_amount').val("");
+		$('.voucher-tabs #service_advance_amount').val("");
+		$('.voucher-tabs #service_rate').val("");
+		$('.voucher-tabs #service_qty').val("");
+	}
+
+	function set_service_totals()
+	{
+		var rate = $('.voucher-tabs #service_rate').val();
+		var qty = $('.voucher-tabs #service_qty').val();
+		unit_amount = Number(rate)*Number(qty);
+
+		$('.voucher-tabs #service_unit_amount').val(unit_amount);
+
+		var adv = $('.voucher-tabs #service_advance_amount').val();
+		var tax = $('.voucher-tabs #service_tax_amount').val();
+		total = unit_amount + Number(tax) - Number(adv);
+		$('.voucher-tabs #service_total_amount').val(total);
+		
+	}
+
+	
+
+
+	//===========================================
 
 });

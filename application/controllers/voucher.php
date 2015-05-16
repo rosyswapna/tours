@@ -41,6 +41,8 @@ class Voucher extends CI_Controller {
 				$this->save($param2);
 			}elseif($param1=='getVoucherTabValues'){
 				$this->getVoucherTabValues();
+			}elseif($param1=='getService'){
+				$this->getService();
 			}else{
 				$this->notFound();
 			}
@@ -279,6 +281,19 @@ class Voucher extends CI_Controller {
 			echo json_encode($editable_values);
 		}else{
 			return false;
+		}
+	}
+
+	function getService()
+	{
+		if((isset($_REQUEST['service_id']))&& (isset($_REQUEST['trip_id']))){
+						
+			$service = $this->voucher_model->getService($service_id,$trip_id);
+
+			echo json_encode($service);
+
+		}else{
+			echo 'false';
 		}
 	}
 	

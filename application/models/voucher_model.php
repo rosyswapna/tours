@@ -238,6 +238,30 @@ class Voucher_model extends CI_Model {
 		
 	}
 
+	function getService($servie_id ,$trip_id){
+		$sqlVoucher = "SELECT rate,quantity,uom_id FROM trip_voucher_services WHERE service_id= ".$this->db->escape($service_id);
+		$sqlVoucher .= " AND trip_voucher_id IN 
+			(SELECT id FROM trip_vouchers WHERE trip_id = ".$this->db->escape($trip_id).")";
+
+		$result = $this->db->query($sqlVoucher);
+		if($result->num_rows() > 0){
+			return $result->row_array();
+		}else{//get from trip
+			$sqlTrip = "SELECT amount as rate,quantity,-1 AS uom_id FROM trip_services WHERE service_id = ".$this->db->escape($service_id);
+			$sqlTrip .= " AND itinerary_id IN 
+			(SELECT id FROM itinerary WHERE trip_id = ".$this->db->escape($trip_id).")";
+
+			$result = $this->db->query($sqlTrip);
+			if($result->num_rows() > 0){
+				return $result->row_array();
+			}else{
+				return false;
+			}
+		}
+
+		
+	}
+
 	
 }
 ?>

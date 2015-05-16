@@ -412,7 +412,7 @@ $(document).ready(function(){
 					$.each(trip_expense, function(i,e){
 					    $(".voucher-vehicle-tab #"+i).val(e);
 					});
-
+				$(".voucher-vehicle-tab #vehicle_advance_amount").val(data.advance_amount);
 				$(".voucher-vehicle-tab #vehicle_tax_group_id option[value='"+data.tax_group_id+"']").attr('selected', true);
 				setTimeout(function(){ $('.voucher-vehicle-tab #vehicle_tax_group_id').trigger('change'); }, 1000);
 				$(".voucher-vehicle-tab #add-voucher-vehicle").val('Update');

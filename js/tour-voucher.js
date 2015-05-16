@@ -271,6 +271,10 @@ $(document).ready(function(){
 			attr_qty 	= $('input[name="acmd_attr_qty[]"]:eq('+index+')').val();
 			room_attributes_amount += Number(attr_amt);
 			room_attributes[i] = attr_id;
+			room_attributes[i][acmd_attr+attr_id] = attr_id;
+			room_attributes[i][acmd_attr_amt+attr_id] = attr_amt;
+			room_attributes[i][acmd_attr_name+attr_id] = attr_name;
+			room_attributes[i][acmd_attr_qty+attr_id] = attr_qty;
 			attr_narration.push(attr_name +" @"+attr_amt);
 			i++;
 			
@@ -292,8 +296,12 @@ $(document).ready(function(){
 			meals_name 	= $('input[name="acmd_meals_name[]"]:eq('+index+')').val();
 			meals_qty 	= $('input[name="acmd_meals_qty[]"]:eq('+index+')').val();
 			meals_package_amount += Number(attr_amt);
-			room_attributes[i] = meals_id;
-			meals_narration.push(meals_name +"("+meals_qty+") @"+meals_amt+"/person");
+			
+			meals_package[i][acmd_meals+attr_id] = meals_id;
+			meals_package[i][acmd_meals_amt+attr_id] = meals_amt;
+			meals_package[i][acmd_meals_name+attr_id] = meals_name;
+			meals_package[i][acmd_meals_qty+attr_id] = meals_qty;
+			meals_narration.push(meals_name +"("+meals_qty+") @"+meals_amt+"/person");*/
 			i++;
 			
 		});

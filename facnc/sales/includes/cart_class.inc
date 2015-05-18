@@ -391,10 +391,10 @@ class cart
 	}
 
 	function add_to_cart($line_no, $stock_id, $qty, $price, $disc, $qty_done=0, $standard_cost=0, $description=null, $id=0, $src_no=0,
-		$src_id=0,$trip_voucher=0)
+		$src_id=0,$trip_voucher=0,$voucher_itinerary)
 	{
 		$line = new line_details($stock_id, $qty, $price, $disc,
-			$qty_done,  $standard_cost, $description, $id, $src_no, $src_id,$trip_voucher);
+			$qty_done,  $standard_cost, $description, $id, $src_no, $src_id,$trip_voucher,'',$voucher_itinerary);
 
 		if ($line->valid) {
 			$this->line_items[$line_no] = $line;
@@ -653,30 +653,39 @@ class line_details
 	var $night_halt;
 	var $advance_amount;
 	var $payment_no;
+
+	var $voucher_itinerary = array();
 	
 
 
 	function line_details ($stock_id, $qty, $prc, $disc_percent,
-		$qty_done, $standard_cost, $description, $id=0, $src_no=0, $src_id=0,$trip_voucher=0,$comments='')
+		$qty_done, $standard_cost, $description, $id=0, $src_no=0, $src_id=0,$trip_voucher=0,$comments='',$voucher_item=false)
 	{
 	/* Constructor function to add a new LineDetail object with passed params */
-		$cnc_voucher = get_cnc_voucher($trip_voucher);		
+		//$cnc_voucher = get_cnc_voucher($trip_voucher);
 
-		if($cnc_voucher){
-			$this->trip_id 		= $cnc_voucher['trip_id'];
-			$this->voucher_no	= $cnc_voucher['voucher_str'];
-			$this->vehicle_model	= $cnc_voucher['vehicle_model'];
-			$this->vehicle_no	= $cnc_voucher['vehicle_no'];
-			$this->username		= $cnc_voucher['username'];
-			$this->particulars      = $cnc_voucher['trip_narration'];
-			$this->pickup_date	= $cnc_voucher['pick_up_date'];
-			$this->cnc_line_amount 	= $cnc_voucher['amount'];
-			$this->price 		= $cnc_voucher['amount'];
-			$this->trip_expense 	= unserialize($cnc_voucher['trip_expense']);
-			$this->driver_bata	= $cnc_voucher['driver_bata'];
-			$this->night_halt	= $cnc_voucher['night_halt'];
-			$this->advance_amount	= $cnc_voucher['advance_amount'];
-			$this->payment_no	= $cnc_voucher['payment_no'];
+		$voucher = get_voucher_itinerary($trip_voucher);		
+
+		if($voucher){
+			$this->trip_id 		= $voucher['trip_id'];
+			$this->voucher_no	= $voucher['voucher_str'];
+			
+			//$this->vehicle_model	= $voucher['vehicle_model'];
+			//$this->vehicle_no	= $voucher['vehicle_no'];
+			//$this->username		= $voucher['username'];
+			//$this->particulars      = $voucher['trip_narration'];
+			//$this->pickup_date	= $voucher['pick_up_date'];
+			//$this->cnc_line_amount 	= $voucher['amount'];
+			//$this->price 		= $voucher['amount'];
+			//$this->trip_expense 	= unserialize($voucher['trip_expense']);
+			//$this->driver_bata	= $voucher['driver_bata'];
+			//$this->night_halt	= $voucher['night_halt'];
+			//$this->advance_amount	= $voucher['advance_amount'];
+			//$this->payment_no	= $voucher['payment_no'];
+		}
+		if($voucher_item){
+			$this->voucher_itinerary = $voucher_item;
+			$this->particulars = $voucher_item['narration'];
 		}
 
 		$this->id = $id;
@@ -700,7 +709,7 @@ class line_details
 		$this->stock_id = $stock_id;
 		$this->quantity = $qty;
 		$this->qty_dispatched = $qty;
-		//$this->price = $prc;
+		$this->price = $prc;
 		$this->discount_percent = $disc_percent;
 		$this->qty_done = $qty_done;
 		$this->standard_cost = $standard_cost;

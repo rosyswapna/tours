@@ -743,22 +743,22 @@ if ($_SESSION['Items']->trans_type == ST_SALESINVOICE) {
 start_form();
 
 //cnc code----------------------
-$cnc_voucher = false;
+$voucher = false;
 if(isset($_GET['NewDelivery']) && $_GET['NewDelivery'] > 0){
 
-	$cnc_voucher = get_cnc_voucher($_GET['NewDelivery']);
-	if($cnc_voucher['tax_group_id'] > 0)
-		$_SESSION['Items']->tax_group_from_cnc = $cnc_voucher['tax_group_id'];
+	/*$voucher = get_voucher_itinerary($_GET['NewDelivery']);
+	if($voucher['tax_group_id'] > 0)
+		$_SESSION['Items']->tax_group_from_cnc = $voucher['tax_group_id'];
 	
 	
-	if($cnc_voucher['group_id'] > 0){
-		$_SESSION['Items']->customer_id = get_cnc_customer_id("CG".$cnc_voucher['group_id']);
+	if($voucher['group_id'] > 0){
+		$_SESSION['Items']->customer_id = get_cnc_customer_id("CG".$voucher['group_id']);
 		$customer = get_customer($_SESSION['Items']->customer_id);
-		$_SESSION['Items']->customer_name = @$cnc_voucher['group_name'];
+		$_SESSION['Items']->customer_name = @$voucher['group_name'];
 	}else{
-		$_SESSION['Items']->customer_id = get_cnc_customer_id("C".$cnc_voucher['cnc_cust_id']);
+		$_SESSION['Items']->customer_id = get_cnc_customer_id("C".$voucher['cnc_cust_id']);
 		$customer = get_customer($_SESSION['Items']->customer_id);
-		$_SESSION['Items']->customer_name = @$cnc_voucher['customer_name'];
+		$_SESSION['Items']->customer_name = @$voucher['customer_name'];
 	}
 	
 	
@@ -768,17 +768,70 @@ if(isset($_GET['NewDelivery']) && $_GET['NewDelivery'] > 0){
 	
 
 	//------------trip item code -> 101---------------------------
-	$_SESSION['Items']->trip_voucher = $cnc_voucher['voucher_no'];
+	$_SESSION['Items']->trip_voucher = $voucher['voucher_no'];
 	$amt = 0;
 	
-	$amt = $cnc_voucher['amount'];
+	$amt = $voucher['amount'];
 
 	add_to_order($_SESSION['Items'],101, 1,
-		$amt, 0 / 100,'',0,$cnc_voucher['voucher_no']);
+		$amt, 0 / 100,'',0,$voucher['voucher_no']);
 
 	//echo "<pre>";print_r($_SESSION['Items']);echo "</pre>";exit;
 
+*/
+
+	$voucher = get_voucher_itinerary($_GET['NewDelivery']);
+	//echo "<pre>";print_r($voucher);echo "</pre>";exit;
+
+	if($voucher){
+		$voucher_head = $voucher['voucher'];
+
+		//set customer
+		$_SESSION['Items']->customer_id = get_cnc_customer_id("C".$voucher_head['customer_id']);
+		$customer = get_customer($_SESSION['Items']->customer_id);
+		$_SESSION['Items']->customer_name = @$voucher_head['customer_name'];
+		$_SESSION['Items']->customer_currency = @$customer['curr_code'] ;
+		$_SESSION['Items']->sales_type = @$customer['sales_type'] ;
+		$_SESSION['Items']->Branch = get_cnc_customer_branch($_SESSION['Items']->customer_id);
+
+		$_SESSION['Items']->trip_voucher = $voucher_head['voucher_no'];
+		if(isset($voucher['travel'])){
+
+			foreach($voucher['travel'] as $travel){
+				$amt = $travel['unit_amount'] - $travel['advance_amount'];
+				add_to_order($_SESSION['Items'],TRIP, 1,
+				$amt, 0 / 100,'',0,$voucher_head['voucher_no'],$travel);
+			}
+		
+		}
+
+		if(isset($voucher['accommodation'])){
+
+			foreach($voucher['accommodation'] as $acmd){
+				$amt = $acmd['unit_amount'] - $acmd['advance_amount'];
+				add_to_order($_SESSION['Items'],ACCOMMOATION, 1,
+				$amt, 0 / 100,'',0,$voucher_head['voucher_no'],$acmd);
+			}
+		}
+
+		if(isset($voucher['services'])){
+			foreach($voucher['services'] as $service) {
+				$amt = $service['unit_amount'] - $service['advance_amount'];
+				add_to_order($_SESSION['Items'],TRIP_SERVICE, 1,
+				$amt, 0 / 100,'',0,$voucher_head['voucher_no'],$service);
+			}
+			
+		}
+
+
+		//echo "<pre>";print_r($_SESSION['Items']);echo "</pre>";exit;
+	}else{
+		//invalid voucher
+	}
+
 	
+	
+
 		
 }
 //-----------------------------------
@@ -788,7 +841,7 @@ if(isset($_GET['NewDelivery']) && $_GET['NewDelivery'] > 0){
 
 hidden('cart_id');
 $customer_error = display_order_header($_SESSION['Items'],
-	($_SESSION['Items']->any_already_delivered() == 0), $idate,$cnc_voucher);
+	($_SESSION['Items']->any_already_delivered() == 0), $idate,$voucher);
 
 
 
@@ -797,7 +850,7 @@ if ($customer_error == "") {
 	start_table(TABLESTYLE, "width=100%", 10);
 	echo "<tr><td>";
 	//display_order_summary($orderitems, $_SESSION['Items'], true);
-	display_trip_data($cnc_voucher,$_SESSION['Items']);
+	display_trip_data($_SESSION['Items']);
 	echo "</td></tr>";
 	//echo "<tr><td>";
 	//display_delivery_details($_SESSION['Items']);

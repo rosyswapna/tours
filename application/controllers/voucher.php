@@ -179,20 +179,20 @@ class Voucher extends CI_Controller {
 		$this->tour_voucher->destroy();
 		if($saveVoucher){
 
-			//new delivery
-			redirect(base_url().'account/front_desk/NewDelivery/'.$saveVoucher);
+			$voucherDetails = $this->voucher_model->getVoucher($saveVoucher);
+			if($voucherDetails['delivery_no'] > 0){
+				redirect(base_url().'account/front_desk/ModifyDelivery/'.$saveVoucher);
+			}else{
+				redirect(base_url().'account/front_desk/NewDelivery/'.$saveVoucher);
+			}
 
 			//$this->session->set_userdata(array('dbSuccess'=>'Voucher Added Succesfully..!')); 
 			//$this->session->set_userdata(array('dbError'=>''));
 		}else{
-			//$this->session->set_userdata(array('dbSuccess'=>'')); 
-			//$this->session->set_userdata(array('dbError'=>'Invalid Trip Voucher..!'));
-
-			//edit delivery
-			redirect(base_url().'account/front_desk/NewDelivery/'.$saveVoucher);
+			$this->session->set_userdata(array('dbSuccess'=>'')); 
+			$this->session->set_userdata(array('dbError'=>'Invalid Trip Voucher..!'));
+			redirect(base_url().'front-desk/voucher/add/'.$trip_id);		
 		}
-
-		//redirect(base_url().'front-desk/voucher/add/'.$trip_id);
 	}
 	
 

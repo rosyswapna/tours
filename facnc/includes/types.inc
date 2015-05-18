@@ -286,6 +286,8 @@ define('CNC_FRONT_DESK',3);
 define('TRIP', 101);
 define('DRIVER_COMMISSION', 102);
 define('VEHICLE_COMMISSION', 103);
+define('ACCOMMOATION', 104);
+define('TRIP_SERVICE', 105);
 
 //tax groups
 define('TAX_GROUP_IN', 1);

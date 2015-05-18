@@ -371,7 +371,7 @@ $(document).ready(function(){
 		
 		var table=$(this).attr('itr-table');
 		var row_id=$(this).attr('row-id');
-			if(table=='trip_voucher_vehicles'){
+			/*if(table=='trip_voucher_vehicles'){
 				
 				var href = $('a[href="#tab_1"]');
 				$(href).trigger('click');
@@ -383,14 +383,18 @@ $(document).ready(function(){
 				
 				var href = $('a[href="#tab_3"]');
 				$(href).trigger('click');
-			}
+			}*/
 		$.post(base_url+"/voucher/getVoucherTabValues",
 		 { 
 			row_id:row_id,
 			table:table
-		 },function(data){
+		 },function(data){ 
 			if(data!=false){ 
 				data=jQuery.parseJSON(data);
+			if(table=='trip_voucher_vehicles'){
+				
+				var href = $('a[href="#tab_1"]');
+				$(href).trigger('click');
 				$(".voucher-vehicle-tab #voucher_vehicle_row_id").val(row_id);
 				$(".voucher-vehicle-tab #voucher_vehicle_id").val(data.id);
 				$(".voucher-vehicle-tab #vehicle_model_id option[value='"+data.vehicle_model_id+"']").attr('selected', true);
@@ -419,6 +423,30 @@ $(document).ready(function(){
 				$(".voucher-vehicle-tab #vehicle_tax_group_id option[value='"+data.tax_group_id+"']").attr('selected', true);
 				setTimeout(function(){ $('.voucher-vehicle-tab #vehicle_tax_group_id').trigger('change'); }, 1000);
 				$(".voucher-vehicle-tab #add-voucher-vehicle").val('Update');
+			}else if(table=='trip_voucher_accommodation'){
+				
+				var href = $('a[href="#tab_2"]');
+				$(href).trigger('click');
+				
+				$(".voucher-accomodation-tab #voucher_accommodation_row_id").val(row_id);
+				$(".voucher-accomodation-tab #voucher_accommodation_id").val(data.id);
+				
+				$(".voucher-accomodation-tab #acmd_from_date").val(data.from_date);
+				$(".voucher-accomodation-tab #acmd_to_date").val(data.to_date);
+				$(".voucher-accomodation-tab #acmd_checkin").val(data.checkin);
+				$(".voucher-accomodation-tab #acmd_checkout").val(data.checkout);
+				$(".voucher-accomodation-tab #acmd_hotel_id option[value='"+data.hotel_id+"']").attr('selected', true);
+				$('.voucher-accomodation-tab #acmd_hotel_id').trigger('change');
+				//setTimeout(function(){ getTripHotelRooms(data.hotel_id,data.to_date); }, 1000);
+				setTimeout(function(){ $(".voucher-accomodation-tab #acmd_room_type_id option[value='"+data.room_type_id+"']").attr('selected', true); }, 1000);
+				setTimeout(function(){ setAccommodationDays();}, 1000);
+				//getRoomTariff(hotel_id,room_type_id,_date);
+			}else if(table=='trip_voucher_services'){
+				
+				var href = $('a[href="#tab_3"]');
+				$(href).trigger('click');
+			}
+				
 			}
 		 
 		 });

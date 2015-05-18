@@ -238,7 +238,7 @@ class Voucher_model extends CI_Model {
 		
 	}
 
-	function getService($servie_id ,$trip_id){
+	function getService($service_id ,$trip_id){
 		$sqlVoucher = "SELECT rate,quantity,uom_id FROM trip_voucher_services WHERE service_id= ".$this->db->escape($service_id);
 		$sqlVoucher .= " AND trip_voucher_id IN 
 			(SELECT id FROM trip_vouchers WHERE trip_id = ".$this->db->escape($trip_id).")";

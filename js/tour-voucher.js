@@ -330,6 +330,10 @@ $(document).ready(function(){
 		setServiceTariff(service_id);
 	});
 
+	$(".service-total").on('keyup',function(){
+		set_service_totals();
+	});
+
 
 
 	$('#add-voucher-service').on('click',function(){
@@ -1074,12 +1078,12 @@ $(document).ready(function(){
 
 
 	//====================service tab functions===============
-	function setServiceTariff(servie_id){
+	function setServiceTariff(service_id){
 		
-		if(Number(servie_id) > 0){
+		if(Number(service_id) > 0){
 
 			$.post(base_url+"/voucher/getService",{trip_id:trip_id,service_id:service_id},
-				function(data){alert(data);
+				function(data){
 				if(data!='false'){
 					data=jQuery.parseJSON(data);
 

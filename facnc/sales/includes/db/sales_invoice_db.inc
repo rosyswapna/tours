@@ -111,7 +111,7 @@ function write_sales_invoice(&$invoice)
 			$invoice_line->item_description, $invoice_line->qty_dispatched,
 			$invoice_line->line_price(), $qty ? $line_tax/$qty : 0, $invoice_line->discount_percent,
 			$invoice_line->standard_cost, $invoice_line->src_id,
-			$trans_no ? $invoice_line->id : 0,$invoice_line->trip_voucher,$invoice_line->unit_taxable_amount);
+			$trans_no ? $invoice_line->id : 0,$invoice_line->trip_voucher,$invoice_line->unit_taxable_amount,$invoice_line->voucher_itinerary_table,$invoice_line->voucher_itinerary_id);
 
 		//reset trip voucher as bill generated
 		if($invoice_line->trip_voucher == 0){

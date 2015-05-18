@@ -768,6 +768,7 @@ if(isset($_GET['NewDelivery']) && $_GET['NewDelivery'] > 0){
 	
 
 	//------------trip item code -> 101---------------------------
+	
 	$_SESSION['Items']->trip_voucher = $voucher['voucher_no'];
 	$amt = 0;
 	
@@ -785,6 +786,7 @@ if(isset($_GET['NewDelivery']) && $_GET['NewDelivery'] > 0){
 
 	if($voucher){
 		$voucher_head = $voucher['voucher'];
+		$_SESSION['Items']->tax_group_from_cnc = 1;
 
 		//set customer
 		$_SESSION['Items']->customer_id = get_cnc_customer_id("C".$voucher_head['customer_id']);

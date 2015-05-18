@@ -190,7 +190,7 @@ function write_sales_delivery(&$delivery,$bo_policy)
 			$delivery_line->item_description, $delivery_line->qty_dispatched,
 			$delivery_line->line_price(), $line_tax,
 			$delivery_line->discount_percent, $delivery_line->standard_cost, $delivery_line->src_id,
-			$trans_no ? $delivery_line->id : 0, $delivery_line->trip_voucher,$delivery_line->unit_taxable_amount);
+			$trans_no ? $delivery_line->id : 0, $delivery_line->trip_voucher,$delivery_line->unit_taxable_amount,$delivery_line->voucher_itinerary_table,$delivery_line->voucher_itinerary_id);
 
 	// Now update sales_order_details for the quantity delivered
 		if ($delivery_line->qty_old != $delivery_line->qty_dispatched)

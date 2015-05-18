@@ -287,8 +287,8 @@ class Voucher extends CI_Controller {
 	function getService()
 	{
 		if((isset($_REQUEST['service_id']))&& (isset($_REQUEST['trip_id']))){
-						
-			$service = $this->voucher_model->getService($service_id,$trip_id);
+					
+			$service = $this->voucher_model->getService($_REQUEST['service_id'],$_REQUEST['trip_id']);
 
 			echo json_encode($service);
 

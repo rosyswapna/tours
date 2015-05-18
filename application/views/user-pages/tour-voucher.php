@@ -673,14 +673,14 @@
 						<div class="form-group div-with-20-percent-width-with-margin-10">
 						<?php
 							echo form_label('Rate','service_rate'); 
-					    		echo form_input(array('name'=>'service_rate','class'=>'form-control','id'=>'service_rate','value'=>@$service_rate));
+					    		echo form_input(array('name'=>'service_rate','class'=>'form-control service-total','id'=>'service_rate','value'=>@$service_rate));
 						?>
 						</div>
 
 						<div class="form-group div-with-20-percent-width-with-margin-10">
 						<?php
 							echo form_label('Quantity','service_qty'); 
-					    		echo form_input(array('name'=>'service_qty','class'=>'form-control','id'=>'service_qty','value'=>@$service_qty));
+					    		echo form_input(array('name'=>'service_qty','class'=>'form-control service-total','id'=>'service_qty','value'=>@$service_qty));
 						?>
 						</div>
 
@@ -697,21 +697,21 @@
 						<div class="form-group div-with-20-percent-width-with-margin-10">
 						<?php
 							echo form_label('Unit Amount','service_unit_amount'); 
-					    		echo form_input(array('name'=>'service_unit_amount','class'=>'form-control','id'=>'service_unit_amount','value'=>@$service_unit_amount));
+					    		echo form_input(array('name'=>'service_unit_amount','class'=>'form-control service-total','id'=>'service_unit_amount','value'=>@$service_unit_amount));
 						?>
 						</div>
 
 						<div class="form-group div-with-20-percent-width-with-margin-10">
 						<?php
 							echo form_label('Advance','service_advance_amount'); 
-					    		echo form_input(array('name'=>'service_advance_amount','class'=>'form-control','id'=>'service_advance_amount','value'=>@$service_advance_amount));
+					    		echo form_input(array('name'=>'service_advance_amount','class'=>'form-control service-total','id'=>'service_advance_amount','value'=>@$service_advance_amount));
 						?>
 						</div>
 
 						<div class="form-group div-with-20-percent-width-with-margin-10">
 						<?php
 							echo form_label('Tax','service_tax_amount'); 
-					    		echo form_input(array('name'=>'service_tax_amount','class'=>'form-control','id'=>'service_tax_amount','value'=>@$service_tax_amount));
+					    		echo form_input(array('name'=>'service_tax_amount','class'=>'form-control service-total','id'=>'service_tax_amount','value'=>@$service_tax_amount));
 						?>
 						</div>
 		

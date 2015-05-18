@@ -13,8 +13,9 @@ include_once($path_to_root . "/sales/includes/cart_class.inc");
 include_once($path_to_root . "/includes/manufacturing.inc");
 
 //--------------------------------------------------------------------------------
-function add_to_order(&$order, $new_item, $new_item_qty, $price, $discount, $description='',$total=0,$trip_voucher=0)
+function add_to_order(&$order, $new_item, $new_item_qty, $price, $discount, $description='',$total=0,$trip_voucher=0,$voucher_itinerary=array())
 {
+	
 	// calculate item price to sum of kit element prices factor for 
 	// value distribution over all exploded kit items
 	 $std_price = get_kit_price($new_item, $order->customer_currency, 
@@ -63,7 +64,7 @@ function add_to_order(&$order, $new_item, $new_item_qty, $price, $discount, $des
 				}
 			}
 			$order->add_to_cart (count($order->line_items),	$item['stock_id'], 
-				$new_item_qty*$item['quantity'], $item_price, $discount, 0,0, $description,0,0,0,$trip_voucher);
+				$new_item_qty*$item['quantity'], $item_price, $discount, 0,0, $description,0,0,0,$trip_voucher,$voucher_itinerary);
 		 }
 	}
 
@@ -261,6 +262,9 @@ function display_order_summary($title, &$order, $editable_items=false)
 	}
     div_end();
 }*/
+
+/*
+
 function display_trip_data($cnc_data, &$order)
 {
    global $SysPrefs;
@@ -315,6 +319,88 @@ function display_trip_data($cnc_data, &$order)
 		hidden('freight_cost',price_format(get_post('freight_cost',0)));
 
 	
+
+		$display_sub_total = price_format($total + input_num('freight_cost'));
+		label_row(_("Sub-total"), $display_sub_total, "colspan=$colspan align=right","align=right");
+		$taxes = $order->get_taxes(input_num('freight_cost'));
+
+		//print_r($taxes);exit;
+		
+		$tax_total = display_edit_tax_items($taxes, $colspan, $order->tax_included, 2);
+
+		$display_total = price_format(($total + input_num('freight_cost') + $tax_total));
+
+		start_row();
+		label_cells(_("Amount Total"), $display_total, "colspan=$colspan align=right","align=right");
+	
+		end_row();
+
+	end_table();
+
+    div_end();
+}
+*/
+
+//modified for tours
+function display_trip_data(&$order)
+{
+   global $SysPrefs;
+
+	
+    display_heading("Trip Details");
+    div_start('items_table');
+	start_table(TABLESTYLE, "colspan=6 width=100%");
+		$th = array(_("Item"),_("No Of Days"),_("Particulars"),_("Amount"));
+
+		table_header($th);
+
+		$total = 0;
+		$k = 0;  //row colour counter
+		//echo "<pre>";print_r($order->line_items);echo "</pre>";exit;
+
+
+		//----------------------------------start trip data----------------------------------------
+		foreach($order->line_items as $line){
+
+			$line_total = 0;
+			if($line->voucher_itinerary){
+				$line_total = $line->voucher_itinerary['unit_amount']-$line->voucher_itinerary['advance_amount'];
+			}
+			$total +=$line_total;
+			
+			alt_table_row_color($rowcounter);
+				label_cell($line->item_description,'width=15%');
+				label_cell(@$line->voucher_itinerary['no_of_days'],'width=10%');
+				label_cell($line->particulars);
+				label_cell(price_format($line_total),'width=10%');
+			end_row();
+
+			hidden('stock_id',$order->stock_id);
+			if(isset($line->voucher_itinerary['vehicle_id'])){
+				$qty = $line->voucher_itinerary['end_km']-$line->voucher_itinerary['start_km'];
+			}elseif(isset($line->voucher_itinerary['hotel_id'])){
+				$qty = $line->voucher_itinerary['no_of_days'];
+			}elseif(isset($line->voucher_itinerary['service_id'])){
+				$qty = $line->voucher_itinerary['quantity'];
+			}else{
+				$qty = 1;
+			}
+
+			hidden('qty',$qty);
+			hidden('price',price_format(0));
+			hidden('Disc',percent_format($order->default_discount * 100));
+			hidden('line_total',$line_total);
+			hidden('LineNo', 1);
+			hidden('Comments', $line->voucher_itinerary['narration'], 31, 5);
+			hidden('trip_voucher',$line->trip_voucher);
+		}
+
+		//----------------------------------end trip data----------------------------------------
+
+
+		$colspan = 3;
+	
+		hidden('freight_cost',price_format(get_post('freight_cost',0)));
 
 		$display_sub_total = price_format($total + input_num('freight_cost'));
 		label_row(_("Sub-total"), $display_sub_total, "colspan=$colspan align=right","align=right");

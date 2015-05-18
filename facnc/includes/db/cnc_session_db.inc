@@ -80,6 +80,7 @@ function get_cnc_user($userid)
 }
 
 //get trip voucher details
+
 function get_cnc_voucher($id = 0)
 {
 	$sql = "SELECT 
@@ -123,6 +124,60 @@ function get_cnc_voucher($id = 0)
 	$result = db_query($sql, "could not get voucher");
 
 	return db_fetch_assoc($result);
+}
+
+function get_voucher_itinerary($id = 0)
+{
+	$voucherItr = array();
+
+	$sql = "SELECT trip.customer_id,voucher.id as voucher_no,
+		voucher.voucher_no as voucher_str,cust.name AS customer_name
+		FROM trip_vouchers voucher,trips trip
+		LEFT JOIN customers cust ON cust.id = trip.customer_id
+		WHERE voucher.id= ".db_escape($id)." AND voucher.trip_id = trip.id";
+	$result = db_query($sql,'Could not get Voucher');
+	//echo $sql ;exit;
+	if(db_num_rows($result) == 1){
+		$voucherItr['voucher'] = db_fetch_assoc($result);
+		//voucher vehicles
+		$sql1 = "SELECT * FROM trip_voucher_vehicles WHERE trip_voucher_id = ".db_escape($id);
+		$result1 = db_query($sql1,'Could not get voucher vehicles');
+		if(db_num_rows($result1) > 0){
+			while($vehicle = db_fetch_assoc($result1)){
+				if($vehicle['trip_expense'] != '')
+					$vehicle['trip_expense'] = unserialize($vehicle['trip_expense']);
+				$voucherItr['travel'][] = $vehicle;
+			}
+		}
+
+		//voucher hotels
+		$sql2 = "SELECT * FROM trip_voucher_accommodation WHERE trip_voucher_id = ".db_escape($id);
+		$result2 = db_query($sql2,'Could not get voucher hotels');
+		if(db_num_rows($result2) > 0){
+			while($accommodation = db_fetch_assoc($result2)){
+				if($accommodation['room_attributes'] != '')
+					$accommodation['room_attributes'] = unserialize($accommodation['room_attributes']);
+				if($accommodation['meals_package'] != '')
+					$accommodation['meals_package'] = unserialize($accommodation['meals_package']);
+				$voucherItr['accommodation'][] = $accommodation;
+			}
+		}
+
+		//voucher trip services
+		$sql3 = "SELECT * FROM trip_voucher_services WHERE trip_voucher_id = ".db_escape($id);
+		$result3 = db_query($sql3,'Could not get voucher services');
+		if(db_num_rows($result3) > 0){
+			while($service = db_fetch_assoc($result3)){
+				$voucherItr['services'][] = $service;
+			}
+		}
+		//echo "<pre>";print_r($voucherItr);echo "</pre>";exit;
+		return $voucherItr;
+
+	}else{
+		return false;
+	}
+	
 }
 
 function get_cnc_customer_id($ref = '')

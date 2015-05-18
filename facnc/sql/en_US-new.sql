@@ -801,7 +801,10 @@ CREATE TABLE IF NOT EXISTS `0_item_codes` (
 INSERT INTO `0_item_codes` (`id`, `item_code`, `stock_id`, `description`, `category_id`, `quantity`, `is_foreign`, `inactive`) VALUES
 (2, '101', '101', 'Trip', 1, 1, 0, 0),
 (3, '102', '102', 'Driver Commission', 1, 1, 0, 0),
-(4, '103', '103', 'Vehicle Commission', 1, 1, 0, 0);
+(4, '103', '103', 'Vehicle Commission', 1, 1, 0, 0),
+(5, '104', '104', 'Accommodation', 1, 1, 0, 0),
+(6, '105', '105', 'Trip Service', 1, 1, 0, 0);
+
 
 -- --------------------------------------------------------
 
@@ -1449,7 +1452,9 @@ CREATE TABLE IF NOT EXISTS `0_stock_master` (
 INSERT INTO `0_stock_master` (`stock_id`, `category_id`, `tax_type_id`, `description`, `long_description`, `units`, `mb_flag`, `sales_account`, `cogs_account`, `inventory_account`, `adjustment_account`, `assembly_account`, `dimension_id`, `dimension2_id`, `actual_cost`, `last_cost`, `material_cost`, `labour_cost`, `overhead_cost`, `inactive`, `no_sale`, `editable`) VALUES
 ('101', 1, 1, 'Trip', 'Trip data', 'km', 'D', '4010', '5010', '1510', '5040', '1530', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
 ('102', 1, 2, 'Driver Commission', 'Driver commission for a trip data', 'km', 'D', '4010', '5010', '1510', '5040', '1530', 0, 0, 0, 0, 0, 0, 0, 0, 1, 0),
-('103', 1, 2, 'Vehicle Commission', 'Vehicle Commission for a trip data', 'km', 'D', '4010', '5010', '1510', '5040', '1530', 0, 0, 0, 0, 0, 0, 0, 0, 1, 0);
+('103', 1, 2, 'Vehicle Commission', 'Vehicle Commission for a trip data', 'km', 'D', '4010', '5010', '1510', '5040', '1530', 0, 0, 0, 0, 0, 0, 0, 0, 1, 0),
+('104', 1, 1, 'Accommodation', 'Trip accommodation', 'days', 'D', '4010', '5010', '1510', '5040', '1530', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+('105', 1, 1, 'Trip Service', 'trip service', 'hr', 'D', '4010', '5010', '1510', '5040', '1530', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
 
 -- --------------------------------------------------------
 

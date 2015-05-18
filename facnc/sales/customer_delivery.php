@@ -104,11 +104,10 @@ if (isset($_GET['OrderNumber']) && $_GET['OrderNumber'] > 0) {
 
 } elseif (isset($_GET['ModifyDelivery']) && $_GET['ModifyDelivery'] > 0) {
 
-	$cnc_voucher = get_cnc_voucher($_GET['ModifyDelivery']);
-	$dn = check_cnc_delivered($_GET['ModifyDelivery']);
+	$voucher = get_voucher_itinerary($_GET['ModifyDelivery']);
+	$voucher_head = $voucher['voucher'];
+	$dn = $voucher_head['delivery_no'];
 
-	
-	
 	//$_SESSION['Items'] = new Cart(ST_CUSTDELIVERY, $_GET['ModifyDelivery']);
 	$_SESSION['Items'] = new Cart(ST_CUSTDELIVERY, $dn);
 	if(isset($_GET['TaxGroup'])){
@@ -118,14 +117,7 @@ if (isset($_GET['OrderNumber']) && $_GET['OrderNumber'] > 0) {
 
 	$_SESSION['Items']->trip_voucher = $_GET['ModifyDelivery'];
 	
-	
-	
-	
-
-	//echo "<pre>";
-	//print_r($_SESSION['Items']);
-	//echo "</pre>";
-	//exit;
+	//echo "<pre>";print_r($_SESSION['Items']);echo "</pre>";exit;
 
 	if ($_SESSION['Items']->count_items() == 0) {
 		hyperlink_params($path_to_root . "/sales/inquiry/customer_inquiry.php",
@@ -504,7 +496,7 @@ display_heading(_("Trip Details"));
 div_start('Items');
 
 	start_table(TABLESTYLE, "width=100%");
-	$th = array(_("Vehicle"),_("No Of Days"),_("Particulars"),_("Amount"));
+	$th = array(_("Item"),_("No Of Days"),_("Particulars"),_("Amount"));
 	table_header($th);
 	$k = 0;
 	$has_marked = false;
@@ -512,7 +504,8 @@ div_start('Items');
 	
 
 	foreach ($_SESSION['Items']->line_items as $line=>$ln_itm) {
-		$line_total = $ln_itm->cnc_line_amount;
+		//echo "<pre>";print_r($ln_itm);echo "</pre>";exit;
+		$line_total = $ln_itm->price;
 		$total += $line_total;
 		if ($ln_itm->quantity==$ln_itm->qty_done) {
 			continue; //this line is fully delivered
@@ -523,17 +516,11 @@ div_start('Items');
 		
 
 		alt_table_row_color($k, $row_classes);
-		
-		echo "<td width='15%'>";
-				echo $ln_itm->vehicle_model;
-				br();
-				echo $ln_itm->vehicle_no;
-				
-		echo "</td>";
-		label_cell(@$cnc_voucher['no_of_days'],'width=10%');
-		label_cell($ln_itm->particulars);
+			label_cell($ln_itm->item_description);
+			label_cell(@$ln_itm->voucher_itinerary['no_of_days']);
+			label_cell($ln_itm->particulars);
 
-		amount_cell($line_total);
+			amount_cell($line_total);
 		end_row();
 	}
 

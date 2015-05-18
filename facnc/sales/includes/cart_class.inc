@@ -212,6 +212,7 @@ class cart
 		if ($trans_no[0]) { // read old transaction
 			if ($type == ST_SALESORDER || $type == ST_SALESQUOTE) { // sales order || sales quotation
 			} else {	// other type of sales transaction
+					
 					read_sales_trans($type, $trans_no, $this); 
 					if ($this->order_no) { // free hand credit notes have no order_no
 						$sodata = get_sales_order_header($this->order_no, ST_SALESORDER);
@@ -655,6 +656,8 @@ class line_details
 	var $payment_no;
 
 	var $voucher_itinerary = array();
+	var $voucher_itinerary_table;
+	var $voucher_itinerary_id;
 	
 
 
@@ -686,6 +689,8 @@ class line_details
 		if($voucher_item){
 			$this->voucher_itinerary = $voucher_item;
 			$this->particulars = $voucher_item['narration'];
+			$this->voucher_itinerary_table = $voucher_item['table'];
+			$this->voucher_itinerary_id = $voucher_item['id'];
 		}
 
 		$this->id = $id;

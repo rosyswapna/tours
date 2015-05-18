@@ -130,7 +130,7 @@ function get_voucher_itinerary($id = 0)
 {
 	$voucherItr = array();
 
-	$sql = "SELECT trip.customer_id,voucher.id as voucher_no,
+	$sql = "SELECT trip.customer_id,voucher.id as voucher_no,voucher.delivery_no,voucher.invoice_no,
 		voucher.voucher_no as voucher_str,cust.name AS customer_name
 		FROM trip_vouchers voucher,trips trip
 		LEFT JOIN customers cust ON cust.id = trip.customer_id
@@ -146,6 +146,8 @@ function get_voucher_itinerary($id = 0)
 			while($vehicle = db_fetch_assoc($result1)){
 				if($vehicle['trip_expense'] != '')
 					$vehicle['trip_expense'] = unserialize($vehicle['trip_expense']);
+
+				$vehicle['table'] = 'trip_voucher_vehicles';
 				$voucherItr['travel'][] = $vehicle;
 			}
 		}
@@ -159,6 +161,7 @@ function get_voucher_itinerary($id = 0)
 					$accommodation['room_attributes'] = unserialize($accommodation['room_attributes']);
 				if($accommodation['meals_package'] != '')
 					$accommodation['meals_package'] = unserialize($accommodation['meals_package']);
+				$accommodation['table'] = 'trip_voucher_accommodation';
 				$voucherItr['accommodation'][] = $accommodation;
 			}
 		}
@@ -168,6 +171,7 @@ function get_voucher_itinerary($id = 0)
 		$result3 = db_query($sql3,'Could not get voucher services');
 		if(db_num_rows($result3) > 0){
 			while($service = db_fetch_assoc($result3)){
+				$service['table'] = 'trip_voucher_services';
 				$voucherItr['services'][] = $service;
 			}
 		}
@@ -178,6 +182,15 @@ function get_voucher_itinerary($id = 0)
 		return false;
 	}
 	
+}
+
+//get voucher itinerary table row with table and id
+function get_voucher_itinerary_detail($table,$id){
+
+	$sql = "SELECT * FROM ".$table." WHERE id = ".db_escape($id);
+	$result = db_query($sql, "could not get voucher itinerary");
+	
+	return $row = db_fetch_assoc($result);
 }
 
 function get_cnc_customer_id($ref = '')

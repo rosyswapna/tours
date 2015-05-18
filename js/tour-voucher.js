@@ -375,19 +375,7 @@ $(document).ready(function(){
 		
 		var table=$(this).attr('itr-table');
 		var row_id=$(this).attr('row-id');
-			/*if(table=='trip_voucher_vehicles'){
-				
-				var href = $('a[href="#tab_1"]');
-				$(href).trigger('click');
-			}else if(table=='trip_voucher_accommodation'){
-				
-				var href = $('a[href="#tab_2"]');
-				$(href).trigger('click');
-			}else if(table=='trip_voucher_services'){
-				
-				var href = $('a[href="#tab_3"]');
-				$(href).trigger('click');
-			}*/
+			
 		$.post(base_url+"/voucher/getVoucherTabValues",
 		 { 
 			row_id:row_id,
@@ -439,12 +427,26 @@ $(document).ready(function(){
 				$(".voucher-accomodation-tab #acmd_to_date").val(data.to_date);
 				$(".voucher-accomodation-tab #acmd_checkin").val(data.checkin);
 				$(".voucher-accomodation-tab #acmd_checkout").val(data.checkout);
+				
+				
 				$(".voucher-accomodation-tab #acmd_hotel_id option[value='"+data.hotel_id+"']").attr('selected', true);
-				$('.voucher-accomodation-tab #acmd_hotel_id').trigger('change');
-				//setTimeout(function(){ getTripHotelRooms(data.hotel_id,data.to_date); }, 1000);
-				setTimeout(function(){ $(".voucher-accomodation-tab #acmd_room_type_id option[value='"+data.room_type_id+"']").attr('selected', true); }, 1000);
-				setTimeout(function(){ setAccommodationDays();}, 1000);
-				//getRoomTariff(hotel_id,room_type_id,_date);
+				getTripHotelRooms(data.hotel_id,data.from_date); 
+				setTimeout(function(){ $(".voucher-accomodation-tab #acmd_room_type_id option[value='"+data.room_type_id+"']").attr('selected', true);}, 1000);
+				$(".voucher-accomodation-tab #acmd_days").val(data.no_of_days);
+				$(".voucher-accomodation-tab #room_tariff_amt").val(data.room_tariff_amount);
+				var attributes=[];
+				attributes=data.room_attributes;
+				var meals_package=[];
+				meals_package=data.meals_package;
+				set_attr_meals_rows(attributes,meals_package);
+				$(".voucher-accomodation-tab #acmd_unit_amount").val(data.unit_amount);
+				$(".voucher-accomodation-tab #acmd_advance_amount").val(data.advance_amount);
+				$(".voucher-accomodation-tab #acmd_tax_amount").val(data.tax_amount);
+				var total_amount=(Number(data.unit_amount)+Number(data.tax_amount))-(Number(data.advance_amount));
+				$(".voucher-accomodation-tab #acmd_total_amount").val(total_amount);
+				$(".voucher-accomodation-tab #add-voucher-accommodation").val('Update');
+				
+				
 			}else if(table=='trip_voucher_services'){
 				
 				var href = $('a[href="#tab_3"]');

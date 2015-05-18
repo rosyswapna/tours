@@ -230,7 +230,7 @@ class Voucher_model extends CI_Model {
 				$voucherData = $voucherCart->contents();
 				$this->insertVoucherData($voucherData,$trip_voucher_id);
 			}
-			return true;
+			return $trip_voucher_id;
 
 		}else{
 			return false;

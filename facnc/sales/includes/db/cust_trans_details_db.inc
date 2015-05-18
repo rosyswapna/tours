@@ -83,7 +83,7 @@ function write_customer_trans_detail_item($debtor_trans_type, $debtor_trans_no, 
 {
 
 	
-	if ($line_id!=0)
+	if ($line_id!=0){
 		$sql = "UPDATE ".TB_PREF."debtor_trans_details SET
 			stock_id=".db_escape($stock_id).",
 			description=".db_escape($description).",
@@ -97,7 +97,8 @@ function write_customer_trans_detail_item($debtor_trans_type, $debtor_trans_no, 
 			voucher_itinerary_id=$voucher_itinerary_id,
 			src_id=".db_escape($src_id)." WHERE
 			id=".db_escape($line_id);
-	else
+			db_query($sql, "The debtor transaction detail could not be written");
+	}else{
 			$sql = "INSERT INTO ".TB_PREF."debtor_trans_details (debtor_trans_no,
 				debtor_trans_type, stock_id, description, quantity, unit_price,
 				unit_tax, discount_percent, standard_cost, src_id,trip_voucher,unit_taxable_amount,voucher_itinerary_table,voucher_itinerary_id)
@@ -106,7 +107,19 @@ function write_customer_trans_detail_item($debtor_trans_type, $debtor_trans_no, 
 				$quantity, $unit_price, $unit_tax, 
 				$discount_percent, $std_cost,".db_escape($src_id).",".db_escape($trip_voucher).",".db_escape($unit_taxable_amount).",".db_escape($voucher_itinerary_table).",".db_escape($voucher_itinerary_id).")";
 
-	db_query($sql, "The debtor transaction detail could not be written");
+			db_query($sql, "The debtor transaction detail could not be written");
+
+			$detail_id = db_insert_id();
+			if($detail_id){
+				$sql1 = "UPDATE ".$voucher_itinerary_table." SET
+					trans_detail_id = ".db_escape($detail_id)." WHERE
+					id = ".db_escape($voucher_itinerary_id);
+				db_query($sql1, "The voucher itinerary detail could not be updated");
+			}		
+			
+	}
+
+	
 }
 
 ?>

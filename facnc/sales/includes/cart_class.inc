@@ -670,8 +670,8 @@ class line_details
 		$voucher = get_voucher_itinerary($trip_voucher);		
 
 		if($voucher){
-			$this->trip_id 		= $voucher['trip_id'];
-			$this->voucher_no	= $voucher['voucher_str'];
+			$this->trip_id 		= $voucher['voucher']['trip_id'];
+			$this->voucher_no	= $voucher['voucher']['voucher_str'];
 			
 			//$this->vehicle_model	= $voucher['vehicle_model'];
 			//$this->vehicle_no	= $voucher['vehicle_no'];

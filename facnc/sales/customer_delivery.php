@@ -24,6 +24,7 @@ include_once($path_to_root . "/sales/includes/sales_db.inc");
 include_once($path_to_root . "/sales/includes/sales_ui.inc");
 include_once($path_to_root . "/reporting/includes/reporting.inc");
 include_once($path_to_root . "/taxes/tax_calc.inc");
+include_once($path_to_root . "/sales/includes/ui/sales_order_ui.inc");
 
 $js = "";
 if ($use_popup_windows) {
@@ -108,6 +109,8 @@ if (isset($_GET['OrderNumber']) && $_GET['OrderNumber'] > 0) {
 	$voucher_head = $voucher['voucher'];
 	$dn = $voucher_head['delivery_no'];
 
+	//echo "<pre>";print_r($voucher);echo "</pre>";exit;
+
 	//$_SESSION['Items'] = new Cart(ST_CUSTDELIVERY, $_GET['ModifyDelivery']);
 	$_SESSION['Items'] = new Cart(ST_CUSTDELIVERY, $dn);
 	if(isset($_GET['TaxGroup'])){
@@ -116,8 +119,49 @@ if (isset($_GET['OrderNumber']) && $_GET['OrderNumber'] > 0) {
 	}
 
 	$_SESSION['Items']->trip_voucher = $_GET['ModifyDelivery'];
+
+	//include new itineraries from voucher
+	if(isset($voucher['travel'])){
+
+		foreach($voucher['travel'] as $travel){
+			if($travel['trans_detail_id'] == 0){
+				$amt = $travel['unit_amount'] - $travel['advance_amount'];
+
+				//add_to_order($_SESSION['Items'],TRIP, 1,
+				//$amt, 0 / 100,'',0,$voucher_head['voucher_no'],$travel);
+
+				$_SESSION['Items']->add_to_cart(count($_SESSION['Items']->line_items), TRIP, 1, $amt, 0 / 100, 0, 0,'', $id=0, $dn,$src_id=0,$voucher_head['voucher_no'],$travel);
+			}
+		}
 	
-	//echo "<pre>";print_r($_SESSION['Items']);echo "</pre>";exit;
+	}
+
+	if(isset($voucher['accommodation'])){
+
+		foreach($voucher['accommodation'] as $acmd){
+			if($acmd['trans_detail_id'] == 0){
+				$amt = $acmd['unit_amount'] - $acmd['advance_amount'];
+				//add_to_order($_SESSION['Items'],ACCOMMOATION, 1,
+				//$amt, 0 / 100,'',0,$voucher_head['voucher_no'],$acmd);
+				$_SESSION['Items']->add_to_cart(count($_SESSION['Items']->line_items), ACCOMMOATION, 1, $amt, 0 / 100, 0, 0,'', $id=0, $dn,$src_id=0,$voucher_head['voucher_no'],$acmd);
+			}
+		}
+	}
+
+	if(isset($voucher['services'])){
+		foreach($voucher['services'] as $service) {
+			if($service['trans_detail_id'] == 0){
+				$amt = $service['unit_amount'] - $service['advance_amount'];
+				//add_to_order($_SESSION['Items'],TRIP_SERVICE, 1,
+				//$amt, 0 / 100,'',0,$voucher_head['voucher_no'],$service);
+				$_SESSION['Items']->add_to_cart(count($_SESSION['Items']->line_items), ACCOMMOATION, 1, $amt, 0 / 100, 0, 0,'', $id=0, $dn,$src_id=0,$voucher_head['voucher_no'],$service);
+			}	
+		}
+		
+	}
+	//-----------------------------------
+	
+	
 
 	if ($_SESSION['Items']->count_items() == 0) {
 		hyperlink_params($path_to_root . "/sales/inquiry/customer_inquiry.php",
@@ -681,6 +725,7 @@ submit_center_last('process_delivery', _("Process Dispatch"),
 */
 submit_center_first('Update', _("Update"),
 	_('Refresh document page'));
+
 
 end_form();
 

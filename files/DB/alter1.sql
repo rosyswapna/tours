@@ -19,3 +19,8 @@ INSERT INTO `1_item_codes` (`id`, `item_code`, `stock_id`, `description`, `categ
 
 ALTER TABLE `1_debtor_trans_details`  ADD `voucher_itinerary_table` VARCHAR(50) NOT NULL AFTER `trip_voucher`,  ADD `voucher_itinerary_id` INT(11) NOT NULL AFTER `voucher_itinerary_table`,  ADD INDEX (`voucher_itinerary_id`);
 
+
+ALTER TABLE `trip_voucher_accommodation`  ADD `trans_detail_id` INT(11) NOT NULL AFTER `narration`,  ADD INDEX (`trans_detail_id`);
+ALTER TABLE `trip_voucher_vehicles`  ADD `trans_detail_id` INT(11) NOT NULL AFTER `narration`,  ADD INDEX (`trans_detail_id`);
+ALTER TABLE `trip_voucher_services`  ADD `trans_detail_id` INT(11) NOT NULL AFTER `narration`,  ADD INDEX (`trans_detail_id`);
+

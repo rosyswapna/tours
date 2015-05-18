@@ -37,34 +37,107 @@ function update_delivery_with_cnc_voucher($delivery)
 	//echo "<pre>";print_r($taxes);echo "</pre>";exit;
 
 
-	foreach($delivery->line_items as $line_items){
+	foreach($delivery->line_items as $delivery_line){
+
+		if($delivery_line->id > 0){
+			$line_tax = get_full_price_for_item($delivery_line->stock_id, $delivery_line->price,
+			0, $delivery->tax_included, $delivery->tax_group_array) - $delivery_line->unit_taxable_amount;
+
+			$sql= "UPDATE ".TB_PREF. "debtor_trans_details SET 
+				unit_price = ".db_escape($delivery_line->price).",
+				unit_taxable_amount = ".db_escape($delivery_line->unit_taxable_amount).",
+				unit_tax = ".db_escape($line_tax)."
+				"
+				."WHERE id =".db_escape($delivery_line->id);
+
+			$total += $delivery_line->price;
 		
+			$total_taxable_amount +=$delivery_line->unit_taxable_amount;
 
-		$line_tax = get_full_price_for_item($line_items->stock_id, $line_items->price,
-			0, $delivery->tax_included, $delivery->tax_group_array) - $line_items->unit_taxable_amount;
-
-		$sql= "UPDATE ".TB_PREF. "debtor_trans_details SET 
-			unit_price = ".db_escape($line_items->price).",
-			unit_taxable_amount = ".db_escape($line_items->unit_taxable_amount).",
-			unit_tax = ".db_escape($line_tax)."
-			"
-			."WHERE id =".db_escape($line_items->id);
-
-		$total += $line_items->price;
-		
-		$total_taxable_amount +=$line_items->unit_taxable_amount;
-
-		db_query($sql, 'failed to update line details');
+			db_query($sql, 'failed to update line details');
 
 
-		$sql= "UPDATE ".TB_PREF. "sales_order_details SET 
-			unit_price = ".db_escape($line_items->price)." WHERE order_no =".db_escape($delivery->order_no);
-
-		
-		db_query($sql, 'failed to update line details');
+			$sql= "UPDATE ".TB_PREF. "sales_order_details SET 
+				unit_price = ".db_escape($delivery_line->price)." WHERE order_no =".db_escape($delivery_line->order_no);
 
 		
-		$comments .= $line_items->particulars;
+			db_query($sql, 'failed to update line details');
+
+		
+			$comments .= $delivery_line->voucher_itinerary['narration'];
+		}else{
+
+			$line_price = $delivery_line->line_price();
+			$line_taxfree_price = get_tax_free_price_for_item($delivery_line->stock_id,
+				$delivery_line->price, 0, $delivery->tax_included,
+				$delivery->tax_group_array);
+
+			//$line_tax = get_full_price_for_item($delivery_line->stock_id, $delivery_line->price,
+				//0, $delivery->tax_included, $delivery->tax_group_array) - $line_taxfree_price;
+
+			$line_tax = get_full_price_for_item($delivery_line->stock_id, $delivery_line->price,
+				0, $delivery->tax_included, $delivery->tax_group_array) - $delivery_line->unit_taxable_amount;
+		
+
+
+
+			//if ($trans_no != 0) // Inserted 2008-09-25 Joe Hunt. This condition is removed after experience by Chaitanya
+				$delivery_line->standard_cost = get_standard_cost($delivery_line->stock_id);
+
+			/* add delivery details for all lines */
+			write_customer_trans_detail_item(ST_CUSTDELIVERY, $trans_no, $delivery_line->stock_id,
+				$delivery_line->item_description, $delivery_line->qty_dispatched,
+				$delivery_line->line_price(), $line_tax,
+				$delivery_line->discount_percent, $delivery_line->standard_cost, $delivery_line->src_id,
+				$trans_no ? $delivery_line->id : 0, $delivery_line->trip_voucher,$delivery_line->unit_taxable_amount,$delivery_line->voucher_itinerary_table,$delivery_line->voucher_itinerary_id);
+
+		// Now update sales_order_details for the quantity delivered
+			if ($delivery_line->qty_old != $delivery_line->qty_dispatched)
+				update_parent_line(ST_CUSTDELIVERY, $delivery_line->src_id,
+					$delivery_line->qty_dispatched-$delivery_line->qty_old);
+
+			if ($delivery_line->qty_dispatched != 0) {
+				add_stock_move_customer(ST_CUSTDELIVERY, $delivery_line->stock_id, $trans_no,
+					$delivery->Location, $delivery->document_date, $delivery->reference,
+					-$delivery_line->qty_dispatched, $delivery_line->standard_cost,1,
+					$line_price, $delivery_line->discount_percent);
+
+
+				$stock_gl_code = get_stock_gl_code($delivery_line->stock_id);
+
+				/* insert gl_trans to credit stock and debit cost of sales at standard cost*/
+				if (is_inventory_item($delivery_line->stock_id) && $delivery_line->standard_cost != 0) {
+
+					/*first the cost of sales entry*/
+					// 2008-08-01. If there is a Customer Dimension, then override with this,
+					// else take the Item Dimension (if any)
+					$dim = ($delivery->dimension_id != $customer['dimension_id'] ? $delivery->dimension_id : 
+						($customer['dimension_id'] != 0 ? $customer["dimension_id"] : $stock_gl_code["dimension_id"]));
+					$dim2 = ($delivery->dimension2_id != $customer['dimension2_id'] ? $delivery->dimension2_id : 
+						($customer['dimension2_id'] != 0 ? $customer["dimension2_id"] : $stock_gl_code["dimension2_id"]));
+
+					add_gl_trans_std_cost(ST_CUSTDELIVERY, $trans_no,
+						$delivery->document_date, $stock_gl_code["cogs_account"], $dim, $dim2, "",
+						$delivery_line->standard_cost * $delivery_line->qty_dispatched,
+						PT_CUSTOMER, $delivery->customer_id,
+						"The cost of sales GL posting could not be inserted");
+
+					/*now the stock entry*/
+
+					add_gl_trans_std_cost(ST_CUSTDELIVERY, $trans_no, $delivery->document_date,
+						$stock_gl_code["inventory_account"], 0, 0, "",
+						(-$delivery_line->standard_cost * $delivery_line->qty_dispatched),
+						PT_CUSTOMER, $delivery->customer_id,
+						"The stock side of the cost of sales GL posting could not be inserted");
+
+				} /* end of if GL and stock integrated and standard cost !=0 */
+
+			} /*quantity dispatched is more than 0 */
+		
+		}
+		
+
+		
 
 	}
 

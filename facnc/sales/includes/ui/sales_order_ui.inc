@@ -58,8 +58,8 @@ function add_to_order(&$order, $new_item, $new_item_qty, $price, $discount, $des
 			{
 				if (strcasecmp($order_item->stock_id, $item['stock_id']) == 0)
 				{
-					display_warning(_("For Part :").$item['stock_id']. " " 
-						. _("This item is already on this document. You have been warned."));
+					//display_warning(_("For Part :").$item['stock_id']. " " 
+					//	. _("This item is already on this document. You have been warned."));
 					break;
 				}
 			}

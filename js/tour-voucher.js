@@ -222,6 +222,11 @@ $(document).ready(function(){
 	$(document).on('keyup', ".acmd-total",function () {
 		setAcmdTotalAmount();
 	});
+	
+	$(".voucher-tabs #room_tariff_amt").on( "blur",function(){
+		setAcmdUnitAmount();
+		
+	});
 
 	$('.acmd-total').live('keyup',function(){
 		setAcmdUnitAmount();
@@ -238,7 +243,7 @@ $(document).ready(function(){
 		var accommodation_data_id 	= $('.voucher-tabs #voucher_accommodation_id').val();
 		var accommodation_row_id	= $('.voucher-tabs #voucher_accommodation_row_id').val();
 		var from_date 			= $('.voucher-tabs #acmd_from_date').val();
-		var to_date 			= $('.voucher-tabs #acmc_to_date').val();
+		var to_date 			= $('.voucher-tabs #acmd_to_date').val();
 		var checkin 			= $('.voucher-tabs #acmd_checkin').val();
 		var checkout 			= $('.voucher-tabs #acmd_checkout').val();
 		var hotel_id 			= $('.voucher-tabs #acmd_hotel_id').val();
@@ -309,7 +314,7 @@ $(document).ready(function(){
 		
 		var dataArr = {id:accommodation_data_id,from_date:from_date,to_date:to_date,
 				checkin:checkin,checkout:checkout,hotel_id:hotel_id,room_type_id:room_type_id,
-				no_of_days:no_of_days,unit_amount:unit_amount,advance_amount:advance_amount,
+				no_of_days:no_of_days,room_tariff_amount:room_tariff_amount,unit_amount:unit_amount,advance_amount:advance_amount,
 				tax_amount:tax_amount,narration:narration,room_attributes:room_attributes,
 				meals_package:meals_package
 				};
@@ -338,13 +343,15 @@ $(document).ready(function(){
 
 	$('#add-voucher-service').on('click',function(){
 		
+		var service_data_id 	= $('.voucher-tabs #voucher_service_id').val();
+		var service_row_id	= $('.voucher-tabs #voucher_service_row_id').val();
 		var from_date 			= $('.voucher-tabs #service_from_date').val();
 		var to_date 			= $('.voucher-tabs #service_to_date').val();
 		var checkin 			= $('.voucher-tabs #service_checkin').val();
 		var checkout 			= $('.voucher-tabs #service_checkout').val();
 		var service_id 			= $('.voucher-tabs #service_id').val();
 		var rate 			= $('.voucher-tabs #service_rate').val();
-		var quantity			= $('.voucher-tabs #service_qty_days').val();
+		var quantity			= $('.voucher-tabs #service_qty').val();
 		var uom_id			= $('.voucher-tabs #service_uom_id').val();
 	
 		var unit_amount 		= $('.voucher-tabs #service_unit_amount').val();
@@ -358,14 +365,14 @@ $(document).ready(function(){
 		narration += " @ Rs "+rate+" per day for "+quantity+" day(s)";
 		
 		
-		var dataArr = {table:"trip_voucher_services",from_date:from_date,to_date:to_date,
+		var dataArr = {id:service_data_id,from_date:from_date,to_date:to_date,
 				checkin:checkin,checkout:checkout,service_id:service_id,rate:rate,
-				quantity:quantity,unit_amount:unit_amount,advance_amount:advance_amount,
+				quantity:quantity,uom_id:uom_id,unit_amount:unit_amount,advance_amount:advance_amount,
 				tax_amount:tax_amount,narration:narration
 				};
 
-		
-		add_voucher_itinerary(dataArr);
+		var dataArray={post:dataArr,table:"trip_voucher_services",row_id:service_row_id};
+		add_voucher_itinerary(dataArray);
 		reset_service_tab();
 		
 	});
@@ -393,14 +400,15 @@ $(document).ready(function(){
 				$(".voucher-vehicle-tab #vehicle_ac_type_id option[value='"+data.vehicle_ac_type_id+"']").attr('selected', true);
 				$(".voucher-vehicle-tab #vehicle_id option[value='"+data.vehicle_id+"']").attr('selected', true);
 				$(".voucher-vehicle-tab #driver_id option[value='"+data.driver_id+"']").attr('selected', true);
-	
+				generateTariffs(data.vehicle_model_id,data.vehicle_ac_type_id,data.tariff_id,'.voucher-tabs #vehicle_tariff_id');
+				setTimeout(function(){$(".voucher-vehicle-tab #vehicle_tariff_id option[value='"+data.tariff_id+"']").attr('selected', true); }, 1000);
 				$(".voucher-vehicle-tab #vehicle_from_date").val(data.from_date);
 				$(".voucher-vehicle-tab #vehicle_to_date").val(data.to_date);
 				$(".voucher-vehicle-tab #vehicle_start_time").val(data.start_time);
 				$(".voucher-vehicle-tab #vehicle_end_time").val(data.end_time);
 				$(".voucher-vehicle-tab #start_km").val(data.start_km);
 				$(".voucher-vehicle-tab #end_km").val(data.end_km);
-				if(data.vehicle_model_id>0 && data.vehicle_ac_type_id>0)
+				/*if(data.vehicle_model_id>0 && data.vehicle_ac_type_id>0)
 					generateTariffs(data.vehicle_model_id,data.vehicle_ac_type_id,data.tariff_id,'.voucher-tabs #vehicle_tariff_id');
 					setTimeout(function(){ setTariffAttributes(); }, 1000);
 					setTotalKM();
@@ -413,7 +421,7 @@ $(document).ready(function(){
 					});
 				$(".voucher-vehicle-tab #vehicle_advance_amount").val(data.advance_amount);
 				$(".voucher-vehicle-tab #vehicle_tax_group_id option[value='"+data.tax_group_id+"']").attr('selected', true);
-				setTimeout(function(){ $('.voucher-vehicle-tab #vehicle_tax_group_id').trigger('change'); }, 1000);
+				setTimeout(function(){ $('.voucher-vehicle-tab #vehicle_tax_group_id').trigger('change'); }, 1000);*/
 				$(".voucher-vehicle-tab #add-voucher-vehicle").val('Update');
 			}else if(table=='trip_voucher_accommodation'){
 				
@@ -451,6 +459,24 @@ $(document).ready(function(){
 				
 				var href = $('a[href="#tab_3"]');
 				$(href).trigger('click');
+				
+				$(".voucher-service-tab #voucher_service_row_id").val(row_id);
+				$(".voucher-service-tab #voucher_service_id").val(data.id);
+				
+				$(".voucher-service-tab #service_from_date").val(data.from_date);
+				$(".voucher-service-tab #service_to_date").val(data.to_date);
+				$(".voucher-service-tab #service_checkin").val(data.checkin);
+				$(".voucher-service-tab #service_checkout").val(data.checkout);
+				$(".voucher-service-tab #service_id option[value='"+data.service_id+"']").attr('selected', true);
+				$(".voucher-service-tab #service_rate").val(data.rate);
+				$(".voucher-service-tab #service_qty").val(data.quantity);
+				$(".voucher-service-tab #service_uom_id option[value='"+data.uom_id+"']").attr('selected', true);
+				$(".voucher-service-tab #service_unit_amount").val(data.unit_amount);
+				$(".voucher-service-tab #service_advance_amount").val(data.advance_amount);
+				$(".voucher-service-tab #service_tax_amount").val(data.tax_amount);
+				var total_amount=(Number(data.unit_amount)+Number(data.tax_amount))-(Number(data.advance_amount));
+				$(".voucher-service-tab #service_total_amount").val(total_amount);
+				$(".voucher-service-tab #add-voucher-service").val('Update');
 			}
 				
 			}

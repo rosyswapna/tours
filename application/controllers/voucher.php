@@ -71,7 +71,7 @@ class Voucher extends CI_Controller {
 				//create voucher cart
 				$this->tour_voucher->create($trip_id,$items);
 
-				$tblArray=array('drivers','vehicle_models','vehicle_ac_types','vehicles');
+				$tblArray=array('drivers','vehicle_models','vehicle_ac_types','vehicles','uom_master');
 			
 				foreach($tblArray as $table){
 					$data[$table]=$this->user_model->getArray($table);
@@ -151,7 +151,7 @@ class Voucher extends CI_Controller {
 
 	function addToVoucher()//from ajax call
 	{	
-		echo "<pre>";print_r($_REQUEST['post']);echo "</pre>";exit;
+		//echo "<pre>";print_r($_REQUEST['post']);echo "</pre>";exit;
 		if((isset($_REQUEST['post'])&&isset($_REQUEST['table'])&&isset($_REQUEST['row_id']))||isset($_REQUEST['id'])){
 			$dataArray=$_REQUEST['post'];
 			$tble = $_REQUEST['table'];
@@ -159,7 +159,7 @@ class Voucher extends CI_Controller {
 			$index = $_REQUEST['row_id'];
 			if($index>=0){
 				$this->tour_voucher->update($tble,$fields,$index);
-			}else{//echo "<pre>";print_r($fields);echo "</pre>";exit;
+			}else{ //echo "<pre>";print_r($fields);echo "</pre>";exit;
 			
 				$data[$tble] = $fields;
 				$this->tour_voucher->insert($data);	

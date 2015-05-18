@@ -690,7 +690,7 @@
 					    		$class="form-control";
 						  	$msg="Select";
 						  	$name=$id="service_uom_id";
-						  	echo $this->form_functions->populate_dropdown($name,@$uom_list,@$service_uom_id,$class,$id,$msg); 
+						  	echo $this->form_functions->populate_dropdown($name,@$uom_master,@$service_uom_id,$class,$id,$msg); 
 						?>
 						</div>
 

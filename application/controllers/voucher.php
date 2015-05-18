@@ -151,7 +151,7 @@ class Voucher extends CI_Controller {
 
 	function addToVoucher()//from ajax call
 	{	
-		//echo "<pre>";print_r($_REQUEST['post']);echo "</pre>";exit;
+		echo "<pre>";print_r($_REQUEST['post']);echo "</pre>";exit;
 		if((isset($_REQUEST['post'])&&isset($_REQUEST['table'])&&isset($_REQUEST['row_id']))||isset($_REQUEST['id'])){
 			$dataArray=$_REQUEST['post'];
 			$tble = $_REQUEST['table'];
@@ -178,14 +178,21 @@ class Voucher extends CI_Controller {
 		$saveVoucher = $this->voucher_model->saveVoucherCart($this->tour_voucher);
 		$this->tour_voucher->destroy();
 		if($saveVoucher){
-			$this->session->set_userdata(array('dbSuccess'=>'Voucher Added Succesfully..!')); 
-			$this->session->set_userdata(array('dbError'=>''));
+
+			//new delivery
+			redirect(base_url().'account/front_desk/NewDelivery/'.$saveVoucher);
+
+			//$this->session->set_userdata(array('dbSuccess'=>'Voucher Added Succesfully..!')); 
+			//$this->session->set_userdata(array('dbError'=>''));
 		}else{
-			$this->session->set_userdata(array('dbSuccess'=>'')); 
-			$this->session->set_userdata(array('dbError'=>'Invalid Trip Voucher..!'));
+			//$this->session->set_userdata(array('dbSuccess'=>'')); 
+			//$this->session->set_userdata(array('dbError'=>'Invalid Trip Voucher..!'));
+
+			//edit delivery
+			redirect(base_url().'account/front_desk/NewDelivery/'.$saveVoucher);
 		}
 
-		redirect(base_url().'front-desk/voucher/add/'.$trip_id);
+		//redirect(base_url().'front-desk/voucher/add/'.$trip_id);
 	}
 	
 

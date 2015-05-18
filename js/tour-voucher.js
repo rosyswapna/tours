@@ -173,8 +173,26 @@ $(document).ready(function(){
 			}
 			
 		});
-
-	
+		
+		var combo_data={};
+			combo_data['vehicle_model_id']=$('.voucher-tabs #vehicle_model_id').val();
+			combo_data['vehicle_ac_type_id']=$('.voucher-tabs #vehicle_ac_type_id').val();
+			combo_data['vehicle_id']=$('.voucher-tabs #vehicle_id').val();
+			combo_data['driver_id']=$('.voucher-tabs #driver_id').val();
+			combo_data['vehicle_tariff_id']=$('.voucher-tabs #vehicle_tariff_id').val();
+		var input_data={};
+			input_data['vehicle_from_date']=$('.voucher-tabs #vehicle_from_date').val();
+			input_data['vehicle_to_date']=$('.voucher-tabs #vehicle_to_date').val();
+			input_data['vehicle_start_time']=$('.voucher-tabs #vehicle_start_time').val();
+			input_data['vehicle_end_time']=$('.voucher-tabs #vehicle_end_time').val();
+			input_data['start_km']=$('.voucher-tabs #start_km').val();
+			input_data['end_km']=$('.voucher-tabs #end_km').val();
+		
+			error=isVarNull(input_data);
+			error_combo=isVarNullCombo(combo_data);
+		if(error=='false' && error_combo=='false'){
+			resetErrorFields(combo_data);
+			resetErrorFields(input_data);
 			var dataArr = {
 				id:vehicle_data_id,vehicle_id:vehicle_id, vehicle_model_id:vehicle_model_id, vehicle_ac_type_id:vehicle_ac_type_id, driver_id:driver_id, tariff_id:vehicle_tariff_id,
 				from_date:from_date, to_date:to_date, start_time:start_time, end_time:end_time,
@@ -190,6 +208,7 @@ $(document).ready(function(){
 			add_voucher_itinerary(dataArray);
 		
 		reset_vehicle_tab();
+		}
 		
 	});
 
@@ -309,20 +328,31 @@ $(document).ready(function(){
 		}
 		//------------------------------------------------------
 		
-
+		var combo_data={};
+			combo_data['acmd_hotel_id']=$('.voucher-tabs #acmd_hotel_id').val();
+			combo_data['acmd_room_type_id']=$('.voucher-tabs #acmd_room_type_id').val();
+			error_combo=isVarNullCombo(combo_data);
+		var input_data={};
+			input_data['acmd_from_date']=$('.voucher-tabs #acmd_from_date').val();
+			input_data['acmd_to_date']=$('.voucher-tabs #acmd_to_date').val();
 		
-		
-		var dataArr = {id:accommodation_data_id,from_date:from_date,to_date:to_date,
-				checkin:checkin,checkout:checkout,hotel_id:hotel_id,room_type_id:room_type_id,
-				no_of_days:no_of_days,room_tariff_amount:room_tariff_amount,unit_amount:unit_amount,advance_amount:advance_amount,
-				tax_amount:tax_amount,narration:narration,room_attributes:room_attributes,
-				meals_package:meals_package
-				};
-			var dataArray={post:dataArr,table:"trip_voucher_accommodation",row_id:accommodation_row_id};
-			add_voucher_itinerary(dataArray);
-		
-		
-		reset_accomodation_tab();
+			error=isVarNull(input_data);
+			error_combo=isVarNullCombo(combo_data);
+		if(error=='false' && error_combo=='false'){
+			resetErrorFields(combo_data);
+			resetErrorFields(input_data);
+			var dataArr = {id:accommodation_data_id,from_date:from_date,to_date:to_date,
+					checkin:checkin,checkout:checkout,hotel_id:hotel_id,room_type_id:room_type_id,
+					no_of_days:no_of_days,room_tariff_amount:room_tariff_amount,unit_amount:unit_amount,advance_amount:advance_amount,
+					tax_amount:tax_amount,narration:narration,room_attributes:room_attributes,
+					meals_package:meals_package
+					};
+				var dataArray={post:dataArr,table:"trip_voucher_accommodation",row_id:accommodation_row_id};
+				add_voucher_itinerary(dataArray);
+			
+			
+			reset_accomodation_tab();
+		}
 		
 	});
 
@@ -364,16 +394,32 @@ $(document).ready(function(){
 		var narration 	= 'Service : '+service_name;	
 		narration += " @ Rs "+rate+" per day for "+quantity+" day(s)";
 		
+		var combo_data={};
+			combo_data['service_id']=$('.voucher-tabs #service_id').val();
+			combo_data['service_uom_id']=$('.voucher-tabs #service_uom_id').val();
+			
+		var input_data={};
+			input_data['service_rate']=$('.voucher-tabs #service_rate').val();
+			input_data['service_qty']=$('.voucher-tabs #service_qty').val();
+			input_data['service_from_date']=$('.voucher-tabs #service_from_date').val();
+			input_data['service_to_date']=$('.voucher-tabs #service_to_date').val();
 		
-		var dataArr = {id:service_data_id,from_date:from_date,to_date:to_date,
-				checkin:checkin,checkout:checkout,service_id:service_id,rate:rate,
-				quantity:quantity,uom_id:uom_id,unit_amount:unit_amount,advance_amount:advance_amount,
-				tax_amount:tax_amount,narration:narration
-				};
+			error=isVarNull(input_data);
+			error_combo=isVarNullCombo(combo_data);
+		if(error=='false' && error_combo=='false'){
+			resetErrorFields(combo_data);
+			resetErrorFields(input_data);
+			
+			var dataArr = {id:service_data_id,from_date:from_date,to_date:to_date,
+					checkin:checkin,checkout:checkout,service_id:service_id,rate:rate,
+					quantity:quantity,uom_id:uom_id,unit_amount:unit_amount,advance_amount:advance_amount,
+					tax_amount:tax_amount,narration:narration
+					};
 
-		var dataArray={post:dataArr,table:"trip_voucher_services",row_id:service_row_id};
-		add_voucher_itinerary(dataArray);
-		reset_service_tab();
+			var dataArray={post:dataArr,table:"trip_voucher_services",row_id:service_row_id};
+			add_voucher_itinerary(dataArray);
+			reset_service_tab();
+		}
 		
 	});
 	
@@ -441,21 +487,6 @@ $(document).ready(function(){
 				$(".voucher-vehicle-tab #vehicle_advance_amount").val(data.advance_amount);
 				$(".voucher-vehicle-tab #vehicle_tax_group_id option[value='"+data.tax_group_id+"']").attr('selected', true);
 				setTimeout(function(){ $('.voucher-vehicle-tab #vehicle_tax_group_id').trigger('change'); }, 1000);
-				//$(".voucher-vehicle-tab #vehicle_total_amount").val(data.night_halt_charge);
-				/*if(data.vehicle_model_id>0 && data.vehicle_ac_type_id>0)
-					generateTariffs(data.vehicle_model_id,data.vehicle_ac_type_id,data.tariff_id,'.voucher-tabs #vehicle_tariff_id');
-					setTimeout(function(){ setTariffAttributes(); }, 1000);
-					setTotalKM();
-					setTotalHR();
-					setTimeout(function(){ setKM_tariff(); }, 1000);
-					setTimeout(function(){ setHR_tariff(); }, 1000);
-				var trip_expense=data.trip_expense; 
-					$.each(trip_expense, function(i,e){
-					    $(".voucher-vehicle-tab #"+i).val(e);
-					});
-				$(".voucher-vehicle-tab #vehicle_advance_amount").val(data.advance_amount);
-				$(".voucher-vehicle-tab #vehicle_tax_group_id option[value='"+data.tax_group_id+"']").attr('selected', true);
-				setTimeout(function(){ $('.voucher-vehicle-tab #vehicle_tax_group_id').trigger('change'); }, 1000);*/
 				$(".voucher-vehicle-tab #add-voucher-vehicle").val('Update');
 			}else if(table=='trip_voucher_accommodation'){
 				
@@ -528,7 +559,42 @@ $(document).ready(function(){
 
 
 	//----voucher functions=====================
+	
+	// reset validated field values
+	function resetErrorFields(data){
 
+	$.each(data, function(key, value) {
+	      
+			$('#'+key).css('border','1px solid #CCC');
+		
+		  
+	});
+
+	}
+	
+	
+	// validation for tabs
+	function isVarNullCombo(data){
+		var error='false'; 
+		$.each(data, function(key, value) {
+		      if(value== -1){ 
+				error='true';
+				$('#'+key).css('border','1px solid red');
+			  }
+		});
+		return error;
+		}
+		
+	function isVarNull(data){//alert(JSON.stringify(data));
+		var error='false';
+		$.each(data, function(key, value) {
+		      	if(value==''){
+				error='true';
+				$('#'+key).css('border','1px solid red');
+			}
+		});
+		return error;
+	}
 
 	function generateTariffs(vehicle_model,vehicle_ac_type,tarif_id='',id){
 		var tarif_id=tarif_id;

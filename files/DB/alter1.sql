@@ -1,10 +1,10 @@
 
---------14 may 2015------------
+--------14 may 2015------------server updated
 ALTER TABLE `trip_vouchers` CHANGE `voucher_number` `voucher_no` VARCHAR(50) CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL;
 
 
 
-------18 may 2015---------------
+------18 may 2015---------------server updated
 ALTER TABLE `trip_voucher_vehicles`  ADD `no_of_days` INT(11) NOT NULL AFTER `end_time`;
 
 INSERT INTO `1_stock_master` (`stock_id`, `category_id`, `tax_type_id`, `description`, `long_description`, `units`, `mb_flag`, `sales_account`, `cogs_account`, `inventory_account`, `adjustment_account`, `assembly_account`, `dimension_id`, `dimension2_id`, `actual_cost`, `last_cost`, `material_cost`, `labour_cost`, `overhead_cost`, `inactive`, `no_sale`, `editable`) VALUES

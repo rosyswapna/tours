@@ -637,16 +637,22 @@ foreach ($_SESSION['Items']->line_items as $line=>$ln_itm) {
 	end_row();
 
 	$slno++;
+
+	$this_dns[] = $ln_itm->src_no;
 }
 
 
 //if (isset($_GET['ModifyInvoice']) ) {
 
-	//get other deliveries
+//get other deliveries
 $other_dn_result = get_deliveries_for_invoice($_SESSION['Items']->customer_id);
+
 if($other_dn_result){
 	unset($_SESSION['otherDNs']);
 	while($row = db_fetch($other_dn_result)){
+
+		if(in_array($row['trans_no'],$this_dns))
+			continue;
 		$row['particulars'] = get_comments_string(ST_CUSTDELIVERY, $row['trans_no']);
 		
 		$_SESSION['otherDNs'][$row['trans_no']] = $row;

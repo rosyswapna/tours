@@ -330,7 +330,7 @@ function get_sql_for_trip_invoices()
 	
 	LEFT JOIN trip_vouchers voucher ON voucher.voucher_no = trans.trans_no
 	LEFT JOIN trips trip ON trip.id = voucher.trip_id
-	LEFT JOIN customer_groups cg  ON  cg.id = trip.customer_group_id
+	
 			LEFT JOIN ".TB_PREF."debtor_trans_details as line
 				ON trans.trans_no=line.debtor_trans_no AND trans.type=line.debtor_trans_type,"
 			.TB_PREF."debtors_master as debtor, "

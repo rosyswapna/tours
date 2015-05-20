@@ -26,7 +26,7 @@ include_once($path_to_root . "/sales/includes/sales_db.inc");
 
 //----------------------------------------------------------------------------------------------------
 
-print_invoices();
+//print_invoices();
 
 function getTrip($voucher)
 {

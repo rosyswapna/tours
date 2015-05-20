@@ -26,7 +26,7 @@ include_once($path_to_root . "/sales/includes/sales_db.inc");
 
 //----------------------------------------------------------------------------------------------------
 
-print_invoices();
+//print_invoices();
 
 function get_delivery_no($src_id){
 	$sql = "SELECT dtd.debtor_trans_no FROM ".TB_PREF."debtor_trans_details dtd WHERE id = ".db_escape($src_id);
@@ -35,9 +35,27 @@ function get_delivery_no($src_id){
 	return $row[0];
 }
 
+/*
 function get_trip($voucher = 0)
 {
 	$sql = "SELECT vehicle.registration_number as vehicle_no,trip.pick_up_date as trip_date,voucher.id as voucher_no,voucher.total_trip_amount as amount,voucher.voucher_no AS voucher_str,IFNULL(guest.name,trip.guest_name) AS username,trip.advance_amount,trip.payment_no,voucher.releasing_place as voucher_description,v_ac.name as vehicle_ac_type_name,v_model.name as vehicle_model_name";
+	$sql .= " FROM trip_vouchers voucher";
+	$sql .= " LEFT JOIN trips trip ON trip.id = voucher.trip_id";
+	$sql .= " LEFT JOIN customers customer ON customer.id = trip.customer_id";
+	$sql .= " LEFT JOIN customers guest ON guest.id = trip.guest_id";
+	$sql .= " LEFT JOIN vehicles vehicle ON trip.vehicle_id = vehicle.id";
+	$sql .= " LEFT JOIN vehicle_ac_types v_ac ON trip.vehicle_ac_type_id = v_ac.id";
+	$sql .= " LEFT JOIN vehicle_models v_model ON voucher.vehicle_model_id = v_model.id";
+	$sql .= " WHERE voucher.id = ".db_escape($voucher);
+
+	$result = db_query($sql, "Error getting order details");
+	return db_fetch_assoc($result);
+	
+}
+*/
+function get_trip($voucher = 0)
+{
+	$sql = "SELECT vehicle.registration_number as vehicle_no,trip.pick_up_date as trip_date,voucher.id as voucher_no,voucher.total_trip_amount as amount,voucher.voucher_no AS voucher_str,guest.name AS username,voucher.releasing_place as voucher_description,v_ac.name as vehicle_ac_type_name,v_model.name as vehicle_model_name";
 	$sql .= " FROM trip_vouchers voucher";
 	$sql .= " LEFT JOIN trips trip ON trip.id = voucher.trip_id";
 	$sql .= " LEFT JOIN customers customer ON customer.id = trip.customer_id";

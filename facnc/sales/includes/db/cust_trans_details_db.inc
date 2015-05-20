@@ -16,7 +16,11 @@ function get_cnc_trans_details($transno,$type) {
 	$sql = "SELECT voucher.voucher_no AS trip_voucher,voucher.trip_id,trip.pick_up_date AS trip_date
 		FROM ".TB_PREF."debtor_trans_details dtd,trip_vouchers voucher,trips trip
 		WHERE dtd.trip_voucher = voucher.id AND voucher.trip_id=trip.id AND dtd.debtor_trans_no=".db_escape($transno)."
-		AND dtd.debtor_trans_type=".db_escape($type)." ORDER BY trip.pick_up_date ASC";
+		AND dtd.debtor_trans_type=".db_escape($type)." 
+		GROUP BY dtd.trip_voucher 
+		ORDER BY trip.pick_up_date ASC";
+
+	//echo $sql;exit;
 
 	return db_query($sql, "The debtor transaction detail could not be queried");
 
@@ -109,13 +113,13 @@ function write_customer_trans_detail_item($debtor_trans_type, $debtor_trans_no, 
 
 			db_query($sql, "The debtor transaction detail could not be written");
 
-			$detail_id = db_insert_id();
+			/*$detail_id = db_insert_id();
 			if($detail_id){
 				$sql1 = "UPDATE ".$voucher_itinerary_table." SET
 					trans_detail_id = ".db_escape($detail_id)." WHERE
 					id = ".db_escape($voucher_itinerary_id);
 				db_query($sql1, "The voucher itinerary detail could not be updated");
-			}		
+			}	*/	
 			
 	}
 

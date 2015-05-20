@@ -436,10 +436,7 @@ $dspans[] = $spanlen;
 //-----------------------------------------------------------------------------
 
 
-//echo "<pre>";
-//print_r($_SESSION['Items']);
-//echo "</pre>";
-//exit;
+//echo "<pre>";print_r($_SESSION['Items']);echo "</pre>";exit;
 
 $is_batch_invoice = count($_SESSION['Items']->src_docs) > 1;
 
@@ -578,7 +575,7 @@ $dn_line_cnt = 0;
 
 $slno = 1;
 foreach ($_SESSION['Items']->line_items as $line=>$ln_itm) {
-	
+	//echo "<pre>";print_r($ln_itm);echo "</pre>";exit;
 	
 	if ($ln_itm->quantity == $ln_itm->qty_done) {
 		continue; // this line was fully invoiced
@@ -663,6 +660,7 @@ if($other_dn_result){
 
 			if(in_array($dnNo,$_SESSION['Items']->add_docs)) continue;
 
+			
 			$voucher = get_cnc_voucher($dn['trip_voucher']);
 			//echo "<pre>";print_r($dn);echo "</pre>";exit;
 

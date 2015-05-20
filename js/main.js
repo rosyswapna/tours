@@ -2708,13 +2708,14 @@ $('.vehicle-list').on('keydown',function(){
 	
 	// rough estimate table
 
-	$('.tour-estimate').on('click',function(){
+	$('.tour-estimate').on('click',function(){ 
 
 		reset_estimate_table();
-
-		package_id=$("#package_id").val();
+	
+	
+		
 		$(".rough-estimate").css('display','block');
-		$.post(base_url+"/tour/getRoughEstimate",{package_id:package_id},function(data){
+		$.post(base_url+"/tour/getRoughEstimate",{},function(data){
 		if(data!=false){
 		
 		data=jQuery.parseJSON(data);

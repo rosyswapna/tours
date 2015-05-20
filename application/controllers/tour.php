@@ -524,20 +524,14 @@ class Tour extends CI_Controller {
 					$cartFromPCk = $this->tour_cart->contents();
 					//echo "<pre>";print_r($cartFromPCk);echo "</pre>";exit;
 					$trip_id = $this->settings_model->addValues_returnId('trips',$tripData); 
-					if($trip_id && $trip_id > 0){//trip added
+					if($trip_id && $trip_id > 0){//trip added 
+					
 						$package_id = $this->input->post('package_id');
 						$pck_itms = $this->tour_cart->total_itineraries();
 						if((is_numeric($package_id ) && $package_id > 0) && $pck_itms > 0){
-
-							//get cart items generated with package
-							$cartFromPCk = $this->tour_cart->contents();
 							
-							//make package cart to tour cart
-							$cart = $this->pckCart_to_tourCart($cartFromPCk,$trip_id);
-							//echo "<pre>";print_r($cart);echo "</pre>";exit;
-							if($cart){
-								$itinerary = $this->tour_model->save_tour_cart($cart,$trip_id);
-							}
+							$itinerary = $this->tour_model->save_tour_cart($this->tour_cart,$trip_id);
+							
 							
 						}else{
 							//build itinerary
@@ -547,7 +541,7 @@ class Tour extends CI_Controller {
 							$this->tour_model->resetTripItineraryData('trip_vehicles',$trip_id);
 							$tripVehicleUpdate = $this->tour_model->addTripVehicles($vehicleData,$trip_id);
 						}
-
+						
 						$this->session->set_userdata(array('dbSuccess'=>'Trip booked successfully!')); 
 						$this->session->set_userdata(array('dbError'=>''));
 						redirect(base_url().'front-desk/tour/booking/'.$trip_id);
@@ -576,33 +570,7 @@ class Tour extends CI_Controller {
 	}
 
 
-	//package cart to tour cart converting function
-	public function pckCart_to_tourCart($cartFromPCk,$trip_id){
-
-		//echo "<pre>";print_r($cartFromPCk);echo "</pre>";exit;
-		$buildItrs = $this->tour_model->buildItinerary($trip_id);
-		$tourCart = array();
-		if($buildItrs!= false && count($cartFromPCk) == count($buildItrs)){
-			$i=0;//index throungh buildItries
-			foreach($cartFromPCk as $dayno=>$itryData){
-				$tour_dataArray = array();
-				foreach($itryData as $tbl=>$dataArray){
-					foreach($dataArray as $data){
-						unset($data['itinerary_id']);
-						$data['id'] = gINVALID;
-						$tour_dataArray[$tbl][] = $data;
-						
-					}
-					
-				}
-				$tourCart[$buildItrs[$i]] = $tour_dataArray;
-				$i++;
-			}
-		}	
-		//echo "<pre>";print_r($tourCart);echo "</pre>";exit;	
-		
-		return $tourCart;
-	}
+	
 	
 	
 	public function show_tour_list(){
@@ -787,7 +755,7 @@ class Tour extends CI_Controller {
 	
 
 	function getFromCart(){
-		$cart = $this->tour_cart->contents();
+		$cart = $this->tour_cart->contents(); //echo '<pre>';print_r($cart);echo '</pre>';exit;
 		$this->build_itinerary_data($cart,$ajax = 'YES');
 	}
 
@@ -879,14 +847,23 @@ class Tour extends CI_Controller {
 				$vehicles = array();
 				if(isset($item['trip_vehicles'])){
 					foreach($item['trip_vehicles'] as $dataArry_index=>$vehicle){
-					$vehicles[]=array($dataArry_index,$vehicle['vehicle_type_id']); 
-					//$vehicle_type=$this->package_model->getVehicleType($vehicle['vehicle_type_id']);
+					$active_tab = 'v_tab';
+					if($vehicle['vehicle_type_id']<=0){
+						$vehicles[]=array($dataArry_index,$vehicle['vehicle_id']); 
+						$select='registration_number';
+						$table='vehicles';
+					}else{
+					
+						$vehicles[]=array($dataArry_index,$vehicle['vehicle_type_id']); 
+						$select='name';
+						$table='vehicle_types';
+					}
 					
 						//array_push($vehicles,$vehicle['vehicle_id']);
 					}
 					
-					$active_tab = 'v_tab';//print_r($vehicles);exit;
-					$vehicles = $this->tour_model->getItineraryDataLink('vehicle_types','name',$vehicles,$active_tab,$itinerary);
+					//print_r($vehicles);exit;
+					$vehicles = $this->tour_model->getItineraryDataLink($table,$select,$vehicles,$active_tab,$itinerary);
 					//echo "<pre>";print_r($vehicles);echo "</pre>";exit;
 				}
 
@@ -1050,7 +1027,7 @@ class Tour extends CI_Controller {
 	}
 	
 	public function getRoughEstimate(){
-		if(isset($_REQUEST['package_id'])){
+		
 			$cart = $this->tour_cart->contents();
 			//echo "<pre>";print_r($cart);echo "</pre>";exit;
 			$str=array();$tr=array();$acc_tr=array();$estimate_tr=array();$travel_tr=array();$model_id=gINVALID;$vehicle_id=gINVALID; $estimate_amt=0;
@@ -1091,7 +1068,7 @@ class Tour extends CI_Controller {
 				if(isset($item['trip_vehicles'])){ 
 				$totalAmount = 0;
 					foreach($item['trip_vehicles'] as $vehicles){ 
-						$package_id=$_REQUEST['package_id']; //echo $vehicles['vehicle_model_id']."-m".$model_id.",".$vehicles['vehicle_id']."-v".$vehicle_id.br();
+						
 						if($vehicles['vehicle_model_id']==$model_id && $vehicles['vehicle_id']==$vehicle_id){
 							continue;
 						}
@@ -1167,7 +1144,7 @@ class Tour extends CI_Controller {
 			$estimate_tr[]=array('','','','Grand Total',number_format($estimate_amt,2));
 			$tr=array_merge($str,$acc_tr,$travel_tr,$estimate_tr); 
 			echo json_encode($tr);
-		}
+		
 		
 	}
 	//------------------------------------------------------------------------------------------------

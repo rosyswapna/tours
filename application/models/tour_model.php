@@ -234,7 +234,7 @@ class Tour_model extends CI_Model {
 
 	//add itineraries with trip dates
 	function addItineraries($trip_id = 0)
-	{
+	{ 
 		$itineraries = $this->buildItinerary($trip_id);
 		if(!$itineraries)
 			return false;
@@ -455,7 +455,8 @@ class Tour_model extends CI_Model {
 
 	//save tour cart with tour cart class
 	function save_tour_cart($cartClass,$trip_id){
-		$cart=$cartClass->contents();
+		//echo '<pre>';print_r($cart);echo '</pre>';exit;
+		$cart=$this->pckCart_to_tourCart($cartClass->contents(),$trip_id);
 		$deleteData=$cartClass->delete_itineraries();
 		//create insert and update array
 		foreach($cart as $_date=>$itry){
@@ -603,7 +604,7 @@ class Tour_model extends CI_Model {
 			$this->db->select($select);
 			$this->db->from($table);
 			$this->db->where(array('id'=>$id));
-			$query = $this->db->get(); //echo $this->db->last_query();
+			$query = $this->db->get(); 
 			if($query->num_rows() > 0){
 			
 				$section_val=$query->row()->$select;
@@ -628,6 +629,7 @@ class Tour_model extends CI_Model {
 
 		$tbls = array('trip_destinations','trip_accommodation','trip_services','trip_vehicles');
 		$retArray = array();
+		if($itineraries!=false){
 		foreach($itineraries as $itinerary){
 			foreach($tbls as $tbl){
 				$tbleData = $this->getItineraryData($itinerary['id'],$tbl);
@@ -637,7 +639,35 @@ class Tour_model extends CI_Model {
 		}
 
 		return $retArray;
+		}
 		
+	}
+	//package cart to tour cart converting function
+	public function pckCart_to_tourCart($cartFromPCk,$trip_id){
+
+		//echo "<pre>";print_r($cartFromPCk);echo "</pre>";exit;
+		$buildItrs = $this->tour_model->buildItinerary($trip_id);
+		$tourCart = array();
+		if($buildItrs!= false && count($cartFromPCk) == count($buildItrs)){
+			$i=0;//index throungh buildItries
+			foreach($cartFromPCk as $dayno=>$itryData){
+				$tour_dataArray = array();
+				foreach($itryData as $tbl=>$dataArray){
+					foreach($dataArray as $data){
+						unset($data['itinerary_id']);
+						$data['id'] = gINVALID;
+						$tour_dataArray[$tbl][] = $data;
+						
+					}
+					
+				}
+				$tourCart[$buildItrs[$i]] = $tour_dataArray;
+				$i++;
+			}
+		}	
+		//echo "<pre>";print_r($tourCart);echo "</pre>";exit;	
+		
+		return $tourCart;
 	}
 
 

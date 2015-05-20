@@ -24,3 +24,7 @@ ALTER TABLE `trip_voucher_accommodation`  ADD `trans_detail_id` INT(11) NOT NULL
 ALTER TABLE `trip_voucher_vehicles`  ADD `trans_detail_id` INT(11) NOT NULL AFTER `narration`,  ADD INDEX (`trans_detail_id`);
 ALTER TABLE `trip_voucher_services`  ADD `trans_detail_id` INT(11) NOT NULL AFTER `narration`,  ADD INDEX (`trans_detail_id`);
 
+ALTER TABLE `trip_vouchers` ADD `delivery_no` INT( 11 ) NOT NULL AFTER `trip_ending_time` ,
+ADD `invoice_no` INT( 11 ) NOT NULL AFTER `delivery_no` ,
+ADD INDEX ( `delivery_no` , `invoice_no` ) ;
+

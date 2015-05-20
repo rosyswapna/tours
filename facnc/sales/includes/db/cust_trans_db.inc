@@ -465,6 +465,7 @@ function get_sql_for_customer_inquiry()
    	return $sql;
 }
 
+/*
 function get_sql_for_sales_deliveries_view($selected_customer, $selected_stock_item=null,$OutstandingOnly=false)
 {
 	/*$sql = "SELECT trans.trans_no,
@@ -532,6 +533,8 @@ function get_sql_for_sales_deliveries_view($selected_customer, $selected_stock_i
 
 	} //end no delivery number selected
 	*/
+
+/*
 	$sql = "SELECT trans.trans_no,
 			branch.branch_code,
 			IF(cg.name IS NULL,' ', cg.name) AS company,
@@ -574,6 +577,108 @@ function get_sql_for_sales_deliveries_view($selected_customer, $selected_stock_i
 				AND line.debtor_trans_type = trans.type
 				AND trans.branch_code = branch.branch_code
 				AND trans.reference = trip.id
+				AND trip.id = voucher.trip_id
+				
+				AND trans.debtor_no = branch.debtor_no ";
+
+	if ($_POST['OutstandingOnly'] == true || $OutstandingOnly == true) {
+		 $sql .= " AND line.qty_done < line.quantity ";
+	}
+
+	//echo $sql;exit;
+
+	//figure out the sql required from the inputs available
+	if (isset($_POST['DeliveryNumber']) && $_POST['DeliveryNumber'] != "")
+	{
+		$delivery = "%".$_POST['DeliveryNumber'];
+		$sql .= " AND trans.trans_no LIKE ".db_escape($delivery);
+		$sql .= " GROUP BY trans.trans_no";
+	}else if (isset($_POST['TripId']) && $_POST['TripId'] != ""){
+		$tripid = $_POST['TripId'];
+		$sql .= " AND trans.reference = ".db_escape($tripid);
+	}
+	else
+	{
+		if (isset($_POST['DeliveryAfterDate']) && isset($_POST['DeliveryToDate'])){
+			$sql .= " AND trans.tran_date >= '".date2sql($_POST['DeliveryAfterDate'])."'";
+			$sql .= " AND trans.tran_date <= '".date2sql($_POST['DeliveryToDate'])."'";
+		}
+		
+		
+
+		if ($selected_customer != -1)
+			$sql .= " AND trans.debtor_no=".db_escape($selected_customer)." ";
+
+		if (isset($selected_stock_item))
+			$sql .= " AND line.stock_id=".db_escape($selected_stock_item)." ";
+
+		if (isset($_POST['StockLocation']) && $_POST['StockLocation'] != ALL_TEXT)
+			$sql .= " AND sorder.from_stk_loc = ".db_escape($_POST['StockLocation'])." ";
+		if (isset($_POST['CustomerGroup']) && $_POST['CustomerGroup'] != ALL_TEXT)
+			$sql .= " AND trip.customer_group_id = ".db_escape($_POST['CustomerGroup'])." ";
+		if (isset($_POST['Customer']) && $_POST['Customer'] != ALL_TEXT)
+			$sql .= " AND trip.customer_id = ".db_escape($_POST['Customer'])." ";
+
+
+		if($_POST['PickupDate'] != null){
+			$sql.=' AND (trip.pick_up_date="'.date2sql($_POST['PickupDate']).'" OR "'.date2sql($_POST['PickupDate']).'" BETWEEN trip.pick_up_date and trip.drop_date)';
+		}else if($_POST['DropDate']!= null){
+			$sql.=' AND (trip.drop_date ="'.$_POST['DropDate'].'")';	
+		}
+
+
+		$sql .= " GROUP BY trans.trans_no ";
+
+	} //end no delivery number selected
+	$sql .= " ORDER BY voucher.id DESC ";
+	//echo $sql;exit;
+	return $sql;
+}*/
+
+function get_sql_for_sales_deliveries_view($selected_customer, $selected_stock_item=null,$OutstandingOnly=false)
+{
+	$sql = "SELECT trans.trans_no,
+			branch.branch_code,
+			'CASH' AS company,
+			debtor.name as customer,
+			cnc_guest.name as guest,
+			voucher.trip_id,
+			voucher.voucher_no,
+			trip.pick_up_date,
+			trans.tran_date,
+			(ov_amount+ov_gst+ov_freight+ov_freight_tax) AS DeliveryValue,
+			debtor.curr_code,
+			Sum(line.quantity-line.qty_done) AS Outstanding,
+			Sum(line.qty_done) AS Done,
+			trans.tax_group_id,
+			line.stock_id,
+			line.unit_price,
+			line.quantity,
+			line.qty_done,
+			line.discount_percent,
+			line.standard_cost,
+			line.src_id,
+			line.description As StockDescription,
+			line.trip_voucher,
+			line.id
+		FROM "
+		 .TB_PREF."sales_orders as sorder, "
+		 .TB_PREF."debtor_trans as trans, "
+		 .TB_PREF."debtor_trans_details as line, "
+		 .TB_PREF."debtors_master as debtor,
+		 "
+		 .TB_PREF."cust_branch as branch,trip_vouchers voucher,trips trip
+		
+		LEFT JOIN customers cnc_customer  ON  trip.customer_id = cnc_customer.id
+		LEFT JOIN customers cnc_guest  ON  trip.guest_id = cnc_guest.id
+			WHERE
+			sorder.order_no = trans.order_ AND
+			trans.debtor_no = debtor.debtor_no
+				AND trans.type = ".ST_CUSTDELIVERY."
+				AND line.debtor_trans_no = trans.trans_no
+				AND line.debtor_trans_type = trans.type
+				AND trans.branch_code = branch.branch_code
+				AND voucher.delivery_no = trans.trans_no
 				AND trip.id = voucher.trip_id
 				
 				AND trans.debtor_no = branch.debtor_no ";

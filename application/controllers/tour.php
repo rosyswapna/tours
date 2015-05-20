@@ -46,8 +46,6 @@ class Tour extends CI_Controller {
 				$this->addToCart();
 			}elseif($param1 == 'addToCartPackage'){ 
 				$this->addToCartPackage();
-			}elseif($param1 == 'deleteFromCart'){
-				$this->deleteFromCart();
 			}elseif($param1 == 'deleteFromCartPackage'){ 
 				$this->deleteFromCartPackage();
 			}elseif($param1 == 'getFromCart'){
@@ -1076,9 +1074,19 @@ class Tour extends CI_Controller {
 						}
 						$model_id=$vehicles['vehicle_model_id'];
 						$vehicle_id=$vehicles['vehicle_id'];
-						//$destinations=$this->package_model->getDestinationsByOrder($package_id,$model_id);
+						
 						$destinations=$this->package_model->getDestinationsByOrder($cart,$model_id,$vehicle_id);
 						
+						
+						if($_REQUEST['pickup']!='' ||$_REQUEST['drop']!=''){
+							if($_REQUEST['pickup']!=''){
+								array_unshift($destinations, $_REQUEST['pickup']);
+							}
+							if($_REQUEST['drop']!=''){
+								array_push($destinations, $_REQUEST['drop']);
+							}
+						
+						}
 						$count= count($destinations);
 						$API_KEY='AIzaSyD3Fog2G5asD5NI4iJJZDsfJHjW-gPhevA';
 					

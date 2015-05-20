@@ -81,6 +81,7 @@ function get_cnc_user($userid)
 
 //get trip voucher details
 
+/*
 function get_cnc_voucher($id = 0)
 {
 	$sql = "SELECT 
@@ -125,6 +126,20 @@ function get_cnc_voucher($id = 0)
 
 	return db_fetch_assoc($result);
 }
+*/
+
+function get_cnc_voucher($id = 0)
+{
+	$sql = "SELECT voucher.*
+		";
+	$sql .="  FROM trip_vouchers voucher ";
+	$sql .= " LEFT JOIN trips trip ON voucher.trip_id = trip.id";
+	$sql .= " WHERE voucher.id = ".db_escape($id);
+	$result = db_query($sql, "could not get voucher");
+
+	return db_fetch_assoc($result);
+}
+
 
 function get_voucher_itinerary($id = 0)
 {
@@ -271,6 +286,7 @@ function get_vouchers_with_invoice($inv_no){
 }
 
 //get invoiced trip vouchers by driver
+/*
 function get_driver_vouchers_with_invoice($inv_no){
 	$sql = "SELECT voucher.*,driver.name as driver_name
 		FROM trip_vouchers voucher
@@ -288,9 +304,28 @@ function get_driver_vouchers_with_invoice($inv_no){
 	}
 
 	return $data;
+}*/
+function get_driver_vouchers_with_invoice($inv_no){
+	$sql = "SELECT voucher_vehicle.*,driver.name as driver_name
+		FROM trip_voucher_vehicles voucher_vehicle
+		LEFT JOIN trip_vouchers voucher ON voucher.id = voucher_vehicle.trip_voucher_id
+		LEFT JOIN vehicles vh ON vh.id = voucher_vehicle.vehicle_id
+		LEFT JOIN drivers driver ON driver.id = voucher_vehicle.driver_id
+		WHERE voucher.invoice_no = ".db_escape($inv_no);
+	
+	
+	$result = db_query($sql, "could not get vouchers");
+	$data = array();
+	while($row = db_fetch_assoc($result)){
+		if($row['driver_id'] > 0)
+			$data[$row['driver_id']][] = $row;	
+	}
+
+	return $data;
 }
 
 //get invoiced trip vouchers by vehicle owner
+/*
 function get_vehicle_vouchers_with_invoice($inv_no){
 	$sql = "SELECT voucher.*,vh.vehicle_owner_id,owner.name as owner_name,vh.supplier_group_id,sg.name as group_name
 		FROM trip_vouchers voucher
@@ -302,6 +337,28 @@ function get_vehicle_vouchers_with_invoice($inv_no){
 
 
 
+	
+	$result = db_query($sql, "could not get vouchers");
+	$data = array();
+	while($row = db_fetch_assoc($result)){
+
+		if($row['supplier_group_id'] > 0)
+			$data['SG'.$row['supplier_group_id']][] = $row;
+		elseif($row['vehicle_owner_id'] > 0)
+			$data['VW'.$row['vehicle_owner_id']][] = $row;
+			
+	}
+	
+
+	return $data;
+}*/
+function get_vehicle_vouchers_with_invoice($inv_no){
+	$sql = "SELECT voucher_vehicle.*,vh.vehicle_owner_id,owner.name as owner_name
+		FROM trip_voucher_vehicles voucher_vehicle
+		LEFT JOIN trip_vouchers voucher ON voucher.id = voucher_vehicle.trip_voucher_id
+		LEFT JOIN vehicles vh ON vh.id = voucher_vehicle.vehicle_id
+		LEFT JOIN vehicle_owners owner ON owner.id = vh.vehicle_owner_id
+		WHERE voucher.invoice_no = ".db_escape($inv_no);
 	
 	$result = db_query($sql, "could not get vouchers");
 	$data = array();

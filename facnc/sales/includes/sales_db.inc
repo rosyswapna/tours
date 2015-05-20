@@ -312,6 +312,8 @@ function read_sales_trans($doc_type, $trans_no, &$cart)
 
 				$voucher_itinerary = get_voucher_itinerary_detail($myrow['voucher_itinerary_table'],$myrow['voucher_itinerary_id']);
 				$trans_no = $myrow["debtor_trans_no"];
+
+				$voucher_itinerary['table'] = $myrow['voucher_itinerary_table'];
 				
 				$cart->line_items[$line_no] = new line_details(
 					$myrow["stock_id"],$myrow["quantity"],

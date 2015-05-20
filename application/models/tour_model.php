@@ -454,10 +454,13 @@ class Tour_model extends CI_Model {
 
 
 	//save tour cart with tour cart class
-	function save_tour_cart($cartClass,$trip_id){
-		//echo '<pre>';print_r($cart);echo '</pre>';exit;
+	function save_tour_cart($cartClass,$trip_id,$package=false){
+		if($package){
 		$cart=$this->pckCart_to_tourCart($cartClass->contents(),$trip_id);
-		$deleteData=$cartClass->delete_itineraries();
+		}else{
+		$cart=$cartClass->contents();
+		}
+		$deleteData=$cartClass->delete_itineraries();//echo '<pre>';print_r($deleteData);echo '</pre>';exit;
 		//create insert and update array
 		foreach($cart as $_date=>$itry){
 			//get itinerary id or get from insert
@@ -471,7 +474,7 @@ class Tour_model extends CI_Model {
 			if(is_numeric($itinerary_id) && $itinerary_id > 0){
 				foreach($itry as $table=>$tableData){
 					if($table != "label" && $tableData!=null){
-						foreach($tableData as $data){
+						foreach($tableData as $data){ //echo '<pre>';print_r($tableData);echo '</pre>';
 							$data['itinerary_id'] = $itinerary_id;
 							$id = $data['id'];
 							unset($data['id']);
@@ -527,6 +530,19 @@ class Tour_model extends CI_Model {
 				
 			}
 				
+		}
+		if($deleteData){
+			foreach($deleteData as $tbl=>$dataBatch){
+					
+					
+					
+					$this->db->where_in('id', $dataBatch);
+					
+					$this->db->delete($tbl); 
+				
+				
+			}
+		
 		}
 		return true;
 	}

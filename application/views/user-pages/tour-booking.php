@@ -80,7 +80,14 @@
 	<td class="td-10"><?php echo form_label('Contact');?></td>
 	<td class="td-15"><?php echo form_input(array('name'=>'customer_contact','class'=>'form-control','id'=>'customer_contact','value'=>@$header['customer_mobile']));?>
 	<?php echo  $this->form_functions->form_error_session('customer_contact','<p class="text-red">', '</p>');?>
-	<div><?php $new_customer='true'; echo form_input(array('name'=>'newcustomer','class'=>'form-control newcustomer hide-me','value'=>$new_customer)).form_input(array('name'=>'customer_id','id'=>'customer_id','class'=>'form-control hide-me','value'=>'')); ?></div></td>
+	<div><?php 
+	if(isset($header['customer_id'])){
+			$customer_id=$header['customer_id'];
+			}else{
+			$customer_id=gINVALID;
+			}
+	echo form_input(array('name'=>'customer_id','id'=>'customer_id','class'=>'form-control hide-me','value'=>$customer_id));
+	?></div></td>
 	<td class="td-10"><?php echo form_label('Time');?></td>
 	<td class="td-15"><?php echo form_input(array('name'=>'pick_up_time','class'=>'form-control ','id'=>'tour-pickuptimepicker','value'=>@$header['pick_up_time']));?></td>
 	<td class="td-10"><?php echo form_label('Vehicle Model');?></td>
@@ -123,7 +130,15 @@
 	<tr>
 	<td class="td-10"><?php echo form_label('Contact');?></td>
 	<td class="td-15"><?php echo form_input(array('name'=>'guest_contact','class'=>'form-control','id'=>'guest_contact','value'=>@$header['guest_mobile'])); echo  $this->form_functions->form_error_session('guest_contact','<p class="text-red">', '</p>');?>
-	<div><?php $new_guest='true'; echo form_input(array('name'=>'newguest','class'=>'form-control newguest hide-me','value'=>$new_guest)).form_input(array('name'=>'guest_id','id'=>'guest_id','class'=>'form-control hide-me','value'=>'')); ?></div></td>
+	<div><?php 
+	
+	if(isset($header['guest_id'])){
+			$guest_id=$header['guest_id'];
+			}else{
+			$guest_id=gINVALID;
+			}
+	echo form_input(array('name'=>'guest_id','id'=>'guest_id','class'=>'form-control hide-me','value'=>$guest_id));
+	?></div></td>
 	<td class="td-10"><?php echo form_label('Time');?></td>
 	<td class="td-15"><?php echo form_input(array('name'=>'drop_time','class'=>'form-control ','id'=>'tour-droptimepicker','value'=>@$header['drop_time']));?></td>
 	<td class="td-10"><?php echo form_label('Driver');?></td>

@@ -366,7 +366,7 @@ class Tour extends CI_Controller {
 	
 	
 	public function manage_tour_booking()
-	{
+	{ //echo '<pre>';print_r($_REQUEST);echo '</pre>';exit;
 		if(isset($_REQUEST['trip-add'])){
 			//validation
 			$this->form_validation->set_rules('customer','Customer Name','trim|required|xss_clean');
@@ -377,26 +377,36 @@ class Tour extends CI_Controller {
 			$this->form_validation->set_rules('guest_contact','Mobile Number','trim|regex_match[/^[0-9]{10}$/]|xss_clean');
 			//trip data
 			$tripData['id'] 		= $this->input->post('id');
+			
+			$customer['name']=$this->input->post('customer');
+			$customer['mobile']=$this->input->post('customer_contact');
+			$guest['name']=$this->input->post('guest_name');
+			$guest['mobile']=$this->input->post('guest_contact');
+			$tripData['customer_id']=gINVALID;
+			$tripData['guest_id']=gINVALID;
 			//check new customer or not
-			$new_customer=$this->input->post('newcustomer');
-			if($new_customer=='true'){
-				$customer['name']=$this->input->post('customer');
-				$customer['mobile']=$this->input->post('customer_contact');
-				if($customer['name']!='')
-				$tripData['customer_id']=$this->customers_model->addCustomer($customer,$login=true);
-			}elseif($new_customer=='false'){
-				$tripData['customer_id'] 	= $this->input->post('customer_id');
+			if($customer['name']!='' ||$customer['mobile']!=''){
+				$customer_id=$this->input->post('customer_id');
+				if($customer_id<=0){
+					$tripData['customer_id']=$this->customers_model->addCustomer($customer,$login=true);
+				}else{
+					$tripData['customer_id']=$customer_id;
+				}
 			}
 			//check new guest or not
-			$new_guest=$this->input->post('newguest');
-			if($new_guest=='true'){
-				$guest['name']=$this->input->post('guest_name');
-				$guest['mobile']=$this->input->post('guest_contact');
-				if($guest['name']!='')
-				$tripData['guest_id']=$this->customers_model->addCustomer($guest,$login=true);
-			}elseif($new_guest=='false'){
-				$tripData['guest_id'] 		= $this->input->post('guest_id');
+			if($guest['name']!='' ||$guest['mobile']!=''){
+				$guest_id=$this->input->post('guest_id');
+				if($guest_id<=0){
+					$tripData['guest_id']=$this->customers_model->addCustomer($guest,$login=true);
+				}else{
+					$tripData['guest_id']=$guest_id;
+				}
 			}
+			
+			
+			
+			//----
+			
 			
 			$tripData['booking_date'] 	= date('Y-m-d');
 			$tripData['booking_time'] 	= date('H:i');
@@ -517,38 +527,54 @@ class Tour extends CI_Controller {
 
 				//-----------------------------------------------------------------------
 
-				if($err==True){
+				if($err==True){ 
 					$vehicleData = $this->checkVehicleData($vehicleData);
-					$cartFromPCk = $this->tour_cart->contents();
-					//echo "<pre>";print_r($cartFromPCk);echo "</pre>";exit;
-					$trip_id = $this->settings_model->addValues_returnId('trips',$tripData); 
-					if($trip_id && $trip_id > 0){//trip added 
-					
-						$package_id = $this->input->post('package_id');
-						$pck_itms = $this->tour_cart->total_itineraries();
-						if((is_numeric($package_id ) && $package_id > 0) && $pck_itms > 0){
-							
-							$itinerary = $this->tour_model->save_tour_cart($this->tour_cart,$trip_id,true);
-							
-							
-						}else{
-							//build itinerary
-							$itinerary = $this->tour_model->addItineraries($trip_id);
-						}
-						if($itinerary && $vehicleData){
-							$this->tour_model->resetTripItineraryData('trip_vehicles',$trip_id);
-							$tripVehicleUpdate = $this->tour_model->addTripVehicles($vehicleData,$trip_id);
-						}
+					if($_REQUEST['trip_id']==' '||$_REQUEST['trip_id']<=0){
+						$cartFromPCk = $this->tour_cart->contents();
+						//echo "<pre>";print_r($cartFromPCk);echo "</pre>";exit;
 						
-						$this->session->set_userdata(array('dbSuccess'=>'Trip booked successfully!')); 
-						$this->session->set_userdata(array('dbError'=>''));
-						redirect(base_url().'front-desk/tour/booking/'.$trip_id);
-					}else{
+						$trip_id = $this->settings_model->addValues_returnId('trips',$tripData); 
+						if($trip_id && $trip_id > 0){//trip added 
+						
+							$package_id = $this->input->post('package_id');
+							$pck_itms = $this->tour_cart->total_itineraries();
+							if((is_numeric($package_id ) && $package_id > 0) && $pck_itms > 0){
+								
+								$itinerary = $this->tour_model->save_tour_cart($this->tour_cart,$trip_id,true);
+								
+								
+							}else{
+								//build itinerary
+								$itinerary = $this->tour_model->addItineraries($trip_id);
+							}
+							if($itinerary && $vehicleData){
+							
+								$this->tour_model->resetTripItineraryData('trip_vehicles',$trip_id);
+								$tripVehicleUpdate = $this->tour_model->addTripVehicles($vehicleData,$trip_id);
+							}
+							
+							$this->session->set_userdata(array('dbSuccess'=>'Trip booked successfully!')); 
+							$this->session->set_userdata(array('dbError'=>''));
+							redirect(base_url().'front-desk/tour/booking/'.$trip_id);
+						}
+					}elseif($_REQUEST['trip_id']>0){
+						unset($tripData['id']);
+						$result = $this->settings_model->updateValues('trips',$tripData,$_REQUEST['trip_id']);
+						if($result){
+							$this->session->set_userdata(array('dbSuccess'=>'Trip Updated successfully!')); 
+							$this->session->set_userdata(array('dbError'=>''));
+							redirect(base_url().'front-desk/tour/booking/'.$_REQUEST['trip_id']);
+						}
+						$this->tour_model->resetTripItineraryData('trip_vehicles',$_REQUEST['trip_id']);
+						$tripVehicleUpdate = $this->tour_model->addTripVehicles($vehicleData,$_REQUEST['trip_id']);
+					
+					}
+					
+				}else{
 						$this->session->set_userdata(array('dbSuccess'=>'')); 
 						$this->session->set_userdata(array('dbError'=>'Trip booking Failed'));
 						redirect(base_url().'front-desk/tour/booking/');
 					}
-				}
 			}
 			$this->mysession->set('post_booking',$data);
 				
@@ -597,6 +623,7 @@ class Tour extends CI_Controller {
 			}else{
 			$trip['advanced_option']=false;
 			}
+			
 				return $trip;
 			}else{
 				redirect(base_url().'front-desk/tour/booking');

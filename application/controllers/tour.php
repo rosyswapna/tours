@@ -592,6 +592,11 @@ class Tour extends CI_Controller {
 			$trip = $this->tour_model->getTrip($trip_id);
 			//echo "<pre>";print_r($trip);echo "</pre>";exit;
 			if($trip){
+			if($trip['vehicle_beacon_light_option_id']>0 ||$trip['pluckcard']>0 ||$trip['uniform']>0||$trip['driver_language_id']>0){
+			$trip['advanced_option']=true;
+			}else{
+			$trip['advanced_option']=false;
+			}
 				return $trip;
 			}else{
 				redirect(base_url().'front-desk/tour/booking');

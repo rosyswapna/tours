@@ -600,7 +600,14 @@ class Tour extends CI_Controller {
 	
 	public function show_tour_list(){
 		if($this->session_check()==true) { 
-			$data['trips']=$this->tour_model->getTrips();
+			$tblArray=array('vehicles','drivers','trip_statuses','customer_groups');
+			
+		foreach($tblArray as $table){
+			$data[$table]=$this->user_model->getArray($table);
+			
+		}
+			$data['status_class']=array(TRIP_STATUS_PENDING=>'label-warning',TRIP_STATUS_CONFIRMED=>'label-success',TRIP_STATUS_CANCELLED=>'label-danger',TRIP_STATUS_CUSTOMER_CANCELLED=>'label-danger',TRIP_STATUS_ON_TRIP=>'label-primary',TRIP_STATUS_TRIP_COMPLETED=>'label-success',TRIP_STATUS_TRIP_PAYED=>'label-info',TRIP_STATUS_TRIP_BILLED=>'label-success');
+			$data['trips']=$this->tour_model->getTrips();//echo "<pre>";print_r($data['trips']);echo "</pre>";exit;
 			$data['title']="Tour List | ".PRODUCT_NAME;  
 			$page='user-pages/trip-list';
 			$this->load_templates($page,$data);

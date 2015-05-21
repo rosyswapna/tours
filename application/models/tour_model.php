@@ -181,6 +181,20 @@ class Tour_model extends CI_Model {
 		
 
 	}
+	
+	function getTrips(){
+		$this->db->select('T.*,C.name as customer_name,C.mobile as customer_mobile,G.name as guest_name,G.mobile as guest_mobile,TS.id as trip_status_id');
+		$this->db->from('trips T');
+		$this->db->join('customers C','T.customer_id = C.id','left');
+		$this->db->join('customers G','T.guest_id = G.id','left');
+		$this->db->join('trip_statuses TS','T.trip_status_id = TS.id','left');
+		$query = $this->db->get();
+		if($query->num_rows() >0){
+			return $query->result_array();
+		}else{
+			return false;
+		}
+	}
 
 	function getTrip($trip_id = 0){
 		$this->db->select('T.*,C.name as customer_name,C.mobile as customer_mobile,G.name as guest_name,G.mobile as guest_mobile,TS.name as trip_status_name,BS.name as booking_source_name,P.name as package_name');

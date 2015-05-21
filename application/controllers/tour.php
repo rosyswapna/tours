@@ -560,13 +560,14 @@ class Tour extends CI_Controller {
 					}elseif($_REQUEST['trip_id']>0){
 						unset($tripData['id']);
 						$result = $this->settings_model->updateValues('trips',$tripData,$_REQUEST['trip_id']);
+						
+						$this->tour_model->resetTripItineraryData('trip_vehicles',$_REQUEST['trip_id']);
+						$tripVehicleUpdate = $this->tour_model->addTripVehicles($vehicleData,$_REQUEST['trip_id']);
 						if($result){
 							$this->session->set_userdata(array('dbSuccess'=>'Trip Updated successfully!')); 
 							$this->session->set_userdata(array('dbError'=>''));
 							redirect(base_url().'front-desk/tour/booking/'.$_REQUEST['trip_id']);
 						}
-						$this->tour_model->resetTripItineraryData('trip_vehicles',$_REQUEST['trip_id']);
-						$tripVehicleUpdate = $this->tour_model->addTripVehicles($vehicleData,$_REQUEST['trip_id']);
 					
 					}
 					

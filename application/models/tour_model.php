@@ -190,7 +190,26 @@ class Tour_model extends CI_Model {
 		$this->db->join('trip_statuses TS','T.trip_status_id = TS.id','left');
 		$query = $this->db->get();
 		if($query->num_rows() >0){
-			return $query->result_array();
+			//return $query->result_array();
+			$trips=$query->result_array();
+			
+			foreach ($trips as $index=>$trip){
+				$this->db->select(' v.registration_number,d.name,d.mobile');
+				$this->db->from('trips T');
+				$this->db->join('itinerary i','T.id = i.trip_id','left');
+				$this->db->join('trip_vehicles tv','i.id = tv.itinerary_id','left');
+				$this->db->join('vehicles v','tv.vehicle_id = v.id','left');
+				$this->db->join('drivers d','tv.driver_id = d.id','left');
+				$this->db->where('T.id',$trip['id']);
+				$qry = $this->db->get();
+				$transport_details=$qry->row_array();
+
+				$trips[$index]['registration_number']=$transport_details['registration_number'];
+				$trips[$index]['name']=$transport_details['name'];
+				$trips[$index]['mobile']=$transport_details['mobile'];
+			
+			}
+			return $trips;
 		}else{
 			return false;
 		}
@@ -882,6 +901,14 @@ class Tour_model extends CI_Model {
 		}else{
 			return false;
 		}
+	}
+	function  updateTrip($data,$id) {
+		$this->db->where('id',$id );
+		$org_id=$this->session->userdata('organisation_id');
+		$this->db->where( 'organisation_id', $org_id ); 
+		$this->db->set('updated', 'NOW()', FALSE);
+		$this->db->update("trips",$data);
+	
 	}
 }
 ?>

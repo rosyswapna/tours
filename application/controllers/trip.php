@@ -9,6 +9,7 @@ class Trip extends CI_Controller {
 		$this->load->model("customers_model");
 		$this->load->model("trip_booking_model");
 		$this->load->model("user_model");
+		$this->load->model("tour_model");
 		no_cache();
 
 		}
@@ -277,8 +278,8 @@ class Trip extends CI_Controller {
 	
 	public function tripComplete($trip_id,$pagination=''){
 	$data=array('trip_status_id'=>TRIP_STATUS_TRIP_COMPLETED);
-	$res=$this->trip_booking_model->updateTrip($data,$trip_id);
-	 redirect(base_url().'organization/front-desk/trips/'.$pagination);
+	$res=$this->tour_model->updateTrip($data,$trip_id);
+	 redirect(base_url().'front-desk/tour/list/'.$pagination);
 	
 	}	
 

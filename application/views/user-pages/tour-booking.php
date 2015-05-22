@@ -37,12 +37,12 @@
 	<td class="td-10"><?php echo form_label('Details','details');?></td>
 	<td class="td-15"><?php echo form_input(array('name'=>'source_details','class'=>'form-control','id'=>'source_details','value'=>@$header['source_details']));?></td>
 
-	<?php if(!is_numeric($trip_id) || $package_id > 0){?>
+	<?php if(!is_numeric($trip_id) || $package_id > 0 ){?>
 	<td class="td-10"><?php echo form_label('Package','package');?></td>
 	<td class="td-15"><?php $class="form-control";
 		  $msg="Package";
 		  $id = $name ="package_id";
-		echo $this->form_functions->populate_editable_dropdown($name, $packages,$class,'Packages',array(),$msg,@$package_id,$id);
+		echo $this->form_functions->populate_editable_dropdown($name, $packages,$class,'Packages',array(),$msg,@$header['package_id'],$id);
 	?></td>
 	<?php }?>
 
@@ -65,7 +65,7 @@
 	<td class="td-15"><?php $class="form-control";
 		  $msg="Select";
 		  $name="vehicle_ac_type_id";
-		  echo $this->form_functions->populate_dropdown($name,$vehicle_ac_types,@$vehicle_ac_type_id,$class,$id='vehicle_ac_type',$msg);?>
+		  echo $this->form_functions->populate_dropdown($name,$vehicle_ac_types,@$header['vehicle_ac_type_id'],$class,$id='vehicle_ac_type',$msg);?>
 		  <span class="text-red"><?php
 			if($this->mysession->get('Err_V_Ac') != ''){
 				echo $this->mysession->get('Err_V_Ac');
@@ -81,9 +81,9 @@
 	<td class="td-15"><?php echo form_input(array('name'=>'customer_contact','class'=>'form-control','id'=>'customer_contact','value'=>@$header['customer_mobile']));?>
 	<?php echo  $this->form_functions->form_error_session('customer_contact','<p class="text-red">', '</p>');?>
 	<div><?php 
-	if(isset($header['customer_id'])){
+	if(isset($header['customer_id'])){ 
 			$customer_id=$header['customer_id'];
-			}else{
+			}else{ 
 			$customer_id=gINVALID;
 			}
 	echo form_input(array('name'=>'customer_id','id'=>'customer_id','class'=>'form-control hide-me','value'=>$customer_id));
@@ -94,7 +94,7 @@
 	<td class="td-15"><?php $class="form-control";
 		  $msg="Select";
 		  $name="vehicle_model_id";
-		  echo $this->form_functions->populate_dropdown($name,$vehicle_models,@$vehicle_model_id,$class,$id='vehicle_model',$msg);?>
+		  echo $this->form_functions->populate_dropdown($name,$vehicle_models,@$header['vehicle_model_id'],$class,$id='vehicle_model',$msg);?>
 		  <span class="text-red"><?php
 			if($this->mysession->get('Err_Vmodel') != ''){
 				echo $this->mysession->get('Err_Vmodel');
@@ -116,7 +116,7 @@
 	<td class="td-15"><?php $class="form-control vehicle-list";
 		  $id="vehicle_id";
 		  $msg=' ';
-	echo $this->form_functions->populate_editable_dropdown('vehicle_id', @$available_vehicles,$class,'vehicles',array(),$msg,@$vehicle_id,$id);?><span class="text-red"><?php
+	echo $this->form_functions->populate_editable_dropdown('vehicle_id', @$available_vehicles,$class,'vehicles',array(),$msg,@$header['vehicle_id'],$id);?><span class="text-red"><?php
 							if($this->mysession->get('Err_reg_num') != ''){
 								echo $this->mysession->get('Err_reg_num');
 								$this->mysession->delete('Err_reg_num');
@@ -145,7 +145,7 @@
 	<td class="td-15"><?php $class="form-control";
 		  $msg=' ';
 
-		  echo $this->form_functions->populate_editable_dropdown('driver_id', @$driver_availability,$class,'drivers',array(),$msg,@$driver_id);?></td>
+		  echo $this->form_functions->populate_editable_dropdown('driver_id', @$driver_availability,$class,'drivers',array(),$msg,@$header['driver_id']);?></td>
 	<td class="td-10"><?php echo " ";?></td>
 	<td class="td-15"><div class="tour-advanced-container"><?php echo form_checkbox(array('name'=>'advanced-option','id'=>'advanced-check-box','class'=>'advanced-check-box flat-red','checked'=>@$header['advanced_option'])).nbs(4);?>
 	<?php echo form_label('Advanced');?></div></td>

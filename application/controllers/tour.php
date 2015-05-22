@@ -334,7 +334,7 @@ class Tour extends CI_Controller {
 		}
 	
 		if($this->mysession->get('post_booking')){
-			$data = $this->mysession->get('post_booking');
+			$data['header'] = $this->mysession->get('post_booking');
 			$this->mysession->delete('post_booking');	
 		}
 		
@@ -384,29 +384,6 @@ class Tour extends CI_Controller {
 			$guest['mobile']=$this->input->post('guest_contact');
 			$tripData['customer_id']=gINVALID;
 			$tripData['guest_id']=gINVALID;
-			//check new customer or not
-			if($customer['name']!='' ||$customer['mobile']!=''){
-				$customer_id=$this->input->post('customer_id');
-				if($customer_id<=0){
-					$tripData['customer_id']=$this->customers_model->addCustomer($customer,$login=true);
-				}else{
-					$tripData['customer_id']=$customer_id;
-				}
-			}
-			//check new guest or not
-			if($guest['name']!='' ||$guest['mobile']!=''){
-				$guest_id=$this->input->post('guest_id');
-				if($guest_id<=0){
-					$tripData['guest_id']=$this->customers_model->addCustomer($guest,$login=true);
-				}else{
-					$tripData['guest_id']=$guest_id;
-				}
-			}
-			
-			
-			
-			//----
-			
 			
 			$tripData['booking_date'] 	= date('Y-m-d');
 			$tripData['booking_time'] 	= date('H:i');
@@ -469,10 +446,17 @@ class Tour extends CI_Controller {
 				$tripData['trip_status_id'] 	= TRIP_STATUS_PENDING;
 			}
 			
-			$data['customer']		= $this->input->post('customer');
-			$data['customer_contact']	= $this->input->post('customer_contact');
+			$data['customer_name']		= $this->input->post('customer');
+			$data['customer_mobile']	= $this->input->post('customer_contact');
 			$data['guest_name']		= $this->input->post('guest_name');
-			$data['guest_contact']		= $this->input->post('guest_contact');
+			$data['guest_mobile']		= $this->input->post('guest_contact');
+			$data['vehicle_ac_type_id']		= $this->input->post('vehicle_ac_type_id');
+			$data['vehicle_model_id']		= $this->input->post('vehicle_model_id');
+			$data['vehicle_id']		= $this->input->post('vehicle_id');
+			$data['driver_id']		= $this->input->post('driver_id');
+			$data['customer_id']		= $this->input->post('customer_id');
+			$data['guest_id']		= $this->input->post('guest_id');
+			$data['package_id']		= $this->input->post('package_id');
 			
 			$tripData['organisation_id'] 	= $this->session->userdata('organisation_id'); 
 			$tripData['user_id'] 		= $this->session->userdata('id');   
@@ -480,6 +464,25 @@ class Tour extends CI_Controller {
 			$err=True;
 		    
 			if($this->form_validation->run() != False ) {
+			
+			//check new customer or not
+			if($customer['name']!='' ||$customer['mobile']!=''){
+				$customer_id=$this->input->post('customer_id');echo $customer_id;
+				if($customer_id<=0){
+					$tripData['customer_id']=$this->customers_model->addCustomer($customer,$login=true);
+				}else{
+					$tripData['customer_id']=$customer_id;
+				}
+			}
+			//check new guest or not
+			if($guest['name']!='' ||$guest['mobile']!=''){
+				$guest_id=$this->input->post('guest_id');
+				if($guest_id<=0){
+					$tripData['guest_id']=$this->customers_model->addCustomer($guest,$login=true);
+				}else{
+					$tripData['guest_id']=$guest_id;
+				}
+			}
 
 				//-------------------get vehicle -----------------------------
 	
@@ -577,7 +580,15 @@ class Tour extends CI_Controller {
 						redirect(base_url().'front-desk/tour/booking/');
 					}
 			}
-			$this->mysession->set('post_booking',$data);
+			//echo "<pre>";print_r($data);echo "</pre>";exit;
+			if($_REQUEST['trip_id']==' '||$_REQUEST['trip_id']<=0){
+				$this->mysession->set('post_booking',$data);
+				redirect(base_url().'front-desk/tour/booking/');
+			}else{
+				$this->mysession->set('post_booking',$data);
+				redirect(base_url().'front-desk/tour/booking/'.$_REQUEST['trip_id']);
+			}
+			
 				
 		}
 		redirect(base_url().'front-desk/tour/booking/');
@@ -631,6 +642,10 @@ class Tour extends CI_Controller {
 			}else{
 			$trip['advanced_option']=false;
 			}
+			$trip['vehicle_ac_type_id']=-1;
+			$trip['vehicle_model_id']=-1;
+			$trip['vehicle_id']=-1;
+			$trip['driver_id']=-1;
 			
 				return $trip;
 			}else{
@@ -1077,12 +1092,7 @@ class Tour extends CI_Controller {
 					foreach($item['trip_services'] as $service){
 						$service_name=$this->settings_model->getValuebyId($service['service_id'],'services','name');
 					
-						$tax=0; //STATIC $sno_of_days=1;
-						/*if(isset($str[$service['service_id']])){
-							$sno_of_days=$sno_of_days+1;
-							$str[$service['service_id']][2]+=$service['amount'];
-							$str[$service['service_id']][4]=$tax+$str[$service['service_id']][2];
-						} */
+						$tax=4.955; 
 							 $total=$tax+$service['amount'];
 							 $s_particulars="Service: ".$service_name.",".$service['location']."- Rs ".$service['amount']." per day ";
 						
@@ -1174,7 +1184,7 @@ class Tour extends CI_Controller {
 								$totalAmount +=$tarrif_data['additional_kilometer_rate']*$additional_km;
 							}
 							if($tarrif_data['driver_bata']){
-								$t_particulars.="+ Driver Bata @ Rs ".$tarrif_data['driver_bata']." each day";
+								$t_particulars.="+ Driver Bata @ Rs ".$tarrif_data['driver_bata']." each day for 1day(s)";
 								$totalAmount +=$tarrif_data['driver_bata'];
 							}
 							if($tarrif_data['night_halt']){
@@ -1182,7 +1192,7 @@ class Tour extends CI_Controller {
 								$totalAmount +=$tarrif_data['night_halt'];
 							}
 						}
-						$tax = 0;
+						$tax = 4.955;
 						$grandTotal = $totalAmount + $tax;
 						$estimate_amt+=$grandTotal;
 						$travel_tr[]=array('Travel',$t_particulars,number_format($totalAmount,2),number_format($tax,2),number_format($grandTotal,2));
@@ -1273,7 +1283,7 @@ class Tour extends CI_Controller {
 			$a_particulars.= " ( Meals Package : ".implode(',',$meals_particulars)." )";
 		}
 
-		$tax = 0;
+		$tax = 4.955;
 		$grandTotal = $totalAmount + $tax;
 		
 		return array(

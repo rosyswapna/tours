@@ -2332,7 +2332,7 @@ $('.vehicle-list').on('keydown',function(){
 		if( start_time < end_time){
 		}
 		else{
-			alert("Correct drop time");
+			//alert("Correct drop time");
 		}
 	}
 	});

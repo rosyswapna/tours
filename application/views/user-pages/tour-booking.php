@@ -266,11 +266,12 @@
 				<div class="row-source-100-percent-width-with-margin-8">
 					<div class="form-group div-with-20-percent-width-with-margin-10">
 					<?php 
-					if(is_numeric($trip_id) && $trip_id > 0){
+					//if(is_numeric($trip_id) && $trip_id > 0){
+					if($flag=='TA' || $flag=='TE' ){
 						echo form_label('Date','travel_date'); 
 				    		echo form_input(array('name'=>'travel_date','class'=>'form-control initialize-date-picker  ','id'=>'travel_date','value'=>@$travel_date));
 					
-					}else{
+					}elseif($flag=='PA' ||$flag=='PE'){
 						echo form_label('Day','travel_date'); 
 						$name = $id = 'travel_date';$class = 'form-control';
 						$msg = "Select Day";
@@ -342,11 +343,11 @@
 				<div class="row-source-100-percent-width-with-margin-8">
 					<div class="form-group div-with-20-percent-width-with-margin-10">
 					<?php 
-					if(is_numeric($trip_id) && $trip_id > 0){
+					if($flag=='TA' || $flag=='TE' ){
 						echo form_label('Date','accommodation_date'); 
 				    		echo form_input(array('name'=>'accommodation_date','class'=>'form-control initialize-date-picker  ','id'=>'accommodation_date','value'=>@$accommodation_date));
 					
-					}else{
+					}elseif($flag=='PA' || $flag=='PE' ){
 						echo form_label('Day','accommodation_date'); 
 						$name = $id = 'accommodation_date';$class = 'form-control';
 						$msg = "Select Day";
@@ -475,11 +476,11 @@
 				<div class="row-source-100-percent-width-with-margin-8">
 					<div class="form-group div-with-20-percent-width-with-margin-10">
 					<?php 
-					if(is_numeric($trip_id) && $trip_id > 0){
+					if($flag=='TA' || $flag=='TE' ){
 						echo form_label('Date','service_date'); 
 				    		echo form_input(array('name'=>'service_date','class'=>'form-control initialize-date-picker  ','id'=>'service_date','value'=>@$service_date));
 					
-					}else{
+					}elseif($flag=='PA' || $flag=='PE' ){
 						echo form_label('Day','service_date'); 
 						$name = $id = 'service_date';$class = 'form-control';
 						$msg = "Select Day";
@@ -560,11 +561,11 @@
 					<div class="form-group div-with-20-percent-width-with-margin-10">
 					<?php 
 					
-					if(is_numeric($trip_id) && $trip_id > 0){
+					if($flag=='TA' || $flag=='TE' ){
 						echo form_label('Date','vehicle_date'); 
 				    		echo form_input(array('name'=>'vehicle_date','class'=>'form-control initialize-date-picker  ','id'=>'vehicle_date','value'=>@$vehicle_date));
 					
-					}else{
+					}elseif($flag=='PA' || $flag=='PE' ){
 						echo form_label('Day','vehicle_date'); 
 						$name = $id = 'vehicle_date';$class = 'form-control';
 						$msg = "Select Day";

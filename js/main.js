@@ -2201,18 +2201,20 @@ $('.vehicle-list').on('keydown',function(){
 	//if edit tour get cart elements (tour booking form)
 	var pathname = window.location.pathname.split("/");
 	//if(pathname[2]=="tour" && pathname[3]=="booking" && pathname[4] > 0){ 
-	if(pathname[2]=="tour" && pathname[3]=="booking"){ 
+	if(pathname[2]=="tour" && pathname[3]=="booking" &&(pathname[4]=="PA" || pathname[4]=="TA")&& pathname[5] > 0){
 		$.post(base_url+'/tour/getFromCart',{},function(data){
 			if(data!=false){
 				data=jQuery.parseJSON(data);
+				
+				if(pathname[4]=="PA" && pathname[5] > 0){
+					$("#package_id").val(pathname[5]);
+					$('input[name="hid_package"]').val(pathname[5]);
+				}
 				build_itinerary_table(data);
 			}
 		});
-	}else if(pathname[2]=="tour" && pathname[3]=="booking"){
-		$('#package_id').val(package_id_edit);
-		$('#package_id').trigger('change');
 	}
-
+	
 
 
 	// season-multiselect

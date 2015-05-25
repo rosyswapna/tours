@@ -670,7 +670,7 @@ class Tour_model extends CI_Model {
 
 	//get trip vehicles, accommodation, services and destinatins of a trip
 	function getItineraryDataAll($trip_id=0)
-	{
+	{  
 		if(!is_numeric($trip_id))
 			return false;
 

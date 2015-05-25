@@ -570,7 +570,7 @@ class Tour extends CI_Controller {
 							
 							$this->session->set_userdata(array('dbSuccess'=>'Trip booked successfully!')); 
 							$this->session->set_userdata(array('dbError'=>''));
-							redirect(base_url().'front-desk/tour/booking/'.$trip_id);
+							redirect(base_url().'front-desk/tour/booking/TA/'.$trip_id);
 						}
 					}elseif($_REQUEST['trip_id']>0){
 						unset($tripData['id']);
@@ -581,7 +581,7 @@ class Tour extends CI_Controller {
 						if($result){
 							$this->session->set_userdata(array('dbSuccess'=>'Trip Updated successfully!')); 
 							$this->session->set_userdata(array('dbError'=>''));
-							redirect(base_url().'front-desk/tour/booking/'.$_REQUEST['trip_id']);
+							redirect(base_url().'front-desk/tour/booking/TA/'.$_REQUEST['trip_id']);
 						}
 					
 					}
@@ -589,21 +589,21 @@ class Tour extends CI_Controller {
 				}else{
 						$this->session->set_userdata(array('dbSuccess'=>'')); 
 						$this->session->set_userdata(array('dbError'=>'Trip booking Failed'));
-						redirect(base_url().'front-desk/tour/booking/');
+						redirect(base_url().'front-desk/tour/booking/TA');
 					}
 			}
 			//echo "<pre>";print_r($data);echo "</pre>";exit;
 			if($_REQUEST['trip_id']==' '||$_REQUEST['trip_id']<=0){
 				$this->mysession->set('post_booking',$data);
-				redirect(base_url().'front-desk/tour/booking/');
+				redirect(base_url().'front-desk/tour/booking/PA');
 			}else{
 				$this->mysession->set('post_booking',$data);
-				redirect(base_url().'front-desk/tour/booking/'.$_REQUEST['trip_id']);
+				redirect(base_url().'front-desk/tour/booking/TA/'.$_REQUEST['trip_id']);
 			}
 			
 				
 		}
-		redirect(base_url().'front-desk/tour/booking/');
+		redirect(base_url().'front-desk/tour/booking/TA');
 	}
 
 
@@ -661,7 +661,7 @@ class Tour extends CI_Controller {
 			
 				return $trip;
 			}else{
-				redirect(base_url().'front-desk/tour/booking');
+				redirect(base_url().'front-desk/tour/booking/TA');
 			}
 			
 		}else{

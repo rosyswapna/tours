@@ -2117,7 +2117,7 @@ $('.vehicle-list').on('keydown',function(){
 	$('.packages-edit').on('click',function(){
 		var package_id = $(this).attr('edit-id');
 		//alert(package_id);
-		window.location.replace(base_url+'/front-desk/tour/booking/0/'+package_id);
+		window.location.replace(base_url+'/front-desk/tour/booking/PA/'+package_id);
 		
 	});
 	//----------------------------------------------

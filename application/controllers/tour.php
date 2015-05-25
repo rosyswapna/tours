@@ -309,23 +309,34 @@ class Tour extends CI_Controller {
 
 	public function tour_booking($param2='',$param3='')
 	{	
-		$data['package_id'] = gINVALID;
-		$data['itrTable'] = false;
 		
-		if($param2!='' && is_numeric($param2) && $param2 > 0){//valid trip id
-			$tour_itms = $this->tour_model->getItineraryDataAll($param2);
+		
+		if($param2=='PA' || $param2=='TA'){
+			
+			if($param2=='PA'&& $param3=='' ){ 
+				$data['flag']='PA';
+			}elseif($param2=='TA'&& $param3==''){
+				$data['flag']='TA';
+			}
+		
+			$data['package_id'] = gINVALID;
+			$data['itrTable'] = false;
+		//if($param2!='' && is_numeric($param2) && $param2 > 0){//valid trip id
+		if($param2=='TA' && is_numeric($param3) && $param3 > 0 ){
+			$tour_itms = $this->tour_model->getItineraryDataAll($param3);
 			if($tour_itms){
 				$this->tour_cart->create($tour_itms);				
 			}
 			$cart = $this->tour_cart->contents();
-			$data['header'] = $this->set_tour_header($param2);
-
-			$this->tour_cart->trip_id = $param2;
-		}elseif($param2 == 0 && is_numeric($param3) && $param3 > 0){
+			$data['header'] = $this->set_tour_header($param3);
+			$data['flag']='TE';
+			$this->tour_cart->trip_id = $param3;
+		//}elseif($param2 == 0 && is_numeric($param3) && $param3 > 0){
+		}elseif($param2=='PA' && is_numeric($param3) && $param3 > 0 ){
 			$data['package_id'] = $param3;
 			$param2 = '';
 			$data['itrTable'] = $this->createCartFromPackage($ajax = 'NO',$param3);
-
+			$data['flag']='PE';
 			//echo "<pre>";print_r($data['itrTable']);echo "</pre>";exit;
 		}else{
 			$this->tour_cart->trip_id = gINVALID;
@@ -361,6 +372,7 @@ class Tour extends CI_Controller {
 		$data['title']="Tour Booking | ".PRODUCT_NAME;  
 		$page='user-pages/tour-booking';
 		$this->load_templates($page,$data);
+		}
 	}
 	
 	
@@ -467,7 +479,7 @@ class Tour extends CI_Controller {
 			
 			//check new customer or not
 			if($customer['name']!='' ||$customer['mobile']!=''){
-				$customer_id=$this->input->post('customer_id');echo $customer_id;
+				$customer_id=$this->input->post('customer_id');//echo $customer_id;
 				if($customer_id<=0){
 					$tripData['customer_id']=$this->customers_model->addCustomer($customer,$login=true);
 				}else{
@@ -793,18 +805,22 @@ class Tour extends CI_Controller {
 				//SAVE ITINERARY DATA
 				$this->tour_model->save_tour_cart($cart,$trip_id);
 				$Msg = "Tour Updated Successfully";
+				$this->session->set_userdata(array('dbSuccess'=>$Msg)); 
+				$this->session->set_userdata(array('dbError'=>''));
+				redirect(base_url().'front-desk/tour/booking/TA/'.$trip_id);
 				
 			}else{
 				//SAVE AS PACKAGE
 				$package = $_REQUEST['hid_package'];
-				$this->package_model->save_package($cart,$package);
+				$package_id=$this->package_model->save_package($cart,$package);
 				$Msg = "Package Updated Successfully";
+				$this->session->set_userdata(array('dbSuccess'=>$Msg)); 
+				$this->session->set_userdata(array('dbError'=>''));
+				redirect(base_url().'front-desk/tour/booking/PA/'.$package_id);
 			}
 		}
 
-		$this->session->set_userdata(array('dbSuccess'=>$Msg)); 
-		$this->session->set_userdata(array('dbError'=>''));
-		redirect(base_url().'front-desk/tour/booking/'.$trip_id);
+		
 		
 	}
 	
@@ -1102,14 +1118,34 @@ class Tour extends CI_Controller {
 				}
 
 				//set accommodation rows----------------
-				if(isset($item['trip_accommodation'])){ 
+				if(isset($item['trip_accommodation'])){  $ret_array=array();$room_attr_narration=array();$meals_narration=array();$room_tariff_narration=array();
 					foreach($item['trip_accommodation'] as $accommodation){ 
 						
-
-						list($name,$a_particulars,$unit_amt,$tax,$total)= $this->getAccomodationCharge($accommodation['hotel_id'],$accommodation['room_type_id'],$accommodation['room_attributes'],$accommodation['room_quantity'],$accommodation['meals_package'],$accommodation['meals_quantity']);
+					if(!empty($ret_array)){
 						
-						$acc_tr[]=array($name,$a_particulars,number_format($unit_amt,2),number_format($tax,2),number_format($total,2));
-						$estimate_amt+=$total;
+					}else{	
+						$hotel_attr=$this->hotel_model->getHotelProfile($accommodation['hotel_id']);
+						$destination=$this->settings_model->getValuebyId($hotel_attr['destination_id'],'destinations','name');
+						$room_type=$this->settings_model->getValuebyId($accommodation['room_type_id'],'room_types','name');
+						$_date 		= date("Y-m-d");
+						$season_ids = $this->tour_model->getSeasonIdssWithDate($_date);
+						if($season_ids){
+							$season_id = $season_ids[0];
+						}else{
+							$season_id = gINVALID;
+						}
+						$filter=array('hotel_id'=>$accommodation['hotel_id'],'room_type_id'=>$accommodation['room_type_id'],'season_id'=>$season_id);
+						$room_tariff= $this->hotel_model->getHotelRoomTariff($filter);
+						$room_charge=($room_tariff->amount)*$accommodation['room_quantity'];
+						$room_tariff_narration=
+						
+						$ret_array=array($accommodation['hotel_id'],$accommodation['room_type_id'],$room_attr_narration,$meals_narration);
+					}
+						
+						//list($name,$a_particulars,$unit_amt,$tax,$total)= $this->getAccomodationCharge($accommodation['hotel_id'],$accommodation['room_type_id'],$accommodation['room_attributes'],$accommodation['room_quantity'],$accommodation['meals_package'],$accommodation['meals_quantity']);
+						
+						//$acc_tr[]=array($name,$a_particulars,number_format($unit_amt,2),number_format($tax,2),number_format($total,2));
+						//$estimate_amt+=$total;
 					}
 					
 				} 
@@ -1219,7 +1255,7 @@ class Tour extends CI_Controller {
 		$hotel_attr=$this->hotel_model->getHotelProfile($hotel_id);
 		$destination=$this->settings_model->getValuebyId($hotel_attr['destination_id'],'destinations','name');
 		$room_type=$this->settings_model->getValuebyId($room_type_id,'room_types','name');
-
+		
 		$a_particulars="Accomodation: ".$hotel_attr['name'].",".$destination;
 
 		$_date 		= date("Y-m-d");

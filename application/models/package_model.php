@@ -144,15 +144,16 @@ class Package_model extends CI_Model {
 
 		$tbls = array('package_destinations','package_accommodation','package_services','package_vehicles');
 		$retArray = array();
-		foreach($pck_itineraries as $pck_itinerary){
-			foreach($tbls as $pck_tbl){
-				$tbl = $this->getTripTable($pck_tbl);
-				$tbleData = $this->getPckItineraryData($pck_itinerary['id'],$pck_tbl);
-				if($tbleData)
-					$retArray[$pck_itinerary['day_no']][$tbl]=$tbleData;
+		if(!empty($pck_itineraries)){
+			foreach($pck_itineraries as $pck_itinerary){
+				foreach($tbls as $pck_tbl){
+					$tbl = $this->getTripTable($pck_tbl);
+					$tbleData = $this->getPckItineraryData($pck_itinerary['id'],$pck_tbl);
+					if($tbleData)
+						$retArray[$pck_itinerary['day_no']][$tbl]=$tbleData;
+				}
 			}
 		}
-
 		return $retArray;
 		
 	}
@@ -300,6 +301,7 @@ class Package_model extends CI_Model {
 				
 				$this->db->insert_batch($tbl,$dataArray);
 			}
+			
 		}
 
 		//update batch
@@ -330,6 +332,7 @@ class Package_model extends CI_Model {
 			}
 		
 		}
+		return $package_id;
 	}
 	
 	
@@ -393,16 +396,8 @@ class Package_model extends CI_Model {
 
 	function get_sql_for_packages()
 	{
-		$qry = "SELECT p.id, p.name as package, p.status_id, 
-				st.name, count(pi.id) as days,GROUP_CONCAT(d.name SEPARATOR ', ') as description
-			FROM packages p
-			LEFT JOIN statuses st ON p.status_id = st.id 
-			LEFT JOIN package_itinerary pi ON pi.package_id = p.id 
-			LEFT JOIN  package_destinations pd ON pi.id = pd.package_itinerary_id
-			LEFT JOIN destinations d ON d.id = pd.destination_id
-			WHERE p.organisation_id = ".$this->session->userdata('organisation_id')."
-			GROUP BY pi.package_id";
-
+		$qry = "SELECT p.id, p.name as package, p.status_id, st.name, count(pi.id) as days FROM packages p LEFT JOIN statuses st ON p.status_id = st.id LEFT JOIN package_itinerary pi ON pi.package_id = p.id WHERE p.organisation_id = ".$this->session->userdata('organisation_id')." GROUP BY pi.package_id"; 
+			
 		return $qry;
 	}
 	

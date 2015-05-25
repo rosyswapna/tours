@@ -17,19 +17,26 @@
  
 	echo form_open(base_url()."tour/manage_tour_booking");
 	echo form_hidden('trip_id',$trip_id);
-	if(!is_numeric($package_id) || $package_id <= 0){
+	
 ?>
 
 
 	<fieldset class="body-border">
-	<legend class="body-head">Booking Source</legend>
+	<legend class="body-head"><?php if($flag=='PA'){ echo "Package Add";}
+					elseif($flag=='TA'){echo "Trip Add";} 
+					elseif($flag=='PE'){echo "Package Edit";} 
+					elseif($flag=='TE'){echo "Trip Edit";} 
+					?></legend>
 	<table class="tour-booking-tbl">
 	<tr>
-	<td class="td-10"><?php echo form_label('Source','source');?></td>
+	<?php if($flag=='TA' ||$flag=='TE'){ ?>
+	<td class="td-10">
+	<?php  echo form_label('Source','source');?></td>
 	<td class="td-15"><?php $class="form-control";
 		  $msg="Select";
 		  $name="source_id";
 		  echo $this->form_functions->populate_dropdown($name,$booking_sources,@$header['trip_source_id'],$class,$id='source_id',$msg);?></td>
+		  
 	<td class="td-10"><?php echo form_label('Contact','contact');?></td>
 	<td class="td-15"><?php echo form_input(array('name'=>'source_contact','class'=>'form-control','id'=>'source_contact','value'=>@$header['source_contact']));?>
 	<?php echo  $this->form_functions->form_error_session('source_contact','<p class="text-red">', '</p>');?>
@@ -37,7 +44,8 @@
 	<td class="td-10"><?php echo form_label('Details','details');?></td>
 	<td class="td-15"><?php echo form_input(array('name'=>'source_details','class'=>'form-control','id'=>'source_details','value'=>@$header['source_details']));?></td>
 
-	<?php if(!is_numeric($trip_id) || $package_id > 0 ){?>
+	<?php //} if(!is_numeric($trip_id) || $package_id > 0 ){?>
+	<?php } if($flag=='TA' || $flag=='PA' || $flag=='PE'){?>
 	<td class="td-10"><?php echo form_label('Package','package');?></td>
 	<td class="td-15"><?php $class="form-control";
 		  $msg="Package";
@@ -49,7 +57,7 @@
 	</tr>
 	</table>
 	</fieldset>
-
+	<?php if($flag=='TA' ||$flag=='TE'){?>
 	<fieldset class="body-border">
 	<legend class="body-head">Booking Information</legend>
 	<table class="tour-booking-tbl">
@@ -177,6 +185,7 @@
 
 		<button class="btn btn-success book-tour-validate" type="button" enable_redirect='false'>
 		<?php echo $save; ?></button>
+		
 		<div class="hide-me">
 		<?php $save_update_button='SAVE';
 			$class_save_update_button="class='btn btn-success trip-save-update'";
@@ -187,20 +196,12 @@
 	</td></tr></table>
 	</table>
 
-	</fieldset>
-	<?php }else{ ?>
+	</fieldset> <?php }?>
+	
 
-	<fieldset class="body-border">
-	<legend class="body-head">Package</legend>
-		<table>
-			<tr>
-				<td><?php echo form_label('Package Name ');?></td>
-				<td><?php echo form_input(array('name'=>'package_text','class'=>'form-control','disabled'=>'disabled','value'=>@$packages[$package_id]));?></td>
-			</tr>
-		</table>
-	</fieldset>
-<?php } 
-	echo form_close();
+	
+<?php 
+	echo form_close(); 
 ?>
 
 <!--itinerary table starts here ,table illed by jquery-->

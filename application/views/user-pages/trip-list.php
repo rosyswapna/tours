@@ -75,7 +75,7 @@ echo form_close();?></td>
 				<td><span class="label <?php echo $status_class[$trip['trip_status_id']]; ?>"><?php echo $trip_statuses[$trip['trip_status_id']];?></span>  </td>
 				<td>
 				<?php 	if($trip['trip_status_id']==TRIP_STATUS_CONFIRMED || $trip['trip_status_id']==TRIP_STATUS_PENDING ) { 
-						echo anchor_popup_default(base_url().'front-desk/tour/booking/'.$trip['id'],'<span></span>',array('class'=>' fa fa-edit ','title'=>'Edit')).nbs(5);
+						echo anchor_popup_default(base_url().'front-desk/tour/booking/TA/'.$trip['id'],'<span></span>',array('class'=>' fa fa-edit ','title'=>'Edit')).nbs(5);
 					}
 					if($trip['trip_status_id']==TRIP_STATUS_CONFIRMED  ) { 
 						echo "<a href=".base_url().'trip/complete/'.$trip['id']."/".$this->uri->segment(4)." title='Complete' class='fa fa-caret-square-o-right complete-trip'></a>";

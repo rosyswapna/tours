@@ -22,7 +22,9 @@
 echo form_close();?>	</td>
 
 			<td>
-			<?php echo form_open(  base_url().'front-desk/tour/booking');
+			<?php 
+			$page_flag='PA';
+			echo form_open(  base_url().'front-desk/tour/booking/'.$page_flag);
 				echo form_submit("add","Add","class='btn btn-primary'");
 				echo form_close(); 
 			?>
@@ -43,7 +45,7 @@ echo form_close();?>	</td>
 	<tr>
 		
 		<th style="width:30%">Package Name</th>
-		<th style="width:40%">Package Description</th>
+		
 		<th style="width:10%">No:of Days</th>
 		<th  style="width:10%">Amount</th>
 		<th  style="width:10%">Status</th>
@@ -69,7 +71,7 @@ echo form_close();?>	</td>
 		?>
 		</td>
 
-		<td><?php echo $package['description'];?></td>
+		
 
 		<td><?php echo $package['days'];?></td>
 

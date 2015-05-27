@@ -57,7 +57,7 @@ class Tour extends CI_Controller {
 			}elseif($param1 == 'getItinerary'){
 				$this->getItinerary();
 			}elseif($param1 == 'save_cart'){
-				$this->save_cart($param2);
+				$this->save_cart($param2,$param3);
 			}elseif($param1 == 'getEditableTabValues'){
 				$this->getEditableTabValues();
 			}elseif($param1 == 'packages'){
@@ -484,6 +484,8 @@ class Tour extends CI_Controller {
 					$tripData['customer_id']=$this->customers_model->addCustomer($customer,$login=true);
 				}else{
 					$tripData['customer_id']=$customer_id;
+					$this->customers_model->updateCustomers($customer,$customer_id); 
+					
 				}
 			}
 			//check new guest or not
@@ -493,6 +495,7 @@ class Tour extends CI_Controller {
 					$tripData['guest_id']=$this->customers_model->addCustomer($guest,$login=true);
 				}else{
 					$tripData['guest_id']=$guest_id;
+					$this->customers_model->updateCustomers($guest,$guest_id);
 				}
 			}
 
@@ -589,21 +592,21 @@ class Tour extends CI_Controller {
 				}else{
 						$this->session->set_userdata(array('dbSuccess'=>'')); 
 						$this->session->set_userdata(array('dbError'=>'Trip booking Failed'));
-						redirect(base_url().'front-desk/tour/booking/');
+						redirect(base_url().'front-desk/tour/booking/TA');
 					}
 			}
 			//echo "<pre>";print_r($data);echo "</pre>";exit;
 			if($_REQUEST['trip_id']==' '||$_REQUEST['trip_id']<=0){
 				$this->mysession->set('post_booking',$data);
-				redirect(base_url().'front-desk/tour/booking/');
+				redirect(base_url().'front-desk/tour/booking/TA');
 			}else{
 				$this->mysession->set('post_booking',$data);
-				redirect(base_url().'front-desk/tour/booking/'.$_REQUEST['trip_id']);
+				redirect(base_url().'front-desk/tour/booking/TA/'.$_REQUEST['trip_id']);
 			}
 			
 				
 		}
-		redirect(base_url().'front-desk/tour/booking/');
+		redirect(base_url().'front-desk/tour/booking/TA');
 	}
 
 
@@ -661,7 +664,7 @@ class Tour extends CI_Controller {
 			
 				return $trip;
 			}else{
-				redirect(base_url().'front-desk/tour/booking');
+				redirect(base_url().'front-desk/tour/booking/TA');
 			}
 			
 		}else{
@@ -796,21 +799,25 @@ class Tour extends CI_Controller {
 
 	
 	
-	function save_cart($trip_id=gINVALID)
+	function save_cart($pt_flag,$pt_id)
 	{ //echo $trip_id;exit;
 		$cart =$this->tour_cart;
-		if(isset($_REQUEST['save-itry'])){ 
+		if(isset($_REQUEST['save-itry'])){
 			
-			if(is_numeric($trip_id) && $trip_id > 0){echo "tour";exit;
+			//if(is_numeric($trip_id) && $trip_id > 0){
+			if($pt_flag=='TA' && $pt_id>0){
+				
 				//SAVE ITINERARY DATA
+				$trip_id=$pt_id;
 				$this->tour_model->save_tour_cart($cart,$trip_id);
 				$Msg = "Tour Updated Successfully";
 				$this->session->set_userdata(array('dbSuccess'=>$Msg)); 
 				$this->session->set_userdata(array('dbError'=>''));
 				redirect(base_url().'front-desk/tour/booking/TA/'.$trip_id);
 				
-			}else{echo "package";exit;
+			}else{
 				//SAVE AS PACKAGE
+				//$package_id=$pt_id;
 				$package = $_REQUEST['hid_package'];
 				$package_id=$this->package_model->save_package($cart,$package);
 				$Msg = "Package Updated Successfully";

@@ -229,8 +229,11 @@
 	</table>
 
 	<div class="form-submit-reset-buttons-group">
-		<?php 
-			echo form_open(base_url()."front-desk/tour/save_cart/".$trip_id);
+		<?php 	if($flag=='TA' ||$flag=='TE'){ 
+				echo form_open(base_url()."front-desk/tour/save_cart/TA/".$trip_id);
+			}elseif($flag=='PA' ||$flag=='PE'){
+				echo form_open(base_url()."front-desk/tour/save_cart/PA/".$trip_id);
+			}
 			echo form_hidden('hid_package','');
 			echo form_submit("save-itry","Save","class='btn btn-success hide-me save-itry'");
 			echo form_close();

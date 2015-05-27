@@ -2176,18 +2176,19 @@ $('.vehicle-list').on('keydown',function(){
 		var errFlag = 0;
 		var errMsg = '';
 		var pathname = window.location.pathname.split("/");
-		if(pathname[4]){//tour module
+		if(pathname[4]=="TA"){//tour module
 			errFlag = 0;errMsg='';
-		}else{//package module
+		}else if(pathname[4]=="PA" || pathname[5]>0){//package module 
 			//get package
 			var _package = $('input[name="hid_package"]').val();
 			if(_package == ''){
 				errFlag = 1;
 				errMsg = "Package Name Required";
 			}
+			
 		}
 
-		if(errFlag == 0){
+		if(errFlag == 0){ 
 			$('.book-tour-validate').attr('enable_redirect','true');
 			$('.save-itry').trigger('click');
 		}else{
@@ -3108,20 +3109,25 @@ $('.vehicle-list').on('keydown',function(){
 		var date = $("#tour-pickupdatepicker").val(); 
 		if(date != ''){
 			$.post(base_url+"/tour/getItineraryCount",{},function(data){
-				days = Number(data)-1;
-				if(days > 0){
-					str = date.split("-");
-					y = str[0];m = str[1];d = str[2];
-					d = new Date(date);
-					d.setDate(d.getDate() + days);
-					var day2 = d.getDate();
-					if(day2 < 10)day2 ="0"+day2;
-					var month2 = d.getMonth() + 1;if(month2 < 10)month2 ="0"+month2;
-					var year2 = d.getFullYear();
-					date2 = year2+"-"+month2+"-"+day2;
-			  
-					$("#tour-dropdatepicker").val(date2);
+				if(data>1){
+					days = Number(data)-1;
+					if(days > 0){
+						str = date.split("-");
+						y = str[0];m = str[1];d = str[2];
+						d = new Date(date);
+						d.setDate(d.getDate() + days);
+						var day2 = d.getDate();
+						if(day2 < 10)day2 ="0"+day2;
+						var month2 = d.getMonth() + 1;if(month2 < 10)month2 ="0"+month2;
+						var year2 = d.getFullYear();
+						date2 = year2+"-"+month2+"-"+day2;
+				  
+						
+					}
+				}else if(data==1){
+					date2 =date;
 				}
+				$("#tour-dropdatepicker").val(date2);
 			});
 		}	
 	}

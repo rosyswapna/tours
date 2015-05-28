@@ -43,6 +43,7 @@ class CI_Tour_cart {
 			$this->_tour_cart_contents['tour_cart_total'] = 0;
 			$this->_tour_cart_contents['total_itineraries'] = 0;
 			$this->_tour_cart_contents['delete_itineraries'] = array();
+			$this->_tour_cart_contents['estimate'] = array();
 		}
 
 		log_message('debug', "Tour Cart Class Initialized");
@@ -59,13 +60,14 @@ class CI_Tour_cart {
 		//echo "<pre>";print_r($items);echo "</pre>";exit;
 		$this->_tour_cart_contents = $items;
 		$this->_tour_cart_contents['delete_itineraries'] = array();
+		$this->_tour_cart_contents['estimate'] = array();
 		$this->_tour_cart_contents['tour_cart_total'] = 0;
 		$this->_tour_cart_contents['total_itineraries'] = 0;
 		$this->save_cart();
 	}
 
 
-	function insert($items,$itinerary){//new cart item
+	function insert($items,$itinerary){ //new cart item
 		if ( ! is_array($items) OR count($items) == 0)
 		{
 			log_message('error', 'The insert method must be passed an array containing data.');
@@ -73,13 +75,53 @@ class CI_Tour_cart {
 		}
 		
 		foreach($items as $tbl=>$dataArr){
+				
 			$this->_tour_cart_contents[$itinerary][$tbl][] = $dataArr;
+			
+			/*end($this->_tour_cart_contents[$itinerary][$tbl]);
+			$index=key($this->_tour_cart_contents[$itinerary][$tbl]); 
+			if($tbl=='trip_accommodation'){ 
+				$from_cart=array(
+					'itinerary'=>$itinerary,
+					'table'=>$tbl,
+					'index'=>$index
+					); 
+				if(!empty($this->_tour_cart_contents['estimate'])){ 
+					$temp=$this->_tour_cart_contents['estimate']['accommodation'];
+						foreach($temp as $key=>$acm){ 
+							
+							if($acm['hotel_id']==$dataArr['hotel_id'] && $acm['room_type_id']==$dataArr['room_type_id']){
+							
+								$this->_tour_cart_contents['estimate']['accommodation'][$key]=$acm; break;
+							}else{ 
+								
+								$this->_tour_cart_contents['estimate']['accommodation'][]=array(
+								'hotel_id'=>$dataArr['hotel_id'],
+								'room_type_id'=>$dataArr['room_type_id'],
+								'from_cart'=>array($from_cart),
+								
+								);
+								
+							}
+						}
+							
+				}else{ 
+						$this->_tour_cart_contents['estimate']['accommodation'][]=array(
+						'hotel_id'=>$dataArr['hotel_id'],
+						'room_type_id'=>$dataArr['room_type_id'],
+						'from_cart'=>array($from_cart),
+						);
+				}
+			}*/
 		}
+			$this->save_cart();
+			
+		} 
 		
-		$this->save_cart();
-
 		
-	}
+	
+		
+	
 	function update($tble,$items,$itinerary,$index){//update cart item
 		if ( ! is_array($items) OR count($items) == 0)
 		{
@@ -134,6 +176,8 @@ class CI_Tour_cart {
 		unset($this->_tour_cart_contents['total_itineraries']);
 		$delete_itineraries = $this->_tour_cart_contents['delete_itineraries'];
 		unset($this->_tour_cart_contents['delete_itineraries']);
+		$estimate = $this->_tour_cart_contents['estimate']; // echo "<pre>";print_r($estimate);echo "</pre>";exit;
+		unset($this->_tour_cart_contents['estimate']);
 
 		// Is our cart empty?  If so we delete it from the session
 		if (count($this->_tour_cart_contents) <= 0)
@@ -150,8 +194,10 @@ class CI_Tour_cart {
 		}
 		$this->_tour_cart_contents['total_itineraries'] = $total_itinerary;
 		$this->_tour_cart_contents['delete_itineraries'] = $delete_itineraries;
+		$this->_tour_cart_contents['estimate'] = $estimate;
 		
 		$this->CI->session->set_userdata(array('tour_cart_contents' => $this->_tour_cart_contents));
+		//echo "<pre>";print_r($this->CI->session->userdata("tour_cart_contents"));echo "</pre>";exit;
 		
 		// Woot!
 		return TRUE;
@@ -182,6 +228,10 @@ class CI_Tour_cart {
 	{
 		return $this->_tour_cart_contents['delete_itineraries'];
 	}
+	
+	function estimate(){
+		return $this->_tour_cart_contents['estimate'];
+	}
 
 	// --------------------------------------------------------------------
 
@@ -201,6 +251,7 @@ class CI_Tour_cart {
 		unset($cart['tour_cart_total']);
 		unset($cart['total_itineraries']);
 		unset($cart['delete_itineraries']);
+		unset($cart['estimate']);
 
 		return $cart;
 	}
@@ -223,6 +274,7 @@ class CI_Tour_cart {
 		$this->_tour_cart_contents['tour_cart_total'] = 0;
 		$this->_tour_cart_contents['total_itineraries'] = 0;
 		$this->_tour_cart_contents['delete_itineraries'] = array();
+		$this->_tour_cart_contents['estimate'] = array();
 		$this->CI->session->unset_userdata('tour_cart_contents');
 	}
 

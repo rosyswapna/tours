@@ -694,25 +694,6 @@ class Tour extends CI_Controller {
 
 	function addToCart()//from ajax call
 	{
-		/*if(isset($_REQUEST['table'])&& isset($_REQUEST['_date']) && isset($_REQUEST['trip_id'])){
-			$tble = $_REQUEST['table'];
-			$fields = $_REQUEST;
-			$itinerary = $fields['_date'];
-			$index = $fields['row_id'];
-			array_shift($fields);//pop first element(url data from ajax call)
-			unset($fields['table']);
-			unset($fields['_date']);
-			unset($fields['trip_id']);
-			unset($fields['row_id']);
-			//echo "<pre>";print_r($fields);echo "</pre>";exit;
-			if(is_numeric($fields['id'])&& ($fields['id']>0)){
-			$this->tour_cart->update($tble,$fields,$itinerary,$index);
-			}else{
-			$data[$tble] = $fields;
-			$this->tour_cart->insert($data,$itinerary);
-			}
-				
-		}*/
 		if(isset($_REQUEST['post'])){
 			$dataArray=$_REQUEST['post'];
 			$tble = $dataArray['table'];
@@ -732,8 +713,10 @@ class Tour extends CI_Controller {
 			}else{ 
 				$data[$tble] = $fields; 
 				$this->tour_cart->insert($data,$itinerary);
+				
 			}
 		}
+		
 		$cart = $this->tour_cart->contents();
 		$this->build_itinerary_data($cart,$ajax = 'YES');
 	}
@@ -764,7 +747,9 @@ class Tour extends CI_Controller {
 			}else{ 
 				$data[$tble] = $fields; 
 				$this->tour_cart->insert($data,$itinerary);
+				//print_r($this->tour_cart->estimate());exit;
 			}
+			
 		}
 
 		$cart = $this->tour_cart->contents();
@@ -1105,9 +1090,9 @@ class Tour extends CI_Controller {
 	}
 	
 	public function getRoughEstimate(){
-		
-			$cart = $this->tour_cart->contents();
-			//echo "<pre>";print_r($cart);echo "</pre>";exit;
+		$cart = $this->tour_cart->estimate();
+			//$cart = $this->tour_cart->contents();
+			echo "<pre>";print_r($cart);echo "</pre>";exit;
 			$str=array();$tr=array();$acc_tr=array();$estimate_tr=array();$travel_tr=array();$model_id=gINVALID;$vehicle_id=gINVALID; $estimate_amt=0;
 			foreach($cart as $itr=>$item){
 				if(isset($item['trip_services'])){

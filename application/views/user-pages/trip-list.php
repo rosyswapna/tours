@@ -61,7 +61,7 @@ echo form_close();?></td>
 		<th style="width:13%">Action</th>
         <tr>
 	
-	<?php if(isset($trips)){
+	<?php if(!empty($trips)){
 			foreach($trips as $trip){?>
 			<tr>
 				<td><?php echo $trip['id']; ?> </td>

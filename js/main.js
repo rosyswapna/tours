@@ -2417,7 +2417,7 @@ $('.vehicle-list').on('keydown',function(){
 		if(error=='false' && error_combo=='false'){
 			resetComboErrorFields(combo_data);
 			resetComboErrorFields(input_data);
-			if(trip_id == ''){ 
+			if(pathname[4] == 'PA'){ 
 				var dataArr = {table:"trip_destinations", _date:_date, row_id:row_id, id:destination_section_id, itinerary_id:itinerary_id, destination_id:destination_id, destination_priority:destination_priority, description:description};
 				var dataArray={post:dataArr};
 				add_itinerary_for_package(dataArray);
@@ -2475,7 +2475,7 @@ $('.vehicle-list').on('keydown',function(){
 			error_combo=isVarNullCombo(combo_data);
 		if(error=='false' && error_combo=='false'){
 			resetComboErrorFields(combo_data);	
-			if(trip_id == ''){
+			if(pathname[4] == 'PA'){
 				var dataArr = {table:"trip_accommodation", _date:_date, row_id:row_id,hotel_id:hotel_id,itinerary_id:itinerary_id, room_type_id:room_type_id, room_quantity:room_quantity,room_attributes:room_attributes,meals_package:meals_package, meals_quantity:meals_quantity, id:accommodation_section_id};
 				var dataArray={post:dataArr};
 				add_itinerary_for_package(dataArray);
@@ -2510,7 +2510,7 @@ $('.vehicle-list').on('keydown',function(){
 			error_combo=isVarNullCombo(combo_data);
 		if(error=='false' && error_combo=='false'){
 			resetComboErrorFields(combo_data);
-			if(trip_id == ''){
+			if(pathname[4] == 'PA'){
 				var dataArr = {table:"trip_services", _date:_date,row_id:row_id, service_id:service_id,itinerary_id:itinerary_id, description:description, location:location,quantity:quantity,amount:amount,id:service_section_id};
 				var dataArray={post:dataArr};
 				add_itinerary_for_package(dataArray);
@@ -2548,7 +2548,7 @@ $('.vehicle-list').on('keydown',function(){
 			error_combo=isVarNullCombo(combo_data);
 		if(error=='false' && error_combo=='false'){
 			resetComboErrorFields(combo_data);
-			if(trip_id == ''){
+			if(pathname[4] == 'PA'){
 				var dataArr = {table:"trip_vehicles", _date:_date, row_id:row_id,vehicle_id:vehicle_id, itinerary_id:itinerary_id, vehicle_type_id: vehicle_type_id, vehicle_ac_type_id:vehicle_ac_type_id,vehicle_model_id:vehicle_model_id,tariff_id:tariff_id,driver_id:driver_id,id:vehicle_section_id};
 				var dataArray={post:dataArr};
 				add_itinerary_for_package(dataArray);

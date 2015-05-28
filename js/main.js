@@ -2486,6 +2486,7 @@ $('.vehicle-list').on('keydown',function(){
 				add_itinerary_for_tour(dataArray);
 			}
 		
+		
 			reset_accomodation_tab_values();
 		}
 	});

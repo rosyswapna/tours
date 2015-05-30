@@ -238,7 +238,7 @@ class Package_model extends CI_Model {
 	//save package
 	function save_package($cartClass,$package){
 		
-		$cart=$cartClass->contents();
+		$cart=$cartClass->contents();//print_r($cartClass->estimate());exit;
 		$deleteData=$cartClass->delete_itineraries();
 		if(is_numeric($package) && $package > 0){//edit package
 			$package_id = $package;

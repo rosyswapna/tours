@@ -78,41 +78,53 @@ class CI_Tour_cart {
 				
 			$this->_tour_cart_contents[$itinerary][$tbl][] = $dataArr;
 			
-			/*end($this->_tour_cart_contents[$itinerary][$tbl]);
+			end($this->_tour_cart_contents[$itinerary][$tbl]);
 			$index=key($this->_tour_cart_contents[$itinerary][$tbl]); 
 			if($tbl=='trip_accommodation'){ 
+			
 				$from_cart=array(
 					'itinerary'=>$itinerary,
 					'table'=>$tbl,
 					'index'=>$index
-					); 
-				if(!empty($this->_tour_cart_contents['estimate'])){ 
+					);
+				//echo "<pre>";print_r($this->_tour_cart_contents['estimate']['accommodation']);echo "</pre>";exit;
+				
+				if(isset($this->_tour_cart_contents['estimate']['accommodation'])){ 
 					$temp=$this->_tour_cart_contents['estimate']['accommodation'];
-						foreach($temp as $key=>$acm){ 
-							
-							if($acm['hotel_id']==$dataArr['hotel_id'] && $acm['room_type_id']==$dataArr['room_type_id']){
-							
-								$this->_tour_cart_contents['estimate']['accommodation'][$key]=$acm; break;
-							}else{ 
+				
+						foreach($temp as $key=>$acm){   
+						
 								
-								$this->_tour_cart_contents['estimate']['accommodation'][]=array(
-								'hotel_id'=>$dataArr['hotel_id'],
-								'room_type_id'=>$dataArr['room_type_id'],
-								'from_cart'=>array($from_cart),
-								
-								);
-								
-							}
+								if($acm['hotel_id']==$dataArr['hotel_id'] && $acm['room_type_id']==$dataArr['room_type_id']){
+									$row=1;
+									$acm['from_cart'][]=$from_cart;
+									$this->_tour_cart_contents['estimate']['accommodation'][$key]=$acm; 
+								}
+						
+							//echo "<pre>";print_r($this->_tour_cart_contents['estimate']['accommodation']);echo "</pre>";exit;
 						}
-							
-				}else{ 
-						$this->_tour_cart_contents['estimate']['accommodation'][]=array(
+						if( !isset($row)){
+							$this->_tour_cart_contents['estimate']['accommodation'][]=array(
+									'hotel_id'=>$dataArr['hotel_id'],
+									'room_type_id'=>$dataArr['room_type_id'],
+									'from_cart'=>array($from_cart),
+									
+									);
+						}
+					
+					
+					
+				
+				}
+				if(!isset($this->_tour_cart_contents['estimate']['accommodation'])){ 
+					$this->_tour_cart_contents['estimate']['accommodation'][]=array(
 						'hotel_id'=>$dataArr['hotel_id'],
 						'room_type_id'=>$dataArr['room_type_id'],
 						'from_cart'=>array($from_cart),
 						);
 				}
-			}*/
+				
+			}
 		}
 			$this->save_cart();
 			

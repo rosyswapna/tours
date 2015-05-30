@@ -310,7 +310,7 @@ class Tour extends CI_Controller {
 	public function tour_booking($param2='',$param3='')
 	{	
 		
-		
+	
 		if($param2=='PA' || $param2=='TA'){
 			
 			if($param2=='PA'&& $param3=='' ){ 
@@ -1091,143 +1091,143 @@ class Tour extends CI_Controller {
 	
 	public function getRoughEstimate(){
 		$cart = $this->tour_cart->estimate();
-			//$cart = $this->tour_cart->contents();
-			echo "<pre>";print_r($cart);echo "</pre>";exit;
-			$str=array();$tr=array();$acc_tr=array();$estimate_tr=array();$travel_tr=array();$model_id=gINVALID;$vehicle_id=gINVALID; $estimate_amt=0;
-			foreach($cart as $itr=>$item){
-				if(isset($item['trip_services'])){
-				
-					foreach($item['trip_services'] as $service){
-						$service_name=$this->settings_model->getValuebyId($service['service_id'],'services','name');
+			//echo "<pre>";print_r($cart);echo "</pre>";exit;
+			$str=array();$tr=array();$acc_tr=array();$estimate_tr=array();$travel_tr=array();$model_id=gINVALID;$vehicle_id=gINVALID; $estimate_amt=0;$total_attr_tariff=0;
+			if(isset($cart['accommodation'])){
+				$accommodation=$cart['accommodation'];
+				//echo "<pre>";print_r($accommodation);echo "</pre>";exit;
+				foreach($accommodation as $item){
+					$no_of_days=count($item['from_cart']);
+					$tax=4.955;
 					
-						$tax=4.955; 
-							 $total=$tax+$service['amount'];
-							 $s_particulars="Service: ".$service_name.",".$service['location']."- Rs ".$service['amount']." per day ";
-						
-							$str[]=array($service_name,$s_particulars,number_format($service['amount'],2),number_format($tax,2),number_format($total,2));
-							$estimate_amt+=$total;
-					} 
-				}
-
-				//set accommodation rows----------------
-				if(isset($item['trip_accommodation'])){  $ret_array=array();$room_attr_narration=array();$meals_narration=array();$room_tariff_narration=array();
-					foreach($item['trip_accommodation'] as $accommodation){ 
-						
-					if(!empty($ret_array)){
-						
-					}else{	
-						$hotel_attr=$this->hotel_model->getHotelProfile($accommodation['hotel_id']);
-						$destination=$this->settings_model->getValuebyId($hotel_attr['destination_id'],'destinations','name');
-						$room_type=$this->settings_model->getValuebyId($accommodation['room_type_id'],'room_types','name');
-						$_date 		= date("Y-m-d");
-						$season_ids = $this->tour_model->getSeasonIdssWithDate($_date);
+					$hotel_name=$this->settings_model->getValuebyId($item['hotel_id'],'hotels','name');
+					$hotel_attr=$this->hotel_model->getHotelProfile($item['hotel_id']);
+					$destination=$this->settings_model->getValuebyId($hotel_attr['destination_id'],'destinations','name');
+					$room_type=$this->settings_model->getValuebyId($item['room_type_id'],'room_types','name');
+					$_date 		= date("Y-m-d");
+					$season_ids = $this->tour_model->getSeasonIdssWithDate($_date);
 						if($season_ids){
 							$season_id = $season_ids[0];
 						}else{
 							$season_id = gINVALID;
 						}
-						$filter=array('hotel_id'=>$accommodation['hotel_id'],'room_type_id'=>$accommodation['room_type_id'],'season_id'=>$season_id);
-						$room_tariff= $this->hotel_model->getHotelRoomTariff($filter);
-						$room_charge=($room_tariff->amount)*$accommodation['room_quantity'];
-						$room_tariff_narration=
-						
-						$ret_array=array($accommodation['hotel_id'],$accommodation['room_type_id'],$room_attr_narration,$meals_narration);
-					}
-						
-						//list($name,$a_particulars,$unit_amt,$tax,$total)= $this->getAccomodationCharge($accommodation['hotel_id'],$accommodation['room_type_id'],$accommodation['room_attributes'],$accommodation['room_quantity'],$accommodation['meals_package'],$accommodation['meals_quantity']);
-						
-						//$acc_tr[]=array($name,$a_particulars,number_format($unit_amt,2),number_format($tax,2),number_format($total,2));
-						//$estimate_amt+=$total;
-					}
 					
-				} 
-				//--------------------------------------
-			
-				if(isset($item['trip_vehicles'])){ 
-				$totalAmount = 0;
-					foreach($item['trip_vehicles'] as $vehicles){ 
+					$filter=array('hotel_id'=>$item['hotel_id'],'room_type_id'=>$item['room_type_id'],'season_id'=>$season_id);
+					$room_tariff= $this->hotel_model->getHotelRoomTariff($filter);
+					$a_particular="Accommodation : ".$hotel_name.", ".$destination;
 						
-						if($vehicles['vehicle_model_id']==$model_id && $vehicles['vehicle_id']==$vehicle_id){
-							continue;
-						}
-						$model_id=$vehicles['vehicle_model_id'];
-						$vehicle_id=$vehicles['vehicle_id'];
-						
-						$destinations=$this->package_model->getDestinationsByOrder($cart,$model_id,$vehicle_id);
-						
-						
-						if($_REQUEST['pickup']!='' ||$_REQUEST['drop']!=''){
-							if($_REQUEST['pickup']!=''){
-								array_unshift($destinations, $_REQUEST['pickup']);
-							}
-							if($_REQUEST['drop']!=''){
-								array_push($destinations, $_REQUEST['drop']);
-							}
-						
-						}
-						$count= count($destinations);
-						$API_KEY='AIzaSyD3Fog2G5asD5NI4iJJZDsfJHjW-gPhevA';
-					
-						$distance=0;
-						for($i=0;$i<($count-1);$i++){
-						
-							$origin=$destinations[$i];
-							$destination=$destinations[$i+1];
-							$url='https://maps.googleapis.com/maps/api/distancematrix/json?origins='.$origin.'&destinations='.$destination.'&mode=driving&language=en&key='.$API_KEY;
-							$data=file_get_contents($url);
-							$decode = json_decode($data);
-								if(isset($decode->rows[0]->elements[0]->status) && $decode->rows[0]->elements[0]->status!='NOT_FOUND') {
-									$distance+=substr($decode->rows[0]->elements[0]->distance->text,0,-3);
-								
-								
+					$total_rooms=0;$total_meals_qty=0;
+						$attr_array=array();$meals_array=array();
+						foreach($item['from_cart'] as $row){ //echo "<pre>";print_r($row);echo "</pre>";exit;
+							$cart_contents = $this->tour_cart->contents();
+							$dataArray=$cart_contents[$row['itinerary']][$row['table']][$row['index']];
+							//echo "<pre>";print_r($cart_contents);echo "</pre>";exit;
+							$room_qty=$cart_contents[$row['itinerary']][$row['table']][$row['index']]['room_quantity'];
+								if($room_qty==''){
+									$room_quantity=1;
+								}elseif($room_qty>0){
+									$room_quantity=$room_qty;
 								}
-						
-						}
-						$total_distance=$distance;
-						$tariff_id=$vehicles['tariff_id']; 
-						$vehicle_model=$this->settings_model->getValuebyId($model_id,'vehicle_models','name'); 
-						
-						//echo $model_id." ".$vehicles['vehicle_ac_type_id'];exit;
-						$tariffdata['vehicle_ac_type']=$vehicles['vehicle_ac_type_id'];
-						$tariffdata['vehicle_model']=$model_id;
-						$tariffdata['organisation_id']=$this->session->userdata('organisation_id');
+							$total_rooms+=$room_quantity;
+							
+							//$dataArray['room_attributes']=array(3);
+							
+							if(!empty($dataArray['room_attributes'])){ 
+								foreach($dataArray['room_attributes'] as $room_attribute){ 
+									$condition=array('hotel_id'=>$item['hotel_id'],'season_id'=>$season_id,
+											'attribute_id'=>$room_attribute);
+									$attr = $this->hotel_model->getAttributeTariff($condition);
+									if($attr){
+										$attr_tariff=$attr->amount;
+										$attr_name=$attr->attr_name;
 
-						$tarrif_data=$this->tarrif_model->selectAvailableTariff($tariffdata);//print_r($tarrif_data);exit;
+								//echo $attr_tariff." ".$attr_name;exit;
+										if(array_key_exists($room_attribute,$attr_array)){
+											
+											$attr_array[$room_attribute][2]++;
+											$attr_array[$room_attribute][3]+=$room_quantity;
+										}else{
+											
+											$attr_array[$room_attribute]=array($attr_name,$attr_tariff,1,$room_quantity);
+										}
+									}
+									
+								}
+							}
+							
+							if(!empty($dataArray['meals_package'])){
+								
+								foreach($dataArray['meals_package'] as $meals_id){
+								//echo $meals_id;exit;
+									$meals_qty=$cart_contents[$row['itinerary']][$row['table']][$row['index']]['meals_quantity'];
+									if($meals_id>0 ){
+										if($meals_qty>0){
+											$meals_quantity=$meals_qty;
+										}elseif($meals_qty==''){
+											$meals_quantity=1;
+										}
+										//$total_meals_qty+=$meals_quantity;
+									}
+									$condition=array('hotel_id'=>$item['hotel_id'],'season_id'=>$season_id,'meals_id'=>$meals_id);
+									$meals = $this->hotel_model->getAttributeTariff($condition);
+									if($meals){
+										$meals_tariff=$meals->amount;
+										$meals_name=$meals->meals_name;
+										
+									}
+								
+									if(array_key_exists($meals_id,$meals_array)){
+							
+										$meals_array[$meals_id][2]++;
+										$meals_array[$meals_id][3]+=$meals_quantity;
+									
+									}else{
+										$meals_idArray[]=$meals_id;
+										$meals_array[$meals_id]=array($meals_name,$meals_tariff,1,$meals_quantity);
+									}
+									
+								}
+							}
+							
+							
 						
-						
-						//print_r($destinations);exit;
-						$t_particulars="Travel: From ".implode(",",$destinations)." - ".$vehicle_model;
-						if($vehicle_id>gINVALID){ 
-							$reg_num=$this->settings_model->getValuebyId($vehicle_id,'vehicles','registration_number');
-							$t_particulars.=" (".$reg_num.")";
-							}
-						if(!empty($tarrif_data)){
-							$tarrif_data=$tarrif_data[0];
-							$t_particulars.= "+ Minimum ".$tarrif_data['minimum_kilometers']."KM @ Rs.".$tarrif_data['rate']." each day";
-							$totalAmount += $tarrif_data['rate'];
-						
-							if($total_distance>$tarrif_data['minimum_kilometers']){
-								$additional_km=$total_distance-$tarrif_data['minimum_kilometers'];
-								$t_particulars.=" + Additional ".$additional_km." KM @ RS".$tarrif_data['additional_kilometer_rate']."/KM ";
-								$totalAmount +=$tarrif_data['additional_kilometer_rate']*$additional_km;
-							}
-							if($tarrif_data['driver_bata']){
-								$t_particulars.="+ Driver Bata @ Rs ".$tarrif_data['driver_bata']." each day for 1day(s)";
-								$totalAmount +=$tarrif_data['driver_bata'];
-							}
-							if($tarrif_data['night_halt']){
-								$t_particulars.="+ Night Halt @ Rs ".$tarrif_data['night_halt']." each night";
-								$totalAmount +=$tarrif_data['night_halt'];
-							}
 						}
-						$tax = 4.955;
-						$grandTotal = $totalAmount + $tax;
-						$estimate_amt+=$grandTotal;
-						$travel_tr[]=array('Travel',$t_particulars,number_format($totalAmount,2),number_format($tax,2),number_format($grandTotal,2));
-					}
+						
+						if($room_tariff){
+							$room_charge=$room_tariff->amount;
+							$a_particular.= "- ".$room_type." Room @ Rs. ".$room_charge." per day for ".$no_of_days." day(s), No:of Rooms (".$total_rooms.")";
+							}else{
+								$room_charge = 0;
+								$a_particular.= "- ".$room_type." Room (Charge not defined)";
+							}
+						$room_total=$room_charge*$total_rooms;
+						
+						$attr_total=0;//echo "<pre>";print_r($attr_array);echo "</pre>";exit;
+						foreach($attr_array as $attribute){ 
+							
+							$a_particular.=" +".$attribute[0]."@ Rs ".$attribute[1]." per day for ".$attribute[2]." day(s)";
+							$attr_total+=$attribute[1]*$attribute[3];
+						}
+						$meals_total=0;//echo "<pre>";print_r($meals_array);echo "</pre>";exit;
+						foreach($meals_array as $meal){ 
+							
+							$a_particular.=" +".$meal[0]."(Qty: ".$meal[3].") @ Rs ".$meal[1]." per day for ".$meal[2]." day(s)";
+							$meals_total+=$meal[1]*$meal[3];
+						}
+					
+						
+					
+					
+					
+					$unit_amount=$room_total+$attr_total+$meals_total;
+					$total=$tax+$unit_amount;
+					$acc_tr[]=array($hotel_name,$a_particular,$unit_amount,number_format($tax,2),$total);
+				
+				} 
+				
+			}
 			
-				}
-			} 
+			
 			//echo $estimate_amt;exit;
 			$estimate_tr[]=array('','','','Grand Total',number_format($estimate_amt,2));
 			$tr=array_merge($str,$acc_tr,$travel_tr,$estimate_tr); 

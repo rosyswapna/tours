@@ -59,8 +59,20 @@ class CI_Tour_cart {
 		
 		//echo "<pre>";print_r($items);echo "</pre>";exit;
 		$this->_tour_cart_contents = $items;
+		
+		foreach ($items as $itinerary=>$tableArr){ 
+			
+			foreach ($tableArr as $table=>$data){
+				foreach ($data as $index=>$dataArr){
+				
+				$this->build_estimate($table,$itinerary,$index,$dataArr);
+				}
+			}
+			
+		}
+		//echo "<pre>";print_r($this->_tour_cart_contents['estimate']);echo "</pre>";exit;
 		$this->_tour_cart_contents['delete_itineraries'] = array();
-		$this->_tour_cart_contents['estimate'] = array();
+		//$this->_tour_cart_contents['estimate'] = array();
 		$this->_tour_cart_contents['tour_cart_total'] = 0;
 		$this->_tour_cart_contents['total_itineraries'] = 0;
 		$this->save_cart();
@@ -80,7 +92,16 @@ class CI_Tour_cart {
 			
 			end($this->_tour_cart_contents[$itinerary][$tbl]);
 			$index=key($this->_tour_cart_contents[$itinerary][$tbl]); 
-			if($tbl=='trip_accommodation'){ 
+			$this->build_estimate($tbl,$itinerary,$index,$dataArr);
+			
+		}
+			$this->save_cart();
+			
+		} 
+		
+		
+	function build_estimate($tbl,$itinerary,$index,$dataArr){ 
+		if($tbl=='trip_accommodation'){  
 			
 				$from_cart=array(
 					'itinerary'=>$itinerary,
@@ -124,14 +145,55 @@ class CI_Tour_cart {
 						);
 				}
 				
+			}elseif($tbl=='trip_vehicles'){
+				$this->_tour_cart_contents['estimate']['vehicles']=array();
+			}elseif($tbl=='trip_services'){
+				$from_cart=array(
+					'itinerary'=>$itinerary,
+					'table'=>$tbl,
+					'index'=>$index
+					);
+				if(isset($this->_tour_cart_contents['estimate']['services'])){ 
+					$temp=$this->_tour_cart_contents['estimate']['services'];
+				
+						foreach($temp as $key=>$service){   
+						
+								
+								if($service['service_id']==$dataArr['service_id'] && $service['amount']==$dataArr['amount']){
+									$row=1;
+									$service['from_cart'][]=$from_cart;
+									$this->_tour_cart_contents['estimate']['services'][$key]=$service; 
+								}
+						
+							
+						}
+						if( !isset($row)){
+							$this->_tour_cart_contents['estimate']['services'][]=array(
+									'service_id'=>$dataArr['service_id'],
+									'amount'=>$dataArr['amount'],
+									'from_cart'=>array($from_cart),
+									
+									);
+						}
+					
+					
+					
+				
+				}
+				if(!isset($this->_tour_cart_contents['estimate']['services'])){ 
+					$this->_tour_cart_contents['estimate']['services'][]=array(
+						'service_id'=>$dataArr['service_id'],
+						'amount'=>$dataArr['amount'],
+						'from_cart'=>array($from_cart),
+						);
+				}
+				//echo "<pre>";print_r($this->_tour_cart_contents['estimate']['services']);exit;
+			}elseif($tbl=='trip_destinations'){
+				$this->_tour_cart_contents['estimate']['destinations']=array();
+				
 			}
-		}
-			$this->save_cart();
-			
-		} 
-		
-		
-	
+			//echo "<pre>";print_r($this->_tour_cart_contents['estimate']);exit;
+	}
 		
 	
 	function update($tble,$items,$itinerary,$index){//update cart item
@@ -141,10 +203,11 @@ class CI_Tour_cart {
 			return FALSE;
 		}
 		
-		$cart=$this->contents(); 
-		if(isset($cart[$itinerary][$tble][$index])){
+		$cart=$this->contents();
+		if(isset($cart[$itinerary][$tble][$index])){ //echo "<pre>";print_r($cart[$itinerary][$tble][$index]);exit;
 		
 			$this->_tour_cart_contents[$itinerary][$tble][$index]=$items;
+			$this->build_estimate($tble,$itinerary,$index,$items);
 		}
 		$this->save_cart();
 	}

@@ -716,7 +716,7 @@ class Tour extends CI_Controller {
 				
 			}
 		}
-		
+		//echo "<pre>";print_r($this->tour_cart->estimate());echo "</pre>";exit;
 		$cart = $this->tour_cart->contents();
 		$this->build_itinerary_data($cart,$ajax = 'YES');
 	}
@@ -1123,15 +1123,15 @@ class Tour extends CI_Controller {
 							$dataArray=$cart_contents[$row['itinerary']][$row['table']][$row['index']];
 							//echo "<pre>";print_r($cart_contents);echo "</pre>";exit;
 							$room_qty=$cart_contents[$row['itinerary']][$row['table']][$row['index']]['room_quantity'];
-								if($room_qty==''){
+								if($room_qty=='' || $room_qty==0){
 									$room_quantity=1;
 								}elseif($room_qty>0){
 									$room_quantity=$room_qty;
 								}
 							$total_rooms+=$room_quantity;
-							
-							//$dataArray['room_attributes']=array(3);
-							
+							if(!is_array($dataArray['room_attributes'])&& $dataArray['room_attributes']!=''){
+								$dataArray['room_attributes']=unserialize($dataArray['room_attributes']);
+							}
 							if(!empty($dataArray['room_attributes'])){ 
 								foreach($dataArray['room_attributes'] as $room_attribute){ 
 									$condition=array('hotel_id'=>$item['hotel_id'],'season_id'=>$season_id,
@@ -1154,7 +1154,9 @@ class Tour extends CI_Controller {
 									
 								}
 							}
-							
+							if(!is_array($dataArray['meals_package'])&& $dataArray['meals_package']!=''){
+								$dataArray['meals_package']=unserialize($dataArray['meals_package']);
+							}
 							if(!empty($dataArray['meals_package'])){
 								
 								foreach($dataArray['meals_package'] as $meals_id){
@@ -1163,7 +1165,7 @@ class Tour extends CI_Controller {
 									if($meals_id>0 ){
 										if($meals_qty>0){
 											$meals_quantity=$meals_qty;
-										}elseif($meals_qty==''){
+										}elseif($meals_qty=='' || $meals_qty==0){
 											$meals_quantity=1;
 										}
 										//$total_meals_qty+=$meals_quantity;
@@ -1182,7 +1184,7 @@ class Tour extends CI_Controller {
 										$meals_array[$meals_id][3]+=$meals_quantity;
 									
 									}else{
-										$meals_idArray[]=$meals_id;
+										//$meals_idArray[]=$meals_id;
 										$meals_array[$meals_id]=array($meals_name,$meals_tariff,1,$meals_quantity);
 									}
 									
@@ -1227,6 +1229,45 @@ class Tour extends CI_Controller {
 				
 			}
 			
+			if(isset($cart['services'])){
+					$tax=4.955; $service_array=array(); 
+					
+				foreach($cart['services'] as $item){ $total_quantity=0;
+				$no_of_days=count($item['from_cart']);
+				$service_name=$this->settings_model->getValuebyId($item['service_id'],'services','name');
+				$s_particular=$service_name." ";
+					
+					foreach($item['from_cart'] as $row){ //echo "<pre>";print_r($row);echo "</pre>";exit;
+						$cart_contents = $this->tour_cart->contents();
+						$dataArray=$cart_contents[$row['itinerary']][$row['table']][$row['index']];//echo "<pre>";print_r($dataArray);echo "</pre>";exit;
+						if($dataArray['location']!=''){
+							$s_particular.=", ".$dataArray['location'];
+						}
+						if($dataArray['quantity']=='' ||$dataArray['quantity']==0){
+							$dataArray['quantity']=1;
+						}
+						if($no_of_days>1)
+						$total_quantity+=$dataArray['quantity'];
+						else{
+						$total_quantity=$dataArray['quantity'];
+						}
+						
+					}
+					$s_particular.="-Rs ".$item['amount']." per day for ".$no_of_days." day(s).(Qty:".$total_quantity.")";
+					
+				$unit_amount=$item['amount']*$total_quantity;
+				$total=$tax+$unit_amount;
+				$str[]=array($service_name,$s_particular,$unit_amount,number_format($tax,2),$total);
+					
+				
+				}
+				
+				
+				 
+					
+			}
+			
+			
 			
 			//echo $estimate_amt;exit;
 			$estimate_tr[]=array('','','','Grand Total',number_format($estimate_amt,2));
@@ -1239,7 +1280,7 @@ class Tour extends CI_Controller {
 
 
 	//generate accomodation charge for a hotel for a
-	public function getAccomodationCharge($hotel_id,$room_type_id,$room_attributes,$room_quantity,$meals_package,$meals_quantity)
+	/*public function getAccomodationCharge($hotel_id,$room_type_id,$room_attributes,$room_quantity,$meals_package,$meals_quantity)
 	{
 
 		$totalAmount = 0;
@@ -1322,7 +1363,7 @@ class Tour extends CI_Controller {
 				$grandTotal
 			);
 			
-	}
+	}*/
 	//-----------------------------------------------------------------------------------------
 
 

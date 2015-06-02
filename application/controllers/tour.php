@@ -1224,7 +1224,8 @@ class Tour extends CI_Controller {
 					
 					
 					$unit_amount=$room_total+$attr_total+$meals_total;
-					$total=$tax+$unit_amount;
+					$tax_amount=($unit_amount*$tax)/100;
+					$total=$tax_amount+$unit_amount;
 					$estimate_total+=$total;
 					$acc_tr[]=array($hotel_name,$a_particular,number_format($unit_amount,2),number_format($tax,2),number_format($total,2));
 				
@@ -1259,7 +1260,8 @@ class Tour extends CI_Controller {
 					$s_particular.="-Rs ".$item['amount']." per day for ".$no_of_days." day(s).(Qty:".$total_quantity.")";
 					
 				$unit_amount=$item['amount']*$total_quantity;
-				$total=$tax+$unit_amount;
+				$tax_amount=($unit_amount*$tax)/100;
+				$total=$tax_amount+$unit_amount;
 				$estimate_total+=$total;
 				$str[]=array($service_name,$s_particular,number_format($unit_amount,2),number_format($tax,2),number_format($total,2));
 					
@@ -1351,7 +1353,8 @@ class Tour extends CI_Controller {
 					
 					
 				$unit_amount= $totalAmount + $tax;
-				$total=$tax+$unit_amount;
+				$tax_amount=($unit_amount*$tax)/100;
+				$total=$tax_amount+$unit_amount;
 				$estimate_total+=$total;
 				$travel_tr[]=array("Travel",$t_particular,number_format($unit_amount,2),number_format($tax,2),number_format($total,2));
 					

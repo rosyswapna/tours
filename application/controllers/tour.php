@@ -707,7 +707,7 @@ class Tour extends CI_Controller {
 			unset($fields['trip_id']);
 			unset($fields['row_id']);
 			
-			//echo "<pre>";print_r($fields);echo "</pre>";exit;
+			
 			if(is_numeric($fields['id'])&& ($fields['id']>0)){
 				$this->tour_cart->update($tble,$fields,$itinerary,$index);
 			}else{ 
@@ -741,10 +741,10 @@ class Tour extends CI_Controller {
 			unset($fields['_date']);
 			unset($fields['row_id']);
 			
-			//echo "<pre>";print_r($fields);echo "</pre>";exit;
-			if($index>=0){
+			//echo "<pre>";print_r($dataArray);echo "</pre>";exit;
+			if($index>=0){ 
 				$this->tour_cart->update($tble,$fields,$itinerary,$index);
-			}else{ 
+			}else{
 				$data[$tble] = $fields; 
 				$this->tour_cart->insert($data,$itinerary);
 				//print_r($this->tour_cart->estimate());exit;
@@ -877,10 +877,11 @@ class Tour extends CI_Controller {
 				
 
 				$destinations = array();
-				if(isset($item['trip_destinations'])){
+				if(isset($item['trip_destinations'])){ 
 					foreach($item['trip_destinations'] as $dataArry_index=>$destination){  
+					$description= $destination['description'];
 					//$destinations[]=array($destination['id'],$destination['destination_id']);
-					$destinations[]=array($dataArry_index,$destination['destination_id']);
+					$destinations[]=array($dataArry_index,$destination['destination_id'],$description);
 						//array_push($destinations,$destination['destination_id']);
 					}
 					$active_tab = 't_tab';

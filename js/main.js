@@ -2567,6 +2567,7 @@ $('.vehicle-list').on('keydown',function(){
   //ajax calls for delete itinerary
 	$('.itinerary #delete-travel').click(function(){
 	var trip_id = $('input[name="trip_id"]').val();
+	//var row_id= $('input[name="destination_row_id"]').val();
 	var row_id= $('input[name="destination_row_id"]').val();
 	var itinerary_id= $('input[name="destination_itinerary_id"]').val();
 	var _date = $('#travel_date').val();
@@ -2838,6 +2839,7 @@ $('.vehicle-list').on('keydown',function(){
 	//reset tab values functions
 	function reset_destination_tab_values(){
 		$(".tour-travel-tab #destination_section_id").val(-1);
+		$(".tour-travel-tab #destination_row_id").val(-1);
 		$(".tour-travel-tab #travel_date").val(" ");
 		$(".tour-travel-tab #destination_id option[value=-1]").attr('selected', true);
 		$(".tour-travel-tab #destination_priority").val('');
@@ -2847,6 +2849,7 @@ $('.vehicle-list').on('keydown',function(){
 	}
 	function reset_accomodation_tab_values(){
 		$(".tour-accomodation-tab #accommodation_section_id").val(-1);
+		$(".tour-accomodation-tab #accommodation_row_id").val(-1);
 		$(".tour-accomodation-tab #accommodation_date").val(" ");
 		$(".tour-accomodation-tab #hotel_destination_id option[value=-1]").attr('selected', true);
 		$(".tour-accomodation-tab #hotel_category_id option[value=-1]").attr('selected', true);
@@ -2864,6 +2867,7 @@ $('.vehicle-list').on('keydown',function(){
 	}
 	function reset_service_tab_values(){
 		$(".tour-service-tab #service_section_id").val(-1);
+		$(".tour-service-tab #service_row_id").val(-1);
 		$(".tour-service-tab #service_date").val(" ");
 		$(".tour-service-tab #service_id option[value='-1']").attr('selected', true);
 		$(".tour-service-tab #service_rate").val('');
@@ -2875,6 +2879,7 @@ $('.vehicle-list').on('keydown',function(){
 	}
 	function reset_vehicle_tab_values(){
 		$(".tour-vehicle-tab #vehicle_section_id").val(-1);
+		$(".tour-vehicle-tab #vehicle_row_id").val(-1);
 		$(".tour-vehicle-tab #vehicle_date").val(" ");
 		$(".tour-vehicle-tab #vehicle_type_id option[value='-1']").attr('selected', true);
 		$(".tour-vehicle-tab #vehicle_ac_type_id option[value='-1']").attr('selected', true);

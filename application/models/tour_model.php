@@ -650,6 +650,11 @@ class Tour_model extends CI_Model {
 		foreach ($trip_sections as $section){
 			$row_id=$section[0];
 			$id=$section[1];
+			if(isset($section[2]) && $section[2]!=''){
+			$description=$section[2];
+			}else{
+			$description="";
+			}
 			$this->db->select($select);
 			$this->db->from($table);
 			$this->db->where(array('id'=>$id));
@@ -658,7 +663,7 @@ class Tour_model extends CI_Model {
 			
 				$section_val=$query->row()->$select;
 				
-				$ret[]= '<a href="#" row_id="'.$row_id.'" table="'.$table.'" tab="'.$tab.'" itinerary="'.$itinerary.'" class="edit_data">'.$section_val."</a>";
+				$ret[]= '<a href="#" row_id="'.$row_id.'" table="'.$table.'" tab="'.$tab.'" itinerary="'.$itinerary.'" class="edit_data">'.$section_val."</a><p>".$description."</p>";
 				
 			}
 			

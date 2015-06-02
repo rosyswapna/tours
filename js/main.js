@@ -2748,20 +2748,26 @@ $('.vehicle-list').on('keydown',function(){
 		$.post(base_url+"/tour/getRoughEstimate",{pickup:pickup,drop:drop},function(data){
 		if(data!=false){
 		
-		data=jQuery.parseJSON(data);
+		data=jQuery.parseJSON(data);//alert(data.length);
 		var table='';
-			$.each( data, function( key, tr ) { //alert(tr.length);return false;
+			$.each( data, function( key, tr ) { //alert(key);return false;
+			if(key==(data.length)-1){ 
+				table += '<tr style="background-color:#B7B7BE;font-weight: bold;">';
+			}else{
 				table += '<tr>';
-				
+			}
 				$.each(tr, function(key,td) { 
 					table += '<td>'+td+'</td>';
 				});
 				table += '</tr>';
-			});
+			}); 
 			$('#estimate-tbl').append(table);
+			
+			
 		}
 		});
-	
+		//$('#estimate-tbl').find('tr').prev().css("background-color","#B7B7BE");
+	$("#estimate-tbl tr:last" ).css({ backgroundColor: "#B7B7BE", fontWeight: "bolder" });
 	});
 	
 	

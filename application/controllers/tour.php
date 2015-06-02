@@ -1329,8 +1329,8 @@ class Tour extends CI_Controller {
 					$tarrif_data=$this->tarrif_model->selectAvailableTariff($tariffdata);
 				if(!empty($tarrif_data)){
 					$tarrif_data=$tarrif_data[0];
-					$t_particular.= "+ Minimum ".$tarrif_data['minimum_kilometers']."KM @ Rs.".$tarrif_data['rate']." each day";
-					$totalAmount += $tarrif_data['rate'];
+					$t_particular.= "+ Minimum ".$tarrif_data['minimum_kilometers']."KM @ Rs.".$tarrif_data['rate']." each day for ".$no_of_days."day(s)";
+					$totalAmount += $tarrif_data['rate']*$no_of_days;
 				
 					if($total_distance>$tarrif_data['minimum_kilometers']){
 						$additional_km=$total_distance-$tarrif_data['minimum_kilometers'];
@@ -1338,12 +1338,12 @@ class Tour extends CI_Controller {
 						$totalAmount +=$tarrif_data['additional_kilometer_rate']*$additional_km;
 					}
 					if($tarrif_data['driver_bata']){
-						$t_particular.="+ Driver Bata @ Rs ".$tarrif_data['driver_bata']." each day for 1day(s)";
-						$totalAmount +=$tarrif_data['driver_bata'];
+						$t_particular.="+ Driver Bata @ Rs ".$tarrif_data['driver_bata']." each day for ".$no_of_days."day(s)";
+						$totalAmount +=$tarrif_data['driver_bata']*$no_of_days;
 					}
 					if($tarrif_data['night_halt']){
-						$t_particular.="+ Night Halt @ Rs ".$tarrif_data['night_halt']." each night";
-						$totalAmount +=$tarrif_data['night_halt'];
+						$t_particular.="+ Night Halt @ Rs ".$tarrif_data['night_halt']." each night for ".$no_of_days."day(s)";
+						$totalAmount +=$tarrif_data['night_halt']*$no_of_days;
 					}
 						
 				}else{
@@ -1353,7 +1353,7 @@ class Tour extends CI_Controller {
 					
 					
 					
-				$unit_amount= $totalAmount + $tax;
+				$unit_amount= $totalAmount;
 				$tax_amount=($unit_amount*$tax)/100;
 				$total=$tax_amount+$unit_amount;
 				$estimate_total+=$total;

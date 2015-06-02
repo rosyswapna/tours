@@ -250,7 +250,7 @@
 
 <!--itinerary tabs starts-->
 
-<div class="nav-tabs-custom itinerary">
+<div class="nav-tabs-custom itinerary" id="tab-display">
 	<ul class="nav nav-tabs">
 	<?php 
 		foreach($tabs as $tab=>$attr){

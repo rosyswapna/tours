@@ -2152,7 +2152,7 @@ $('.vehicle-list').on('keydown',function(){
 
 	$('#package_id').on('change',function(){
 
-		
+		$(".rough-estimate").css("display","none");
 		var package_id = $(this).val();
 		if($.isNumeric(package_id) && package_id > 0){
 			$.post(base_url+'/tour/createCartFromPackage',{package_id:package_id},function(data){

@@ -2733,18 +2733,16 @@ $('.vehicle-list').on('keydown',function(){
 	$('.tour-estimate').on('click',function(){ 
 
 		reset_estimate_table();
+		var pickup="";var drop="";
+		if(pathname[4]=="TA"){
 		
 		if($("#pick_up").val()!=""){
 			var pickup=$("#pick_up").val();
-		}else{
-			var pickup="";
 		}
 		if($("#drop").val()!=""){
 			var drop=$("#drop").val();
-		}else{
-			var drop="";
 		}
-		
+		}
 		$(".rough-estimate").css('display','block');
 		$.post(base_url+"/tour/getRoughEstimate",{pickup:pickup,drop:drop},function(data){
 		if(data!=false){

@@ -100,8 +100,8 @@ class CI_Tour_cart {
 		} 
 		
 		
-	function build_estimate($tbl,$itinerary,$index,$dataArr){ 
-		if($tbl=='trip_accommodation'){  
+	function build_estimate($tbl,$itinerary,$index,$dataArr){ // print_r($dataArr);exit;
+		if($tbl=='trip_accommodation'){  //----------------------------------------Accommodation-------------------------------------
 			
 				$from_cart=array(
 					'itinerary'=>$itinerary,
@@ -145,9 +145,50 @@ class CI_Tour_cart {
 						);
 				}
 				
-			}elseif($tbl=='trip_vehicles'){
-				$this->_tour_cart_contents['estimate']['vehicles']=array();
-			}elseif($tbl=='trip_services'){
+			}elseif($tbl=='trip_vehicles'){ //----------------------------------------Vehicle-------------------------------------
+				$from_cart=array(
+					'itinerary'=>$itinerary,
+					'table'=>$tbl,
+					'index'=>$index
+					);
+				if(isset($this->_tour_cart_contents['estimate']['vehicles'])){ 
+					$temp=$this->_tour_cart_contents['estimate']['vehicles'];
+				
+						foreach($temp as $key=>$vehicle){  
+						
+								
+								if($vehicle['vehicle_model_id']==$dataArr['vehicle_model_id'] && $vehicle['vehicle_ac_type_id']==$dataArr['vehicle_ac_type_id'] && $vehicle['vehicle_id']==$dataArr['vehicle_id']){
+									$row=1;
+									$vehicle['from_cart'][]=$from_cart;
+									$this->_tour_cart_contents['estimate']['vehicles'][$key]=$vehicle; 
+								}
+						
+							
+						}
+						if( !isset($row)){
+							$this->_tour_cart_contents['estimate']['vehicles'][]=array(
+									'vehicle_model_id'=>$dataArr['vehicle_model_id'],
+									'vehicle_ac_type_id'=>$dataArr['vehicle_ac_type_id'],
+									'vehicle_id'=>$dataArr['vehicle_id'],
+									'from_cart'=>array($from_cart),
+									
+									);
+						}
+					
+					
+					
+				
+				}
+				if(!isset($this->_tour_cart_contents['estimate']['vehicles'])){ 
+					$this->_tour_cart_contents['estimate']['vehicles'][]=array(
+						'vehicle_model_id'=>$dataArr['vehicle_model_id'],
+						'vehicle_ac_type_id'=>$dataArr['vehicle_ac_type_id'],
+						'vehicle_id'=>$dataArr['vehicle_id'],
+						'from_cart'=>array($from_cart),
+						);
+				}
+				
+			}elseif($tbl=='trip_services'){ //----------------------------------------Services-------------------------------------
 				$from_cart=array(
 					'itinerary'=>$itinerary,
 					'table'=>$tbl,

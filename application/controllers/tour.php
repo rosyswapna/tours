@@ -911,11 +911,13 @@ class Tour extends CI_Controller {
 				if(isset($item['trip_vehicles'])){
 					foreach($item['trip_vehicles'] as $dataArry_index=>$vehicle){
 					$active_tab = 'v_tab';
-					if($vehicle['vehicle_type_id']<=0){
+					
+					
+					if($vehicle['vehicle_id']>0){
 						$vehicles[]=array($dataArry_index,$vehicle['vehicle_id']); 
 						$select='registration_number';
 						$table='vehicles';
-					}else{
+					}elseif($vehicle['vehicle_type_id']>0){
 					
 						$vehicles[]=array($dataArry_index,$vehicle['vehicle_type_id']); 
 						$select='name';
@@ -1089,10 +1091,10 @@ class Tour extends CI_Controller {
 	
 	}
 	
-	public function getRoughEstimate(){
+	public function getRoughEstimate(){ 
 		$cart = $this->tour_cart->estimate();
 			//echo "<pre>";print_r($cart);echo "</pre>";exit;
-			$str=array();$tr=array();$acc_tr=array();$estimate_tr=array();$travel_tr=array();$model_id=gINVALID;$vehicle_id=gINVALID; $estimate_amt=0;$total_attr_tariff=0;
+			$str=array();$tr=array();$acc_tr=array();$estimate_tr=array();$travel_tr=array();$model_id=gINVALID;$vehicle_id=gINVALID; $estimate_amt=0;$total_attr_tariff=0;$estimate_total=0;
 			if(isset($cart['accommodation'])){
 				$accommodation=$cart['accommodation'];
 				//echo "<pre>";print_r($accommodation);echo "</pre>";exit;
@@ -1223,7 +1225,8 @@ class Tour extends CI_Controller {
 					
 					$unit_amount=$room_total+$attr_total+$meals_total;
 					$total=$tax+$unit_amount;
-					$acc_tr[]=array($hotel_name,$a_particular,$unit_amount,number_format($tax,2),$total);
+					$estimate_total+=$total;
+					$acc_tr[]=array($hotel_name,$a_particular,number_format($unit_amount,2),number_format($tax,2),number_format($total,2));
 				
 				} 
 				
@@ -1257,7 +1260,100 @@ class Tour extends CI_Controller {
 					
 				$unit_amount=$item['amount']*$total_quantity;
 				$total=$tax+$unit_amount;
-				$str[]=array($service_name,$s_particular,$unit_amount,number_format($tax,2),$total);
+				$estimate_total+=$total;
+				$str[]=array($service_name,$s_particular,number_format($unit_amount,2),number_format($tax,2),number_format($total,2));
+					
+				
+				}
+				
+				
+				 
+					
+			}
+			if(isset($cart['vehicles'])){
+					$tax=4.955; 
+					
+				foreach($cart['vehicles'] as $item){ 
+				$no_of_days=count($item['from_cart']);
+				
+				$destinations=$this->package_model->getDestinationsByOrder($cart_contents,$item['vehicle_model_id'],$item['vehicle_id']);
+				if($_REQUEST['pickup']!='' ||$_REQUEST['drop']!=''){
+							if($_REQUEST['pickup']!=''){
+								array_unshift($destinations, $_REQUEST['pickup']);
+							}
+							if($_REQUEST['drop']!=''){
+								array_push($destinations, $_REQUEST['drop']);
+							}
+						
+						}
+						$count= count($destinations);
+						$API_KEY='AIzaSyD3Fog2G5asD5NI4iJJZDsfJHjW-gPhevA';
+					
+						$distance=0;
+						for($i=0;$i<($count-1);$i++){
+						
+							$origin=$destinations[$i];
+							$destination=$destinations[$i+1];
+							$url='https://maps.googleapis.com/maps/api/distancematrix/json?origins='.$origin.'&destinations='.$destination.'&mode=driving&language=en&key='.$API_KEY;
+							$data=file_get_contents($url);
+							$decode = json_decode($data);
+								if(isset($decode->rows[0]->elements[0]->status) && $decode->rows[0]->elements[0]->status!='NOT_FOUND') {
+									$distance+=substr($decode->rows[0]->elements[0]->distance->text,0,-3);
+								
+								
+								}
+						
+						}
+				$total_distance=$distance;
+				$t_particular="Travel: From ".implode(",",$destinations);
+				// get first vehicle value
+				$row=$item['from_cart'][0];
+				$totalAmount=0;	
+				$cart_contents = $this->tour_cart->contents();
+				$dataArray=$cart_contents[$row['itinerary']][$row['table']][$row['index']];
+				//$tarrif_id=$dataArray['tariff_id'];echo $tarrif_id;exit;
+				
+					$vehicle_model=$this->settings_model->getValuebyId($item['vehicle_model_id'],'vehicle_models','name'); 
+					$t_particular.=" - ".$vehicle_model;	
+				if($item['vehicle_id']>0){ 
+					$reg_num=$this->settings_model->getValuebyId($item['vehicle_id'],'vehicles','registration_number');
+					$t_particular.=" (".$reg_num.")";
+				}
+					$tariffdata['vehicle_ac_type']=$item['vehicle_ac_type_id'];
+					$tariffdata['vehicle_model']=$item['vehicle_model_id'];
+					$tariffdata['organisation_id']=$this->session->userdata('organisation_id');
+
+					$tarrif_data=$this->tarrif_model->selectAvailableTariff($tariffdata);
+				if(!empty($tarrif_data)){
+					$tarrif_data=$tarrif_data[0];
+					$t_particular.= "+ Minimum ".$tarrif_data['minimum_kilometers']."KM @ Rs.".$tarrif_data['rate']." each day";
+					$totalAmount += $tarrif_data['rate'];
+				
+					if($total_distance>$tarrif_data['minimum_kilometers']){
+						$additional_km=$total_distance-$tarrif_data['minimum_kilometers'];
+						$t_particular.=" + Additional ".$additional_km." KM @ RS".$tarrif_data['additional_kilometer_rate']."/KM ";
+						$totalAmount +=$tarrif_data['additional_kilometer_rate']*$additional_km;
+					}
+					if($tarrif_data['driver_bata']){
+						$t_particular.="+ Driver Bata @ Rs ".$tarrif_data['driver_bata']." each day for 1day(s)";
+						$totalAmount +=$tarrif_data['driver_bata'];
+					}
+					if($tarrif_data['night_halt']){
+						$t_particular.="+ Night Halt @ Rs ".$tarrif_data['night_halt']." each night";
+						$totalAmount +=$tarrif_data['night_halt'];
+					}
+						
+				}else{
+					$t_particular.="Tarrif not defined";
+					$totalAmount=0;
+				}
+					
+					
+					
+				$unit_amount= $totalAmount + $tax;
+				$total=$tax+$unit_amount;
+				$estimate_total+=$total;
+				$travel_tr[]=array("Travel",$t_particular,number_format($unit_amount,2),number_format($tax,2),number_format($total,2));
 					
 				
 				}
@@ -1270,7 +1366,7 @@ class Tour extends CI_Controller {
 			
 			
 			//echo $estimate_amt;exit;
-			$estimate_tr[]=array('','','','Grand Total',number_format($estimate_amt,2));
+			$estimate_tr[]=array('','','','Grand Total',number_format($estimate_total,2));
 			$tr=array_merge($str,$acc_tr,$travel_tr,$estimate_tr); 
 			echo json_encode($tr);
 		

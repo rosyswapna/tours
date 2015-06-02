@@ -1227,7 +1227,7 @@ class Tour extends CI_Controller {
 					$tax_amount=($unit_amount*$tax)/100;
 					$total=$tax_amount+$unit_amount;
 					$estimate_total+=$total;
-					$acc_tr[]=array($hotel_name,$a_particular,number_format($unit_amount,2),number_format($tax,2),number_format($total,2));
+					$acc_tr[]=array($hotel_name,$a_particular,number_format($unit_amount,2),number_format($tax_amount,2),number_format($total,2));
 				
 				} 
 				
@@ -1263,7 +1263,7 @@ class Tour extends CI_Controller {
 				$tax_amount=($unit_amount*$tax)/100;
 				$total=$tax_amount+$unit_amount;
 				$estimate_total+=$total;
-				$str[]=array($service_name,$s_particular,number_format($unit_amount,2),number_format($tax,2),number_format($total,2));
+				$str[]=array($service_name,$s_particular,number_format($unit_amount,2),number_format($tax_amount,2),number_format($total,2));
 					
 				
 				}
@@ -1356,7 +1356,7 @@ class Tour extends CI_Controller {
 				$tax_amount=($unit_amount*$tax)/100;
 				$total=$tax_amount+$unit_amount;
 				$estimate_total+=$total;
-				$travel_tr[]=array("Travel",$t_particular,number_format($unit_amount,2),number_format($tax,2),number_format($total,2));
+				$travel_tr[]=array("Travel",$t_particular,number_format($unit_amount,2),number_format($tax_amount,2),number_format($total,2));
 					
 				
 				}

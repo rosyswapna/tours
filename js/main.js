@@ -2231,6 +2231,14 @@ $('.vehicle-list').on('keydown',function(){
 		   
 		}
 	});
+	
+	//room-attribute multiselect
+	$('#room_attributes').click(function(){
+		if ($("#room_attributes option[value!='']:selected").length > 0){
+		    $("#room_attributes option[value='']").removeAttr("selected");  
+		   
+		}
+	});
 
 	//for checking customer in db
 	$('#customer_contact').on('keyup click blur',function(){

@@ -244,11 +244,11 @@ class CI_Tour_cart {
 			return FALSE;
 		}
 		
-		$cart=$this->contents();
-		if(isset($cart[$itinerary][$tble][$index])){ //echo "<pre>";print_r($cart[$itinerary][$tble][$index]);exit;
+		$cart=$this->contents(); 
+		if(isset($cart[$itinerary][$tble][$index])){ 
 		
 			$this->_tour_cart_contents[$itinerary][$tble][$index]=$items;
-			$this->build_estimate($tble,$itinerary,$index,$items);
+			//$this->build_estimate($tble,$itinerary,$index,$items);
 		}
 		$this->save_cart();
 	}

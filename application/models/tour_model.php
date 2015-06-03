@@ -915,5 +915,23 @@ class Tour_model extends CI_Model {
 		$this->db->update("trips",$data);
 	
 	}
+	
+	function getTripVehicles($trip_id){
+		
+		
+		$org_id=$this->session->userdata('organisation_id');
+		$condition=array('TV.organisation_id'=>$org_id,'T.id'=>$trip_id);
+		$this->db->select('TV.*');
+		$this->db->from('trip_vehicles TV');
+		$this->db->join('itinerary I','TV.itinerary_id = I.id','left');
+		$this->db->join('trips T','I.trip_id = T.id','left');
+		$this->db->where($condition); 
+		$qry=$this->db->get(); 
+		if($qry->num_rows() > 0){
+			return $qry->result_array();
+		}else{
+			return false;
+		}
+	}
 }
 ?>

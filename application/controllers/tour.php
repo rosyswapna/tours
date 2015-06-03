@@ -657,11 +657,20 @@ class Tour extends CI_Controller {
 			}else{
 			$trip['advanced_option']=false;
 			}
+			$vehicle_detail=$this->tour_model->getTripVehicles($trip_id);
+			if($vehicle_detail){$vehicleArr=array();
+			$vehicleArr=$vehicle_detail[0];//echo "<pre>";print_r($vehicleArr);echo "</pre>";exit;
+			$trip['vehicle_ac_type_id']=$vehicleArr['vehicle_ac_type_id'];
+			$trip['vehicle_model_id']=$vehicleArr['vehicle_model_id'];;
+			$trip['vehicle_id']=$vehicleArr['vehicle_id'];;
+			$trip['driver_id']=$vehicleArr['driver_id'];
+			}else{
+			
 			$trip['vehicle_ac_type_id']=-1;
 			$trip['vehicle_model_id']=-1;
 			$trip['vehicle_id']=-1;
 			$trip['driver_id']=-1;
-			
+			}
 				return $trip;
 			}else{
 				redirect(base_url().'front-desk/tour/booking/TA');

@@ -191,6 +191,8 @@
 		<button class="btn btn-success book-tour-validate" type="button" enable_redirect='false'>
 		<?php echo $save; ?></button>
 		
+		
+		
 		<div class="hide-me">
 		<?php $save_update_button='SAVE';
 			$class_save_update_button="class='btn btn-success trip-save-update'";
@@ -198,6 +200,7 @@
 			echo form_submit("trip-add",$save_update_button,$class_save_update_button).nbs(7);
 		?>
 		</div>
+		
 	</td></tr></table>
 	</table>
 
@@ -245,6 +248,11 @@
 		?>
 		<button class="btn btn-success save-itry-btn" type="button">Save</button>
 		<button class="btn btn-success tour-estimate" type="button">Estimate</button>
+		<?php if($flag=='TE' ||$flag=='PE'){?>
+	
+		<button class="btn btn-success " type="button" id="show-tab" >
+		<?php echo "Add Itinerary" ?></button>
+		<?php }?>
 	</div>
 	
 </div>

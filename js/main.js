@@ -2239,7 +2239,13 @@ $('.vehicle-list').on('keydown',function(){
 		   
 		}
 	});
-
+	
+	
+	$('#show-tab').click(function(){
+		$("#tab-display").css("display","block");
+	});
+	
+	
 	//for checking customer in db
 	$('#customer_contact').on('keyup click blur',function(){
 		var mobile=$('#customer_contact').val();

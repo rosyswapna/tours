@@ -47,10 +47,15 @@
 	<?php //} if(!is_numeric($trip_id) || $package_id > 0 ){?>
 	<?php } if($flag=='TA' || $flag=='PA' || $flag=='PE'){?>
 	<td class="td-10"><?php echo form_label('Package','package');?></td>
-	<td class="td-15"><?php $class="form-control";
-		  $msg="Package";
-		  $id = $name ="package_id";
-		echo $this->form_functions->populate_editable_dropdown($name, $packages,$class,'Packages',array(),$msg,@$header['package_id'],$id);
+	<td class="td-15"><?php 
+		if($flag=='PE' ||$flag=='TA'){
+		        $class="form-control";
+		        $msg="Package";
+		        $id = $name ="package_id";
+			echo $this->form_functions->populate_editable_dropdown($name, $packages,$class,'Packages',array(),$msg,@$header['package_id'],$id);
+		}elseif($flag=='PA'){
+			echo form_input(array('name'=>'package_id','class'=>'form-control','id'=>'package_id','placeholder'=>'Package Name'));
+		}
 	?></td>
 	<?php }?>
 

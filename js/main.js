@@ -2220,8 +2220,10 @@ $('.vehicle-list').on('keydown',function(){
 		});
 	}
 	
-
-
+	if(pathname[5] > 0){
+		$("#tab-display").css("display","none");
+	}
+	
 	// season-multiselect
 	$('#seasons').click(function(){
 		if ($("#seasons option[value!='']:selected").length > 0){
@@ -2428,9 +2430,14 @@ $('.vehicle-list').on('keydown',function(){
 				var dataArray={post:dataArr};
 				add_itinerary_for_tour(dataArray);
 			}
-		
+			var gINVALID=-1;
+			if(row_id >gINVALID && destination_section_id> gINVALID){ 
+			$("#tab-display").css("display","none");
+			}
 			reset_destination_tab_values();
+			
 		}
+		
 		
 	
 	});
@@ -2485,7 +2492,11 @@ $('.vehicle-list').on('keydown',function(){
 				var dataArray={post:dataArr};
 				add_itinerary_for_tour(dataArray);
 			}
-		
+			
+			var gINVALID=-1;
+			if(row_id >gINVALID && accommodation_section_id> gINVALID){ 
+			$("#tab-display").css("display","none");
+			}
 		
 			reset_accomodation_tab_values();
 		}
@@ -2520,7 +2531,10 @@ $('.vehicle-list').on('keydown',function(){
 				var dataArray={post:dataArr};
 				add_itinerary_for_tour(dataArray);
 			}
-			
+			var gINVALID=-1;
+			if(row_id >gINVALID && service_section_id> gINVALID){ 
+			$("#tab-display").css("display","none");
+			}
 			reset_service_tab_values();
 		}
 	});
@@ -2559,7 +2573,10 @@ $('.vehicle-list').on('keydown',function(){
 				var dataArray={post:dataArr};
 				add_itinerary_for_tour(dataArray);
 			}
-
+		var gINVALID=-1;
+			if(row_id >gINVALID && vehicle_section_id> gINVALID){ 
+			$("#tab-display").css("display","none");
+			}
 		reset_vehicle_tab_values();
 		}
 	});
@@ -2578,7 +2595,11 @@ $('.vehicle-list').on('keydown',function(){
 	}else{
 		var dataArr = {table:"trip_destinations",  trip_id:trip_id, _date:_date,row_id:row_id, id:destination_section_id};
 		delete_itinerary_for_package(dataArr);
-	}
+	}	
+		var gINVALID=-1;
+		if(row_id >gINVALID && destination_section_id> gINVALID){ 
+			$("#tab-display").css("display","none");
+			}
 		reset_destination_tab_values();
 	});
 	
@@ -2595,6 +2616,10 @@ $('.vehicle-list').on('keydown',function(){
 		var dataArr = {table:"trip_accommodation",  trip_id:trip_id, _date:_date,row_id:row_id, id:accommodation_section_id};
 		delete_itinerary_for_package(dataArr);
 	}
+		var gINVALID=-1;
+		if(row_id >gINVALID && accommodation_section_id> gINVALID){ 
+			$("#tab-display").css("display","none");
+			}
 		reset_accomodation_tab_values();
 	});
 	
@@ -2610,7 +2635,11 @@ $('.vehicle-list').on('keydown',function(){
 	}else{
 		var dataArr = {table:"trip_services",  trip_id:trip_id, _date:_date,row_id:row_id, id:service_section_id};
 		delete_itinerary_for_package(dataArr);
-	}
+	}	
+		var gINVALID=-1;
+		if(row_id >gINVALID && service_section_id> gINVALID){ 
+			$("#tab-display").css("display","none");
+			}
 		reset_service_tab_values();
 	});
 	
@@ -2627,6 +2656,10 @@ $('.vehicle-list').on('keydown',function(){
 		var dataArr = {table:"trip_vehicles",  trip_id:trip_id, _date:_date,row_id:row_id, id:vehicle_section_id};
 		delete_itinerary_for_package(dataArr);
 	}
+		var gINVALID=-1;
+		if(row_id >gINVALID && vehicle_section_id> gINVALID){ 
+			$("#tab-display").css("display","none");
+			}
 		reset_vehicle_tab_values();
 	});
 	
@@ -2645,8 +2678,9 @@ $('.vehicle-list').on('keydown',function(){
 		 },function(data){ 
 			if(data!=false){
 				data=jQuery.parseJSON(data);
+				$("#tab-display").css("display","block");
 				//travel-tab values
-				if(tab=="t_tab"){
+				if(tab=="t_tab"){ 
 					var href = $('a[href="#tab_1"]');
 					$(href).trigger('click');
 					$(".tour-travel-tab #destination_row_id").val(row_id);

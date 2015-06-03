@@ -1017,7 +1017,7 @@ class Tour extends CI_Controller {
 		if((isset($_REQUEST['row_id']))&& (isset($_REQUEST['table'])) && (isset($_REQUEST['itinerary']))){
 			
 			$editable_values=$this->tour_cart->select($_REQUEST['itinerary'],$_REQUEST['table'],$_REQUEST['row_id']);
-			
+			//print_r($editable_values);exit;
 			echo json_encode($editable_values);
 		}else{
 			return false;
@@ -1334,7 +1334,7 @@ class Tour extends CI_Controller {
 				
 					if($total_distance>$tarrif_data['minimum_kilometers']){
 						$additional_km=$total_distance-$tarrif_data['minimum_kilometers'];
-						$t_particular.=" + Additional ".$additional_km." KM @ RS".$tarrif_data['additional_kilometer_rate']."/KM ";
+						$t_particular.=" + Additional ".$additional_km." KM @ Rs ".$tarrif_data['additional_kilometer_rate']."/KM ";
 						$totalAmount +=$tarrif_data['additional_kilometer_rate']*$additional_km;
 					}
 					if($tarrif_data['driver_bata']){

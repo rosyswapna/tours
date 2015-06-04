@@ -2209,6 +2209,7 @@ $('.vehicle-list').on('keydown',function(){
 	var pathname = window.location.pathname.split("/");
 	//if(pathname[2]=="tour" && pathname[3]=="booking" && pathname[4] > 0){ 
 	if(pathname[2]=="tour" && pathname[3]=="booking" &&(pathname[4]=="PA" || pathname[4]=="TA")&& pathname[5] > 0){
+
 		$.post(base_url+'/tour/getFromCart',{},function(data){
 			if(data!=false){
 				data=jQuery.parseJSON(data);
@@ -2722,11 +2723,15 @@ $('.vehicle-list').on('keydown',function(){
 					
 					$(".tour-accomodation-tab #room_type_id option[value='"+data.room_type_id+"']").attr('selected', true);
 					var room_attributes=data.room_attributes; 
-					$.each(room_attributes, function(i,e){
-					    $(".tour-accomodation-tab #room_attributes option[value='']").removeAttr("selected");
+					$(".tour-accomodation-tab #room_attributes option:selected").removeAttr("selected");
+					$.each(room_attributes, function(i,e){ 
+					    
+					    //$(".tour-accomodation-tab #room_attributes option[value='']").removeAttr("selected");
 					    $(".tour-accomodation-tab #room_attributes option[value='" + e + "']").attr("selected", true);
-					});
+					}); 
+
 					var meals_package=data.meals_package;
+					$(".icheckbox_minimal").removeClass("checked");
 					$.each(meals_package, function(i,val){
 					$("#meals_package"+val).closest( "div" ).addClass( "checked" );
 					$("#meals_package"+val).attr('checked',true);

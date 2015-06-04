@@ -2150,7 +2150,7 @@ $('.vehicle-list').on('keydown',function(){
 		setTimeout(function(){$('#package_id').trigger('change');},1000);
 	}
 
-	$('#package_id').on('change',function(){
+	$('select[id="package_id"]').on('change',function(){
 
 		$(".rough-estimate").css("display","none");
 		var package_id = $(this).val();
@@ -2180,9 +2180,11 @@ $('.vehicle-list').on('keydown',function(){
 		var errFlag = 0;
 		var errMsg = '';
 		var pathname = window.location.pathname.split("/");
-		if(pathname[4]=="TA"){//tour module
+		if(pathname[4]=="TA" && pathname[5]>0){//tour module 
+		
 			errFlag = 0;errMsg='';
-		}else if(pathname[4]=="PA" || pathname[5]>0){//package module 
+		}else if((pathname[4]=="PA" || pathname[5]>0) ||(pathname[4]=="TA" && pathname[5]!='')){//package module 
+		
 			//get package
 			var _package = $('input[name="hid_package"]').val();
 			if(_package == ''){
@@ -2191,7 +2193,7 @@ $('.vehicle-list').on('keydown',function(){
 			}
 			
 		}
-
+		
 		if(errFlag == 0){ 
 			$('.book-tour-validate').attr('enable_redirect','true');
 			$('.save-itry').trigger('click');

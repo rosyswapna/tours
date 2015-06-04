@@ -247,10 +247,16 @@ class Package_model extends CI_Model {
 			$package_id = $this->addPackage($insertPackage);
 		}
 
-		if(is_numeric($package_id) && $package_id > 0){		
+		if(is_numeric($package_id) && $package_id > 0){	
 			//create insert and update array
+			$daynum=1;
 			foreach($cart as $dayno=>$itry){
-				//get itinerary id or get from insert
+			
+			//convert date to day while package add /update
+			if(!is_numeric($dayno)){ 
+			 $dayno=$daynum++;
+			}
+			//get itinerary id or get from insert
 				$pck_itinerary = $this->getPackageItinerary($dayno,$package_id);
 				if($pck_itinerary){
 					$pck_itry_id = $pck_itinerary['id'];
@@ -288,6 +294,7 @@ class Package_model extends CI_Model {
 						}
 					}
 				}
+
 
 			
 			}

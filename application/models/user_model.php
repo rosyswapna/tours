@@ -50,7 +50,7 @@ class user_model extends CI_Model {
 	
 
 	//get list of data
-	public function getArray($tbl){
+	public function getArray($tbl){ 
 		$org_id=$this->session->userdata('organisation_id'); 
 		$flag=0;
 		if($tbl=='drivers'){

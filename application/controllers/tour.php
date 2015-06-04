@@ -1145,6 +1145,15 @@ class Tour extends CI_Controller {
 								$dataArray['room_attributes']=unserialize($dataArray['room_attributes']);
 							}
 							if(!empty($dataArray['room_attributes'])){ 
+							
+							//estimate calculation for all attributes
+							if($dataArray['room_attributes'][0]==''){
+								$all_attr=$this->user_model->getArray('room_attributes');
+								foreach ($all_attr as $idAttr=>$Attribute){
+									$dataArray['room_attributes'][]=$idAttr;
+								}
+							}
+							
 								foreach($dataArray['room_attributes'] as $room_attribute){ 
 									$condition=array('hotel_id'=>$item['hotel_id'],'season_id'=>$season_id,
 											'attribute_id'=>$room_attribute);

@@ -710,9 +710,23 @@ class Tour extends CI_Controller {
 			$itinerary = $dataArray['_date'];
 			$index = $dataArray['row_id'];
 			$trip_id=$dataArray['trip_id'];
+			
+			if(isset($dataArray['to_date']) && $dataArray['to_date']!='' ){
+				$to_date = $dataArray['to_date'];
+				$dateArr=array();
+				$begin = new DateTime($itinerary);
+				$end = new DateTime($to_date);
+
+				$daterange = new DatePeriod($begin, new DateInterval('P1D'), $end);// P1D means  period of one day
+					
+					foreach($daterange as $date){ 
+					    $dateArr[]= $date->format("Y-m-d");
+					    }
+			}
 			array_shift($fields);//pop first element(url data from ajax call)
 			unset($fields['table']);
 			unset($fields['_date']);
+			unset($fields['to_date']);
 			unset($fields['trip_id']);
 			unset($fields['row_id']);
 			
@@ -721,8 +735,14 @@ class Tour extends CI_Controller {
 				$this->tour_cart->update($tble,$fields,$itinerary,$index);
 			}else{ 
 				$data[$tble] = $fields; 
+				if(!empty($dateArr)){
+				$dateArr[]=$to_date;
+					foreach($dateArr as $itinerary){
+						$this->tour_cart->insert($data,$itinerary);
+					}
+				}else{
 				$this->tour_cart->insert($data,$itinerary);
-				
+				}
 			}
 		}
 		//echo "<pre>";print_r($this->tour_cart->estimate());echo "</pre>";exit;
@@ -744,18 +764,32 @@ class Tour extends CI_Controller {
 			$tble = $dataArray['table'];
 			$fields = $dataArray;
 			$itinerary = $dataArray['_date'];
+			if(isset($dataArray['to_date']) && $dataArray['to_date']!='' ){
+				$to_date = $dataArray['to_date'];
+				$dayArr=array();
+				for($i=$itinerary;$i<=$to_date;$i++){
+				$dayArr[]=$i;
+				}
+			}
 			$index = $dataArray['row_id'];
 			array_shift($fields);//pop first element(url data from ajax call)
 			unset($fields['table']);
 			unset($fields['_date']);
 			unset($fields['row_id']);
+			unset($fields['to_date']);
 			
 			//echo "<pre>";print_r($dataArray);echo "</pre>";exit;
 			if($index>=0){ 
 				$this->tour_cart->update($tble,$fields,$itinerary,$index);
 			}else{
 				$data[$tble] = $fields; 
-				$this->tour_cart->insert($data,$itinerary);
+				if(!empty($dayArr)){
+					foreach ($dayArr as $itinerary){
+						$this->tour_cart->insert($data,$itinerary);
+					}
+				}else{
+					$this->tour_cart->insert($data,$itinerary);
+				}
 				//print_r($this->tour_cart->estimate());exit;
 			}
 			

@@ -284,15 +284,36 @@
 					<?php 
 					//if(is_numeric($trip_id) && $trip_id > 0){
 					if($flag=='TA' || $flag=='TE' ){
-						echo form_label('Date','travel_date'); 
-				    		echo form_input(array('name'=>'travel_date','class'=>'form-control initialize-date-picker  ','id'=>'travel_date','value'=>@$travel_date));
-					
-					}elseif($flag=='PA' ||$flag=='PE'){
-						echo form_label('Day','travel_date'); 
-						$name = $id = 'travel_date';$class = 'form-control';
-						$msg = "Select Day";
 						
-						echo $this->form_functions->populate_dropdown($name,$days,@$travel_date,$class,$id,$msg); 
+							?><div class="from-to-date">
+							<div class="from-date-field">
+								<?php echo form_label(' From Date','travel_date'); 
+								echo form_input(array('name'=>'travel_date','class'=>'form-control initialize-date-picker  ','id'=>'travel_date','value'=>@$travel_date));
+								?>
+							</div>
+							<div class="to-date-field">
+								<?php
+								echo form_label(' To Date','travel_date'); 
+								echo form_input(array('name'=>'travel_to_date','class'=>'form-control initialize-date-picker  ','id'=>'travel_to_date','value'=>@$travel_to_date));
+								?>
+							</div>
+							</div>
+							<?php 
+						
+					}elseif($flag=='PA' ||$flag=='PE'){
+						?><div class="from-to-date"><div class="from-date-field"><?php
+							echo form_label('From Day','travel_date'); 
+							$name = $id = 'travel_date';$class = 'form-control';
+							$msg = "Select Day";
+							
+							echo $this->form_functions->populate_dropdown($name,$days,@$travel_date,$class,$id,$msg); 
+							?></div><div class="to-date-field"><?php 
+							echo form_label('To Day','travel_to_date'); 
+							$name = $id = 'travel_to_date';$class = 'form-control';
+							$msg = "Select Day";
+							
+							echo $this->form_functions->populate_dropdown($name,$days,@$travel_to_date,$class,$id,$msg); 
+						?>  </div></div><?php
 					}
 					echo $this->form_functions->form_error_session('travel_date', '<p class="text-red">', '</p>'); 
 					?>			
@@ -358,20 +379,48 @@
 	   		<fieldset class="body-border">
 				<div class="row-source-100-percent-width-with-margin-8">
 					<div class="form-group div-with-20-percent-width-with-margin-10">
+				
+					
 					<?php 
+					//if(is_numeric($trip_id) && $trip_id > 0){
 					if($flag=='TA' || $flag=='TE' ){
-						echo form_label('Date','accommodation_date'); 
-				    		echo form_input(array('name'=>'accommodation_date','class'=>'form-control initialize-date-picker  ','id'=>'accommodation_date','value'=>@$accommodation_date));
-					
-					}elseif($flag=='PA' || $flag=='PE' ){
-						echo form_label('Day','accommodation_date'); 
-						$name = $id = 'accommodation_date';$class = 'form-control';
-						$msg = "Select Day";
 						
-						echo $this->form_functions->populate_dropdown($name,$days,@$accommodation_date,$class,$id,$msg); 
+							?><div class="from-to-date">
+							<div class="from-date-field">
+								<?php echo form_label(' From Date','accommodation_date'); 
+								echo form_input(array('name'=>'accommodation_date','class'=>'form-control initialize-date-picker  ','id'=>'accommodation_date','value'=>@$accommodation_date));
+								?>
+							</div>
+							<div class="to-date-field">
+								<?php
+								echo form_label(' To Date','accommodation_to_date'); 
+								echo form_input(array('name'=>'accommodation_to_date','class'=>'form-control initialize-date-picker  ','id'=>'accommodation_to_date','value'=>@$accommodation_to_date));
+								?>
+							</div>
+							</div>
+							<?php 
+						
+					}elseif($flag=='PA' ||$flag=='PE'){
+						?><div class="from-to-date"><div class="from-date-field"><?php
+							echo form_label('From Day','accommodation_date'); 
+							$name = $id = 'accommodation_date';$class = 'form-control';
+							$msg = "Select Day";
+							
+							echo $this->form_functions->populate_dropdown($name,$days,@$accommodation_date,$class,$id,$msg); 
+							?></div><div class="to-date-field"><?php
+							echo form_label('To Day','accommodation_to_date'); 
+							$name = $id = 'accommodation_to_date';$class = 'form-control';
+							$msg = "Select Day";
+							
+							echo $this->form_functions->populate_dropdown($name,$days,@$accommodation_to_date,$class,$id,$msg); 
+						?>  </div></div><?php
 					}
+					echo $this->form_functions->form_error_session('accommodation_date', '<p class="text-red">', '</p>'); 
+					?>
 					
-					echo $this->form_functions->form_error_session('accommodation_date', '<p class="text-red">', '</p>'); ?>		</div>
+					
+					
+							</div>
 				</div>
 				<div class="row-source-100-percent-width-with-margin-8">
 					<div class="form-group div-with-20-percent-width-with-margin-10">
@@ -578,18 +627,40 @@
 					<?php 
 					
 					if($flag=='TA' || $flag=='TE' ){
-						echo form_label('Date','vehicle_date'); 
-				    		echo form_input(array('name'=>'vehicle_date','class'=>'form-control initialize-date-picker  ','id'=>'vehicle_date','value'=>@$vehicle_date));
-					
-					}elseif($flag=='PA' || $flag=='PE' ){
-						echo form_label('Day','vehicle_date'); 
-						$name = $id = 'vehicle_date';$class = 'form-control';
-						$msg = "Select Day";
 						
-						echo $this->form_functions->populate_dropdown($name,$days,@$vehicle_date,$class,$id,$msg); 
+							?><div class="from-to-date">
+							<div class="from-date-field">
+								<?php echo form_label(' From Date','vehicle_date'); 
+								echo form_input(array('name'=>'vehicle_date','class'=>'form-control initialize-date-picker  ','id'=>'vehicle_date','value'=>@$vehicle_date));
+								?>
+							</div>
+							<div class="to-date-field">
+								<?php
+								echo form_label(' To Date','vehicle_to_date'); 
+								echo form_input(array('name'=>'vehicle_to_date','class'=>'form-control initialize-date-picker  ','id'=>'vehicle_to_date','value'=>@$vehicle_to_date));
+								?>
+							</div>
+							</div>
+							<?php 
+						
+					}elseif($flag=='PA' ||$flag=='PE'){
+						?><div class="from-to-date"><div class="from-date-field"><?php
+							echo form_label('From Day','vehicle_date'); 
+							$name = $id = 'vehicle_date';$class = 'form-control';
+							$msg = "Select Day";
+							
+							echo $this->form_functions->populate_dropdown($name,$days,@$vehicle_date,$class,$id,$msg); 
+							?></div><div class="to-date-field"><?php
+							echo form_label('To Day','vehicle_to_date'); 
+							$name = $id = 'vehicle_to_date';$class = 'form-control';
+							$msg = "Select Day";
+							
+							echo $this->form_functions->populate_dropdown($name,$days,@$vehicle_to_date,$class,$id,$msg); 
+						?>  </div></div><?php
 					}
+					echo $this->form_functions->form_error_session('vehicle_date', '<p class="text-red">', '</p>');
 					
-					echo $this->form_functions->form_error_session('vehicle_date', '<p class="text-red">', '</p>'); ?>			</div>
+					 ?>			</div>
 				</div>
 
 

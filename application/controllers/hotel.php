@@ -275,8 +275,8 @@ class Hotel extends CI_Controller {
 		$id = '';$data = array();
 		if(isset($_REQUEST['room-type-tariff-add']) || isset($_REQUEST['room-type-tariff-edit'])){ 
 
-			$this->form_validation->set_rules('room_type_id','Room Type','trim|required|xss_clean');
-			$this->form_validation->set_rules('season_id1','Business Season','trim|required|xss_clean');
+			$this->form_validation->set_rules('room_type_id','Room Type','trim|xss_clean');
+			$this->form_validation->set_rules('season_id1','Business Season','trim|xss_clean');
 			$this->form_validation->set_rules('amount1','Amount','trim|required|numeric|xss_clean');
 
 			$data['room_type_id'] = $this->input->post('room_type_id');
@@ -285,8 +285,8 @@ class Hotel extends CI_Controller {
 			$table = 'room_tariffs';
 		}elseif(isset($_REQUEST['attr-tariff-add']) || isset($_REQUEST['attr-tariff-edit'])){
 
-			$this->form_validation->set_rules('room_attr_id','Room Attribute','trim|required|xss_clean');
-			$this->form_validation->set_rules('season_id2','Business Season','trim|required|xss_clean');
+			$this->form_validation->set_rules('room_attr_id','Room Attribute','trim|xss_clean');
+			$this->form_validation->set_rules('season_id2','Business Season','trim|xss_clean');
 			$this->form_validation->set_rules('amount2','Amount','trim|required|numeric|xss_clean');
 
 			$data['attribute_id'] = $this->input->post('room_attr_id');
@@ -295,8 +295,8 @@ class Hotel extends CI_Controller {
 			$table = 'room_attribute_tariffs';
 
 		}elseif(isset($_REQUEST['meals-tariff-add']) || isset($_REQUEST['meals-tariff-edit'])){
-			$this->form_validation->set_rules('meals_package_id','Meals Package','trim|required|xss_clean');
-			$this->form_validation->set_rules('season_id3','Business Season','trim|required|xss_clean');
+			$this->form_validation->set_rules('meals_package_id','Meals Package','trim|xss_clean');
+			$this->form_validation->set_rules('season_id3','Business Season','trim|xss_clean');
 			$this->form_validation->set_rules('amount3','Amount','trim|required|numeric|xss_clean');
 			
 			$data['meals_id'] = $this->input->post('meals_package_id');
@@ -330,7 +330,7 @@ class Hotel extends CI_Controller {
 			$err=true;
 			$this->mysession->set('Err_season_id3','Choose Season!');
 			}
-
+	
 		if($data){
 			$dbData = $data;
 			$dbData['hotel_id'] = $hotel_id;

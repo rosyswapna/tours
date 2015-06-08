@@ -2244,9 +2244,11 @@ $('.vehicle-list').on('keydown',function(){
 	});
 	
 	
-	$('#show-tab').click(function(){
+	$('#show-tab').click(function(){ 
 		$("#tab-display").css("display","block");
-		
+		$(".tour-travel-tab .to-date-field").css('display','block');
+		$(".tour-accomodation-tab .to-date-field").css('display','block');
+		$(".tour-vehicle-tab .to-date-field").css('display','block');
 		
 	});
 	

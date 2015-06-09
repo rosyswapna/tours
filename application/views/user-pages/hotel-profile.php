@@ -1,4 +1,22 @@
 <div class="page-outer">
+<?php if($this->mysession->get('post_tariff')!=''){
+$post_val=$this->mysession->get('post_tariff');
+if(isset($post_val['room_type_id'])&&$post_val['room_type_id']>gINVALID||isset($post_val['season_id1'])&&$post_val['season_id1']>gINVALID||isset($post_val['amount1'])&&$post_val['amount1']!=''){
+	$room_type_id=$post_val['room_type_id'];
+	$season_id1=$post_val['season_id1'];
+	$amount1=$post_val['amount1'];
+}elseif(isset($post_val['attribute_id'])&&$post_val['attribute_id']>gINVALID||isset($post_val['season_id2'])&&$post_val['season_id2']>gINVALID||isset($post_val['amount2'])&&$post_val['amount2']!=''){
+	$attribute_id=$post_val['attribute_id'];
+	$season_id2=$post_val['season_id2'];
+	$amount2=$post_val['amount2'];
+}elseif(isset($post_val['meals_id'])&&$post_val['meals_id']>gINVALID||isset($post_val['season_id3'])&&$post_val['season_id3']>gINVALID||isset($post_val['amount3'])&&$post_val['amount3']!=''){
+	$meals_id=$post_val['meals_id'];
+	$season_id3=$post_val['season_id3'];
+	$amount3=$post_val['amount3'];
+}
+$this->mysession->delete('post_tariff');
+}?>
+
 <fieldset class="body-border">
 <legend class="body-head">Hotel</legend>
 <?php echo form_open(base_url()."hotel/manage_hotel_profile"); ?>
@@ -344,19 +362,33 @@
 		<td><?php echo form_label('Room Type ','room_type',$attributes).nbs(5); ?></td><td><?php $class="form-control";
 				$msg="-Select-";
 				$name="room_type_id";
-				echo $this->form_functions->populate_dropdown($name,$room_types,$room_type_id='',$class,$id='room_type_id',$msg);?></td><td>
+				echo $this->form_functions->populate_dropdown($name,$room_types,@$post_val['room_type_id'],$class,$id='room_type_id',$msg);?>
+		<?php if($this->mysession->get('Err_room_type_tariff')!=''){
+		?>
+		<p style="color:#F56954;"><?php echo $this->mysession->get('Err_room_type_tariff');?></p>
+		<?php
+		$this->mysession->delete('Err_room_type_tariff');
+		}?>
+				</td><td>
 		</td>
 		<td><?php echo nbs(10);?></td>
 		<td><?php echo form_label('Season ','season',$attributes).nbs(5); ?></td><td><?php $class="form-control";
 				$msg="-Select-";
 				$name="season_id1";
-				echo $this->form_functions->populate_dropdown($name,$business_seasons,$season_id='',$class,$id='season_id1',$msg);?></td>
+				echo $this->form_functions->populate_dropdown($name,$business_seasons,@$season_id1,$class,$id='season_id1',$msg);?>
+		<?php if($this->mysession->get('Err_season_id1')!=''){
+		?>
+		<p style="color:#F56954;"><?php echo $this->mysession->get('Err_season_id1');?></p>
+		<?php
+		$this->mysession->delete('Err_season_id1');
+		}?></td>
 				<td><?php echo nbs(10);?></td>
-		<td><?php echo form_label('Amount ','amount',$attributes).nbs(5); ?></td><td><?php echo form_input(array('name'=>'amount1','class'=>'form-control' ,'id'=>'amount1','value'=>''));?></td>
+		<td><?php echo form_label('Amount ','amount',$attributes).nbs(5); ?></td><td><?php echo form_input(array('name'=>'amount1','class'=>'form-control' ,'id'=>'amount1','value'=>@$amount1));
+		echo $this->form_functions->form_error_session('amount1', '<p class="text-red">', '</p>');?></td>
 
 		<td><div  class="room-tariff" style="margin-top: 15px;" ><?php echo nbs(5);?><i class="fa fa-plus-circle cursor-pointer"></i><?php echo nbs(5);?></div><div class="hide-me"><?php echo form_submit("room-type-tariff-add","Add","id=room-tariff-id","class=btn");?></td>
 		</tr>
-	
+		
 		<?php echo form_close(); ?>
 		<?php echo form_open(base_url()."hotel/manage_hotel_rooms_tariff/".$profile['id']); ?>
 		<tr><?php $attributes = array(
@@ -365,15 +397,28 @@
 		<td><?php echo form_label('Room Attributes ','room_attributes',$attributes).nbs(5); ?></td><td><?php $class="form-control";
 				$msg="-Select-";
 				$name="room_attr_id";
-				echo $this->form_functions->populate_dropdown($name,$room_attributes,$room_type_id='',$class,$id='room_attr_id',$msg);?></td><td>
+				echo $this->form_functions->populate_dropdown($name,$room_attributes,@$attribute_id,$class,$id='room_attr_id',$msg);?>
+				<?php if($this->mysession->get('Err_room_attr')!=''){
+				?>
+				<p style="color:#F56954;"><?php echo $this->mysession->get('Err_room_attr');?></p>
+				<?php
+				$this->mysession->delete('Err_room_attr');
+				}?></td><td>
 		</td>
 		<td><?php echo nbs(10);?></td>
 		<td><?php echo form_label('Season ','season',$attributes).nbs(5); ?></td><td><?php $class="form-control";
 				$msg="-Select-";
 				$name="season_id2";
-				echo $this->form_functions->populate_dropdown($name,$business_seasons,$season_id='',$class,$id='season_id2',$msg);?></td>
+				echo $this->form_functions->populate_dropdown($name,$business_seasons,@$season_id2,$class,$id='season_id2',$msg);?>
+				<?php if($this->mysession->get('Err_season_id2')!=''){
+				?>
+				<p style="color:#F56954;"><?php echo $this->mysession->get('Err_season_id2');?></p>
+				<?php
+				$this->mysession->delete('Err_season_id2');
+				}?></td>
 				<td><?php echo nbs(10);?></td>
-		<td><?php echo form_label('Amount ','amount',$attributes).nbs(5); ?></td><td><?php echo form_input(array('name'=>'amount2','class'=>'form-control' ,'id'=>'t_amount','value'=>''));?></td>
+		<td><?php echo form_label('Amount ','amount',$attributes).nbs(5); ?></td><td><?php echo form_input(array('name'=>'amount2','class'=>'form-control' ,'id'=>'t_amount','value'=>@$amount2));
+		echo $this->form_functions->form_error_session('amount2', '<p class="text-red">', '</p>');?></td>
 
 		<td><div  class="attribute-tariff" style="margin-top: 15px;" ><?php echo nbs(5);?><i class="fa fa-plus-circle cursor-pointer"></i><?php echo nbs(5);?></div><div class="hide-me"><?php echo form_submit("attr-tariff-add","Add","id=attribute-tariff-id","class=btn");?></td>
 		</tr>
@@ -385,15 +430,28 @@
 		<td><?php echo form_label('Meals Package ','meals_package',$attributes).nbs(5); ?></td><td><?php $class="form-control";
 				$msg="-Select-";
 				$name="meals_package_id";
-				echo $this->form_functions->populate_dropdown($name,$meals_options,$room_type_id='',$class,$id='meals_package_id',$msg);?></td><td>
+				echo $this->form_functions->populate_dropdown($name,$meals_options,@$meals_id,$class,$id='meals_package_id',$msg);?>
+				<?php if($this->mysession->get('Err_meals')!=''){
+				?>
+				<p style="color:#F56954;"><?php echo $this->mysession->get('Err_meals');?></p>
+				<?php
+				$this->mysession->delete('Err_meals');
+				}?></td><td>
 		</td>
 		<td><?php echo nbs(10);?></td>
 		<td><?php echo form_label('Season ','season',$attributes).nbs(5); ?></td><td><?php $class="form-control";
 				$msg="-Select-";
 				$name="season_id3";
-				echo $this->form_functions->populate_dropdown($name,$business_seasons,$season_id='',$class,$id='season_id3',$msg);?></td>
+				echo $this->form_functions->populate_dropdown($name,$business_seasons,@$season_id3,$class,$id='season_id3',$msg);?>
+				<?php if($this->mysession->get('Err_season_id3')!=''){
+				?>
+				<p style="color:#F56954;"><?php echo $this->mysession->get('Err_season_id3');?></p>
+				<?php
+				$this->mysession->delete('Err_season_id3');
+				}?></td>
 				<td><?php echo nbs(10);?></td>
-		<td><?php echo form_label('Amount ','amount',$attributes).nbs(5); ?></td><td><?php echo form_input(array('name'=>'amount3','class'=>'form-control' ,'id'=>'amount3','value'=>''));?></td>
+		<td><?php echo form_label('Amount ','amount',$attributes).nbs(5); ?></td><td><?php echo form_input(array('name'=>'amount3','class'=>'form-control' ,'id'=>'amount3','value'=>@$amount3));
+		echo $this->form_functions->form_error_session('amount3', '<p class="text-red">', '</p>');?></td>
 
 		<td><div  class="meals-tariff" style="margin-top: 15px;" ><?php echo nbs(5);?><i class="fa fa-plus-circle cursor-pointer"></i><?php echo nbs(5);?></div><div class="hide-me"><?php echo form_submit("meals-tariff-add","Add","id=meals-tariff-id","class=btn");?></td>
 		</tr>

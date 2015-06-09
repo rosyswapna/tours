@@ -280,8 +280,11 @@ class Hotel extends CI_Controller {
 			$this->form_validation->set_rules('amount1','Amount','trim|required|numeric|xss_clean');
 
 			$data['room_type_id'] = $this->input->post('room_type_id');
-			$data['season_id'] = $this->input->post('season_id1');
-			$data['amount'] = $this->input->post('amount1');
+			$dbData['room_type_id'] = $data['room_type_id'];
+			$data['season_id1'] = $this->input->post('season_id1');
+			$dbData['season_id'] = $data['season_id1'];
+			$data['amount1'] = $this->input->post('amount1');
+			$dbData['amount'] = $data['amount1'];
 			$table = 'room_tariffs';
 		}elseif(isset($_REQUEST['attr-tariff-add']) || isset($_REQUEST['attr-tariff-edit'])){
 
@@ -290,8 +293,11 @@ class Hotel extends CI_Controller {
 			$this->form_validation->set_rules('amount2','Amount','trim|required|numeric|xss_clean');
 
 			$data['attribute_id'] = $this->input->post('room_attr_id');
-			$data['season_id'] = $this->input->post('season_id2');
-			$data['amount'] = $this->input->post('amount2');
+			$dbData['attribute_id'] = $data['attribute_id'];
+			$data['season_id2'] = $this->input->post('season_id2');
+			$dbData['season_id'] = $data['season_id2'];
+			$data['amount2'] = $this->input->post('amount2');
+			$dbData['amount'] = $data['amount2'];
 			$table = 'room_attribute_tariffs';
 
 		}elseif(isset($_REQUEST['meals-tariff-add']) || isset($_REQUEST['meals-tariff-edit'])){
@@ -300,8 +306,11 @@ class Hotel extends CI_Controller {
 			$this->form_validation->set_rules('amount3','Amount','trim|required|numeric|xss_clean');
 			
 			$data['meals_id'] = $this->input->post('meals_package_id');
-			$data['season_id'] = $this->input->post('season_id3');
-			$data['amount'] = $this->input->post('amount3');
+			$dbData['meals_id'] = $data['meals_id'];
+			$data['season_id3'] = $this->input->post('season_id3');
+			$dbData['season_id'] = $data['season_id3'];
+			$data['amount3'] = $this->input->post('amount3');
+			$dbData['amount'] = $data['amount3'];
 			$table = 'room_attribute_tariffs';
 
 		}
@@ -314,7 +323,7 @@ class Hotel extends CI_Controller {
 			$err=true;
 			$this->mysession->set('Err_season_id1','Choose Season!');
 			}
-			if(isset($data['room_attr_id']) && $data['room_attr_id']==gINVALID){
+			if(isset($data['attribute_id']) && $data['attribute_id']==gINVALID){
 			$err=true;
 			$this->mysession->set('Err_room_attr','Choose Attribute!');
 			}
@@ -322,7 +331,7 @@ class Hotel extends CI_Controller {
 			$err=true;
 			$this->mysession->set('Err_season_id2','Choose Season!');
 			}
-			if(isset($data['meals_package_id']) && $data['meals_package_id']==gINVALID){
+			if(isset($data['meals_id']) && $data['meals_id']==gINVALID){
 			$err=true;
 			$this->mysession->set('Err_meals','Choose Meals Package!');
 			}
@@ -332,7 +341,7 @@ class Hotel extends CI_Controller {
 			}
 	
 		if($data){
-			$dbData = $data;
+			//$dbData = $data;
 			$dbData['hotel_id'] = $hotel_id;
 			$dbData['organisation_id'] = $this->session->userdata('organisation_id'); 
 			$dbData['user_id'] = $this->session->userdata('id');
@@ -344,8 +353,9 @@ class Hotel extends CI_Controller {
 				$this->session->set_userdata(array('T_dbError'=>''));		
 				
 
-			}else{
+			}else{ 
 				$this->mysession->set('post_tariff',$data);
+				
 			}
 		}
 		

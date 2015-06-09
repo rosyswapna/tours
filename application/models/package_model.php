@@ -409,8 +409,8 @@ class Package_model extends CI_Model {
 		if(isset($condition['where']['status_id']) && $condition['where']['status_id']>0)	{
 			$qry.=" AND p.status_id='".$condition['where']['status_id']."'";
 		}
-		if(isset($condition['like']['name']) && $condition['like']['name']!='')	{
-			$qry.=" AND p.name LIKE '%".$condition['like']['name']."%'";
+		if(isset($condition['like']['p_name']) && $condition['like']['p_name']!='')	{
+			$qry.=" AND p.name LIKE '%".$condition['like']['p_name']."%'";
 		}
 		$qry.=" GROUP BY pi.package_id";
 		return $qry;

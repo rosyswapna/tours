@@ -1090,13 +1090,13 @@ class Tour extends CI_Controller {
 			$data['urlseg'] = 4;
 			
 			
-			$data['package_name']	= $like_arry['name'] 		= '';
+			$data['package_name']	= $like_arry['p_name'] 		= '';
 			$data['status_id']	= $where_arry['status_id'] 	= '';
 			
 			if(isset($_REQUEST['package_search'])){
 				
 				$where_arry['status_id']=$_REQUEST['status_id'];
-				$like_arry['name']=$_REQUEST['package_name'];	
+				$like_arry['p_name']=$_REQUEST['package_name'];	
 				$this->mysession->set('condition',array("where"=>$where_arry,"like"=>$like_arry));
 			}
 			
@@ -1107,7 +1107,7 @@ class Tour extends CI_Controller {
 				$condition=$this->mysession->get('condition');
 
 				$data['status_id']=$condition['where']['status_id'];
-				$data['package_name']=$condition['like']['name'];
+				$data['package_name']=$condition['like']['p_name'];
 			}else{
 				$condition = false;
 			}

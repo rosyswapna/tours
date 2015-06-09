@@ -401,10 +401,18 @@ class Package_model extends CI_Model {
 		
 	}
 
-	function get_sql_for_packages()
-	{
-		$qry = "SELECT p.id, p.name as package, p.status_id, st.name, count(pi.id) as days FROM packages p LEFT JOIN statuses st ON p.status_id = st.id LEFT JOIN package_itinerary pi ON pi.package_id = p.id WHERE p.organisation_id = ".$this->session->userdata('organisation_id')." GROUP BY pi.package_id"; 
-			
+	function get_sql_for_packages($condition)
+	{	
+		
+		$qry = "SELECT p.id, p.name as package, p.status_id, st.name, count(pi.id) as days FROM packages p LEFT JOIN statuses st ON p.status_id = st.id LEFT JOIN package_itinerary pi ON pi.package_id = p.id WHERE p.organisation_id = ".$this->session->userdata('organisation_id'); 
+		
+		if(isset($condition['where']['status_id']) && $condition['where']['status_id']>0)	{
+			$qry.=" AND p.status_id='".$condition['where']['status_id']."'";
+		}
+		if(isset($condition['like']['name']) && $condition['like']['name']!='')	{
+			$qry.=" AND p.name LIKE '%".$condition['like']['name']."%'";
+		}
+		$qry.=" GROUP BY pi.package_id";
 		return $qry;
 	}
 	

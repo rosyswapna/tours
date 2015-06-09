@@ -1076,59 +1076,57 @@ class Tour extends CI_Controller {
 		
 	}
 
-	public function showPackageList($param2){
+	public function showPackageList($param2){ 
 		if($this->session_check()==true) { 
-			if($this->mysession->get('condition')!=null){
+			
+			if($param2=='1'){ $param2='0'; }
+			if($param2==''){ $this->mysession->delete('condition');$param2='0'; }
+			
+			$tbl	= " ";$like_arry = $where_arry = array();
+			$baseurl = base_url().'front-desk/tour/packages';
+			$per_page = 30;
+			$data['slno_per_page'] = 10;
+			$uriseg ='4';
+			$data['urlseg'] = 4;
+			
+			
+			$data['package_name']	= $like_arry['name'] 		= '';
+			$data['status_id']	= $where_arry['status_id'] 	= '';
+			
+			if(isset($_REQUEST['package_search'])){
+				
+				$where_arry['status_id']=$_REQUEST['status_id'];
+				$like_arry['name']=$_REQUEST['package_name'];	
+				$this->mysession->set('condition',array("where"=>$where_arry,"like"=>$like_arry));
+			}
+			
+			
+			
+			if($this->mysession->get('condition')!=''){ 
+
 				$condition=$this->mysession->get('condition');
-				if(!isset($condition['like']['name']) && !isset($condition['where']['status_id'])){
-					$this->mysession->delete('condition');
-				}
+
+				$data['status_id']=$condition['where']['status_id'];
+				$data['package_name']=$condition['like']['name'];
+			}else{
+				$condition = false;
 			}
 			$tbl_arry=array('statuses');
 			for ($i=0;$i<count($tbl_arry);$i++){
 				$data[$tbl_arry[$i]] = $this->user_model->getArray($tbl_arry[$i]);
 			}
-
-			$where_arry['organisation_id'] = $this->session->userdata('organisation_id');
-			$like_arry = array();
-			if(isset($_REQUEST['package_search'])){
-
-				if($param2==''){
-					$param2='0';
-				}
-				if($_REQUEST['package_name']!=null){
-					$like_arry['name']=$_REQUEST['package_name'];
-				}
-
-				if(is_numeric($_REQUEST['status_id']) && $_REQUEST['status_id'] > 0){
-					$where_arry['status_id'] = $_REQUEST['status_id'];
-				}
-
-				$this->mysession->set('condition',array("where"=>$where_arry,"like"=>$like_arry));
-				
-			}
-			if(is_null($this->mysession->get('condition'))){
-				$this->mysession->set('condition',array("where"=>$where_arry,"like"=>$like_arry));
-
-				$data['package_name'] 	= @$like_arry['name'];
-				$data['status_id']	= @$where_arry['status_id'];
-				
-			}
-
-			$baseurl=base_url().'front-desk/tour/packages';
-			$per_page=10;
-			$uriseg ='4';
-			$qry = $this->package_model->get_sql_for_packages();
-			$paginations=$this->mypage->paging('',$per_page,$param2,$baseurl,$uriseg,'yes',$qry);
+			
+			$qry = $this->package_model->get_sql_for_packages($condition);
+			$paginations=$this->mypage->paging($tbl='',$per_page,$param2,$baseurl,$uriseg,$custom='yes',$qry);
 			$data['page_links']=$paginations['page_links'];
-			$data['packages'] = $paginations['values'];
-			if($param2==''){
-				$this->mysession->delete('condition');
-			}
-
+			$data['packages']=$paginations['values'];
+				if(empty($data['packages'])){
+					$data['result']="No Results Found !";
+				}
 			$data['title']="Package List| ".PRODUCT_NAME;  
 			$page='user-pages/packageList';
 			$this->load_templates($page,$data);
+					
 		}else{
 			$this->notAuthorized();
 		}

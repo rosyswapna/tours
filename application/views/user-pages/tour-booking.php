@@ -85,8 +85,9 @@
 				$this->mysession->delete('Err_V_Ac');
 			} 
 			?></span></td>
-	<td class="td-10"><?php echo form_label('Pickup');?></td>
-	<td class="td-15"><?php echo form_input(array('name'=>'pick_up','class'=>'form-control','id'=>'pick_up','placeholder'=>'','value'=>@$header['pick_up_location'])).form_input(array('name'=>'pick_up_lat','class'=>'form-control hide-me','id'=>'pick_up_lat','placeholder'=>'','value'=>@$pick_up_lat)).form_input(array('name'=>'pick_up_lng','class'=>'form-control hide-me','id'=>'pick_up_lng','placeholder'=>'','value'=>@$pick_up_lng));?></td>
+	<td class="td-10"><?php echo form_label('PAX');?></td>
+	<td class="td-15"><?php echo form_input(array('name'=>'pax','class'=>'form-control','id'=>'pax','value'=>@$header['pax']));?></td>
+	
 	</tr>
 
 	<tr>
@@ -115,8 +116,10 @@
 			 }
 		 ?></span>
 	</td>
-	<td class="td-10"><?php echo form_label('Drop');?></td>
-	<td class="td-15"><?php echo form_input(array('name'=>'drop','class'=>'form-control','id'=>'drop','placeholder'=>'','value'=>@$header['drop_location'])).form_input(array('name'=>'drop_lat','class'=>'form-control hide-me','id'=>'drop_lat','placeholder'=>'','value'=>@$drop_lat)).form_input(array('name'=>'drop_lng','class'=>'form-control hide-me','id'=>'drop_lng','placeholder'=>'','value'=>@$drop_lng));?></td>
+	
+	<td colspan="2"><div class="tour-advanced-container"><?php echo form_checkbox(array('name'=>'advanced-option','id'=>'advanced-check-box','class'=>'advanced-check-box flat-red','checked'=>@$header['advanced_option'])).nbs(4);?>
+	<?php echo form_label('Advanced');?></div></td>
+	
 	</tr>
 
 	<tr>
@@ -136,8 +139,8 @@
 							} 
 						
 						?></span></td>
-	<td class="td-10"><?php echo form_label('PAX');?></td>
-	<td class="td-15"><?php echo form_input(array('name'=>'pax','class'=>'form-control','id'=>'pax','value'=>@$header['pax']));?></td>
+	<td class="td-10"></td>
+	<td class="td-15"></td>
 	</tr>
 
 	<tr>
@@ -160,10 +163,15 @@
 
 		  echo $this->form_functions->populate_editable_dropdown('driver_id', @$driver_availability,$class,'drivers',array(),$msg,@$header['driver_id']);?></td>
 	<td class="td-10"><?php echo " ";?></td>
-	<td class="td-15"><div class="tour-advanced-container"><?php echo form_checkbox(array('name'=>'advanced-option','id'=>'advanced-check-box','class'=>'advanced-check-box flat-red','checked'=>@$header['advanced_option'])).nbs(4);?>
-	<?php echo form_label('Advanced');?></div></td>
+	<td class="td-15"><?php echo " ";?></td>
 	</tr>
-	<tbody style="display:none;" class="tbody-toggle">
+	<tr class="tbody-lineheight">
+	<td class="td-10"><?php echo form_label('Pickup');?></td>
+	<td colspan="3" class="td-padding-20"><?php echo form_input(array('name'=>'pick_up','class'=>'form-control','id'=>'pick_up','placeholder'=>'','value'=>@$header['pick_up_location'])).form_input(array('name'=>'pick_up_lat','class'=>'form-control hide-me','id'=>'pick_up_lat','placeholder'=>'','value'=>@$pick_up_lat)).form_input(array('name'=>'pick_up_lng','class'=>'form-control hide-me','id'=>'pick_up_lng','placeholder'=>'','value'=>@$pick_up_lng));?></td>
+	<td class="td-10" class="td-padding-20"><?php echo form_label('Drop');?></td>
+	<td colspan="3"><?php echo form_input(array('name'=>'drop','class'=>'form-control','id'=>'drop','placeholder'=>'','value'=>@$header['drop_location'])).form_input(array('name'=>'drop_lat','class'=>'form-control hide-me','id'=>'drop_lat','placeholder'=>'','value'=>@$drop_lat)).form_input(array('name'=>'drop_lng','class'=>'form-control hide-me','id'=>'drop_lng','placeholder'=>'','value'=>@$drop_lng));?></td>
+	</tr>
+	<tbody style="display:none;" class="tbody-toggle tbody-lineheight">
 	<tr>
 	<td class="td-10"><?php echo form_checkbox(array('name'=> 'vehicle_beacon_light_option_id','class'=>'beacon-light-chek-box flat-red','checked'=>@$header['vehicle_beacon_light_option_id']));
 		  ?></td>

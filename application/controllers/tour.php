@@ -1250,23 +1250,23 @@ class Tour extends CI_Controller {
 						
 						if($room_tariff){
 							$room_charge=$room_tariff->amount;
-							$a_particular.= "- ".$room_type." Room @ Rs ".$room_charge." per day for ".$no_of_days." day(s), No:of Rooms (".$total_rooms.").".br();
+							$a_particular.= "- ".$room_type." Room @ Rs. ".$room_charge." per day for ".$no_of_days." day(s), No:of Rooms (".$total_rooms.").";
 							}else{
 								$room_charge = 0;
-								$a_particular.= "- ".$room_type." Room (Charge not defined).".br();
+								$a_particular.= "- ".$room_type." Room (Charge not defined).";
 							}
 						$room_total=$room_charge*$total_rooms;
 						
 						$attr_total=0;//echo "<pre>";print_r($attr_array);echo "</pre>";exit;
 						foreach($attr_array as $attribute){ 
 							
-							$a_particular.=$attribute[0]."@ Rs ".$attribute[1]." per day for ".$attribute[2]." day(s).".br();
+							$a_particular.=" </br>".$attribute[0]."@ Rs ".$attribute[1]." per day for ".$attribute[2]." day(s).";
 							$attr_total+=$attribute[1]*$attribute[3];
 						}
 						$meals_total=0;//echo "<pre>";print_r($meals_array);echo "</pre>";exit;
 						foreach($meals_array as $meal){ 
 							
-							$a_particular.=$meal[0]."(Qty: ".$meal[3].") @ Rs ".$meal[1]." per day for ".$meal[2]." day(s).".br();
+							$a_particular.="</br>".$meal[0]."(Qty: ".$meal[3].") @ Rs ".$meal[1]." per day for ".$meal[2]." day(s).";
 							$meals_total+=$meal[1]*$meal[3];
 						}
 					
@@ -1308,7 +1308,7 @@ class Tour extends CI_Controller {
 						}
 						
 					}
-					$s_particular.="-Rs ".$item['amount']." per day for ".$no_of_days." day(s).(Qty:".$total_quantity.").".br();
+					$s_particular.="-Rs ".$item['amount']." per day for ".$no_of_days." day(s).(Qty:".$total_quantity.").</br>";
 					
 				$unit_amount=$item['amount']*$total_quantity;
 				$tax_amount=($unit_amount*$tax)/100;
@@ -1367,13 +1367,12 @@ class Tour extends CI_Controller {
 				//$tarrif_id=$dataArray['tariff_id'];echo $tarrif_id;exit;
 				
 					$vehicle_model=$this->settings_model->getValuebyId($item['vehicle_model_id'],'vehicle_models','name'); 
-					$t_particular.=" - ".$vehicle_model;
-					
+					$t_particular.=" - ".$vehicle_model;	
 				if($item['vehicle_id']>0){ 
 					$reg_num=$this->settings_model->getValuebyId($item['vehicle_id'],'vehicles','registration_number');
 					$t_particular.=" (".$reg_num.")";
 				}
-					$t_particular.=br()."Total Kilometers :".$total_distance." KM";
+					$t_particular.="</br> Total Kilometers : ".$total_distance." KM.";
 					$tariffdata['vehicle_ac_type']=$item['vehicle_ac_type_id'];
 					$tariffdata['vehicle_model']=$item['vehicle_model_id'];
 					$tariffdata['organisation_id']=$this->session->userdata('organisation_id');
@@ -1381,25 +1380,25 @@ class Tour extends CI_Controller {
 					$tarrif_data=$this->tarrif_model->selectAvailableTariff($tariffdata);
 				if(!empty($tarrif_data)){
 					$tarrif_data=$tarrif_data[0];
-					$t_particular.= br()."Minimum ".$tarrif_data['minimum_kilometers']."KM @ Rs.".$tarrif_data['rate']." each day for ".$no_of_days."day(s)";
+					$t_particular.= "</br> Minimum ".$tarrif_data['minimum_kilometers']."KM @ Rs.".$tarrif_data['rate']." each day for ".$no_of_days."day(s).";
 					$totalAmount += $tarrif_data['rate']*$no_of_days;
 				
 					if($total_distance>$tarrif_data['minimum_kilometers']){
 						$additional_km=$total_distance-$tarrif_data['minimum_kilometers'];
-						$t_particular.=br()."Additional ".$additional_km." KM @ Rs ".$tarrif_data['additional_kilometer_rate']."/KM ";
+						$t_particular.=" </br> Additional ".$additional_km." KM @ Rs ".$tarrif_data['additional_kilometer_rate']."/KM .";
 						$totalAmount +=$tarrif_data['additional_kilometer_rate']*$additional_km;
 					}
 					if($tarrif_data['driver_bata']){
-						$t_particular.=br()."Driver Bata @ Rs ".$tarrif_data['driver_bata']." each day for ".$no_of_days."day(s)";
+						$t_particular.="</br> Driver Bata @ Rs ".$tarrif_data['driver_bata']." each day for ".$no_of_days."day(s).";
 						$totalAmount +=$tarrif_data['driver_bata']*$no_of_days;
 					}
 					if($tarrif_data['night_halt']){
-						$t_particular.=br()."Night Halt @ Rs ".$tarrif_data['night_halt']." each night for ".$no_of_days."day(s)";
+						$t_particular.="</br> Night Halt @ Rs ".$tarrif_data['night_halt']." each night for ".$no_of_days."day(s).";
 						$totalAmount +=$tarrif_data['night_halt']*$no_of_days;
 					}
 						
 				}else{
-					$t_particular.=br()."Tarrif not defined";
+					$t_particular.="</br> Tarrif not defined.";
 					$totalAmount=0;
 				}
 					

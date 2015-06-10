@@ -2429,19 +2429,15 @@ $('.vehicle-list').on('keydown',function(){
 		var destination_priority = $('input[name="destination_priority"]').val();
 		var description = $('#travel_description').val();
 		var destination_section_id=$('#destination_section_id').val();
-		
+		var to_date=' ';
 		if(pathname[4]=='PA' && row_id==-1 && destination_section_id==-1){
 			if($('#travel_to_date').val()!=-1){
 				var to_date= $('#travel_to_date').val();
-			}else{
-				var to_date='';
 			}
 		}
 		if(pathname[4]=='TA' && row_id==-1 && destination_section_id==-1){
 			if($('#travel_to_date').val()!=''){
 				var to_date= $('#travel_to_date').val();
-			}else{
-				var to_date='';
 			}
 		}
 		
@@ -2490,21 +2486,18 @@ $('.vehicle-list').on('keydown',function(){
 		var room_type_id = $('#room_type_id').val();
 		var room_quantity = $('#room_quantity').val();
 		var accommodation_section_id=$('#accommodation_section_id').val();
-		
-		if(pathname[4]=='PA' && row_id==-1 && accommodation_section_id==-1){ 
+		var to_date=' ';
+		if(pathname[4]=='PA' && row_id==-1 && accommodation_section_id==-1){
 			if($('#accommodation_to_date').val()!=-1){
 				var to_date= $('#accommodation_to_date').val();
-			}else{
-				var to_date='';
 			}
 		}
 		if(pathname[4]=='TA' && row_id==-1 && accommodation_section_id==-1){
 			if($('#accommodation_to_date').val()!=''){
 				var to_date= $('#accommodation_to_date').val();
-			}else{
-				var to_date='';
 			}
 		}
+		
 		
 		var room_attributes = [];
 		$('#room_attributes option:selected').each(function(){
@@ -2605,19 +2598,15 @@ $('.vehicle-list').on('keydown',function(){
 		var tariff_id	 	= $('.tour-vehicle-tab #vehicle_tariff_id').val();
 		var driver_id	 	= $('.tour-vehicle-tab #driver_id').val();
 		var vehicle_section_id=$('#vehicle_section_id').val();
-		
+		var to_date=' ';
 		if(pathname[4]=='PA' && row_id==-1 && vehicle_section_id==-1){ 
 			if($('#vehicle_to_date').val()!=-1){
 				var to_date= $('#vehicle_to_date').val();
-			}else{
-				var to_date='';
 			}
 		}
 		if(pathname[4]=='TA' && row_id==-1 && vehicle_section_id==-1){
 			if($('#vehicle_to_date').val()!=''){
 				var to_date= $('#vehicle_to_date').val();
-			}else{
-				var to_date='';
 			}
 		}
 		
@@ -2767,13 +2756,17 @@ $('.vehicle-list').on('keydown',function(){
 				//accomodation-tab values
 					var href = $('a[href="#tab_2"]');
 					$(href).trigger('click');
+					$(".tour-accomodation-tab #accommodation_date").val(itinerary);
+					setTimeout(function(){
+								$('.tour-accomodation-tab #accommodation_date').trigger('change');
+							    },500);
 					var hotel_id=data.hotel_id;
-					getHotelAttributes(hotel_id);
+					setTimeout(function(){ getHotelAttributes(hotel_id);},500);
 					$(".tour-accomodation-tab .to-date-field").css('display','none');
 					$(".tour-accomodation-tab #accommodation_row_id").val(row_id);
 					$(".tour-accomodation-tab #accommodation_itinerary_id").val(data.itinerary_id);
 					$(".tour-accomodation-tab #accommodation_section_id").val(data.id);
-					$(".tour-accomodation-tab #accommodation_date").val(itinerary);
+					
 					
 					$(".tour-accomodation-tab #room_type_id option[value='"+data.room_type_id+"']").attr('selected', true);
 					var room_attributes=data.room_attributes; 
@@ -2880,6 +2873,23 @@ $('.vehicle-list').on('keydown',function(){
 	$("#estimate-tbl tr:last" ).css({ backgroundColor: "#B7B7BE", fontWeight: "bolder" });
 	});
 	
+	
+	
+	$(".tour-accomodation-tab #accommodation_date").on('change',function(){ 
+		var itinerary_date=$(".tour-accomodation-tab #accommodation_date").val();
+		$.post(base_url+"/tour/getAccomodationDestinations",{itinerary_date:itinerary_date},function(data){
+		var id ='.tour-accomodation-tab #hotel_destination_id';
+		data=jQuery.parseJSON(data);
+		$(id+' option').remove();
+		
+			$(id).append($("<option ></option>").attr("value",'-1').text('--Select Destinations--'));
+			
+		
+			$.each(data, function(key, value) {
+				$(id).append($("<option ></option>").attr("value",key).text(value));
+			});
+		});
+	});
 	
 	//-----------------------------------Tour events ends-----------------------------------------------
 

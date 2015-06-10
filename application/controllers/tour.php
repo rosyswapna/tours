@@ -66,7 +66,10 @@ class Tour extends CI_Controller {
 				$this->getRoughEstimate();
 			}elseif($param1 == 'getHotelAttributes'){
 				$this->getHotelAttributes();
-			}else{
+			}elseif($param1 == 'getAccomodationDestinations'){
+				$this->getAccomodationDestinations();
+			}
+			else{
 				$this->notFound();
 			}
 
@@ -711,7 +714,7 @@ class Tour extends CI_Controller {
 			$index = $dataArray['row_id'];
 			$trip_id=$dataArray['trip_id'];
 			
-			if(isset($dataArray['to_date']) && $dataArray['to_date']!='' ){
+			if(isset($dataArray['to_date']) && $dataArray['to_date']!=' ' ){
 				$to_date = $dataArray['to_date'];
 				$dateArr=array();
 				$begin = new DateTime($itinerary);
@@ -722,6 +725,8 @@ class Tour extends CI_Controller {
 					foreach($daterange as $date){ 
 					    $dateArr[]= $date->format("Y-m-d");
 					    }
+			}else{//echo "ok";exit;
+			$dateArr=array();
 			}
 			array_shift($fields);//pop first element(url data from ajax call)
 			unset($fields['table']);
@@ -736,7 +741,7 @@ class Tour extends CI_Controller {
 			}else{ 
 				$data[$tble] = $fields; 
 				if(!empty($dateArr)){
-				$dateArr[]=$to_date;
+				$dateArr[]=$to_date; 
 					foreach($dateArr as $itinerary){
 						$this->tour_cart->insert($data,$itinerary);
 					}
@@ -764,7 +769,7 @@ class Tour extends CI_Controller {
 			$tble = $dataArray['table'];
 			$fields = $dataArray;
 			$itinerary = $dataArray['_date'];
-			if(isset($dataArray['to_date']) && $dataArray['to_date']!='' ){
+			if(isset($dataArray['to_date']) && $dataArray['to_date']!=' ' ){
 				$to_date = $dataArray['to_date'];
 				$dayArr=array();
 				for($i=$itinerary;$i<=$to_date;$i++){
@@ -1426,6 +1431,27 @@ class Tour extends CI_Controller {
 			echo json_encode($tr);
 		
 		
+	}
+	
+	public function getAccomodationDestinations(){
+		if($_REQUEST['itinerary_date']!==''){
+			$itineray_date=$_REQUEST['itinerary_date'];
+			$cart=$this->tour_cart->contents();//echo "<pre>";print_r($cart[$itineray_date]['trip_destinations']);echo "</pre>";exit;
+			if(!empty($cart[$itineray_date]['trip_destinations'])){
+				$destArr=$cart[$itineray_date]['trip_destinations'];
+				foreach($destArr as $destID){
+					$dest_name=$this->settings_model->getValuebyId($destID['destination_id'],'destinations','name');
+					$acc_destination[$destID['destination_id']]=$dest_name;
+					
+				}
+				echo json_encode($acc_destination);
+			}else{
+				return false;
+			}
+		}else{
+			return false;
+		}
+	
 	}
 	//------------------------------------------------------------------------------------------------
 

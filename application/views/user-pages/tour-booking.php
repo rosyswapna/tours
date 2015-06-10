@@ -438,7 +438,7 @@
 					$class="form-control";
 					$msg="Select Destination";
 					$name = $id = "hotel_destination_id";
-					echo $this->form_functions->populate_dropdown($name,$destinations,@$hotel_destination_id,$class,$id,$msg); 
+					echo $this->form_functions->populate_dropdown($name,@$acc_destinations,@$hotel_destination_id,$class,$id,$msg); 
 					echo $this->form_functions->form_error_session('hotel_destination_id', '<p class="text-red">', '</p>'); ?>		</div>
 
 					<div class="form-group div-with-20-percent-width-with-margin-10">
